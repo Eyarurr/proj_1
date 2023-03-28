@@ -1,0 +1,439 @@
+{%- from '/macros/favicon.html' import favicon -%}
+{%- from '/macros/loginForm.html' import login_form -%}
+{%- from '/macros/registerForm.' + config.get('JURISDICTION') + '.html' import register_form -%}
+{%- from '/macros/registerFormOauth.html' import register_form_oauth -%}
+{%- from 'macros/spinner.html' import spinner -%}
+
+{%- set default_date_format = '%m/%d/%Y' -%}
+{%- set date_format = {
+    'en': default_date_format,
+    'de': '%d.%m.%Y',
+    'fr': '%d/%m/%Y',
+    'ru': '%d.%m.%Y'
+} -%}
+<!DOCTYPE html>
+<html lang="{{ g.lang }}" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+    <title>{{ page_title|default(_('Biganto'), true) }}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+
+    <meta name="language" content="{{ g.lang }}">
+    {% if corpus_class != 'my' -%}
+        {#- для некоторых страниц, например, подробных страниц новостей
+            задается список языков exist_langs, на которых доступна данная страница -#}
+        {% for language in exist_langs or config['LANGUAGES']  %}
+        <link rel="alternate" href="{{ request.base_url }}?lang={{ language }}" hreflang="{{ language }}">
+        {%- endfor%}
+        <link rel="alternate" href="{{ request.base_url }}" hreflang="x-default">
+    {%- endif %}
+
+    <meta http-equiv="imagetoolbar" content="no">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+    <meta name="google" content="notranslate">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="robots" content="index,follow">
+    <meta name="MobileOptimized" content="480">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script>
+        var BG = {};
+        window.BG = BG;
+        window.JURISDICTION = '{{ config.JURISDICTION }}';
+
+        {# Тут инициализируется глобальная переменная current_user с тем же содержимым, как если бы обратились к методу API `GET /my` #}
+        {% if not current_user.is_authenticated %}
+            var current_user = {
+                is_authenticated: false,
+                name: ''
+            }
+        {% else %}
+            var current_user = {{ current_user.current_user_api_repr(is_authenticated=True) | tojson }}
+        {% endif %}
+    </script>
+
+    {{- favicon() -}}
+
+    {% block head_share %}
+        {#facebook#}
+        <meta property="og:title" content="{{ page_title|default(_('biganto.com'), true) }}" />
+        <meta property="og:description" content="{{ _('We create a virtual space long before it is built.') }}">
+        <meta property="og:image" content="{{ url_for('static', filename='public/img/share/logo1.png', _external=True) }}" />
+
+        {#twitter#}
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ page_title|default(_('biganto.com'), true) }}">
+        <meta name="twitter:description" content="{{ _('We create a virtual space long before it is built.') }}">
+        <meta name="twitter:image" content="{{ url_for('static', filename='public/img/share/logo1.png', _external=True) }}">
+    {%endblock %}
+
+    <meta name="url" content="{{ request.url }}">
+    {# For future application
+    <meta property="og:type" content="instapp:photo">
+    <meta property="instapp:owner_user_id" content="1960719759">
+    <meta name="apple-itunes-app" content="app-id=580243869">
+    <meta property="al:ios:app_name" content="Biganto">
+    <meta property="al:ios:app_store_id" content="389801252">
+    <meta property="al:ios:url" content="instagram://media?id=1044684988937298088">
+    <meta property="al:android:app_name" content="Biganto">
+    <meta property="al:android:package" content="com.instagram.android">#}
+    <meta property="al:android:url" content="{{ request.url }}">
+    <meta property="al:web:url" content="{{ request.url }}">
+    {% block common_head %}{% endblock %}
+
+    {% if not pixels_disabled %}
+        {% include '_pixels_top.html' ignore missing %}
+    {% endif %}
+    <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+</head>
+<body class="{% if corpus_class -%} b-page__ {{- corpus_class }}{% endif -%}
+             {% if corpus_class == 'tutorials' and background_head %} opaque-header{% endif %}">
+
+    {% block common_content %}{% endblock %}
+    {% block common_footer %}{% endblock %}
+
+    {# Модалка для проигрывания тура #}
+    <script type="text/template" class="template-modal" id="tmpl__tour">
+        <div class="b-overlay">
+            <div class="modal-custom modal-custom--fullscreen modal-tour">
+                <div class="modal-custom__inner">
+                    <div class="modal-custom__content">
+                        <iframe src="<%= rc.url %>" class="modal-tour__iframe" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    {# модальное окно авторизации #}
+    {% if not current_user.is_authenticated %}
+        <script type="text/template" class="template-modal" id="tmpl__auth-login">
+            <div class="b-overlay">
+                <div class="modal-custom">
+                    <div class="modal-custom__inner">
+                        <div class="modal-custom__header">
+                            <div class="modal-custom__close"><svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg></div>
+                            <div class="modal-custom__title">
+                                {{ _("Sign in") }}
+                            </div>
+                        </div>
+                        <div class="modal-custom__content">
+                            {% if url_for('my.index') in request.url %}
+                                {{ login_form('same_page') }}
+                            {% else %}
+                                {{ login_form() }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/template" class="template-modal" id="tmpl__auth-login-advanced">
+            <div class="b-overlay">
+                <div class="modal-custom">
+                    <div class="modal-custom__inner">
+                        <div class="modal-custom__header">
+                            <div class="modal-custom__close"><svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg></div>
+                            <div class="modal-custom__title">
+                                {{ _("Sign in") }}
+                            </div>
+                        </div>
+                        <div class="modal-custom__content">
+                            {{ login_form('next') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+    {% endif %}
+
+    {# модальное окно регистрации #}
+    {% if not current_user.is_authenticated %}
+        <script type="text/template" class="template-modal" id="tmpl__auth-registration">
+            <div class="b-overlay">
+                <div class="modal-custom">
+                    <div class="modal-custom__inner">
+                        <div class="modal-custom__header">
+                            <div class="modal-custom__close"><svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg></div>
+                            <div class="modal-custom__title">
+                                {{ _("Sign up") }}
+                            </div>
+                        </div>
+                        <div class="modal-custom__content">
+                            {{ register_form() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+    {% endif %}
+
+    {# модальное окно после успешной аутентификации через Oauth первый раз #}
+    {% set auth_registration_oauth = session.pop('auth-registration-oauth', False) %}
+    {% if auth_registration_oauth %}
+        <script type="text/template" class="template-modal" id="tmpl__auth-registration-oauth">
+            <div class="b-overlay">
+                <div class="modal-custom">
+                    <div class="modal-custom__inner">
+                        <div class="modal-custom__header">
+                            <div class="modal-custom__close"><svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg></div>
+                            <div class="modal-custom__title">
+                                {{ _("Sign up") }}
+                            </div>
+                        </div>
+                        <div class="modal-custom__content">
+                            {{ register_form_oauth() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+    {% endif %}
+
+    {# модальное окно сообщения о подтверждении почты #}
+    {% if not current_user.is_authenticated %}
+        <script type="text/template" class="template-modal" id="tmpl__email-confirmation">
+            <div class="b-overlay">
+                <div class="modal-custom">
+                    <div class="modal-custom__inner">
+                        <div class="modal-custom__header">
+                            <div class="modal-custom__close"><svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg></div>
+                            <div class="modal-custom__title">
+                                {{ _("Confirm") }}
+                            </div>
+                        </div>
+                        <div class="modal-custom__content">
+                            <div class='email__text form-modal__section'>{{ _("Please confirm your email address by following the link you will receive shortly to {{email}}") }}</div>
+                            <button type="submit" class="button fill blue modal-custom__button-wide email__close" tabindex="1">{{ _("OK") }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+    {% endif %}
+
+    {# модальное окно подтверждения регистрации #}
+    {% set welcome = session.pop('welcome', False) %}
+    {% if welcome %}
+    <script type="text/template" class="template-modal" id="tmpl__welcome">
+        <div class="b-overlay">
+            <div class="modal-custom modal-welcome">
+                <div class="modal-custom__inner">
+                    <div class="modal-custom__header modal-welcome__header background-1">
+                        <div class="modal-custom__close modal-welcome__close">
+                            <svg viewBox="0 0 32 32" class="icon__svg custom-color" width="24" height="24">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use>
+                            </svg>
+                        </div>
+                        <div class="modal-custom__title--middle">
+                            {{ _("Welcome to biganto.com!") }}
+                        </div>
+                    </div>
+                    <div class="modal-custom__content">
+                        <p class="p1">
+                            {{ _("We’re glad you are with us, please check some useful links below. They will help you to get started:") }}
+                        </p>
+                        <p class="p2">
+                            <a href='/tutorials/'>{{ _("Our \"Tutorials\" page") }}</a>{{ _(", where all important information is collected.") }}
+                        </p>
+                        <p class="p3">
+                            <a href='/tutorials/quick_start_guide/'>{{ _("Create sample tour") }}</a>{{ _(", start working right now and dig into details as you go!") }}
+                        </p>
+                        <p class="p4">
+                            <span class='create-tour-link'>{{ _("Create your own tours!") }}</span> {{ _("Trial plan is assigned to you, you can create several tours for free.") }}
+                        </p>
+                        <p class="p5">
+                            {{ _("We've also sended you an email with confirmation of your registration and useful links to:") }} {{current_user.email}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    {% endif %}
+
+    <script type="text/template" class="template" id="tmpl__overlay">
+        <div class="b-overlay<% if (rc.fake) { %> b-overlay--fake<% } %><% if (rc.dark) { %> b-overlay--dark<% } %><% if (rc.cl) { %> b-overlay--<%= rc.cl %><% } %>"<% if (rc.styles) { %> style="<%= rc.styles %>"<% } %>>
+            <% if (rc.close) { %>
+                <div class="b-overlay__close">
+                    <svg viewBox="0 0 38 38" class="icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#x-big"></use></svg>
+                </div>
+            <% } %>
+        </div>
+    </script>
+
+    {# @todo: более не используется, выпилить вместе с components/main/result-request.js #}
+    {# Заказ: Успешная отправка #}
+    <script type="text/template" class="template-other" id="tmpl__request-success">
+        <div class="result-request result-request--success">
+            <div class="result-request__image">
+                <svg viewBox="0 0 256 256" class="icon__svg result-request__icon" width="256" height="256"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#<%= rc.icon || 'operator' %>"></use></svg>
+            </div>
+            <h3 class="result-request__head background-image-title"><%= rc.title %></h3>
+            <p class="result-request__text"><%= rc.text %></p>
+        </div>
+    </script>
+
+    {# @todo: более не используется, выпилить вместе с components/main/result-request.js #}
+    {# Заказ: Ошибка отправки #}
+    <script type="text/template" class="template-other" id="tmpl__request-error">
+        <div class="result-request result-request--error">
+            <div class="result-request__image">
+                <svg viewBox="0 0 32 32" class="icon__svg result-request__icon" width="32" height="32"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg>
+            </div>
+            <h3 class="result-request__head">{{ _("Error") }}</h3>
+            <p class="result-request__text"><%= rc.error %></p>
+        </div>
+    </script>
+
+    {# Шаблон белого модального окна на весь экран #}
+    <script type="text/template" class="template-other" id="tmpl__modal-fs">
+        <section class="modal-fs">
+            <% if (rc.header) { %>
+            <header class="modal-fs__header">
+                <div class="b-page__inner container-fluid clearfix">
+                    <div class="modal-fs__logo logo logo--dark">
+                        <svg viewBox="0 0 105 32" class="modal-fs__brand logo__icon icon__svg" width="105" height="32"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#biganto"></use></svg>
+                    </div>
+                    <div class="modal-fs__close">
+                        <svg viewBox="0 0 32 32" class="icon__svg" width="32" height="32"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg>
+                    </div>
+                </div>
+            </header>
+            <% } %>
+            <div class="modal-fs__content">
+                <div class="b-page__inner container-fluid modal-fs__inner">
+                    <% if (rc.title) { %>
+                    <h1 class="modal-fs__title background-image-title">
+                        <%= rc.title %>
+                    </h1>
+                    <% } %>
+                    <% if (rc.content) { %>
+                    <div class="modal-fs__wrap">
+                        <%= rc.content %>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+            <% if (rc.footer !== false) { %>
+            <div class="modal-fs__footer">
+                <% if (rc.footer) { %>
+                    <%= rc.footer %>
+                <% } %>
+            </div>
+            <% } %>
+        </section>
+    </script>
+
+    {# Выбор или создание папки перед созданием тура #}
+    <script type="text/template" class="template-modal" id="tmpl__choose-folder">
+        <div class="b-overlay">
+            <div class="modal-custom">
+                <div class="modal-custom__inner">
+                    <div class="modal-custom__header">
+                        <div class="modal-custom__close"><svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg></div>
+                        <div class="modal-custom__title modal-custom__title--middle">
+                            {{ _("Create new tour") }}
+                        </div>
+                    </div>
+                    <div class="modal-custom__content">
+                        <form class="form-modal create-folder" method="post" action="{{ url_for('front.gallery') }}">
+                            <div class="create-folder__loading">
+                                {{ spinner('create-folder__spinner') }}
+                            </div>
+                            <div class="create-folder__content">
+                                <div class="form-modal__section create-folder__section create-folder__section--id">
+                                    <div class="form-modal__label">{{ _("Select folder") }}</div>
+                                    <div class="form-modal__field create-folder__field">
+                                        <div class="big-select">
+                                            <select name="folder_id" class="big-select__input create-folder__id">
+                                                <option value="">{{ _("Create new folder") }}</option>
+                                            </select>
+                                            <svg viewBox="0 0 9 8" class="big-select__icon" width="9" height="8"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down" /></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-modal__section create-folder__section create-folder__section--title">
+                                    <div class="form-modal__label">{{ _("Folder title") }}</div>
+                                    <div class="form-modal__field create-folder__field">
+                                        <input type="text" class="big-input create-folder__title" value="" name="folder_title">
+                                    </div>
+                                </div>
+                                <div class="form-modal__section">
+                                    {{ _("Each tour should belong to a folder, create new or select existing folder to start tour creation.") }}
+                                </div>
+                                <div class="form-modal__section create-folder__submit clearfix">
+                                    <button type="submit" class="button fill blue modal-custom__button-wide create-folder__button" disabled="disabled">{{ _("Create") }}</button>
+                                </div>
+                            </div>
+                            <p class="create-folder__error form-modal__error">
+                                {{ _("Site is undergoing a technical maintenance at the moment. We apologize for the inconvenience. Please try again later.") }}
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script>
+        var CSRF_TOKEN = '{{ csrf_token() }}';
+        BG.CONST = {
+            MESSAGES: {
+                ERROR_DEFAULT: "{{ _("Site is undergoing a technical maintenance at the moment. We apologize for the inconvenience. Please try again later.") }}",
+                ERROR_NOT_FOUND: "{{ _("Object not found") }}",
+                ERROR_CHANGE_PASS: "{{ _("Passwords mismatch.") }}",
+                ORDER: {
+                    SUCCESS: "{{ _("Thank you! We well get in touch with you shortly.") }}"
+                }
+            },
+            THANK_YOU: {
+                title: "{{ _("Thank you for using our services!") }}",
+                text: "{{ _("Our specialist will contact you during working hours to specify the details of the project") }}",
+                icon: 'operator'
+            },
+            CHECKING: {
+                title: "{{ _("Checking in progress…") }}",
+                text: "{{ _("Usually it takes a couple of days. When your project will be checked we’ll get in touch with you via email") }}",
+                icon: 'checking'
+            },
+            GOOGLE: {
+                RECAPTCHA: {
+                    enabled: {{ 'true' if config.get('GOOGLE_RECAPTCHA_ENABLED') else 'false' }},
+                    sitekey: "{{ config.get('GOOGLE_RECAPTCHA_SITE_KEY') }}"
+                }
+            },
+            modalHeaders: {
+                "buy-now": "{{ _("Buy {plan} plan") }}",
+                "buy-more": "{{ _("Buy {plan} plan") }}",
+                "downgrade": "{{ _("Downgrade to {plan} plan") }}",
+                "upgrade": "{{ _("Upgrade to {plan} plan") }}"
+            },
+            NOTIFICATION_CHANNELS: {
+                billing: "{{ _("Billing") }}",
+                common: "{{ _("Common") }}",
+                other: "{{ _("Other") }}",
+                empty: "{{ _("No notifications yet") }}"
+            }
+        };
+
+        // предполагаемый язык пользователя
+        BG.CONST.LANG = '{{ g.lang }}';
+        BG.CONST.LANGUAGES = {{ config.get('LANGUAGES').items() | tojson }};
+        // дефолтный язык
+        BG.CONST.LANGUAGE = '{{ config.get('LANGUAGE') }}';
+        window.COOKIE_BANNER_TEXT = '{{ _("We use cookies on this website. Some of these are mandatory and required for website to function properly, while others allow us to enhance your experience, personalise content and provide insights into how the site is being used. You can change settings in our <a href=\"%(url)s\" class=\"link link--cookie\">Cookie settings page</a>.", url=url_for('front.cookie_policy')) }}';
+        window.COOKIE_BANNER_BUTTON_TEXT = '{{ _("Accept default") }}';
+        window.COOKIE_POLICY_URL = '{{ url_for("front.cookie_policy") }}';
+        window.COOKIE_BANNER_CUSTOMIZE_COOKIE_BUTTON_TEXT = '{{ _("Customize Cookie settings") }}';
+    </script>
+    <script src="/static/public/js/modernizr.min.js" defer></script>
+    <script src="/static/public/js/base.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+    {% block common_tail %}{% endblock %}
+
+    {%- if not pixels_disabled -%}
+        {% include '_pixels_bottom.html' ignore missing %}
+    {% endif %}
+</body>
+</html>

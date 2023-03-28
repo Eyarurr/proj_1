@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+{% set page_title = _("Troubleshooting") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/troubleshooting/troubleshooting.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--yellow">{{ _("support") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div class="content-page__main">
+
+                <p>This is a brief description of known issues that can occur, and possible solutions. Most of these are a direct result of NOT using our tools or not following the instructions we provide.
+                </p>
+                <p>If your problem is not in the list or you are not able to solve it, please contact <a href='{{ url_for('support.index') }}'>technical support</a>.
+                </p>
+                <div id="general-issues" class="b-anchor"></div>
+                <h2>General issues</h2>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>My tour is stuttering, have low frame rate or other performance issues.</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>This may happen because of several things:</p>
+                    <ol type="a">
+                        <li>Your device is performing a demanding task at the moment, e.g. when a PC is rendering 3d images there may be a framerate drop in 3d tour as well
+                        </li>
+                        <li>3d model in a tour is not sufficiently optimized, if you downloaded low poly model yourself
+                        </li>
+                        <li>Your device is not powerful enough to process the tour</li>
+                        <li>Your browser is not supported</li>
+                    </ol>
+                    <p>Solution “a” - check if your device is performing other resource demanding tasks at the moment, restart the device if necessary.
+                    </p>
+                    <p>Solution “b” - when optimizing model yourself, try to reduce number of polygons to 200k or less. If not possible, than upload high poly model and use our optimization algorithm. Remember, that plants and scattered objects may impact your polycount significantly.
+                    </p>
+                    <p>Solution “c” - try using other device. Generally most of smartphones and tablets from 2018 and onwards (and flagship models from earlier) should perform well.
+                    </p>
+                    <p>Solution “d” - try using Google Chrome instead.</p>
+                    <p>General tip - open 3d tour on a different, preferably more modern device.</p>
+                </div>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>It takes a lot of time to download the tour. I am constantly seeing download icon, when travelling through the tour.
+                    </h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation: your internet connection is not fast enough at the moment to provide best experience
+                    </p>
+                    <p>Solution “a” - use VR player for PC or mobile applications for iOS and Android to download and view the tour offline
+                    </p>
+                    <p>Solution “b” - check your internet connection and solve any related issues</p>
+                    <p>Solution “c” - as a last resort you may open a tour and keep it opened for some time, travel between different points in a tour. When most of the point will be cached in your browser, your user experience will improve
+                    </p>
+                </div>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Points on a tour minimap are not in line with point location in a tour.</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>If you followed our tutorial for rendering floor plan, than this may be a result of an object, outside bounding box.
+                    </p>
+                    <p>Solution: open asset editing page and hover mouse over the floor section. Press “Adjust minimap position”:
+                    </p>
+                    <p><img src="/static/public/img/tutorials/troubleshooting/image_1.jpg" alt=""></p>
+                    <p><img src="/static/public/img/tutorials/troubleshooting/image_2.jpg" alt="" width="800"></p>
+                    <p>If points in a tour are not in line with the minimap, you can change it here. Move and zoom your minimap with mouse to fix any issues with floor plan.
+                    </p>
+                </div>
+                <div id="model-issues" class="b-anchor"></div>
+                <h2>3d model related issues</h2>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Object looks “flat” or has blurry trail, when travelling between the points.</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>If these effects occur, than the object is likely missing from 3d model. This can be a result of:
+                    </p>
+                    <ol type="a">
+                        <li>Not using our tool and/or guide for preparing geometry</li>
+                        <li>Not collapsing complex group of objects into single mesh (e.g. a chandelier, consisting of dozens of elements)
+                        </li>
+                        <li>Geometry being too complex to be preserved in the scene (e.g. a plant with several thousands of leaves)
+                        </li>
+                        <li>Object was created using scatter tools in 3d max (scatters are being disabled if you use our tools for export geometry)
+                        </li>
+                    </ol>
+
+                    <p>Solution “a” and “b”:</p>
+                    <ol>
+                        <li>Use <a href='/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms'>our tools</a> to prepare geometry for the scene. Follow <a href='{{ url_for('tutorials.preparing_geometry') }}'>this guide</a> carefully. Prepare geometry and export correct model.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+                    <p>Solution “c”:</p>
+                    <ol>
+                        <li>Complex objects, with lots of individual small elements are too taxing for tour performance. However, you can create a “proxy” object, which will resemble the shape of a problematic object and place it in your 3d scene manually. Prepare geometry and export correct model.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+
+                    <p>Solution “d”:</p>
+                    <ol>
+                        <li>If you want to keep your scattered object in the scene, convert it to mesh first.  Prepare geometry and export correct model.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                        <li>Remember, that objects, with lots of individual small elements are too taxing for tour performance. Thus you may resort to the solution, mentioned above in “c”
+                        </li>
+                    </ol>
+                </div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>It seems, like there is no object, when travelling between the points.</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>If these effects occur, than the object is likely missing from 3d model. This can be a result of:
+                    </p>
+                    <ol type="a">
+                        <li>Not using our tool and/or guide for preparing geometry</li>
+                        <li>Not collapsing complex group of objects into single mesh (e.g. a chandelier, consisting of dozens of elements)
+                        </li>
+                        <li>Geometry being too complex to be preserved in the scene (e.g. a plant with several thousands of leaves)
+                        </li>
+                        <li>Object was created using scatter tools in 3d max (scatters are being disabled if you use our tools for export geometry)
+                        </li>
+                    </ol>
+
+                    <p>Solution “a” and “b”:</p>
+                    <ol>
+                        <li>Use <a href='/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms'>our tools</a> to prepare geometry for the scene. Follow <a href='{{ url_for('tutorials.preparing_geometry') }}'>this guide</a> carefully. Prepare geometry and export correct model.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+                    <p>Solution “c”:</p>
+                    <ol>
+                        <li>Complex objects, with lots of individual small elements are too taxing for tour performance. However, you can create a “proxy” object, which will resemble the shape of a problematic object and place it in your 3d scene manually. Prepare geometry and export correct model.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+
+                    <p>Solution “d”:</p>
+                    <ol>
+                        <li>If you want to keep your scattered object in the scene, convert it to mesh first.  Prepare geometry and export correct model.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                        <li>Remember, that objects, with lots of individual small elements are too taxing for tour performance. Thus you may resort to the solution, mentioned above in “c”
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>There are some “ghost” objects, whose are not on render, but appear, when travelling between the points.
+                    </h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>Your 3d model does not correspond to renders. This can be a result of (a) changes in the scene, that were not reflected in 3d model, or (b) animated objects in the scene.
+                    </p>
+                    <p>Solution “a”:</p>
+                    <ol>
+                        <li>Check, whether renders and 3d model were taken from different versions of the scene
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+                    <p>Solution “b”:</p>
+                    <ol>
+                        <li>Delete all animation from the scene, except Virtoaster camera. If you follow our camera creation guide (which you should), the script will do it for you automatically.
+                        </li>
+                        <li>Check if animated objects caused unnecessary effects on renders (e.g. animated chair has changed its location in different points in a tour). Render new, corrected images.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>I see a flat box instead of object, when travelling between the points.</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>This is a result of incorrect export of a proxy object. In 3d max proxy objects are being exported into .obj the way they look in 3d max viewport, e.g. if proxy view mode is “bounding\solid box” it will be exported as a box.
+                    </p>
+                    <p>Solution:</p>
+                    <ol>
+                        <li>Use <a href='/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms'>our tools</a> to prepare geometry for the scene. Follow <a href='{{ url_for('tutorials.preparing_geometry') }}'>this guide</a> carefully. Prepare geometry and export correct model.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Unable to travel through the scene. Unable to walk backwards. When moving between the points, the whole scene creates blurry image without smooth transition. I am moving through the walls.
+                    </h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>Your model is not in line with your renders, because:</p>
+                    <ol type="a">
+                        <li>Incorrect renderer selected. Vray and Corona render cubemaps have different order of squares, thus selecting wrong render engine will cause incorrect model position
+                        </li>
+                        <li>3d model scale is incorrect</li>
+                    </ol>
+                    <p>Solution “a” - incorrect renderer selected:</p>
+                    <ol>
+                        <li>Check whether you selected correct renderer in your 3d scene. Unfortunately there is no way to see this information inside the tour yet (coming soon), so your memory is the best source of information. You may try the solution anyway, it is easy to reverse the changes.
+                        </li>
+                        <li>Open asset editing interface and press “Reupload” in the panorama list. Select your render sequence and select correct render. That should solve a problem.
+                        </li>
+                    </ol>
+                    <p><img src="/static/public/img/tutorials/troubleshooting/image_3.jpg" alt=""></p>
+                    <p>Solution “b” - incorrect model scale:</p>
+                    <ol>
+                        <li>Use our tool to export 3d model from 3d max. Use <a href='{{ url_for('tutorials.preparing_geometry') }}'>our guide</a> to prepare geometry.
+                        </li>
+                        <li>If you export 3d model from different software or unable to use our tool, make sure your 3d models .obj file is scaled in meters.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Unable to travel to specific point.</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>Most likely there is a 3d object, preventing you from moving to desired location. It is either a  (a) result of incorrect point placement, either (b) there is an unintended object between these points.
+                    </p>
+                    <p>Solution “a”:</p>
+                    <ol>
+                        <li>Open your 3d scene to see, if there is line of sight between the points and if there are any 3d objects interfering.
+                        </li>
+                        <li>To adjust camera position, remove current Virtoaster camera and auxiliary 3d geometry, adjust point position and create new Virtoaster camera.
+                        </li>
+                        <li>Create file with points from camera creation script (use <a href='{{ url_for('tutorials.setting_up_camera') }}'>camera creation guide</a>)
+                        </li>
+                        <li>Render new images for problematic points.</li>
+                        <li>
+                            In asset uploading interface, hover over problematic panoramas and select “Edit”. You can learn point number from minimap in editing mode.
+                            <p><img src="/static/public/img/tutorials/troubleshooting/image_4.jpg" alt=""></p>
+                        </li>
+                        <li>Upload new image and paste coordinates of a point from the file to the text field.
+                        </li>
+                    </ol>
+                    <p><img src="/static/public/img/tutorials/troubleshooting/image_5.jpg" alt="" width="800"></p>
+                    <p>Solution “b”:</p>
+                    <ol>
+                        <li>Open your 3d scene to see, if there is line of sight between the points and if there are any 3d objects interfering.
+                        </li>
+                        <li>Delete\move this object from the scene and render new images to reflect this change.
+                        </li>
+                        <li>Export new 3d model</li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour.
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>It seems like 3d model in a tour is shifted, compared to renders. It seems like borders of objects are not in line with rendered images.
+                    </h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>Point coordinates are likely shifted from render position. This is a result of unintended movement of 3d scene, auxiliary 3d objects we use to determine coordinates or camera during render
+                    </p>
+                    <p>Solution:</p>
+                    <ol>
+                        <li>Open your 3d scene and check if 3d model is moved relative to the camera or 3d helpers we use to define coordinates. If there is indeed a shift in the model, try extracting new coordinates using <a href='{{ url_for('tutorials.setting_up_camera') }}'>our guides for camera creation</a>. Then create a new 3d tour using these coordinates
+                        </li>
+                        <li>Alternatively, you may try to adjust model position to the position, you can see on renders. Restore old scene or camera position from older scene versions if you have them. Then create a new tour using restored 3d model
+                        </li>
+                        <li>In any case there is no easy way around fixing this issue. Your best bet can be to start all over again with camera creation and be careful about moving 3d model or removing movement locks from camera this time.
+                        </li>
+                    </ol>
+                </div>
+
+                <div id="image-camera-issues" class="b-anchor"></div>
+                <h2>Image and camera related issues</h2>
+
+                <div
+                    class="troubleshooting__wrapper troubleshooting__wrapper__arrow troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>I see visible seams on my renders in a tour.</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>Visible seams on renders appear as a result of enabled post processing effects during image rendering or as a
+                        result
+                        of incorrect post production. Such effects as blur, DoF, Bloom, vignetting or sharp will cause visible seams, if
+                        applied incorrectly. Some of these effects should never be used for cubemap panoramas. If you are using Corona
+                        4.0 or newer High Quality Image Filter under System tab is also known to cause these issues.
+                    </p>
+                
+                    <p>Solution:</p>
+                    <ol>
+                        <li>Check your render settings and post processing setup for these effects. Follow our guides for <a
+                                href='{{ url_for('tutorials.setting_up_render') }}'>image rendering</a> and <a
+                                href='{{ url_for('tutorials.post_production') }}'>postprocessing</a> carefully. Replace existing
+                            panoramas
+                            with correct ones with asset manager.
+                        </li>
+                        <li>Check Image Filter type under System tab in the render settings. Disable High Quality Image Filter and
+                            select
+                            "None" or "Tent" filter type.</li>
+                    </ol>
+                </div>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>My camera is on the floor in tour. My points have incorrect height.</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p class="troubleshooting__explanation__title">Explanation:</p>
+                    <p>You forgot to change height, when placing points in your 3d scene.</p>
+                    <p>Solution “a” - all points are on the floor:</p>
+                    <ol>
+                        <li>Follow our <a href='{{ url_for('tutorials.setting_up_camera') }}'>camera creation guide</a> carefully and render new images
+                        </li>
+                        <li>Either export new 3d model, or use camera script to create file with coordinates.
+                        </li>
+                        <li>Press “Back to assets uploading” inside tour assembly interface. Upload new, correct model and press “Create tour” to reassemble the tour. Alternatively you can use old 3d model and upload file with coordinates manually (uncheck “Recognize coordinates from .obj”).
+                        </li>
+                    </ol>
+
+                    <p>Solution “b” - only some points are on the floor:</p>
+                    <ol>
+                        <li>Render new images for problematic points, with new height</li>
+                        <li>
+                            In asset uploading interface, hover over problematic panoramas and select “Edit”. You can learn point number from minimap in editing mode.
+                            <p><img src="/static/public/img/tutorials/troubleshooting/image_4.jpg" alt=""></p>
+                        </li>
+                        <li>
+                            Upload new image and change height of a point (Z coordinate).
+                            <p>Usual height of a point is 1.5 meters above the floor. You can learn actual height from other, correct points in a tour or you can use camera script to extract point coordinates from the scene (more details in <a href='{{ url_for('tutorials.setting_up_camera') }}'>“Setting up camera”</a> guide).
+                            </p>
+                            <p><img src="/static/public/img/tutorials/troubleshooting/image_6.jpg" alt="" width="600">
+                            </p>
+                        </li>
+                        <li>Repeat for all problematic points</li>
+                        <li>Note, that you 3D panorama's textures may bake incorrectly, because they used point from the floor level.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#general-issues"
+                                class="side-menu__link link-scroll-to">General issues</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#model-issues"
+                                class="side-menu__link link-scroll-to">3d model related issues</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#image-camera-issues"
+                                class="side-menu__link link-scroll-to">Image and camera related issues</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

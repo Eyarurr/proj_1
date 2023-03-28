@@ -1,0 +1,78 @@
+{% extends 'front/tour/base.html' %}
+{% set bundle = 'main' %}
+{% block head %}
+<link
+    rel="stylesheet"
+    type="text/css"
+    href="/static/public/player/css/editable.css?{{ config.get('RELEASE_VERSION') }}"
+/>
+<script>
+    var PLAYER_MODULE = 'EDIT';
+
+    var ENDPOINT_FLOW = "{{ url_for('front.flow_upload', token='') }}",
+        TOUR_IN_EDIT_MODE = true,
+        TOOLBAR_SAVE = [
+            {
+                name: 'save',
+                title:"{{ _('Save') }}",
+            }
+        ],
+        TOOLBAR_START = [
+            {
+                name: 'start',
+                title: "{{ _('Set start position') }}",
+            }
+        ],
+        TOOLBAR_OVERLAYS = [
+            {
+                name: 'overlays',
+                title: "{{ _('Create overlay') }}",
+            },
+            {
+                name: 'clickable',
+                title: "{{ _('Cancel') }}",
+            }
+        ],
+        TOOLBAR_OPTIONS = [
+            {
+                name: 'options',
+                title: "{{ _('Set options') }}",
+            }
+        ],
+        TOOLBAR_UNDO = [
+            {
+                name: 'undo',
+                title: "{{ _('Undo previous action') }}",
+            }
+        ],
+        TOOLBAR = [
+            // {# кнопки редактирования #}
+            TOOLBAR_START,
+            TOOLBAR_OVERLAYS,
+            TOOLBAR_NAVIGATOR,
+            TOOLBAR_OPTIONS,
+            // {# базовые кнопки #}
+            TOOLBAR_SAVE,
+            TOOLBAR_UNDO,
+            TOOLBAR_HELP,
+            TOOLBAR_FULLSCREEN,
+            TOOLBAR_MODE,
+        ];
+
+    MESSAGES.EDIT_SUCCESS = {
+        DEFAULT: "{{ _('Changes saved.') }}",
+    };
+    MESSAGES.EDIT_ERRORS = {
+        NETWORK: "{{ _('Changes could not be saved. Check your network.') }}",
+        DEFAULT: "{{ _('An unexpected error occurred. Changes could not be saved.') }}",
+    };
+</script>
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}
+
+{% block body_scripts %}
+{{ super() }}
+{% endblock %}

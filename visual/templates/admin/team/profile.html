@@ -1,0 +1,207 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'team' %}
+
+
+{% block head %}
+    <style type="text/css">
+        h1.banned {
+            text-decoration: line-through;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row"><p>← <a href="{{ url_for('.team') }}">Остальные сотрудники</a></p>
+
+    <div class="row mb-3">
+        <div class="col-lg-4">
+            <div class="">
+                <div class="card-body mb-3">
+                    {% if user.team_member.avatar %}
+                        <img class="mb-3" src="{{ user.team_member.avatar.url }}" width="{{ user.team_member.avatar.width }}"
+                             height="{{ user.team_member.avatar.height }}">
+                    {% else %}
+                        <img class="mb-3" src="/static/admin/person.png" width="200" height="200">
+                    {% endif %}
+                    <div class="d-grid gap-2 col-6">
+                        {% if user.id == current_user.id %}
+                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#modal-photo-upload">
+                                Загрузить фото
+                            </button>
+                        {% endif %}
+                            {% if user.team_member.can_edit() %}
+                    <a href="{{ url_for('.team_edit', user_id=user.id) }}" class="btn btn-info btn-sm text-light">Редактировать</a>
+                {% if current_user.has_role('team') %}
+                    <a href="{{ url_for ('.team_member_status', user_id = user.id) }}" class="btn btn-info btn-sm text-nowrap text-light">Редактировать статусы</a>
+                {% endif %}
+
+            {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                    <div class="row justify-content-between">
+                        <div class="col-lg-6"><h1 {% if user.banned %} class="banned" {% endif %}>{{ user.name }}</h1></div>
+                        <div class="col-lg-6">Был на сайте: {{ user.last_active|utcinlocal|humantime() }}</div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h4>{% if user.team_member.department %}
+                    Отдел:
+                    <a href="{{ url_for('.team', department_id=user.team_member.department_id) }}">{{ user.team_member.department.title }},</a>
+                {% endif %}
+                {% if user.team_member.position %}
+                    должность: {{ user.team_member.position }}{% endif %}</h4>
+                            </li>
+                            {% if user.team_member.phone_mobile %}
+                                <li class="list-group-item">
+                                    Мобильный телефон: {{ user.team_member.phone_mobile }}
+                                </li>
+                            {% endif %}
+                            {% if user.team_member.phone_mobile %}
+                                <li class="list-group-item">
+                                    Telegram: <a href="http://t.me/{{ user.team_member.telegram }}">{{ user.team_member.telegram }}</a>
+                                </li>
+                            {% endif %}
+
+                            {% if user.team_member.phone_mobile %}
+                                <li class="list-group-item">
+                                    <a href="{{ user.team_member.location_url }}" class="btn btn-info" target="_blank">Где сидит:</a>
+                                </li>
+                            {% endif %}
+
+                            <li class="list-group-item">
+                                E-mail: <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                            </li>
+                            {% if user.team_member.city_id %}
+                                <li class="list-group-item">
+                                Город: {{ user.team_member.city.name_ru }}
+                                </li>
+                            {% endif %}
+                            {% if user.team_member.timezone %}
+                                <li class="list-group-item">
+                                    <span id="timezone">Часовой пояс: UTC{{ user.team_member.timezone|get_utc_delta }}.</span> <span id="time"></span>
+                                </li>
+                            {% endif %}
+                            {% if user.team_member.city_id %}
+                                <li class="list-group-item">
+                                    Кол-во дней в офисе: {{ user.team_member.office_days }}
+                                </li>
+                            {% endif %}
+
+                            {% if user.team_member.city_id %}
+                                <li class="list-group-item">
+                                Внутренний телефон: {{ user.team_member.phone_internal }}
+                                </li>
+                            {% endif %}
+                            {% if user.team_member.birthdate %}
+                                <li class="list-group-item">
+                                День рождения: {{ user.team_member.birthdate.strftime('%d.%m') }}
+                                </li>
+                            {% endif %}
+
+                            {% if user.team_member.hired %}
+                                <li class="list-group-item">
+                                    Работает с {{ user.team_member.hired.strftime('%d.%m.%Y') }}
+                                    {% if not user.team_member.fired %}
+                                        (стаж {{ date_sub(current_datetime(), user.team_member.hired) }})
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                            {% if user.team_member.fired %}
+                                <li class="list-group-item">
+                                    Уволен с {{ user.team_member.fired.strftime('%d.%m.%Y') }}
+                                    (стаж {{ date_sub(user.team_member.fired, user.team_member.hired) }})
+                                </li>
+                            {% endif %}
+                            <li class="list-group-item">
+                                <h4>Права:</h4>
+                                {% if user.team_member.roles %}
+                                    <ul>
+                                        {% for role in user.team_member.roles %}
+                                            <li>{{ ROLES.get(role, role) }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    Прав на сайте нет.
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    <div class="row my-3">
+        {% if user.team_status %}
+                <h4> Все статусы сотрудника</h4>
+                <div class="col-10">
+                <table class="table table-bordered table-list">
+                    <thead>
+                    <tr>
+                        <th>Статус</th>
+                        <th>Дата начала</th>
+                        <th>Дата окончания</th>
+                        <th>Комментарий</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in team_status %}
+                        {% if  item.finish == None or (item.finish and item.finish >= date_now) %}
+                            <tr>
+                            <td>{{ item.type_name()|capitalize }}</td>
+                            <td>{{ item.start.strftime('%d.%m.%Y') }}</td>
+                            {% if item.finish %}
+                                <td>{{ item.finish.strftime('%d.%m.%Y') }} </td>
+                            {% else %}
+                                <td class="text-danger">Событие не закрыто</td>
+                            {% endif %}
+                            <td>{{ item.comment }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            {% endif %}
+    </div>
+
+    <!-- добавление фото -->
+    <form method="post" action="{{ url_for('.team_photo_upload', user_id=user.id) }}"
+          enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal " id="modal-photo-upload">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-light">Загрузить фото</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <input type="file" name="photo" class="form-control">
+                        </p>
+                        <p class="help-block">
+                            Фотография появится на вашей странице после проверки.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="btn-group">
+                        <button type="submit" class="btn btn-outline-success"><i class="fa fa-plus"></i> Добавить фото</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+<script>
+    let now = new Date();
+    let c_time = now.toLocaleTimeString('ru', {'timeZone': '{{ user.team_member.timezone }}'});
+    $('#time').html('Сейчас у сотрудника ' + '<strong>' + c_time.slice(0, 5) +  '</strong>')
+</script>
+{% endblock %}

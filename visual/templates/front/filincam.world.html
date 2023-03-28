@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% set page_title = _("Filincam") %}
+{% set corpus_class = 'filincam-page' %}
+{% from '/macros/examples_look.html' import examples_look %}
+
+{% block content %}
+    <div class="topper">
+        <div class="topper__inner">
+            <div class="topper__header b-page__header">
+                {% include 'header.'+ config.JURISDICTION + '.html' %}
+            </div>
+            <section class="topper__content reality">
+                <div class="b-page__inner reality__inner">
+                    <div class='b-page__filincam-page__inner'>
+                        <h1 class="reality__head">{{ _("Filincam") }}</h1>
+                        <div class="reality__split"></div>
+                        <div class="reality__about">{{ _("Digital doubles of real estate, three-dimensional laser scanning with hi-def photoshoot.") }}</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    {{ examples_look(
+        items=demo_tours,
+        interface_color='orange',
+        container_class='examples-look_f',
+        old_style=True
+    ) }}
+
+    <section class="filincam-features">
+        <div class="filincam-features__inner  b-page__inner block__inner">
+            <div class="filincam-features__feature">
+                {{ _("FilinCam is a professional 3d camera to digitize existing premises and create their doubles in virtual space. FilinCam with the help of accompanying proprietary software creates high definition laser scan of a space and automatically builds its 3d model.") }}
+            </div>
+            <div class="filincam-features__feature">
+                {{ _("Tours, created with FilinCam use existing Biganto infrastructure and all our main features will be available there. At the moment the camera is in the final stages of testing.") }}
+            </div>
+            <div class="filincam-features__feature">
+                {{ _("We are filming commercial premises in Moscow and St. Petersburg. If you are interested in these services, please contact us, we will be happy to help!") }}
+            </div>
+        </div>
+    </section>
+
+    <section class="filincam-form">
+        <div class="b-page__inner block__inner">
+            <h1 class="filincam-form__title">
+                {{ _("Contact us") }}
+            </h1>
+            <div class="filincam-form__contacts">
+                <p>{{ _('Phone:') }} <a href="tel: +4989262-195-67">+49 (89) 262-195-67</a></p>
+                <p>{{ _('E-mail: ') }}<a class="filincam-form__contacts__email" href="mailto:info@biganto.com">info@biganto.com</a></p>
+            </div>
+        </div>
+    </section>
+{% endblock %}

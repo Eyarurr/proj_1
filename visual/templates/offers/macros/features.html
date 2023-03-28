@@ -1,0 +1,16 @@
+{% macro features(offer) %}
+    <section class="b-features b-external__section{% if offer.template_data.features|length == 1 %} b-features--center{% endif %}">
+        <div class="b-external__inner clearfix">
+            <div class="b-external__content clearfix">
+                <ul class="b-features__list">
+                    {% for feature in offer.template_data.features %}
+                        <li class="b-features__item">
+                            <span class="b-features__name">{{ feature.key }}</span>
+                            <span class="b-features__value">{{ feature.value }}{% if feature.measure %} {{ feature.measure|safe }}{% endif %}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+{% endmacro %}

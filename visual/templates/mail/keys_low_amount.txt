@@ -1,0 +1,60 @@
+<style>
+  a {
+    color: #4a90e2;
+  }
+
+  .footer-text {
+    margin: 16px 0;
+    font-size: small;
+  }
+
+  .footer-text a {
+    text-decoration: none;
+  }
+</style>
+<table id="common" align="center" border="0" cellpadding="0" cellspacing="0" width="576"
+  style="border-collapse: collapse; font-family: Arial; color: #474a4e; font-size: 16px;">
+  <tr>
+    <td>
+      <img src="{{ url_for('static', filename='public/img/header.jpg', _external=True, _scheme='https') }}" alt="">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <p>
+        Добрый день!
+      </p>
+
+      <p>
+        Для платформы «{{ product }}» заканчиваются ключи доступа.
+      </p>
+
+      <p>
+        С уважением,
+        <br>
+        команда Biganto
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <hr>
+    </td>
+  </tr>
+  <tr style="font-size: small;">
+    <td>
+      <p class="footer-text">
+        {{ _("This email was sent to you as a registered member of biganto.com. To update your emails
+                      preferences") }} <a
+          href='{{ url_for('my.index', path='settings', _external=True, _scheme='https') }}'>{{ _("click here") }}</a>.
+      </p>
+      <p class="footer-text">
+        {{ _("Biganto GmbH · Schloßschmidstr. 5 · 80639 Munich · Germany") }}<br />
+        {{ _("Registered: Munich Local Court HRB 206771 VAT ID No.: 291306762") }}<br />
+        <a href="{{ url_for('front.user_agreement', _external=True, _scheme='https') }}">{{ _("User agreement") }}</a> ·
+        <a
+          href="{{ url_for('front.privacy_policy', _external=True, _scheme='https') }}">{{ _("Privacy policy") }}</a><br />
+      </p>
+    </td>
+  </tr>
+</table>

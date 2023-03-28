@@ -1,0 +1,55 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'tours' %}
+
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+    <h2>Тур «{{ tour.title }}»</h2>
+
+    {% include('admin/tours/_tabs.html') %}
+
+    <div class="row">
+        <div class="col-sm-6 mb-3">
+            <div class="btn-group btn-group-sm">
+            {% for at in ('hour', 'day', 'month', 'year') %}
+                    <a href="?aggr_type={{ at }}" class="btn btn-outline-primary
+                    {% if at == aggr_type %} active{% endif %}">{{ at }}</a>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="col-sm-6 text-right">
+            {{ render_pagination(data, '.tour_statistics', tour_id=tour.id, user_id=user_id) }}
+        </div>
+    </div>
+
+
+    <table class="table table-bordered table-hover list">
+    <thead>
+    <tr>
+        <td>Дата</td>
+        <td>Посетителей</td>
+        <td>Сессий</td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in data.items %}
+        <tr>
+        <td>{{ row.date.strftime('%d.%m.%Y %H:%M:%S') }}</td>
+        <td>{{ row.count_uuids }}</td>
+        <td>{{ row.count_sessions }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+    {{ render_pagination(data, '.tour_statistics', tour_id=tour.id, user_id=user_id) }}
+
+{% endblock %}
+
+
+{% block tail %}
+
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% set page_title = _("About") %}
+{% set corpus_class = 'about' %}
+
+{% from '/macros/logo.html' import logo %}
+{% from '/macros/types_customers.html' import types_customers %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+    <div class="page-title">
+        <div class="b-page__inner page-title__inner">
+            <h1 class="page-title__head background-image-title-about h1">{{ page_title }}</h1>
+            <p class="page-title__about">{{ _("Biganto is an IT company founded in 2014. We specialize in software and hardware development and innovative technologies in real estate marketing. Our portfolio has dozens of successful cases, including massive projects we did for development companies, which you can find in our <a href='%(url)s'>“Gallery”</a>.", url=url_for('front.gallery')) }}</p>
+            <p class="page-title__about">{{ _("Biganto VR and 3d virtual tours allow viewers to freely and seamlessly move through the interior or exterior of a space, thus creating immersive experience. Product is unique with its combination of high image quality, ease of production and wide range of platforms it is available on, from internet browser to applications for mobile and VR devices.") }}</p>
+
+            {{ types_customers(title=False) }}
+
+            <h2 class="page-title__subtitle">{{ _("Our products") }}</h2>
+            <div class="page-title__tabs tabs-head tabs-head--js">
+                <div class="tabs-head__inner">
+                    <ul class="tabs-head__list">
+                        <li class="tabs-head__item is-active">
+                            <a href="#architects" class="tabs-head__link tabs-head__link--virtoaster">{{ _("Virtoaster") }}</a>
+                        </li>
+                        <li class="tabs-head__item">
+                            <a href="#visualizers" class="tabs-head__link tabs-head__link--filincam">{{ _("Filincam") }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="bighub-text">
+        <div class="bighub-text__inner">
+            <div class="bighub-text__text text-toogle">
+                <div class="text-toogle__value" data-name="architects">
+                    <div class="b-page__inner container-fluid">
+                        <div class="bighub-text__wrapper">
+                            <div class="bighub-text__text-wrapper">
+                                <div class="bighub-text__title">
+                                    {{ _("Virtoaster") }}
+                                </div>
+                                <div class="bighub-text__description">
+                                    {{ _("Virtoaster is a service, allowing 3d artists, interior designers and architecture visualizers to create VR and 3d virtual tours on their own, within short time frame. Using already available assets, Virtoaster is a simple and powerful tool to turn 3d models into interactive presentations of your projects.") }}
+                                </div>
+                                {% if config.JURISDICTION =='ru' %}
+                                <div class="bighub-text__description">
+                                    <span>Для создания туров самостоятельно с помощью сервиса Virtoaster создайте аккаунт на международной версии сайта: <a href="https://biganto.com">biganto.com</a></span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="bighub-text__image">
+                                <picture class="bighub-text__picture-wrapper">
+                                    <img class="bighub-text__picture" src="/static/public/img/pic-virtoaster.png" srcset="/static/public/img/pic-virtoaster@2x.png 2x,
+                                                                        /static/public/img/pic-virtoaster@3x.png 3x"
+                                        alt="{{ _("Use virtoaster") }}">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-toogle__value" data-name="visualizers">
+                    <div class="b-page__inner container-fluid">
+                        <div class="bighub-text__wrapper">
+                            <div class="bighub-text__text-wrapper">
+                                <div class="bighub-text__title">
+                                    {{ _("Filincam") }}
+                                </div>
+                                <div class="bighub-text__description">
+                                    {{ _("FilinCam is a professional 3d camera to digitize existing premises and create their doubles in virtual space. FilinCam with the help of accompanying proprietary software creates high definition laser scan of a space and automatically build its 3d model.") }}
+                                </div>
+                            </div>
+                                <div class="bighub-text__image">
+                                    <picture class="bighub-text__picture-wrapper">
+                                        <img class="bighub-text__picture" src="/static/public/img/pic-filincam.png" srcset="/static/public/img/pic-filincam@2x.png 2x,
+                                                                                /static/public/img/pic-filincam@3x.png 3x"
+                                            alt="{{ _("coming soon") }}">
+                                    </picture>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="virtoaster-adv">
+    <div class="virtoaster-adv__inner">
+        <div class="virtoaster-adv__title b-page__inner">
+            <h2 class="virtoaster-adv__head">{{ _("Advantages of Biganto tours:") }}</h2>
+        </div>
+        <ul class="virtoaster-adv__list">
+            <li class="virtoaster-adv__item-v virtoaster-adv__freedom">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image">
+                        <img src="/static/public/img/bighub/pic-freedom.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/bighub/pic-freedom@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/bighub/pic-freedom@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture virtoaster-adv__picture__freedom">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Freedom of movement") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _("In traditional virtual tours, there is only one viewpoint per room with «jumping» to another room. Our tours allow you to move smoothly through the virtual space, to navigate quickly and understand the space planning, without breaking the immersion.") }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v virtoaster-adv__freedom">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image">
+                        <img src="/static/public/img/pic-toast-cards.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/pic-toast-cards@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/pic-toast-cards@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture virtoaster-adv__picture__easy">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Easy to make") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _('Intuitive web interface and our tools saves you time and effort, it takes less than half an hour to extract the model and prepare 3d scene for rendering with them. No need to learn new software or other special training to create VR ready interactive tours, everything important is already collected on our <a href="%(url)s" class="underline">\"Tutorials\"</a> page.', url=url_for('tutorials.index')) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v virtoaster-adv__multi">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image">
+                        <img src="/static/public/img/bighub/pic-multi.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/bighub/pic-multi@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/bighub/pic-multi@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture virtoaster-adv__picture__multi">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Multiplatformity") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _("Biganto tours work on computers, tablets and smartphones. Easy access to the tour for all website visitors and wide audience coverage are provided by a demonstration via the Internet browser or offline with our applications.") }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image">
+                        <img src="/static/public/img/pic-player.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/pic-player@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/pic-player@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture virtoaster-adv__picture__functionality">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Wide functionality") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <ul>
+                                <li>{{ _("Clickable objects show detailed information about furniture items and decoration") }}</li>
+                                <li>{{ _("Three-dimensional view from above") }}</li>
+                                <li>{{ _("Measuring tape for measuring distances") }}</li>
+                                <li>{{ _("Anchor links to a specific location in the tour") }}</li>
+                                <li>{{ _("Recording and subsequent playback of the route") }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v virtoaster-adv__vr">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image virtoaster-adv__image__vr">
+                        <img src="/static/public/img/bighub/pic-vr.jpg?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/bighub/pic-vr@2x.jpg?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/bighub/pic-vr@3x.jpg?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture virtoaster-adv__picture__vr">
+                    </div>
+                    <div class="virtoaster-adv__info virtoaster-adv__info__vr">
+                        <h3 class="virtoaster-adv__caption">{{ _("VR support") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _("Any virtual Biganto tour works in VR mode. For this purpose, use Oculus Rift / Oculus Go / HTC Vive virtual reality headsets or cardboards for mobile devices.") }}</p>
+                            <div class="virtoaster-adv__line">
+                                <img src="/static/public/img/bighub/ic-oculus.svg?{{ config.get('RELEASE_VERSION') }}" class="virtoaster-adv__micro">
+                                <img src="/static/public/img/bighub/ic-vive.svg?{{ config.get('RELEASE_VERSION') }}" class="virtoaster-adv__micro">
+                                <img src="/static/public/img/bighub/ic-cardboard.svg?{{ config.get('RELEASE_VERSION') }}" class="virtoaster-adv__micro">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image virtoaster-adv__image__joint">
+                        <img src="/static/public/img/bighub/pic-joint-viewing.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/bighub/pic-joint-viewing@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/bighub/pic-joint-viewing@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture virtoaster-adv__picture__joint">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Joint viewing") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _("Explore the tour together with your friends, family or clients. Follow the leader, lead your guests, select your own path and use chat to communicate. Private room will be created in new window.") }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'my/base.html' %}
+{% set page_title_my = _('Personal account') %}
+
+{% block content_my %}
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+            {{ login_form('same_page') }}
+        </div>
+    </div>
+
+{% endblock %}

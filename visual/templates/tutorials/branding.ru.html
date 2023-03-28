@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% set page_title = _("Tour Branding") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/branding/branding-tile.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+         style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="terms" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <h2>Условия</h2>
+                <p>
+                    Брендирование туров позволяет вам убрать изображения и упоминания о Biganto и заменить их своими
+                    изображениями и текстами.
+                </p>
+                <ul>
+                    <li>Стоимость брендинга €50 в год за тур.</li>
+                    <li>Брендинг доступен только подписчикам Business тарифа Virtoaster</li>
+                    <li>
+                        Если у вас больше нет подписки на тариф «Бизнес», вы не сможете приобретать новый брендинг для туров. Существующий брендинг останется без изменений. Обратите внимание, что если у вас отсутствует подписка совсем, вы не сможете поделится туром.
+                    </li>
+                    <li>
+                        По окончанию периода действия брендинга все настройки брендирования будут сброшены на настройки
+                        по умолчанию. Вы получите об этом уведомление на электронную почту заранее, в разумный срок.
+                    </li>
+                    <li>Брендинг привязан к отдельному туру и не может быть передан в другой тур.</li>
+                    <li>Покупка осуществляется индивидуально для каждого тура.</li>
+                    <li>Вы можете сразу приобрести брендинг для тура на несколько лет.</li>
+                </ul>
+
+                <div id="preferences" class="b-anchor"></div>
+                <h2>Настройки брендинга</h2>
+                <p>
+                    Чтобы приобрести брендинг или изменить его настройки зайдите в тур из личного кабинета и перейдите
+                    на вкладку Брендинг.
+                </p>
+                <img src="/static/public/img/tutorials/branding/screenshot_branding.jpg" alt="">
+                <p>Нажмите Купить чтобы разблокировать доступ к настройкам брендинга.</p>
+                <p>Вы можете изменить следующее:</p>
+                <ul>
+                    <li>
+                        Текст над миникартой. Текст по умолчанию: “Made in biganto.com”. Оставьте строку пустой если
+                        текст не требуется.
+                    </li>
+                    <li>
+                        Поп-ап Help, текст. Текст по умолчанию: “Made in biganto.com”. Help показывается пользователю
+                        при первом просмотре тура. Оставьте строку пустой если текст не требуется.
+                    </li>
+                    <li>
+                        Поп-ап Help, логотип. Изображение по умолчанию: логотип Biganto. Help показывается пользователю
+                        при первом просмотре тура. Загрузите свой логотип или снимите чекбокс, чтобы отключить показ
+                        логотипа.
+                    </li>
+                    <li>
+                        Поп-ап Help, ссылка. Ссылка по умолчанию: отсутствует. Ссылка на вэб-сайт, по которой перейдет
+                        пользователь при клике на логотип. Оставьте строку пустой если ссылка не требуется.
+                    </li>
+                    <li>
+                        Кнопка Generate link. По умолчанию: включена. Эта опция позволяет включить или выключить кнопку
+                        “Generate link” в панели инструмента тура. Ссылки, генерируемые с помощью данной функции
+                        выглядят так: “https://biganto.com/tour/.../”. Вы можете отключить данную функцию, если вы не
+                        хотите чтобы пользователи видели Biganto в сгенерированных ссылках на тур.
+                    </li>
+                </ul>
+
+                <p>
+                    <span class="warning">Важно</span>: полностью убрать упоминание о Biganto из адресной строки тура технически нецелесообразно.
+                    Вместо этого вы можете использовать т.н. “i-frame” чтобы встроить тур на свой сайт.
+                    Вы можете сгенерировать i-frame код из списка ваших туров.
+                    Наведите мышь на тур из списка и выберите “Код для вставки”.
+                    Обратите внимание что некоторые функции в туре могут перенаправить пользователя обратно на страницу с Biganto в адресной строке.
+                </p>
+                <img src="/static/public/img/tutorials/branding/screenshot_branding_2.png" alt="">
+                <br/>
+                <br/>
+                <p>Туры с приобретенным брендингом отмечены в списке туров красной “лентой” на превью:</p>
+                <img src="/static/public/img/tutorials/branding/screenshot_branding_3.jpg" alt="">
+            </div>
+
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#terms" class="side-menu__link link-scroll-to">Условия</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#preferences" class="side-menu__link link-scroll-to">Настройки брендинга</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

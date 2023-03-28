@@ -1,0 +1,114 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'footages' %}
+
+
+{% block content %}
+<h2>Свойства съёмки # <span class="text-muted">{{ footage.id }}</span></h2>
+
+{% include('admin/footages/_tabs.html') %}
+
+
+<form method="post" enctype="multipart/form-data" class="form-horizontal" id="form-edit">
+    {{ form.csrf_token() }}
+
+    {# Если записать сюда непустое значение, то после сохранения формы пользователь останется на этой же странице #}
+    <input type="hidden" name="stay">
+
+    <div class="row mb-2">
+        <label class="text-lg-end col-lg-2">Создано</label>
+        <div class="col-lg-4"><p class="form-control-static">
+            {{ footage.created|utcinlocal|humantime(not_today=True)}}
+            {% if footage.created_by %}
+                — <a href="{{ url_for('.team_profile', user_id=footage.created_by) }}" class="team-member text-underline-hover">{{ footage.creator.name }}</a>
+            {% endif %}
+        </p></div>
+        <label class="text-lg-end col-lg-2">Принадлежит</label>
+        <div class="col-lg-4">
+            <a href="{{ url_for('.user_edit', user_id=footage.user_id) }}" class="team-member text-underline-hover">{{ footage.user.name }}</a>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="text-lg-end col-lg-2">Тип</label>
+        <div class="col-lg-4">{{ form.type(class="form-select") }}</div>
+        <label class="text-lg-end col-lg-2">Статус</label>
+        <div class="col-lg-4">{{ form.status(class="form-select") }}</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-4 offset-lg-2">
+            <button type="submit" class="btn btn-primary mb-1"><i class="fa fa-life-ring"></i> Сохранить</button>
+            <button type="button" class="btn btn-success mb-1" id="action-apply">Применить</button>
+            {% if footage.id %}
+                <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger mb-1">Удалить</a>
+            {% endif %}
+        </div>
+        <div class="col-lg-6 text-lg-end">
+            <a href="{{ url_for('.footages') }}" class="btn btn-outline-secondary">Отмена</a>
+            <a href="#modal-download" data-bs-toggle="modal" class="btn btn-outline-secondary"> <i class="fa fa-download"></i> Скачать ZIP-архив съёмки</a>
+        </div>
+    </div>
+</form>
+
+{% if footage.id %}
+    <form method="post" action="{{ url_for('.footage_delete', footage_id=footage.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-delete"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+            <h4 class="modal-title">Удалить съёмку?</h4>
+        </div>
+        <div class="modal-body">
+            {% if footage.tours %}
+                Вместе со съёмкой вы удалите и туры:
+                <ul>
+                {% for tour in footage.tours %}
+                    <li>{{ tour.title }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                У съёмки нет туров.
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+
+    <form method="get" action="{{ url_for('admin.footage_download', footage_id=footage.id) }}">
+    <div class="modal modal-zipfile" id="modal-download"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Что сейчас будет</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" style="background-image: url('/static/admin/zipfile-footage.jpg');">
+            <p>
+                Сейчас съёмка будет упакована в ZIP-архив; это займёт несколько минут.
+                Когда всё будет готово, вам на почту {{ current_user.email }} придёт письмо со ссылкой на скачивание этого архива.
+            </p>
+            <p>
+                Архив для скачивания хранится всего сутки, так что не тормозите.
+            </p>
+            <p>
+                Этот zip-файл можно потом загрузить в виде съёмки на другой сервер (например, на локальный дев-сервер).
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-danger">Погнали</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Да ну на</button>
+        </div>
+    </div></div></div>
+    </form>
+{% endif %}
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript">
+(function() {
+    $('#action-apply').click(function() {
+        $('#form-edit').find('[name=stay]').val('1').end().submit();
+    });
+})();
+</script>
+{% endblock %}

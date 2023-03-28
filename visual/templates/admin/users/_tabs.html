@@ -1,0 +1,19 @@
+{% if user.id %}
+{% set tabs = [
+    (('admin.user_edit', ), 'Свойства'),
+    (('admin.user_products', 'admin.user_product_edit'), 'Продукты'),
+    (('admin.user_billing', ), 'Биллинг'),
+    (('admin.user_products_history', ), 'История'),
+    (('admin.user_tags', ), 'Теги'),
+] %}
+
+<ul class="nav nav-tabs mb-3">
+{% for endpoints, title in tabs %}
+    <li class="nav-item">
+        <a href="{{ url_for(endpoints[0], user_id=user.id) }}" class="nav-link {% if request.endpoint in endpoints %} active {% endif %}">
+            {{ title }}
+        </a>
+    </li>
+{% endfor %}
+</ul>
+{% endif %}

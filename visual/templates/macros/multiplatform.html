@@ -1,0 +1,141 @@
+{% set browsers = ['chrome', 'firefox', 'opera', 'safari'] %}
+{% set desktops = ['windows', 'oculus', 'vive'] %}
+{% set mobile = ['apple', 'android'] %}
+
+{% macro multiplatform(has_android_app=False, has_ios_app=False, has_windowsplayer=False, android_app=None, ios_app=None, windowsplayer=None) %}
+<section class="block multiplatform">
+    <div class="b-page__inner">
+        <div class="block__head">
+            <h2 class="block__title multiplatform__head">{{ _("Multiplatformity") }}</h2>
+        </div>
+        <div class="block__content">
+            <ul class="multiplatform__list">
+                <li class="multiplatform__item multiplatform__web">
+                    <div class="multiplatform__top">
+                        <h3 class="multiplatform__title">{{ _("Browser") }}</h3>
+                        <div class="multiplatform__icons">
+                            {% for browser in browsers %}
+                            <img
+                                src="/static/public/img/icon-{{ browser }}.svg"
+                                alt="{{ browser }}"
+                                class="multiplatform__icon multiplatform__icon--browser"
+                            >
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p class="multiplatform__more">{{ _("Tours are easily accessible from any browser at any platform. Both on desktops and mobile devices.") }}</p>
+                    <div class="multiplatform__button-wrapper">
+                        <div class="multiplatform__button">
+                            <a href="{{ url_for('front.gallery') }}" class="button mini border gray">{{ _("View demo") }}</a>
+                        </div>
+                    </div>
+                </li>
+                {% if has_windowsplayer %}
+                <li class="multiplatform__item multiplatform__desktop">
+                    <div class="multiplatform__top">
+                        <h3 class="multiplatform__title">{{ _("Desktop") }}</h3>
+                        <div class="multiplatform__icons">
+                            {% for desktop in desktops %}
+                            <img
+                                src="/static/public/img/icon-{{ desktop }}.svg"
+                                alt="{{ desktop }}"
+                                class="multiplatform__icon multiplatform__icon--{{ desktop }}"
+                            >
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p class="multiplatform__more">{{ _("Windows application with TV mode and VR support via Oculus Rift or  HTC Vive and offline mode.") }}</p>
+                    <div class="multiplatform__button-wrapper">
+                        <div class="multiplatform__button">
+                            <a href="{{ windowsplayer.get('download_url') }}" class="button mini fill light-blue">{{ _("Download") }}</a>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+                {% if has_ios_app %}
+                <li class="multiplatform__item multiplatform__mobile">
+                    <div class="multiplatform__top">
+                        <h3 class="multiplatform__title">{{ _("Mobile") }}</h3>
+                        <div class="multiplatform__icons">
+                            {% for app_os in mobile %}
+                            <img
+                                src="/static/public/img/icon-{{ app_os }}.svg"
+                                alt="{{ app_os }}"
+                                class="multiplatform__icon multiplatform__icon--{{ app_os }}"
+                            >
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p class="multiplatform__more">{{ _("iOS and Android application with VR support via cardboard and offline mode.") }}</p>
+                    <div class="multiplatform__button-wrapper">
+                        <div class="multiplatform__button">
+                            <a href="{{ ios_app.get('download_url') }}" target="_blank" rel="nofollow noopener">
+                                <picture>
+                                    <source
+                                        type="image/webp"
+                                        srcset="/static/public/img/appstore.webp,
+                                                /static/public/img/appstore@2x.webp 2x,
+                                                /static/public/img/appstore@3x.webp 3x"
+                                    >
+                                    <img
+                                        width="128"
+                                        height="40"
+                                        src="/static/public/img/appstore.jpg"
+                                        alt="{{ _("Download on the App Store") }}"
+                                        srcset="/static/public/img/appstore@2x.jpg 2x,
+                                                /static/public/img/appstore@3x.jpg 3x"
+                                    >
+                                </picture>
+                            </a>
+                        </div>
+                        <div class="multiplatform__button">
+                            <a href="{{ android_app.get('download_url') }}" target="_blank" rel="nofollow noopener">
+                                <picture>
+                                    <source
+                                        type="image/webp"
+                                        srcset="/static/public/img/google-play.webp,
+                                                /static/public/img/google-play@2x.webp 2x,
+                                                /static/public/img/google-play@3x.webp 3x"
+                                    >
+                                    <img
+                                        width="128"
+                                        height="40"
+                                        src="/static/public/img/google-play.jpg"
+                                        alt="{{ _("Download on the Google Play") }}"
+                                        srcset="/static/public/img/google-play@2x.jpg 2x,
+                                                /static/public/img/google-play@3x.jpg 3x"
+                                    >
+                                </picture>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+                {% if has_android_app %}
+                <li class="multiplatform__item multiplatform__oculus">
+                    <div class="multiplatform__top">
+                        <h3 class="multiplatform__title">{{ _("Oculus") }}</h3>
+                        <div class="multiplatform__icons">
+                            <img
+                                src="/static/public/img/icon-oculus.svg"
+                                alt="oculus"
+                                class="multiplatform__icon multiplatform__icon--oculus"
+                            >
+                        </div>
+                    </div>
+                    <p class="multiplatform__more">{{ _("Applications for Standalone all-in-one VR headsets.") }}</p>
+                    <div class="multiplatform__button-wrapper">
+                        <div class="multiplatform__button">
+                            <a href="https://www.oculus.com/experiences/quest/6563777177027712/?utm_medium=share&utm_source=oculus" target="_blank" class="button mini border gray">{{ _("Oculus Quest") }}</a>
+                        </div>
+                        <div class="multiplatform__button">
+                            <a href="{{ url_for('tutorials.installing_oculus', _anchor="go") }}" class="button mini border gray">{{ _("Oculus Go") }}</a>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</section>
+{% endmacro %}

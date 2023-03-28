@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ offer.template_data.get('title', 'Biganto') }}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+
+    <meta name="language" content="ru">
+    <meta http-equiv="Content-Language" content="ru_RU">
+    <meta http-equiv="imagetoolbar" content="no">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+    <meta name="google" content="notranslate">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="robots" content="index,follow">
+    <meta name="MobileOptimized" content="480">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block styles %}{% endblock %}
+
+    <script type="text/javascript" src="/static/public/js/modernizr.min.js"></script>
+    <script type="text/javascript">
+        var BG = {};
+        window.BG = BG;
+    </script>
+</head>
+<body{% if corpus_class %} class="{{ corpus_class }}"{% endif %}>
+    {% block before %}{% endblock %}
+    {% block content %}{% endblock %}
+    {% block scripts %}{% endblock %}
+    {% block tail %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% set page_title = _("Interactive meshes") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/interactive-meshes/interactive-meshes.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+                <p>In addition to creating new Interactive objects to the tour, you can also interact with the model of the tour itself. You can select the meshes from the tour and apply Actions to them directly, e.g. you can select a chair mesh and direct viewers to the manufacturers website by clicking on that chair. These so-called “Interactive meshes” are a powerful tool to turn a tour into a creative and exciting presentation.</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_1.jpg" alt="">
+                </p>
+                <p>The process to create interactive meshes is very simple. First, open your tour in the editor and look for the "Meshes" tab, in the bottom left corner. Here you can see the full list of meshes in the tour, search meshes and filter the list to show only interactive meshes with the <img class="icon--inline" src="/static/public/img/tutorials/interactive-meshes/ic-interactive.svg" alt=""> button.</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_2.jpg" alt="">
+                </p>
+                <p>
+                    Use the text search in the bottom of the mesh list to find the required mesh.
+                    It will be highlighted in the scene once you've selected it. When you select the mesh from the list tour player will do its best to center the camera on that mesh.
+                    In rare cases the mesh can be hidden behind the corner or other object, however, so keep that in mind.
+                </p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_3.jpg" alt="">
+                </p>
+                <p>
+                    Alternatively you can pick mesh directly from the scene, using the “Pick mesh” <img class="icon--inline" src="/static/public/img/tutorials/interactive-meshes/ic-interactive.svg" alt=""> button on the top of the screen. Press the button and simply select the mesh inside the tour.
+                </p>
+                <p>To turn regular mesh into interactive simply change its mode to “interactive” in the right panel. Here you can also change the visuals of the mesh (change the regular highlight color for the mesh and the same on mouse hover, hover tooltips, whether to hide player cursor on hover, etc.).</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_4.jpg" alt="">
+                </p>
+                <p>Most Importantly you can add an action to the Mesh, such as go to a different website, play audio\video, open pop-up windows, etc. For example the action to open different website in a popup window will look like that:</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_5.jpg" alt="">
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

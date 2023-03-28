@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% set page_title = _("Tour editing mode") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/tour-editing-mode/tour-editing-mode.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <h2>Summary</h2>
+                <ol>
+                    <li>Accessing editing mode
+                    </li>
+                    <li>Edit captions</li>
+                    <li>Set and change starting position</li>
+                    <li>Record route</li>
+                    <li>Create overlays</li>
+                    <li>Create navigation panel</li>
+                    <li>Set tour options</li>
+                </ol>
+
+                <div id="more" class="b-anchor"></div>
+                <h2>Full guide</h2>
+
+                <p>“Editing mode” is an alternative mode of web player. You can travel across the space the same way you do in “View only” mode but “Editing mode” also contains a set of tools to add extra features on top of the existing tour, e.g. navigation panels, overlay objects, record routes, etc.</p>
+                <p>To enter editing mode, hover mouse over the tour in tour list and press “Edit tour”: </p>
+                <p><img src="/static/public/img/tutorials/tour-editing-mode/image_1.jpg" alt=""></p>
+                <p>Also, you can enter editing mode when editing tour assets, by pressing “Edit tour”:</p>
+                <p><img src="/static/public/img/tutorials/tour-editing-mode/image_3.png" alt=""></p>
+                <p>Instead of usual icons available in view mode you will see an alternative toolbar. These tools are intuitive and very easy to use, here is the quick guide for each one of them:</p>
+
+                <ol>
+                    <li>
+                        <p>Edit Captions<img class="icon" src="/static/public/img/tutorials/tour-editing-mode/PENCIL.svg"></p>
+                        <p>“Caption” is a small note for each point in a tour, displayed next to the toolbar in view mode. By pressing “Edit caption” you may edit single record for the point you are located at the moment. To edit all captions simultaneously you may click on a tour in your tour list, and add text description to every point in panorama list:</p>
+                        <p><img src="/static/public/img/tutorials/tour-editing-mode/image_4.jpg" alt=""></p>
+                        <p>Captions are completely optional, but can be used to improve usability of the tour. For example, they can describe what room type it is and how big it is, e.g. “Dining room (8,87 m2)”</p>
+                    </li>
+                    <li>
+                        <p>Set starting position<img class="icon" src="/static/public/img/tutorials/tour-editing-mode/TOOLBAR_START.svg"></p>
+                        <p>Starting position is a point, where user will be located when loading the tour. Set automatically, when tour assembling is complete. You can change it manually, by clicking on “Set starting position”.</p>
+                    </li>
+                    <li>
+                        <p>Record route<img class="icon" src="/static/public/img/tutorials/tour-editing-mode/TOOLBAR_WALK_WRITE.svg"></p>
+                        <p>You may record a route in the editing mode and play it later in view mode. Camera will travel across the space as if it is a live person controlling the movement, including both movement and rotation of the camera. When the route will reach its final point it will start again from the beginning. You may use this feature to show the tour on screen automatically or to make a quick showcase of main features of the space.</p>
+                        <p>To start recording, press “Record route” and the recording will start immediately.</p>
+                        <p>
+                            Start navigating through the tour. We suggest to use keyboard for more fluid movement: WASD buttons to move around and IJKL buttons to rotate the camera. To make smooth 180 degree turns you can use corresponding buttons in the toolbar: “Turn back clockwise/counterclockwise”
+                            <img class="icon" src="/static/public/img/tutorials/tour-editing-mode/TOOLBAR_WALK_WRITE_TURN_1.svg">
+                            <img class="icon" src="/static/public/img/tutorials/tour-editing-mode/TOOLBAR_WALK_WRITE_TURN_2.svg">
+                        </p>
+                        <p>
+                            You may pause recording anytime and make other changes in edit mode. Next time you press “Route” icon you will be returned to the last known position of your route. You can always discard the recording by pressing “Cancel” icon
+                            <img class="icon" src="/static/public/img/tutorials/tour-editing-mode/TOOLBAR_WALK_WRITE_CANCEL.svg">
+                        </p>
+                        <p>To finish the recording, press “Save route” icon, preview menu will pop-up. </p>
+                        <p><img src="/static/public/img/tutorials/tour-editing-mode/image_5.jpg" width="600" alt=""></p>
+                        <p>From this menu you may delete pauses made when recording, review, save or delete recorded route.</p>
+                    </li>
+                    <li>
+                        <p>Create overlay<img class="icon" src="/static/public/img/tutorials/tour-editing-mode/TOOLBAR_OVERLAYS.svg"></p>
+                        <p>Overlay is a 3d object which exist in the same space as 3d model of a tour. It can be used to draw attention to different areas (icons, text messages, information notes, etc.) or to perform different actions (play audio/video, open link, go to different tour, etc.).</p>
+                        <p>Please, see <a href='{{ url_for('tutorials.creating_interactive_objects') }}'>overlay guide</a> for more details.</p>
+                    </li>
+                    <li>
+                        <p>Navigator<img class="icon" src="/static/public/img/tutorials/tour-editing-mode/TOOLBAR_NAVIGATOR.svg"></p>
+                        <p>Navigation tool is a panel for quick transition between distant locations in your tour. You can add any point to navigation panel for quick access.</p>
+                        <p>To add current point to navigation panel, press Navigation icon and select “Add” from dropdown menu. To see the list of existing points in Navigation panel, press Navigation icon and select “List”. From here you can also add and edit caption for each point in the list (caption inside Navigation panel only).</p>
+                    </li>
+                    <li>
+                        <p>Set options<img class="icon" src="/static/public/img/tutorials/tour-editing-mode/TOOLBAR_OPTIONS.svg"></p>
+                        <p>Tour options contain some of the color and minimap setting you may change to your taste. You may press colored icons to change colors and transparency in RGBa space or use direct input (first three numbers define color, fourth number define transparency).</p>
+                        <p>Map options define the size of the map when loading the tour. By default map is set to “Collapsed” - medium size of the map. You must take into account that changing sizes of map viewport will not change the resolution of map image.</p>
+                    </li>
+                </ol>
+            </div>
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#short" class="side-menu__link link-scroll-to">Summary</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#more" class="side-menu__link link-scroll-to">Full guide</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

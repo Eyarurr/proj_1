@@ -1,0 +1,72 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'statistics' %}
+
+
+{% block head %}
+    <script src="/static/public/js/moment/moment.js?{{ config.get('RELEASE_VERSION') }}"></script>
+    <script src="/static/public/js/daterangepicker.js?{{ config.get('RELEASE_VERSION') }}"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+{% endblock %}
+
+{% block content %}
+<h1>Статистика сервиса</h1>
+
+{% include('admin/statistics/_tabs.html') %}
+
+<form method="get" class="row table-filters" id="form-filters">
+<div class="col-auto">
+    <div class="input-group input-group-sm">
+        <span class="input-group-text">Отобрать</span>
+    <input type="text" name="daterange" value="{{ daterange }}" class="form-control">
+    </div>
+</div>
+ <div class="col text-start">
+     <button type="submit" class="btn btn-primary btn-sm">Ok</button>
+ </div>
+</form>
+
+{% if top20 %}
+    <table class="table table-list table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th class="t">Юзер</th>
+            <th class="n">Посетителей</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user, uniq in top20 %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td class="t">
+                <a href="{{ url_for('.tours', user_id=user.id) }}">{{ user.name }}</a>
+            </td>
+            <td class="n">
+                {{ uniq }}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+{% else %}
+    <div class="alert alert-info">За эту дату ни у одного тура не было трафика.</div>
+{% endif %}
+
+{% endblock %}
+
+
+{% block tail %}
+<script type="text/javascript">
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            locale: {
+                format: 'DD.MM.YYYY'
+            }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            console.log($('input[name="daterange"]').val())
+            $('#form-filters').submit();
+        });
+    });
+</script>
+{% endblock %}
+</script>

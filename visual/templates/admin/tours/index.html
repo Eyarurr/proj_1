@@ -1,0 +1,433 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'footages' if footage_id else 'tours' %}
+
+
+{% macro tour_resolutions(tour) -%}
+    {%- if tour.footage.type == 'outside' -%}
+        {%- for res in tour.footage.meta.get('resolutions') -%}
+            {{- res|join('×') }}{% if not loop.last %}, {% endif -%}
+        {%- endfor -%}
+    {%- else -%}
+        {{- tour.footage.meta.get('resolutions')|sort|join(', ') -}}
+    {%- endif -%}
+{%- endmacro %}
+
+{% block head %}
+<style type="text/css">
+    .gallery .not-ready {
+        position: absolute; top: 50%; left: 50%; margin-left: -20px; margin-top: -20px;
+        color: #f00; text-shadow: 0 0 20px #000;
+    }
+    .problems {
+        font-size: 1.2em;
+        background: red;
+        padding: 1px 2px;
+        -radius: 2px;
+        color: yellow;
+    }
+    ul.gallery .actions {
+        right: 45px;
+    }
+    ul.gallery .status {
+        position: absolute;
+        right: 6px;
+        bottom: 6px;
+    }
+    .bg-state { font-size: .8em; margin: 5px 0 3px; }
+</style>
+{% endblock %}
+
+
+{% block content %}
+    <h1>
+        {% if user %}
+            Туры юзера {{ user.name }} <span class="text-muted">({{ tours.total }})</span>
+        {% else %}
+            Туры <span class="text-muted">({{ tours.total }})</span>
+        {% endif %}
+
+        <div class="float-lg-end">
+            {% if user %}
+                <a class="btn btn-sm btn-success" href="{{ url_for('.user_edit', user_id=user.id) }}"><i class="fas fa-user"></i> Юзер</a>
+                <a class="btn btn-sm btn-success" href="{{ url_for('.footages', user_id=user.id) }}"><i class="fas fa-user"></i> Съёмки</a>
+                <a class="btn btn-sm btn-success" href="{{ url_for('.multitours', user_id=user.id) }}"><i class="fas fa-user"></i> Мультитуры</a>
+                <a href="" data-bs-toggle="modal" class="btn btn-sm btn-success" data-bs-target="#modal-tour-create"><i class="fas fa-plus-circle"></i> Создать тур</a>
+            {% elif footage %}
+                <a href="#" data-bs-toggle="modal" class="btn btn-sm btn-success" data-bs-target="#modal-tour-create-from-footage"><i class="fas fa-plus-circle"></i> Создать тур из съёмки</a>
+            {% endif %}
+        </div>
+    </h1>
+    {% if footage_id %}
+        {% include('admin/footages/_tabs.html') %}
+    {% endif %}
+
+<!-- фильтры -->
+    <form class="table-filters">
+        <div class="row justify-content-between ">
+            <div class="col-lg-auto">
+                <div class="row justify-content-start">
+                    <div class="col-lg-auto mb-1 mb-lg-0">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Тип</span>
+                            {{ filters.type(class='form-select form-select-sm') }}
+                        </div>
+                    </div>
+                    <div class="col-lg-auto mb-1 mb-lg-0">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Статус</span>
+                            {{ filters.status(class='form-select form-select-sm') }}
+                        </div>
+                    </div>
+                    <div class="col-lg-auto mb-1 mb-lg-0">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Фичи</span>
+                            {{ filters.feature(class='form-select form-select-sm') }}
+                        </div>
+                    </div>
+                    <div class="col-lg-auto mb-1 mb-lg-0">
+                        {{ filters.search(class='form-control form-control-sm input-group', placeholder='Поиск по названию', title='А ещё тут можно ввести # и ID тура для быстрого перехода по ID или /частьименипапки, чтобы поискать по названиям папкок.') }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg text-end">
+                <button type="submit" class="btn btn-sm btn-primary">Показать</button>
+            </div>
+        </div>
+<!-- фильтры конец-->
+
+<!--Управление папками -->
+        {% if user %}
+        <div class="row mt-1 pt-1 border-top">
+            <div class="col-auto">
+                <div class="col-lg-1 text-lg-end">
+                    {% if filters.folder_id.data == '' %}
+                        <i class="fas fa-folder align-middle"></i>
+                    {% else %}
+                        <i class="fas fa-folder-open align-middle"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 px-0 mb-1 mb-lg-0">
+                {{ filters.folder_id(class='form-select form-select-sm', onchange='this.form.submit()') }}
+            </div>
+            <div class="col-auto px-1">
+                <div class="btn-group btn-group-sm">
+                    <a href="" data-bs-toggle="modal" data-bs-target="#modal-folder-create" class="btn btn-outline-success btn-sm">Создать</a>
+                    {% if filters.folder_id.data not in ('', '0') %}
+                        <a href="" data-bs-toggle="modal" data-bs-target="#modal-folder-edit" class="btn btn-primary btn-sm">Изменить</a>
+                        <a href="#modal-folder-pass" data-bs-toggle="modal" data-bs-target="#modal-folder-pass" class="btn btn-warning btn-sm">Передать</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </form>
+<!--Управление папками end-->
+
+    {% if tours.total == 0 %}
+        <div class="text-info">
+            Туров не найдено.
+        </div>
+    {% else %}
+
+    <!--Управление турами -->
+    <div class="table-responsive-lg">
+    <table class="table table-bordered table-hover">
+    <thead class="table-light">
+    <tr>
+        <th class="text-nowrap">
+            <a href="{{ url_for('.tours', user_id=user_id, **filters.as_dict(sort='created')) }}">Создано</a>
+            {% if filters.sort.data == 'created' %}<i class="fas fa-sort-down"></i>{% endif %}
+        </th>
+        <th title="Статус съёмки">S</th>
+        <th >Тип</th>
+        <th>
+            {% if user %}
+                <a href="{{ url_for('.tours', user_id=user_id, footage_id=footage_id, **filters.as_dict(sort='folder')) }}">Папка</a>
+            {% else %}
+                <a href="{{ url_for('.tours', user_id=user_id, footage_id=footage_id, **filters.as_dict(sort='folder')) }}">Пользователь / Папка</a>
+            {% endif %}
+            {% if filters.sort.data == 'folder' %}<i class="fas fa-sort-down"></i>{% endif %}
+        </th>
+        <th >
+            <a href="{{ url_for('.tours', user_id=user_id, footage_id=footage_id, **filters.as_dict(sort='title')) }}">Название</a>
+            {% if filters.sort.data == 'title' %}<i class="fas fa-sort-down"></i>{% endif %}
+            <div class="float-end">Фичи</div>
+        </th>
+        <th title="Максимальное разрешение. Наведите мышку, чтобы посмотреть все разрешения."><i class="fas fa-arrows-alt"></i></th>
+        <th class="border border-r">Точек</th>
+        <th title="Сегодня / всего">Трафик</th>
+        <th>Управление</th>
+    </tr>
+    </thead>
+    <tbody >
+    {% for tour in tours.items %}
+        <tr >
+            <td>{{ tour.created|utcinlocal|humantime }}</td>
+            <!--Иконки состояния тура -->
+            <td>
+                <span class="text-light">{{ footage_status_icon(tour.footage) }}</span>
+            </td>
+            <!--Иконки тип тура -->
+            <td >
+                {{ footage_type_icon(tour.footage.type) }}
+            </td>
+            <td >
+                {% if not user %}
+                    <a href="{{ url_for('.tours', user_id=tour.user_id, **filters.as_dict()) }}">{{ tour.user.name -}}</a>
+                {% endif %}
+                {% if not user and tour.folder %}
+                    /
+                {% endif %}
+                {% if tour.folder %}
+                    <a href="{{ url_for('.tours', user_id=tour.user_id, **filters.as_dict(folder_id=tour.folder_id)) }}">{{ tour.folder.title }}</a>
+                {% endif %}
+                {% if tour.password_hash %}<i class="fa fa-key" title="Тур запаролен"></i>{% endif %}
+                {% if tour.user.deleted %}<i class="fa fa-dizzy text-warning" title="Юзер самоудалился"></i>{% endif %}
+            </td>
+            <!-- название -->
+            <td>
+                <div class="float-lg-end">
+                    {% with problems = tour.check() %}
+                        {% if problems %}
+                            <i class="fas fa-exclamation-triangle problems" title="Содержит {{ problems|length }} ошибок"></i>
+                        {% endif %}
+                    {% endwith %}
+                    {{ tour_features(tour) }}
+                    {{ tour_paid_features(tour) }}
+                    </div>
+
+                {% if tour.hidden %}<i class="fas fa-eye-slash" title="Закрыто"></i>{% endif %}
+                {{ tour.title or '<i>Без названия</i>'|safe }}
+
+                {% if tour.footage.status == 'processing' %}
+                    {% if tour.id in jobs %}
+                        <div class="build-status">{{ jobs[tour.id].meta.get('wtf', '') }}</div>
+                    {% endif %}
+                {% elif tour.footage.status == 'loading' %}
+                    {% if tour.footage.meta.get('_loading', {}).get('build_errors') %}
+                        <div class="build-errors">{{ tour.footage.meta._loading.build_errors|join('<br>') }}</div>
+                    {% endif %}
+                {% endif %}
+            </td>
+
+            {% if tour.footage.meta.get('resolutions') %}
+                <td title="{{ tour_resolutions(tour) }}" >
+                    {% if tour.footage.type == 'outside' %}
+                        {{ tour.footage.max_res[0] }}
+                    {% else %}
+                        {{ tour.footage.max_res }}
+                    {% endif %}
+                </td>
+            {% else %}
+                <td ></td>
+            {% endif %}
+
+            <td >
+                {{ if_value(tour.footage.count_panoramas()) }}
+            </td>
+
+            <td >
+                {{ tour.traffic_today or '—' }} / {{ tour.traffic_total or '—' }}
+            </td>
+<!--Иконки управления тура -->
+            <td class="text-lg-end text-light text-nowrap">
+                {% if tour.footage.status in ['testing', 'published', 'banned'] %}
+                    <a href="{{ url_for('front.tour', tour_id=tour.id) }}" class="btn btn-sm btn-info mb-1" title="Посмотреть"><i class="text-light fas fa-eye"></i></a>
+                {% endif %}
+                {% if tour.footage.type in ['virtual', 'real'] and tour.footage.status in ['testing', 'published', 'banned'] %}
+                    <a href="{{ url_for('front.tour_edit', tour_id=tour.id) }}" class="btn btn-sm btn-primary mb-1" title="WISYWIG-редактор"><i class="fas fa-paint-brush"></i></a>
+                {% endif %}
+                <a href="{{ url_for('.tour_edit', tour_id=tour.id, user_id=user_id) }}" class="btn btn-sm btn-primary mb-1" title="Свойства тура"><i class="far fa-edit"></i></a>
+                {% if tour.footage.status == 'loading' and tour.footage.type == 'outside' %}
+                    <a href="{{ url_for('.tour_create_outside', tour_id=tour.id, user_id=tour.user_id) }}" class="btn btn-sm btn-success" title="Сборщик">
+                        <i class="fas fa-wrench"></i>
+                    </a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </div>
+
+    {{ render_pagination(tours, '.tours', user_id=user_id, **filters.as_dict()) }}
+
+    <p class="help-block">
+        Иконкой <i class="fas fa-exclamation-triangle problems"></i> помечаются туры с проблемами в метаданных. На этой странице не проверяются файлы туров,
+        поэтому если войти в свойства «беспроблемного» тура, то можно обнаружить в нём новые проблемы (например, неверное разрешение или отсутствие
+        каких-нибудь файлов).
+    </p>
+{% endif %}
+
+{% if user %}
+    <!-- Модальное окно создать папку -->
+    <form method="post" action="{{ url_for('.folder_edit', user_id=user.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal" id="modal-folder-create"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Создать папку</h4>
+            </div>
+            <div class="modal-body">
+                <label class="control-label">Название</label>
+                <input type="text" name="title" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-success">Создать</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            </div>
+        </div></div></div>
+    </form>
+    <!-- Модальное окно создать папку конец-->
+
+<div id="modal-tour-create" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Выберите тип тура:</h4>
+            <button type="button" class="btn-close" aria-label="Закрыть" data-bs-dismiss="modal"></button>
+        </div><div class="modal-body">
+        <div class="row mb-2">
+            <div class="col-sm-3">
+                <a href="{{ url_for('.tour_create_inside', user_id=user_id, folder_id=filters.folder_id.data) }}" class="btn btn-lg btn-success">
+                    <i class="fas fa-laptop"></i>
+                    Виртуальный
+                </a>
+            </div>
+            <div class="col-sm-9">
+                Будет создана пустая съёмка типа virtual и тур в статусе testing. Все его компоненты можно заливать вручную.
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-3">
+                <a href="{{ url_for('.tour_create_outside', user_id=user_id, folder_id=filters.folder_id.data) }}" class="btn btn-lg btn-success">
+                    <i class="fas fa-globe"></i> Outside
+                </a>
+            </div>
+            <div class="col-sm-9">
+                Запустить сборщик outside-туров.
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-3">
+                <a href="{{ url_for('.tour_upload', user_id=user_id, folder_id=filters.folder_id.data) }}" class="btn btn-lg btn-success">
+                    <i class="fas fa-file-archive"></i> Загрузить ZIP
+                </a>
+            </div>
+            <div class="col-sm-9">
+                Съёмка и тур будут созданы из zip-файла с исходниками.
+                <a href="javascript:void($('#zip-sample').toggle())" class="ajax text-underline-hover">Показать пример содержимого архива архива</a>.
+                        <pre id="zip-sample" class="mt-2" style="display:none;"><code>    footage/        <--- здесь лежат все ассеты съёмки:
+        1024/           <--- например, это - директория с панорамами 1024px
+        1536/
+        256/
+        512/
+        maps/           <--- тут планировки лежат
+        models/         <--- тут модель, mtl и текстурные карты
+        _meta.json  <--- метаданные съёмки в JSON
+    tour/           <--- а здесь все файлы тура
+        ...             <--- у тебя тут скорее всего будет пусто
+        _meta.json  <--- метаданные тура в JSON</code></pre>
+            </div>
+        </div>
+    </div>
+</div></div></div>
+
+{% if folder %}
+    <form method="post" action="{{ url_for('.folder_edit', user_id=user.id, folder_id=folder.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-folder-edit"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Изменить папку</h4>
+        </div>
+        <div class="modal-body">
+            <label class="control-label">Название</label>
+            <input type="text" name="title" class="form-control" value="{{ folder.title }}">
+            <p class="text-muted">
+                Чтобы удалить папку, сотрите название.
+                {% if tours.total %}Все туры из удалённой папки переместятся в корневую папку.{% endif %}
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-success">Сохранить</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+
+    <form method="post" action="{{ url_for('.folder_pass', user_id=user.id, folder_id=folder.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-folder-pass">
+        <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Передать папку другому юзеру</h4>
+        </div>
+        <div class="modal-body">
+            <label>Кому:</label>
+            <select name="user_id" class="form-control"></select>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-success">Сохранить</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+{% endif %}
+{% endif %}
+
+{% if footage_id %}
+<div class="modal" id="modal-tour-create-from-footage"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h4 class="modal-title">Создание тура</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="control-label">Выберите папку</label>
+            <div class="row">
+                <div class="col-xs-12">
+                    <select class="form-control" name="folder_id">
+                        {% for f in footage.user.folders %}
+                            <option value="{{ f.id }}">{{ f.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary create-from-footage">Создать</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+{% endif %}
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript">
+    {% if footage_id %}
+        $('.create-from-footage').on('click', function () {
+            var folder_id = $('[name=folder_id]').val();
+            window.location = '/admin/footages/{{ footage_id }}/tours/new/?folder_id=' + folder_id
+        });
+    {% endif %}
+
+    let $modalMove = $('#modal-folder-pass'), $selectUserId = $('#modal-folder-pass [name=user_id]');
+    $modalMove.on('shown.bs.modal', function() {
+        fetch(
+            apiUrl('users.getBadges')
+        ).then(result => {
+            return result.json();
+        }).then(users => {
+            $selectUserId.empty();
+            for(let user of users) {
+                let $option = $('<option>').attr('value', user.id).text(user.name + ' (' + user.email + ')');
+                $selectUserId.append($option);
+            }
+            $selectUserId.trigger('change');
+        });
+    });
+
+</script>
+{% endblock %}

@@ -1,0 +1,465 @@
+{% extends 'admin/base.html' %}
+
+{% set menu_current = 'tours' %}
+
+
+{% macro ul_usage(offers) %}
+    <ul>
+        {% for offer in usage %}
+            <li>
+                {{ offer|offer_type_label('cnt') }}
+                <a href="{{ url_for('.multitour_edit', offer_id=offer.id) }}">{{ offer.title }}</a>
+                <a href="{{ url_for('front.offer', offer_id=offer.id) }}" class="btn btn-sm btn-info"
+                   title="Посмотреть" target="_blank">
+                    <i class="fa fa-share"></i>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% block content %}
+    {{ super() }}
+    <h2>
+        {% if tour.id %} Тур «{{ tour.title or '' }}» {% else %} Создать тур {% endif %}
+        <span class="text-muted">{{ tour.id }}</span>
+    </h2>
+
+    {% include('admin/tours/_tabs.html') %}
+
+    <form method="post" enctype="multipart/form-data" class="form-horizontal" id="form-edit">
+        {{ form.csrf_token }}
+        <input type="hidden" name="redirect">
+
+        <div class="row mb-3">
+            <div class="col-lg-10 offset-lg-2">
+                <div class="alert alert-danger alert-container d-none">
+                    <strong>Внимание!</strong> <span>При переводе тура в статус «Загрузка» будут удалены модели, материалы, скайбоксы и минимапы.</span>
+                </div>
+            </div>
+{# начало свойства #}
+            <div class="row mb-2">
+            <label class="col-lg-2 text-lg-end">Съёмка:</label>
+            <div class="col-lg-6">
+                <p class="">
+                    {{ tour.footage|footage_type_label }}
+                    {% with size = tour.footage.total_size() %}
+                        {% if size %}{{ size|filesizeformat }}{% endif %}
+                    {% endwith %}
+                    <a href="{{ url_for('.footage_edit', footage_id=tour.footage_id) }}" class="text-underline-hover">
+                        #{{ tour.footage_id }}
+                        {{ tour.footage.created|utcinlocal|humantime(not_today=True) }}
+                    </a>
+                    {% if tour.footage.created_by %}
+                        — <a href="{{ url_for('.team_profile', user_id=tour.footage.created_by) }}"
+                            class="text-underline-hover">{{ tour.footage.creator.name }}</a>
+                    {% endif %}
+            </div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-lg-2 text-lg-end ">Статус съёмки:</label>
+                <div class="col-lg-5">{{ form.footage_status(class='form-select') }}</div>
+                <label class="col-lg-1">Папка:</label>
+                <div class="col">{{ form.folder_id(class='form-select') }}</div>
+            </div>
+            {% if tour.footage.tours|length > 1 %}
+                <div class="col-lg-10 offset-lg-2">
+                    <h4>Другие туры, использующие эту съёмку:</h4>
+                    <ul>
+                        {% for t in tour.footage.tours if t.id != tour.id %}
+                            <li>
+                                <a href="{{ url_for('.tours', user_id=t.user_id) }}">{{ t.user.name }}</a>
+                                {% if t.folder_id %} /
+                                    <a href="{{ url_for('.tours', user_id=t.user_id, folder_id=t.folder_id) }}">{{ t.folder.title }}</a>{% endif %}
+                                / <a
+                                    href="{{ url_for('.tour_edit', tour_id=t.id, user_id=t.user_id) }}">{{ t.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <p class="help-block">Изменение статуса съёмки коснётся всех этих туров.
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Владелец:</label>
+            <div class="col-4">
+                <a href="{{ url_for('.tours', user_id=tour.user_id) }}" class="text-underline-hover">{{ tour.user.name }}</a>
+            </div>
+
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-lg-2 text-lg-end">Тур создан:</label>
+            <div class="col-lg-5">
+                <p class="form-control-static">
+                    {% if tour.created %}
+                        {{ tour.created|utcinlocal|humantime(not_today=True) }}
+                        {% if tour.created_by %}
+                            — <a href="{{ url_for('.team_profile', user_id=tour.created_by) }}"
+                                class="text-underline-hover">{{ tour.creator.name }}</a>
+                        {% endif %}
+                        {% if tour.updated != tour.created %}
+                            / изменен {{ tour.updated|utcinlocal|humantime(not_today=True) }}
+                        {% endif %}
+                    {% else %}
+                        Ещё не создано
+                    {% endif %}
+
+            </div>
+            <div class="col-lg-auto form-check">
+                <label class="form-check-label" title="Тур видит клиент, но не видят другие люди в интернете.">
+                    {{ form.hidden(class="form-check-input") }}
+                    Тур скрыт
+                </label>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Название:</label>
+            <div class="col-lg-10">{{ form.title(class='form-control') }}</div>
+        </div>
+
+        {% if tour.preview %}
+            <div class="row mb-3">
+                <div class="col-lg-4 offset-lg-2">
+                    <a href="{{ tour.screen.url }}" target="_blank"
+                       title="{{ tour.screen.width }}x{{ tour.screen.height }}px">
+                        <img src="{{ tour.preview.url }}" width="{{ tour.preview.width }}"
+                             height="{{ tour.preview.height }}">
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Обложка:</label>
+            <div class="col-lg-5">
+                {{ form.screen(class='form-control') }}
+
+            </div>
+            <div class="col-lg-5">
+                <span class="text-muted">Картинка не мельче {{ Tour.screen.width }}x{{ Tour.screen.height }}px.
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">В галерее:</label>
+            <div class="col-lg-5">
+                {{ form.gallery_admin(class='form-select') }}
+            </div>
+            <div class="col-lg-5">
+                {% if not tour.gallery_user %}
+                    <strong>Пользователь запретил показывать тур в галерее</strong>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Пароль:</label>
+            <div class="col-lg-5">{{ form.password(class='form-control', placeholder='Есть, можно задать новый' if tour.password_hash else 'Не задан',type= 'text',autocomplete="off") }}</div>
+            <div class="col-lg-2 form-check">
+                <label class="form-check-label">
+                    {{ form.password_clear(class="form-check-input") }}
+                    Снять пароль
+                </label>
+            </div>
+            <div class="col-lg-3 form-check">
+                <label class=" form-check-label">
+                    {{ form.password_in_url(class="form-check-input") }}
+                    Пароль можно передавать в URL
+                </label>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Проверка:</label>
+            <div class="col-lg-10">
+                {% with problems = tour.check(True) %}
+                    {% if problems %}
+                        <ul>
+                            {% for problem in problems %}
+                                <li class="text-danger">{{ problem }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        Всё в порядке!
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-lg-auto offset-lg-2">
+                <button type="submit" class="btn btn-primary mb-1 mb-lg-0"><i class="fa fa-life-ring"></i> Сохранить</button>
+                <button type="button" class="btn btn-success text-light mb-1 mb-lg-0" id="action-apply">Применить</button>
+                <a href="{{ url_for('.tours', user_id=user_id) }}" class="btn btn-secondary mb-1 mb-lg-0">Отмена</a>
+            </div>
+            <div class="col-lg text-sm-end">
+                {% if tour.id %}
+                    <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger ">Удалить тур</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg col-lg-offset-2 text-lg-end">
+                <a href="#modal-download" data-bs-toggle="modal" class="btn btn-outline-secondary mb-1 mb-lg-0" data-bs-target="#modal-download">Скачать в .ZIP</a>
+                <a href="#modal-copy" data-bs-toggle="modal" class="btn btn-outline-secondary mb-1 mb-lg-0" data-bs-target="#modal-copy">Скопировать</a>
+                <a href="#modal-move" data-bs-toggle="modal" class="btn btn-outline-secondary mb-1 mb-lg-0" data-bs-target="#modal-move">Передать другому юзеру</a>
+                <a href="#modal-paid-features" data-bs-toggle="modal" class="btn btn-outline-secondary mb-1 mb-lg-0" data-bs-target="#modal-paid-features">Платные фичи</a>
+            </div>
+        </div>
+    </form>
+
+
+    {% if usage %}
+        <h2>Тур используется в презентациях:</h2>
+        {{ ul_usage(usage) }}
+    {% endif %}
+
+{% endblock %}
+
+
+{% block tail %}
+
+    {% if tour.id %}
+        <form method="post" action="{{ url_for('.tour_delete', tour_id=tour.id, user_id=user_id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-delete">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Удалить тур?</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% if usage %}
+                                Этот тур используется в презентациях:
+                                {{ ul_usage(usage) }}
+                                Если его сейчас удалить, он исчезнет из них. Кстати, отменить удаление
+                                    невозможно.
+                            {% else %}
+                                Этот тур нигде не используется. Отменить удаление невозможно.
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Да и пёс с ним</button>
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Нет, не надо</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <form method="get" action="{{ url_for('.tour_download', tour_id=tour.id, user_id=user_id) }}">
+            <div class="modal modal-zipfile" id="modal-download">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Что сейчас будет</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                        </div>
+                        <div class="modal-body " style="background-image: url('/static/admin/zipfile-tour.jpg');">
+
+                                <p class="text-lg-center">Сейчас тур вместе со своей съёмкой будут упакованы в ZIP-архив; это займёт несколько
+                                минут.
+                                Когда всё будет готово, вам на почту {{ current_user.email }} придёт письмо со ссылкой
+                                на скачивание этого архива.
+
+
+                                Архив для скачивания хранится всего сутки, так что не тормозите.
+
+
+                                Этот zip-файл можно потом загрузить в виде тура на другой сервер (например, на локальный
+                                дев-сервер).</p>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Погнали</button>
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Да ну на</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form method="post" action="{{ url_for('.tour_copy', tour_id=tour.id, user_id=user_id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-copy">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Скопировать тур</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            Название нового тура:
+                            <input type="text" name="title" class="form-control" value="{{ tour.title }} copy">
+                        </div>
+                        <div class="modal-body">
+                            Папка:
+                                <select name="folder_id" class="form-control">
+                                    <option value="0">В корень</option>
+                                    {% for f in tour.user.folders %}
+                                        <option value="{{ f.id }}" {% if f.id == tour.folder_id %}
+                                                selected {% endif %}>{{ f.title }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label>
+                                    <input type="checkbox" name="copy_meta" value="1" checked> копировать метаданные
+                                </label>
+
+
+                                <label>
+                                    <input type="checkbox" name="copy_footage" value="1"> копировать съёмку
+                                </label>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Ok</button>
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <form method="post" action="{{ url_for('.tour_move', tour_id=tour.id, user_id=user_id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-move">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Передать тур другому юзеру</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                        </div>
+                        <div class="modal-body">
+                            <select name="user_id" class="form-control"></select>
+                            <br>
+                            <select name="folder_id" class="form-control"></select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Ok</button>
+                            <button type="button" class="btn" data-bs-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <form method="post" action="{{ url_for('.tour_paid_features', tour_id=tour.id, user_id=user_id) }}"
+              class="form-horizontal">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-paid-features">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Платные фичи</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% for feature in tour.paid_features_rel %}
+                                <div class="row mb-3">
+                                    <label class="col-lg-4">{{ feature.feature }}</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" name="paid_till.{{ feature.feature }}"
+                                               value="{{ feature.paid_till.strftime('%Y-%m-%d %H:%M:%S') }}"
+                                               class="form-control" placeholder="YYYY-MM-DD HH:MM:SS">
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="row mb-3">
+                                <div class="col-lg-4"><input type="text" name="new.feature" class="form-control"
+                                                             placeholder="Добавить фичу"></div>
+                                <div class="col-lg-8"><input type="text" name="new.paid_till" class="form-control"
+                                                             placeholder="Срок действия, YYYY-MM-DD HH:MM:SS"></div>
+                            </div>
+                            <p class="help-block">
+                                Чтобы удалить существующую фичу, сотрите её срок действия.
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                            <button type="button" class="btn" data-bs-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+
+    <script type="text/javascript">
+        (function () {
+            var Tour = {
+                id: {{ tour.user_id }},
+                folder_id: {{ tour.folder_id or 'null' }},
+                user_id: {{ tour.user_id }}
+            };
+
+            $('#action-apply').click(function () {
+                $('#form-edit').find('[name=redirect]').val('.tour_edit').end().submit();
+            });
+
+            var selectStatus = $('select[name=status]'),
+                statusValue = selectStatus.children(":selected").val(),
+                alertContainer = $('.alert-container'),
+                alertValue = alertContainer.children('span');
+
+            selectStatus.change(function () {
+                var self = $(this),
+                    statusNew = self.children(":selected").val();
+
+                if (statusValue === 'testing' && statusNew === 'loading') {
+                    alertValue.text('Все файлы тура будут удалены, сохранятся только исходники тура и метаданные.');
+                    alertContainer.removeClass('hidden');
+                } else if (statusValue === 'testing' && statusNew === 'published') {
+                    alertValue.text('Исходники тура будут удалены. Пожалуйста убедитесь, что тур протестирован и пересобираться не будет.');
+                    alertContainer.removeClass('hidden');
+                } else if (statusValue === 'published' && statusNew === 'loading') {
+                    alertValue.text('Все файлы тура будут удалены, сохранятся только метаданных.');
+                    alertContainer.removeClass('hidden');
+                } else {
+                    alertContainer.addClass('hidden');
+                }
+            });
+
+            let $modalMove = $('#modal-move'), $selectUserId = $('#modal-move [name=user_id]'),
+                $selectFolderId = $('#modal-move [name=folder_id]');
+
+            $modalMove.on('shown.bs.modal', function () {
+                fetch(
+                    apiUrl('users.getBadges', {order: 'name'})
+                ).then(result => {
+                    return result.json();
+                }).then(users => {
+                    $selectUserId.empty();
+                    for (let user of users) {
+                        let $option = $('<option>').attr('value', user.id).text(user.name + ' (' + user.email + ')');
+                        if (user.id === Tour.user_id) {
+                            $option.attr('selected', true);
+                        }
+                        $selectUserId.append($option);
+                    }
+                    $selectUserId.trigger('change');
+                });
+            });
+
+            $selectUserId.on('change', () => {
+                fetch(
+                    apiUrl('users.getFolders', {user_id: $selectUserId.val()})
+                ).then((result) => {
+                    return result.json();
+                }).then(folders => {
+                    $selectFolderId.empty();
+                    $selectFolderId.append($('<option>').attr('value', '').text('Корень'));
+                    for (let folder of folders) {
+                        $selectFolderId.append($('<option>').attr('value', folder.id).text(folder.title));
+                    }
+                });
+            });
+
+        })();
+    </script>
+
+{% endblock %}

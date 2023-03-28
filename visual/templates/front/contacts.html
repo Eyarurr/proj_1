@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% set page_title = _("Contacts") %}
+{% set corpus_class = 'about' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <div class="b-page__inner page-title__inner">
+        <h1 class="page-title__head background-image-title h1">{{ page_title }}</h1>
+    </div>
+</div>
+<div class="b-page__inner b-page__mrg content-page">
+    <section class="contact-info">
+        <div class="contact-info__inner">
+            <ul class="contact-info__list">
+                {% if config.JURISDICTION =='ru' %}
+                <li>
+                    <div class="contact-info__section">
+                        <h2 class="contact-info__line contact-info__name">{{ _("Head office") }}:</h2>
+                        <address class="contact-info__line contact-info__address">{{ _('Bolshaya Tatarskaya Street, 13с1, Moscow, Russia') }}
+                        </address>
+                        <p class="contact-info__line contact-info__tel">{{ _('Phone:') }} <a href="tel: +7495899-02-22">+7 (495) 899-02-22</a></p>
+                        <p class="contact-info__line contact-info__email">{{ _('E-mail: <a href="mailto:ru.info@biganto.ru">ru.info@biganto.ru</a>') }}</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="contact-info__section">
+                        <h2 class="contact-info__line contact-info__name">Партнеры в г. Мюнхен:</h2>
+                        <address class="contact-info__line contact-info__address">{{ _('Schloßschmidstraße 5, D-80639 München, Deutschland') }}
+                        </address>
+                        <p class="contact-info__line contact-info__tel">{{ _('Phone:') }} <a href="tel: +4989262-195-67">+49 (89) 262-195-67</a></p>
+                        <p class="contact-info__line contact-info__email">{{ _('E-mail: <a href="mailto:info@biganto.com">info@biganto.com</a>') }}</p>
+                    </div>
+                </li>
+                {% endif %}
+                {% if config.JURISDICTION =='world' %}
+                <li>
+                    <div class="contact-info__section">
+                        <h2 class="contact-info__line contact-info__name">{{ _("Head office") }}:</h2>
+                        <address class="contact-info__line contact-info__address">{{ _('Schloßschmidstraße 5, D-80639 München, Deutschland') }}
+                        </address>
+                            <p class="contact-info__line contact-info__tel">{{ _('Phone:') }} <a href="tel: +4989262-195-67">+49 (89) 262-195-67</a></p>
+                        <p class="contact-info__line contact-info__email">{{ _('E-mail: <a href="mailto:info@biganto.com">info@biganto.com</a>') }}</p>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock %}
+

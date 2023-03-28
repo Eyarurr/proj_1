@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% set page_title = _("About") %}
+{% set corpus_class = 'cases' %}
+
+{% from 'front/cases/page_nav.html' import page_nav %}
+{% from 'front/cases/features_list.html' import feature_list %}
+
+{% set use_cases = [
+    ('#ic-path', _(" Three dimensional tour allows free movement and instantly provides good understanding of the space, which is harder to achieve via traditional still images or floorplans ")),
+    ('#ic-conversation', _(" Interactivity and ability to show real estate from different angles allows to demonstrate the project with all its nuances and easily finalize the details with a customer ")),
+    ('#ic-multiplatfom', _(" Show 3d tours on your device personally or share it with the customer via the link. Browser and internet connection is all that required ")),
+    ('#ic-furniture', _(" Display furniture and materials information using interactive objects and other tour features ")),
+    ('#ic-puzzle', _(" Creating a 3d tour is easy and requires minimal extra knowledge and resources beyond traditional visualisation "))
+] %}
+
+{% block content %}
+    <div class='background-video'>
+        <video muted loop autoplay class='background-video__video' poster="/static/public/img/cases/tour1_poster.jpeg">
+            <source src="/static/public/video/cases/tour1_720p.webm" type="video/webm">
+            <source src="/static/public/video/cases/tour1_720p.ogg" type="video/ogg">
+            <source src="/static/public/video/cases/tour1_720p.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class='tabs-css b-page__inner'>
+
+        {{ page_nav('Designers') }}
+
+        <div class='tabs-css__tabs-folder'>
+            <div class='tabs-css__tab-content'>
+
+                <div class="page-title">
+                    <div class="page-title__inner">
+                        <h1 class="page-title__head h1">{{ _("Designers") }}</h1>
+                    </div>
+                </div>
+
+                {{ feature_list(use_cases) }}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

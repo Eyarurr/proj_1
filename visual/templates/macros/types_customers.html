@@ -1,0 +1,40 @@
+{% macro types_customers(title=True) %}
+<section class="types-customers">
+    <div class="b-page__inner types-customers__inner">
+        {% if title %}
+        <div class="block__head">
+            <h2 class="block__title types-customers__head">{{ _("Who needs it") }}</h2>
+        </div>
+        {% endif %}
+        <ul class="types-customers__list">
+            <li class="types-customers__item">
+                <a href="{{ url_for('front.cases_designers') }}" class="types-customers__link">
+                    <div class="types-customers__inner-container">
+                        <img src="/static/public/img/pic-pencil.jpg" alt="" class="types-customers__image">
+                        <h3 class="types-customers__title">{{ _("Designers") }}</h3>
+                        <p class="types-customers__desc">{{ _("Bring next level immersion to your projects and make sure everything meets customers’ requirements.") }}</p>
+                    </div>
+                </a>
+            </li>
+            <li class="types-customers__item">
+                <a href="{{ url_for('front.cases_visualizers') }}" class="types-customers__link">
+                    <div class="types-customers__inner-container">
+                        <img src="/static/public/img/pic-sofa.jpg" alt="" class="types-customers__image">
+                        <h3 class="types-customers__title">{{ _("Visualizers") }}</h3>
+                        <p class="types-customers__desc">{{ _("Distinguish your work among others, create VR ready 3d tours from existing assets and without special knowledge, attract new customers and impress existing ones") }}</p>
+                    </div>
+                </a>
+            </li>
+            <li class="types-customers__item">
+                <a href="{{ url_for('front.cases_developers') }}" class="types-customers__link">
+                    <div class="types-customers__inner-container">
+                        <img src="/static/public/img/pic-crane.jpg" alt="" class="types-customers__image">
+                        <h3 class="types-customers__title">{{ _("Developers") }}</h3>
+                        <p class="types-customers__desc">{{ _("Increase online and offline sales with interactive presentation of your projects") }}</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+{% endmacro %}

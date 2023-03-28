@@ -1,0 +1,89 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'support' %}
+{% set cur_status = request.args.get('status', 'new') %}
+
+{% macro issue_subject(issue) %}
+    {{ Issue.SUBJECTS.get(issue.subject, issue.subject) }}
+{% endmacro %}
+
+{% block head %}
+<style type="text/css">
+    .block {margin: 32px 0 48px 0;}
+    .form__section {margin: 0 0 32px 0;}
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+    <h1 class="card-header">Тикет #{{ issue.number }}</h1>
+
+    <div class="card-body">
+        <p class="card-text"><b>Дата</b>: {{ issue.created|utcinlocal|humantime(not_today=True) }}</p>
+        <p class="card-text"><b>Статус</b>: {{ Issue.STATUSES.get(issue.status, issue.status) }}</p>
+        <p class="card-text"><b>Тема</b>: {{ Issue.SUBJECTS.get(issue.subject, issue.subject) }}</p>
+        <p class="card-text"><b>Содержание</b>:</p>
+        <blockquote class="blockquote border-3 border-info border-start ps-4">{{ issue.text|nl2br }}</blockquote>
+        {% if issue.tour_link %}
+            <p><b>Ссылка на тур</b>: <a href="{{ issue.tour_link }}" target="_blank" class="text-underline-hover">{{ issue.tour_link }}</a></p>
+        {% endif %}
+        {% if issue.contact_email %}
+            <p><b>Email</b>: <a href="mailto:{{ issue.contact_email }}" class="text-underline-hover">{{ issue.contact_email }}</a></p>
+        {% endif %}
+        {% if issue.user_id %}
+            <p class="card-f"><b>Пользователь</b>: <a href="{{ url_for('.user_edit', user_id=issue.user_id) }}">{{ issue.user.name }}</a></p>
+        {% endif %}
+    </div>
+    </div>
+
+    <form action="{{ url_for('admin.issue_edit', issue_id=issue.id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <h3>Ответить:</h3>
+        <div class="form__section">
+            <textarea name="message" class="form-control" rows="6"></textarea>
+        </div>
+
+            <button class="btn btn-md btn-primary" type="submit">Отправить</button>
+            <div class="float-end">
+                {% if issue.status in ['new', 'process'] %}
+                <a href="{{ url_for('admin.issue_edit', issue_id=issue.id) }}" class="btn btn-md btn-secondary button-status" data-status="complete">
+                    Закрыть
+                </a>
+                {% endif %}
+                {% if issue.status != 'spam' %}
+                <a href="{{ url_for('admin.issue_edit', issue_id=issue.id) }}" class="btn btn-md btn-danger button-status" data-status="spam">
+                    Спам
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    <script>
+        $(function() {
+            var CSRF_TOKEN = '{{ csrf_token() }}';
+            $('.button-status').on('click', function(event) {
+                var url = $(this).prop('href'),
+                    targetStatus = $(this).data('status');
+                event.preventDefault();
+                $.ajax({
+                    method: 'POST',
+                    url: url,
+                    headers: {
+                        'X-CSRFToken': CSRF_TOKEN
+                    },
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify({status: targetStatus})
+                }).done(function(answer) {
+                    if (answer.redirect) {
+                        window.location.href = answer.redirect;
+                    } else if (answer.reload) {
+                        window.location.reload();
+                    } else if (answer.errors) {
+                        console.error('Errors:', answer.errors);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

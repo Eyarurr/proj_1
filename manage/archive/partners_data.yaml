@@ -1,0 +1,59 @@
+1:
+    logo: visual/static/public/img/content/success-1.png
+    hidden: False
+    title: Котельнические Высотки
+    url: http://www.vkotelniki.ru/
+
+2:
+    logo: visual/static/public/img/content/success-2.png
+    hidden: False
+    title: Город на реке Тушино
+    url: http://tushino2018.ru/
+3:
+    logo: visual/static/public/img/content/success-3.png
+    hidden: False
+    title: ООО "ИСК "РАС"
+    url: http://ras23.ru/
+4:
+    logo: visual/static/public/img/content/success-4.png
+    hidden: False
+    title: Инвестиционно-финансовая компания «Мера»
+    url: https://msk.i-mera.ru/
+5:
+    logo: visual/static/public/img/content/success-5.png
+    hidden: False
+    title: Lexion Development
+    url: http://lexion-development.ru/
+6:
+    logo: visual/static/public/img/content/success-6.png
+    hidden: False
+    title: Dvi interior
+    url: http://www.dviarchitecture.com/
+7:
+    logo: visual/static/public/img/content/success-7.png
+    hidden: False
+    title: Seven Suns Development
+    url: https://sevensuns.ru/
+8:
+    logo: visual/static/public/img/content/success-8.png
+    hidden: False
+9:
+    logo: visual/static/public/img/content/success-9.png
+    hidden: False
+    title: Estee Дизайн-бюро интерьеров
+    url: http://estee-design.ru/about
+10:
+    logo: visual/static/public/img/content/success-10.png
+    hidden: True
+    title: X-FIT - фитнес-клубы бизнес и премиум-класса
+    url: http://www.xfit.ru/
+11:
+    logo: visual/static/public/img/content/success-11.png
+    hidden: True
+    title: Lladro Porcelain – Art porcelain figurines
+    url: http://www.lladro.ru/
+12:
+    logo: visual/static/public/img/content/success-12.png
+    hidden: True
+    title: Бест-недвижимость
+    url: http://www.best-realty.ru/

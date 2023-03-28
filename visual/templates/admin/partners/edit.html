@@ -1,0 +1,57 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'content' %}
+
+
+{% block content %}
+    <h1>{% if partner.id %} Редактировать информацию о партнёре {% else %} Добавить партнёра {% endif %}</h1>
+
+    <form method="post" class="form-horizontal" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="row mb-3">
+            <label class="col-sm-2 text-lg-end">Партнёр</label>
+            <div class="col-sm-10">{{ form.title(class='form-control', autofocus=True) }}</div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-2 text-lg-end">Ссылка</label>
+            <div class="col-sm-10">{{ form.url(class='form-control', rows=6) }}</div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-2 text-lg-end">Логотип</label>
+            <div class="col-sm-10">{{ form.logo(class='form-control') }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-10 offset-lg-2">
+                <div class="form-check">
+                <label class="form-check-text">не показывать</label>
+                    {{ form.hidden(class="form-check-input") }}
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-10 offset-lg-2">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                {% if partner.id %}
+                <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger">Удалить</a>
+                {% endif %}
+                <a href="{{ url_for('.partners') }}" class="btn btn-outline-secondary">Отмена</a>
+            </div>
+        </div>
+    </form>
+
+    {% if partner.id %}
+        <form method="post" action="{{ url_for('.partner_delete', partner_id=partner.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-delete"><div class="modal-dialog modal-lg"><div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Удалить партнёра?</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Да</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Нет</button>
+                </div>
+            </div></div></div>
+        </form>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% set page_title=_('Sharing is restricted') %}
+
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div class="b-page__content">
+        <div class="page-title">
+            <div class="b-page__inner page-title__inner page-title__inner--align-left">
+                <h1 class="page-title__head background-image-title-oops h1">{{ _('Oops') }}</h1>
+                <div class="page-title__subtitle">
+                    {{ _('It seems that sharing is restricted for this tour') }}
+                </div>
+                <hr class="page-title__divider" />
+                <div class="page-title__text">
+                    {{ _('Tour owner could log in to access it') }}
+                </div>
+                <a href="/my/" class="page-title__action button fill blue mini">
+                    {{ _("Log in") }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'my/base.html' %}
+{% set page_title_my = _('Update VAT ID') %}
+{% set cc = 'settings' %}
+{% from 'macros/tax_types.html' import tax_types %}
+
+{% block head %}
+    <style type="text/css">
+        #update-vat-form { width: 100%; }
+        #vat-errors { margin: 10px 0; color: red; }
+    </style>
+{% endblock %}
+
+{% block content_my %}
+    <div class="settings-page settings-page__container">
+
+    <form method="POST" id="update-vat-form" class="subscription-form" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <section class="settings-page__block">
+            <h2 class="h2 settings-page__head">{{ _("Update VAT ID") }}</h2>
+
+            <div class="b-form-password__new">
+                <div class="settings-page__section subscription-form__tax">
+                    <div class="subscription-form__tax-type">
+                        <label class="form-modal__label">
+                            {{ _("TAX Number") }}
+                            <span class="subscription-form__tooltip tooltip-place" data-tooltip-content="#tax_number">
+                                <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                            </span>
+                            <div class="tooltip_templates">
+                                <span id="tax_number" class="tooltip_content tooltip_content--smaller-font">
+                                    {{ _("Select Tax ID type and enter valid Tax ID to be considered a business customer. Be aware that it is responsibility of a business customer to pay VAT or similar taxes when applicable.") }}
+                                </span>
+                            </div>
+                        </label>
+                        <div class="big-select b-form-password__item">
+                            <select name="tax_id_type" class="big-select__input">
+                                <option></option>
+                                {% for tax_type, tax_type_name in tax_types %}
+                                    <option value="{{ tax_type }}">{{ tax_type_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <svg viewBox="0 0 9 8" class="big-select__icon" width="9" height="8"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down" /></svg>
+                        </div>
+                    </div>
+                    <div class="subscription-form__tax-id">
+                        <div class="b-form-password__item">
+                            <input type="text" name="tax_id" class="big-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="settings-page__section">
+            <div id="vat-errors" role="alert">{{ error['message'] if 'message' in error else '' }}</div>
+        </div>
+        <button type="submit" id="subscription-submit" class="button fill blue settings-page__submit">{{ _("Save") }}</button>
+        <a href="{{ url_for('virtoaster.pricing') }}" class="button fill blue settings-page__submit">{{ _("Cancel") }}</a>
+    </form>
+
+    </div>
+{% endblock %}
+
+{% block tail_my %}
+
+{% endblock %}

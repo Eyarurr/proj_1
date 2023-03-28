@@ -1,0 +1,15 @@
+{% extends 'my/base.html' %}
+{% set page_title_my = _('Password recovery') %}
+
+{% block content_my %}
+    <form method="post" class="b-form b-form__validate" action="{{ url_for('users.remind') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            <label class="control-label">E-mail:</label>
+            {{ form.email(class='form-control', type='email', autofocus=True, required=True) }}
+        </div>
+        <div class="b-form__submit form-group">
+            <button type="submit" class="btn btn-md btn-default">{{ _("Send") }}</button>
+        </div>
+    </form>
+{% endblock %}

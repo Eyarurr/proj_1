@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% set page_title=_('Access forbidden') %}
+
+
+{% block common_content %}
+<div class="b-page">
+    <main class="b-page__bg">
+
+        <div class="b-page__content">
+            <div class="error-page error-page--tour">
+                <div class="b-page__content">
+                    <div class="page-title page-title--403-membership">
+                        <div class="b-page__inner page-title__inner page-title__inner--align-left">
+                            <h1 class="page-title__head h1">403</h1>
+                            <div class="page-title__subtitle">
+                                {{ _('Access forbidden. You are not invited to this project') }}
+                            </div>
+                            <hr class="page-title__divider" />
+                            <div class="page-title__text">
+                                {{ _('Contact project administrator to become a member then try again later.') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

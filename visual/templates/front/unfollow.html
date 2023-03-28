@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% set page_title=_("Newsletter status") %}
+
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="b-page__content">
+    <div class="page-title">
+        <div class="page-title__inner align-center ">
+            <h1 class="page-title__head background-image-title h1">@</h1>
+        </div>
+    </div>
+    <div class="b-page__inner" style="text-align: center;">
+        {{ _("You have successfully unsubscribed from a newsletter.") }}
+    </div>
+</div>
+{% endblock %}

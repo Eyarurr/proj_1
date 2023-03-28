@@ -1,0 +1,20 @@
+{% set tabs = [
+    (('admin.statistics', ), 'Трафик'),
+    (('admin.statistics_top_tours', ), 'Лучшие туры'),
+    (('admin.statistics_top_users', ), 'Лучшие юзеры'),
+    (('admin.statistics_rejects', ), 'Отказы'),
+    (('admin.statistics_geo', ), 'География'),
+    (('admin.statistics_referers', ), 'Источники'),
+    (('admin.statistics_devices', ), 'Устройства'),
+    (('admin.statistics_systems', ), 'Системы'),
+] %}
+<ul class="nav nav-tabs" style="margin-bottom: 20px;">
+    {% for endpoints, title in tabs %}
+        {% set active = "active" if request.endpoint in endpoints %}
+    <li class="nav-item">
+        <a href="{{ url_for(endpoints[0]) }}" class="nav-link {{ active }}">
+            {{ title }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,76 @@
+- email: designmira@mail.ru
+  name: Катерина Пилюшенок
+  phone: +7 495 740-86-01
+  admin_comment: ДизайнМира
+  estates:
+  - title: Дизайнерский интерьер
+    preview: landing/assets/big/designmira.jpg
+    tours:
+    - tour:     designmira_test
+      preview:  landing/assets/big/designmira.jpg
+      title:    Дизайнерский интерьер
+
+- email: melitonyan@biganto.ru
+  name: Мито Мелитонян
+  phone: +7 909 933-8999
+  estates:
+  - title: Офис Mito Melitonyan
+    preview:  landing/assets/big/office_melitonyan.jpg
+    tours:
+    - tour:     office_melitonyan
+      preview:  landing/assets/big/office_melitonyan.jpg
+      title:    Офис Mito Melitonyan
+
+- email: kovalevsky@sevensuns.ru
+  name: Ковалевский Дмитрий
+  phone: +7 812 777-20-20
+  admin_comment: 7suns
+  estates:
+  - title: Интерьер 4-комнатной квартиры
+    preview:  landing/assets/big/7suns.jpg
+    tours:
+    - tour:     7suns
+      preview:  landing/assets/big/7suns.jpg
+      title:    Интерьер 4-комнатной квартиры
+
+- email: anna.mihnovec@mail.ru
+  name: Анна Михновец
+  phone: +7 495 646-02-62
+  admin_comment: Пентхаус 300 метров
+  estates:
+  - title: Пентхаус 300 м²
+    preview:  landing/assets/big/penthouse300-furniture-better.jpg
+    tours:
+    - tour:     penthouse300-floors
+      preview:  landing/assets/big/penthouse300-floors-better.jpg
+      title:    В бетоне
+    - tour:     penthouse300-furniture
+      preview:  landing/assets/big/penthouse300-furniture-better.jpg
+      title:    С отделкой и частично интерьером
+
+- email: info@biganto.ru
+  estates:
+  - title: Двухкомнатная квартира, Румянцево-Парк
+    preview:  landing/assets/big/zour2.jpg
+    tours:
+    - tour:     ztour-b
+      preview:  landing/assets/big/ztour-b.jpg
+      title:    В бетоне
+    - tour:     ztour-o
+      preview:  landing/assets/big/ztour-o.jpg
+      title:    С отделкой
+    - tour:     ztour2
+      preview:  landing/assets/big/zour2.jpg
+      title:    С мебелью и перепланировкой
+  - title:      4-комнатная квартира, Некрасовка-Парк
+    preview:  landing/assets/big/mebel-7.jpg
+    tours:
+    - tour:     4kkb-2
+      preview:  landing/assets/big/beton-1.jpg
+      title:    В бетоне
+    - tour:     4kko
+      preview:  landing/assets/big/4kko.jpg
+      title:    С отделкой
+    - tour:     4kki-2
+      preview:  landing/assets/big/mebel-7.jpg
+      title:    С мебелью

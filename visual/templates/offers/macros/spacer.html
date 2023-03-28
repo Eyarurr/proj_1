@@ -1,0 +1,11 @@
+{#
+    @param {string} type - тип outer (внешняя - разделяет блоки) и inner (внутренняя - разделяет элементы внутри блока)
+    @param {string} width - ширина narrow (узкая, по умолчанию) и wide (широкая)
+#}
+{% macro spacer_line(type = 'outer', width = 'narrow') %}
+    <div class="b-spacer b-spacer--{{ width }}">
+        {% if type == 'outer' %}<div class="b-external__inner">{% endif %}
+            <div class="b-spacer__line"></div>
+        {% if type == 'outer' %}</div>{% endif %}
+    </div>
+{% endmacro %}

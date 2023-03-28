@@ -1,0 +1,227 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'multitours' %}
+{% if user %}{% set user_id = user.id %}{% else %}{% set user_id = None %}{% endif %}
+
+
+{% block head %}
+<style type="text/css">
+    #form-tours h2 {
+        text-align: center;
+    }
+    #form-tours .tools {
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+    }
+    #tours-user .action-up, #tours-user .action-down { display: none; }
+</style>
+{% endblock %}
+
+
+{% block content %}
+    <h1>Туры мультитура «{{ offer.title_en or offer.title_ru or offer.title_de or offer.title_fr }}»</h1>
+
+    <form id="form-tours" class="form-horizontal" method="POST" action="{{ url_for('.multitour_tours', offer_id=offer.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="tour_ids" value="">
+
+    <div class="row mt-3">
+    <div class="col-lg-6">
+        <h2 >Туры пользователя</h2>
+        <div class=" row mb-1 gx-0 py-1 border-bottom" style="--bs-bg-opacity: .1;">
+                <div class="row align-items-center">
+                    <div class="col-lg">
+                        <a href="{{ url_for('.multitours', user_id=offer.user_id) }}"
+                           class="text-underline-hover">{{ offer.user.name }}</a><br>
+                    </div>
+                    <div class="col-lg">
+                        <div class="row align-items-center">
+                            <label class="control-label col-lg-3">Папка:</label>
+                            <div class="col-8 float-end">
+                                <select name="folder_id" class="form-select form-select-sm">
+                                    <option value="">Корень</option>
+                                    {% for folder in offer.user.folders %}
+                                        <option value="{{ folder.id }}" {% if folder.id == offer.folder_id %}
+                                                selected {% endif %}>{{ folder.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    <div class="row">
+        <ul id="tours-user" class="gallery"></ul>
+        <div class="alert alert-info" id="tours-user-empty">
+            В этой папке пусто. Выберите другую.
+        </div>
+    </div>
+    </div>
+        <div class="col-lg-6">
+            <h2 class="">Туры мультитура</h2>
+            <div class="gx-0 py-2 row mb-1 border-bottom" style="--bs-bg-opacity: .1;">
+                <div class="col invisible">Мультитур "tours"</div>
+            </div>
+                <ul id="tours-tour" class="gallery">
+                    {% for offertour in offer.tours %}
+                        <li data-tour-id="{{ offertour.tour.id }}" data-folder-id="{{ offertour.tour.folder_id }}">
+                            <img src="{{ offertour.tour.preview.url }}">
+                            <p class="title">{{ offertour.title }}</p>
+                            <div class="actions">
+                                <a href="#" class="btn btn-sm btn-success action-move"><i
+                                    class="fas fa-arrows-alt-h"></i></a>
+                                <a href="#" class="btn btn-sm btn-info action-up"><i class="fas fa-arrow-up"></i></a>
+                                <a href="#" class="btn btn-sm btn-info action-down"><i
+                                    class="fas fa-arrow-down"></i></a>
+                                <a href="#" class="btn btn-sm btn-info action-edit"><i class="fas fa-edit"></i></a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="alert alert-info" id="tours-tour-empty">
+                    Мультитур пуст.
+                </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="{{ url_for('.multitours', user_id=user_id) }}" class="btn btn-outline-secondary" id="btn-cancel">Отмена</a>
+        </div>
+    </div>
+    </form>
+
+    <div class="row" style="margin-top:40px;">
+        <div class="col-lg-6">
+            <p class="text-muted">
+                <img src="/static/admin/leopold.png" height="96" style="float: left; margin-right: 20px;">
+                В левой колонке выберите папку и добавляйте туры в мультитур при помощи кнопки
+                <a href="javascript:void(0)" class="btn btn-sm btn-success action-move"><i class="fas fa-arrows-alt-h"></i></a>.
+            </div>
+        <div class="col-lg-6">
+            <p class="text-muted">
+                В правой колонке тур можно убрать той же кнопкой
+                <a href="javascript:void(0)" class="btn btn-sm btn-success action-move"><i class="fas fa-arrows-alt-h"></i></a>,
+                изменить порядок туров кнопками
+                <a href="javascript:void(0)" class="btn btn-sm btn-info action-up"><i class="fas fa-arrow-up"></i></a> и
+                <a href="javascript:void(0)" class="btn btn-sm btn-info action-down"><i class="fas fa-arrow-down"></i></a>,
+                поменять подпись к туру в мультируре кнопкой
+                <a href="javascript:void(0)" class="btn btn-sm btn-info action-edit"><i class="fas fa-edit"></i></a>.
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block tail %}
+<script type="text/javascript">
+$(function() {
+    let user_id = {{ offer.user_id }};
+
+    let $form = $('#form-tours'), $folder = $form.find('[name=folder_id]'),
+        $toursUser = $('#tours-user'), $toursTour = $('#tours-tour');
+
+    function folderChanged() {
+        let folder_id = $folder.val();
+        let rq = {user_id: user_id};
+        if (folder_id !== '') rq.folder_id = folder_id;
+        fetch(api3Url('tours', rq))
+            .then((res) => { return res.json() })
+            .then((res) => {
+                $toursUser.empty();
+                if (res.result.length === 0) {
+                    $('#tours-user-empty').show();
+                } else {
+                    $('#tours-user-empty').hide();
+                    for(let tour of res.result) {
+                        if ($toursTour.find('[data-tour-id=' + tour.id + ']').length) {
+                            continue;
+                        }
+                        let $li = $('<li>').attr('data-tour-id', tour.id).attr('data-folder-id', tour.folder_id);
+                        $li.append($('<img>').attr('src', tour.preview));
+                        $li.append('<p class="title">' + tour.title + '</p>');
+                        $li.append('<div class="actions">' +
+                            '<a href="#" class="btn btn-sm btn-success action-move"><i class="fas fa-arrows-alt-h"></i></a> ' +
+                            '<a href="#" class="btn btn-sm btn-info action-up"><i class="fas fa-arrow-up"></i></a> ' +
+                            '<a href="#" class="btn btn-sm btn-info action-down"><i class="fas fa-arrow-down"></i></a> ' +
+                            '<a href="#" class="btn btn-sm btn-info action-edit"><i class="fas fa-edit"></i></a> ' +
+                            '</div>\n'
+                        );
+                        $toursUser.append($li)
+                    }
+                }
+            })
+    }
+
+    $toursUser.on('click', '.action-move', function(e) {
+        let $li = $(this).parents('li');
+        e.preventDefault();
+        $toursTour.append($li);
+        if ($toursTour.find('li').length) {
+            $('#tours-tour-empty').hide();
+        } else {
+            $('#tours-tour-empty').show();
+        }
+    });
+
+    $toursTour.on('click', '.action-move', function(e) {
+        let $li = $(this).parents('li');
+        e.preventDefault();
+        if ((parseInt($li.data('folder-id')) === parseInt($folder.val())) || (isNaN(parseInt($li.data('folder-id'))) && isNaN(parseInt($folder.val()))) ) {
+            $toursUser.append($li);
+        }
+        if ($toursTour.find('li').length) {
+            $('#tours-tour-empty').hide();
+        } else {
+            $('#tours-tour-empty').show();
+        }
+    });
+
+    $toursTour.on('click', '.action-up', function(e) {
+        let $li = $(this).parents('li');
+        e.preventDefault();
+        if ($li.prev().length) {
+            $li.prev().before($li);
+        }
+    });
+
+    $toursTour.on('click', '.action-down', function(e) {
+        let $li = $(this).parents('li');
+        e.preventDefault();
+        if ($li.next().length) {
+            $li.next().after($li);
+        }
+    });
+
+    $toursTour.on('click', '.action-edit', function(e) {
+        e.preventDefault();
+        let $li = $(this).parents('li'), $title = $li.find('p.title');
+        let title = prompt('Подпись к туру в мультитуре:', $title.text());
+        $title.text(title);
+    });
+
+    $folder.on('change', folderChanged);
+    folderChanged();
+    if ($toursTour.find('li').length) {
+        $('#tours-tour-empty').hide();
+    }
+
+    $form.on('submit', function(e) {
+        let payload = [];
+        $toursTour.find('li').each(function(e) {
+            payload.push({tour_id: $(this).data('tour-id'), title: $(this).find('.title').text()});
+        });
+        fetch($form.attr('action'), {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': $form.find('[name=csrf_token]').val()
+            },
+            body: JSON.stringify(payload)
+        }).then((res) => {
+            location.href = $('#btn-cancel').attr('href');
+        });
+        return false;
+    })
+});
+</script>
+{% endblock %}

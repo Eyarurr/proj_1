@@ -1,0 +1,58 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Материалы заказа #{{ order.id }}</h1>
+
+
+
+
+
+{% if assets.total == 0 %}
+<div class="alert alert-info">
+    Ещё никаких материалов не залито.
+</div>
+{% else %}
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-3">
+
+<thead>
+<tr>
+    <td>Создано</td>
+    <th class="break">Тип</th>
+    <th class="break">Контент</th>
+    <th class="break"></th>
+</tr>
+</thead>
+<tbody>
+
+{% for asset in assets.items %}
+<tr>
+    <td class="">{{ asset.created|humantime }}</td>
+    <td><span class="badge bg-primary">{{ asset.type }}</span></td>
+    <td class="break">{{ asset.s3key }}</td>
+    <td class="break">
+        <a href="{{ url_for('.br_order_edit', office_id=order.office_id, order_id=order.id) }}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
+
+{{ render_pagination(orders, '.br_orders', **filters.as_dict()) }}
+
+{% endif %}
+{% if not office %}
+    <p class="alert alert-success">
+        Чтобы создать заказ, <a href="{{ url_for('.br_offices') }}">выберите какой-нибудь офис</a>.
+    </p>
+{% endif %}
+{% endblock %}

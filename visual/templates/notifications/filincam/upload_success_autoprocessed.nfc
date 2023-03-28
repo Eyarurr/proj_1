@@ -1,0 +1,44 @@
+# Отправляется, когда сцена загрузилась, и у юзера включен автопроцессинг
+#
+[CONTEXT]
+dataset=RemoteDataset
+
+[COMMON]
+channel=filincam
+tone=action
+link={{ url_for('my.index', path='scenes/') }}
+
+[RU]
+message=Началась обработка сцены <b>{{ dataset.title or 'Untitled' }}</b>
+email_subject=Началась обработка сцены "{{ dataset.title or 'Untitled' }}"
+email_html=<p>
+        Ваша сцена <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        выгрузилась из камеры и уже обрабатывается, так как у вас включен автопроцессинг туров.
+     </p>
+     <p>
+        Вы можете изменить настройки автопроцессинга
+        <a href="{{ url_for('my.index', _external=True, path='scenes/') }}">на странице сцен</a> в личном кабинете.
+     </p>
+email_text=Ваша сцена "{{ dataset.title or 'Untitled' }}" выгрузилась из камеры и уже обрабатывается, так
+        как у вас включен автопроцессинг туров.
+
+        Вы можете изменить настройки автопроцессинга на странице сцен в личном кабинете:
+        <a href="{{ url_for('my.index', _external=True, path='scenes/') }}">
+
+
+[EN]
+message=Autoprocessing of scene <b>{{ dataset.title or 'Untitled' }}</b> started
+email_subject=Autoprocessing of scene "{{ dataset.title or 'Untitled' }}"" started
+email_html=<p>
+        Your scene <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        has been uploaded from camera and is processing now, because you have autoprocesssing turned on.
+     </p>
+     <p>
+        You can manage <a href="{{ url_for('my.index', _external=True, path='scenes/') }}">autoprocessing settings</a> in your account.
+     </p>
+email_text=Your scene "{{ dataset.title or 'Untitled' }}" has been uploaded from camera and is processing now,
+    because you have autoprocesssing turned on.
+
+    You can manage autoprocessing settings in your account:
+
+    {{ url_for('my.index', path='scenes/', _external=True) }}

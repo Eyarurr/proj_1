@@ -1,0 +1,481 @@
+{% extends 'base.html' %}
+{% set page_title = "Nutzungsbedingungen" %}
+
+{% block content %}
+    <div class="page-title page-title--textpage">
+        <div class="b-page__inner page-title__inner page-title__inner--align-left">
+            <h1 class="page-title__head h1">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg content-page content-page__license">
+        <p><strong>Nutzungsbedingungen – www.biganto.com</strong></p>
+
+        <br>
+        <p><strong>1. Allgemeine Bestimmungen</strong></p>
+
+        <p>Diese Nutzungsbedingungen regeln die Nutzung der unter <a href="{{ url_for('front.index') }}">www.biganto.com</a> von der Biganto GmbH, Schloßschmidstr. 5, 80639 München, eingetragen im Handelsregister am Amtsgericht München, HRB 206771 (im Folgenden: Biganto) angebotenen Onlinedienste.
+        </p>
+
+        <p>Die von Biganto angebotenen Onlinedienste dienen der Erstellung und Verwaltung von interaktiven Präsentationen, virtuellen - und Foto-Touren, digitalen Visualisierungen, Renderings und 3D-Modellen durch die Benutzer.
+        </p>
+
+        <p>Die bereitgestellten Onlinedienste von Biganto umfassen sämtliche unter <a href="{{ url_for('front.index') }}">www.biganto.com</a> bereitgestellten Onlineapplikationen, Software, die Bereitstellung des technischen Kundendienstes (Support), Beispielinhalte (Muster), Skripte, Anleitungen und Dokumentationen, zusammengefasst im Folgenden „Onlinedienste“.
+        </p>
+
+        <p>Diese Nutzungsbedingungen gelten für sämtliche von Biganto angebotenen Onlinedienste, auch die Nutzung von künftig angebotenen weiteren Diensten und Entwicklungen von Biganto unterliegt diesen Nutzungsbedingungen.
+
+        </p>
+
+        <p>Mit Verwendung der von Biganto bereitgestellten Onlinedienste, stimmt der Benutzer diesen Nutzungsbedingungen zu.
+
+        </p>
+
+        <p>Geschäftsbedingungen der Benutzer oder Dritter finden keine Anwendung, auch wenn Biganto ihrer Geltung im Einzelfall nicht gesondert widerspricht.
+
+        </p>
+
+        <br>
+
+        <p><strong>2. Anwendbares Recht</strong></p>
+
+        <p>Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts, wenn
+
+        </p>
+
+        <ul>
+            <li>Der Benutzer seinen gewöhnlichen Aufenthalt in Deutschland hat, oder
+
+            </li>
+            <li>der Benutzer seinen gewöhnlichen Aufenthalt in einem Staat hat, der nicht Mitglied der Europäischen Union ist.
+            </li>
+        </ul>
+
+        <p>Für den Fall, dass der Benutzer seinen gewöhnlichen Aufenthalt in einem Mitgliedsland der Europäischen Union hat, gilt ebenfalls die Anwendbarkeit des deutschen Rechts, wobei zwingende Bestimmungen des Staates, in dem der Benutzer seinen gewöhnlichen Aufenthalt hat, unberührt bleiben.
+        </p>
+
+        <br>
+
+        <p><strong>3. Verwendung von Onlinediensten unter www.biganto.com</strong></p>
+
+        <p>Benutzer haben die Möglichkeit, die Onlinedienste von Biganto nach Registrierung in eingeschränktem Umfang kostenfrei oder – nach Auswahl eines entsprechenden Tarifs - über die kostenfreie Nutzung hinaus kostenpflichtig zu nutzen.
+
+        </p>
+
+        <p>Ferner haben die Benutzer die Möglichkeit, den von ihnen mit den Onlinediensten von Biganto erstellten Inhalte über einen aktiven Link im Internet zu veröffentlichen.
+
+        </p>
+
+        <br>
+
+        <p><strong>3.1. Nutzungsvoraussetzungen</strong></p>
+
+        <p>Biganto stellt seine Dienste über das Internet als Infrastruktur zur Verfügung (Software-as-a-service). Für die Nutzung der Onlinedienste von Biganto ist somit eine funktionierende Internetverbindung sowie ein entsprechendes Endgerät (siehe auch Ziff. 3.3 dieser Nutzungsbedingungen) erforderlich.
+
+        </p>
+
+        <br>
+
+        <p><strong>3.2. Registrierung</strong></p>
+
+        <p>Zur kostenfreien wie auch zur kostenpflichtigen Verwendung der Onlinedienste ist die Registrierung des Benutzers erforderlich. Diese setzt eine gültige E-Mailadresse des Benutzers voraus. Nach Vergabe eines Passworts und Bestätigung der Registrierung durch den Benutzer, erhält dieser einen Benutzeraccount.
+
+        </p>
+
+        <p>Für den Fall, dass die bei der Registrierung angegebenen Daten des Nutzers keine Identifizierung des Nutzers ermöglichen, hat Biganto das Recht, dem Nutzer den Zugang zum Konto und die Nutzung der Onlinedienste zu verweigern.
+
+        </p>
+
+        <p>Der Benutzeraccount darf Dritten nicht zur Nutzung der Onlinedienste von Biganto zur Verfügung gestellt werden.
+
+        </p>
+
+        <p>Der Benutzer hat für eine vertrauliche Verwendung und Aufbewahrung seiner Zugangsdaten zu den Onlinediensten von Biganto zu sorgen.
+
+        </p>
+
+        <p>Biganto behandelt die Registrierungsdaten selbstverständlich vertraulich und nutzt diese nur im Rahmen der <a
+                href="{{ url_for('front.privacy_policy') }}">Datenschutzbestimmungen</a>.
+        </p>
+
+        <br>
+
+        <p><strong>3.3. Systemvoraussetzungen</strong></p>
+
+        <p>Für die Nutzung der Onlinedienste muss der Benutzer für die Einhaltung der technischen Systemvoraussetzungen der von ihm zu verwendenden Endgeräte sorgen. Die technischen Systemvoraussetzungen finden sich unter <a
+                href="{{ url_for('tutorials.system_requirements') }}">https://biganto.com/tutorials/system_requirements/</a>.
+        </p>
+
+        <p>Der Benutzer bestätigt, sich vor Nutzung der Onlinedienste mit den Ausgangsmaterialien und Anleitungen unter <a
+                href="{{ url_for('tutorials.index') }}">https://biganto.com/virtoaster/tutorials/</a> vertraut gemacht zu haben.</p>
+
+        <br>
+
+        <p><strong>4. Leistungserbringung durch Biganto</strong></p>
+
+        <p>Biganto erbringt die Onlinedienste entsprechend den jeweils auf der Website angegebenen Tarifen, Bonusprogrammen oder Sonderangeboten. Der Benutzer hat in begrenztem Umfang auch die Möglichkeit der kostenfreien Nutzung.
+
+        </p>
+
+        <p>Die Nutzung eines über die kostenfreie Nutzung hinausgehenden Tarif zu den jeweils auf der Website angegebenen Kosten möglich.
+
+        </p>
+
+        <br>
+
+        <p><strong>4.1. Vertragsschluss</strong></p>
+
+        <p>Die Darstellung der Onlinedienste unter www.biganto.com stellt kein rechtlich bindendes Angebot, sondern eine Aufforderung zur Bestellung (invitatio ad offerendum) dar.
+
+        </p>
+
+        <p>Durch Absenden der Bestellung am Ende des Bestellprozesses gibt der Benutzer ein verbindliches Angebot zur Buchung der in der Bestellübersicht angezeigten Onlinedienste ab. Unmittelbar nach Absenden der Bestellung erhält der Benutzer eine Bestellbestätigung, die jedoch noch keine Annahme seines Vertragsangebots darstellt. Ein Vertrag zwischen dem Benutzer und Biganto kommt zustande, sobald Biganto die Bestellung und/oder Buchung des Benutzers durch eine gesonderte E-Mail annimmt bzw. den gewünschten Onlinedienste für den Benutzer freischaltet.
+
+        </p>
+
+        <p>Der Benutzer prüft regelmäßig den SPAM-Ordner seines E-Mail-Postfachs.
+
+        </p>
+
+        <br>
+
+        <p><strong>4.2. Zahlungsbedingungen bei kostenpflichtiger Nutzung
+        </strong></p>
+
+        <p>Der Preis für die vom Benutzer ausgewählten Onlinedienste wird im Voraus mit Bestellung/Buchung fällig. Die Zahlung der gebuchten Leistung kann auf die im Rahmen des Bestellvorgangs angegebenen Zahlungsweisen über unsere Zahlungsdienstleister erfolgen.
+
+        </p>
+
+        <p>Alle von Biganto angegebenen Preise und Tarife erfolgen in der Währung „Euro“ (EUR).
+
+        </p>
+
+        <p>Biganto verwendet für die Bezahlung über die Webseite Zahlungsdienstleister, die Zahlungen über öffentliche Netze in Übereinstimmung mit internationalen Standards (wie z. B. „verified by VISA“, „Mastercard SecureCode“) unter Verwendung aktueller Technologien zur Absicherung von Zahlungsvorgängen, wie z.B. 3D-Secure, verwenden. Die Authentifizierung der Benutzer bzw. Autorisierung der Zahlung erfolgt im Rahmen dieser Technologien über das emittierende Kreditinstitut des Benutzers.
+
+        </p>
+
+        <br>
+
+        <p><strong>4.3. Laufzeit</strong></p>
+
+        <p>Entscheidet sich der Benutzer für einen kostenpflichtigen Tarif, so werden die monatlich anfallen Tarifkosten monatlich von dem bei Bestellung angegebenen Zahlungsmittel abgebucht.
+
+        </p>
+
+        <p>Der Vertrag zwischen dem Benutzer und Biganto verlängert sich jeweils um einen Monat, sofern der Benutzer das Vertragsverhältnis nicht vor der nächsten Abbuchung beendet.
+
+        </p>
+
+        <br>
+
+        <p><strong>4.4. Kündigung</strong></p>
+
+        <p>Benutzer haben das Recht, den Vertrag mit Biganto jederzeit zu kündigen, sodass sich der Vertrag nicht mehr monatlich verlängert. Bereits erfolgte Zahlungen für den laufenden Monat werden nicht zurückerstattet. Eine Kündigung durch den Benutzer entbindet diesen nicht von der Zahlung etwaig zuvor aufgelaufener Beträge.
+        </p>
+
+        <p>Das Recht zur Kündigung aus außerordentlichem Grund bleibt hiervon unberührt.
+
+        </p>
+
+        <p>Gründe, die Biganto zu einer außerordentlichen Kündigung berechtigen, sind u.a. der Verstoß gegen Nutzerpflichten, insbesondere gegen Ziff. 7.1 dieser Nutzungsbedingungen, Einstellung des Betriebs der Onlinedienste durch Biganto, Verstöße der Benutzer gegen gesetzliche Bestimmungen bei Nutzung der Onlinedienste, Zahlungsverzug von mehr als 30 Tagen oder eine Inaktivität des kostenfreien Accounts von mehr als 6 Monate.
+
+        </p>
+
+        <p>Folge der außerordentlichen Kündigung durch Biganto ist die endgültige und unwiderrufliche Löschung des Nutzerprofils oder die Sperrung des Zugangs. In diesem Fall wird der Benutzer darüber informiert, dass sein Nutzerprofil sowie seine in den Systemen von Biganto gespeicherten Daten im Rahmen einer angemessenen Frist von Biganto gelöscht werden wird.
+
+        </p>
+
+        <br>
+
+        <p><strong>5. Leistungszeitpunkt und Abnahme</strong></p>
+
+        <br>
+
+        <p><strong>5.1. Leistungszeitpunkt</strong></p>
+
+        <p>Termine für die Erbringung von Leistungen sind für Biganto nur bei schriftlicher Bestätigung bzw. Bestätigung durch Biganto in Textform und endgültiger Festlegung bindend.
+
+        </p>
+
+        <p>Leistungsverzögerungen im Verantwortungsbereich des Benutzers (z.B. nicht rechtzeitige Erbringung von Mitwirkungsleistungen) oder aufgrund höherer Gewalt (wie z.B. Streik, behördliche Anordnungen, allgemeine Störungen der Telekommunikationsnetze usw.) berechtigen Biganto dazu, die betroffenen Leistungen um die Dauer der Behinderung zuzüglich einer angemessenen Anlaufzeit hinauszuschieben.
+
+        </p>
+
+        <br>
+
+        <p><strong>5.2. Abnahme</strong></p>
+
+        <p>Hat Biganto für die Herbeiführung eines bestimmten Erfolges einzustehen (werkvertragliche Verpflichtung), werden der Benutzer und Biganto die Voraussetzungen und das Verfahren zur Abnahme im Einzelvertrag oder im Rahmen des Projektmanagements festlegen. </p>
+
+        <p>Die Abnahme durch den Benutzer kann auch im Wege schlüssigen Verhaltens erfolgen, insbesondere durch Nutzung des Systems im produktiven Einsatz, durch vorbehaltlose Zahlung oder Abruf weiterer Leistungen.
+
+        </p>
+
+        <p>Der Benutzer prüft und testet die ihm übergebene Leistung nach der vereinbarten Vorgehensweise; Biganto kann dazu auch selbständig prüfbare Teilleistungen übergeben. Eine Gesamtabnahme findet nur statt, soweit keine Teilabnahmen erfolgt sind.
+
+        </p>
+
+        <p>Der Benutzer stellt sicher, dass die Leistungen von Biganto nicht vor Abschluss der Tests und Abnahme produktiv genutzt werden, es sei denn, zwischen den Vertragspartnern wurde anderes vereinbart.
+
+        </p>
+
+        <p>Entsprechen die Leistungen oder Teilleistungen von Biganto den vereinbarten Anforderungen oder liegen nur unwesentliche Abweichungen vor, erklärt der Benutzer unverzüglich die Abnahme. Diese soll in Textform (z. B. E-Mail) erfolgen. Unwesentlich sind insbesondere solche Abweichungen, welche die Funktionsfähigkeit nur unwesentlich beeinträchtigen.
+
+        </p>
+
+        <p>Erklärt der Benutzer innerhalb von fünf Werktagen nach Übergabe einer Leistung bzw. nach Aufforderung zur Abnahme der Leistung die Abnahme nicht und hat er in dieser Zeit keine wesentlichen Mängelgegenüber Biganto gerügt, so gelten die Leistungen oder Teilleistungen als abgenommen.
+
+        </p>
+
+        <br>
+
+        <p><strong>6. Widerrufsrecht für Verbraucher</strong></p>
+
+        <p>Ist der Benutzer Verbraucher, so steht diesem ein Widerrufsrecht zu. Verbraucher ist jede natürliche Person, die ein Rechtsgeschäft zu Zwecken abschließt, die überwiegend weder ihrer gewerblichen noch ihrer selbständigen beruflichen Tätigkeit zugerechnet werden können.
+
+        </p>
+
+        <p>Am Ende dieser Nutzungsbedingungen findet sich unsere Widerrufsbelehrung sowie ein nicht verbindliches Muster für den Widerruf durch Verbraucher.
+
+        </p>
+
+        <br>
+
+        <p><strong>7. Nutzungsrechte und Nutzungspflichten der Benutzer</strong></p>
+
+        <p>Unabhängig davon, ob der Benutzer eine kostenfreie oder kostenpflichtige Nutzung der Onlinedienste ausgewählt hat, räumt Biganto den Benutzern das nicht ausschließliche und nicht übertragbare Recht ein, die von ihnen ausgewählte Nutzungsvariante der Onlinedienste (kostenpflichtig oder kostenfrei) während der Dauer des Nutzungsverhältnisse im Rahmen dieser Bestimmungen und den jeweiligen Tarifen zu nutzen.
+
+        </p>
+
+        <br>
+
+        <p><strong>7.1. Pflichten der Benutzer</strong></p>
+
+        <p>Der Benutzer verpflichtet sich, keine gesetzeswidrigen Handlungen bei und durch die Nutzung der Onlinedienste zu begehen. Diese Verpflichtung umfasst auch die Beachtung etwaig einer Nutzung durch den Benutzer entgegenstehender Urheber- und Markenrechte, wie auch Namens-, Patent- und Wettbewerbsrechte sowie Rechte des geistigen Eigentums an dem von ihm bei der Nutzung der Onlinedienste in die Systeme von Biganto hochgeladenen bzw. gespeicherten Dateien und Inhalten, sowie der Urheberrechte von Biganto an den Onlinediensten an sich.
+
+        </p>
+
+        <p>Weiterhin ist der Benutzer verpflichtet die Onlinedienste nur so zu nutzen, dass es nicht zu Funktionsstörungen der Website und/oder der Onlinedienste an sich kommt;
+
+        </p>
+
+        <p>Dem Benutzer ist es untersag:
+
+        </p>
+
+        <ul>
+            <li>rechtswidrige Inhalte in die Systeme von Biganto hochzuladen und/oder zu speichern;
+            </li>
+            <li>sittlich oder moralisch anstößige Inhalte, wie bspw. pornografische oder gewaltverherrlichende Inhalte in die Systeme von Biganto hochzuladen oder zu speichern;
+            </li>
+            <li>die Onlinedienste von Biganto Dritten entgeltlich oder unentgeltlich zur Nutzung anzubieten;
+
+            </li>
+            <li>die Onlinedienste oder Teile hiervon zu kopieren, zu modifizieren, zu verkaufen oder anderweit Dritten bereitzustellen oder weiter zu lizenzieren;
+
+            </li>
+            <li>die mit den Onlinediensten oder Software von Biganto erstellten interaktiven Präsentationen, virtuellen - und Foto-Touren, digitalen Visualisierungen, Renderings und 3D-Modelle zur Herstellung systematischer Sammlungen, wie z. B. zur Speicherung in einer Datenbank, zu kopieren oder zu sammeln, soweit dies über die dem Benutzer in Ziff. 9 dieser Nutzungsbedingungen eingeräumten Rechte hinausgeht;
+            </li>
+            <li>Zugriffsrechte oder Nutzungsbeschränkungen zu umgehen oder dies zu versuchen; Gleiches gilt für die – auch versuchte – Deaktivierung unserer Onlinedienste;
+
+            </li>
+            <li>Schadsoftware oder Code oder andere systembeeinträchtigende Inhalte, wie z. B. Computerviren in die Systeme von Biganto hochzuladen oder zu speichern.
+            </li>
+            <li>Die Onlinedienste von Biganto ohne unsere ausdrückliche Genehmigung zu bewerben;
+            </li>
+            <li>Die Onlinedienste oder andere von Biganto bereitgestellte Software oder Schnittstellen zu extrahieren oder zu kopieren;
+            </li>
+        </ul>
+
+        <p>Soweit Biganto dem Benutzer Speicherplatz innerhalb der Systeme von Biganto zur Verfügung stellt, verpflichtet sich der Benutzer, diesen Speicherplatz nur zur Verwendung der von ihm ausgewählten Dienste von Biganto zu verwenden. Dabei hat der Benutzer dafür zu sorgen, dass durch die Nutzung des Speicherplatzes keine die Rechte Dritter verletzenden Inhalte gespeichert werden. Bei der Speicherung von Dateien in den Systemen von Biganto, obliegt es dem Benutzer, für die Sicherung dieser Dateien selber zu sorgen (Datensicherung).
+
+        </p>
+
+        <p>Verstößt der Benutzer gegen diese Nutzungsbedingungen, so stellt er Biganto vollumfänglich von der Haftung für Ansprüche Dritter einschließlich etwaiger hierdurch entstehender weiterer Kosten, die Biganto durch die Abwehr dieser Ansprüche entstehen, frei.
+
+        </p>
+
+        <br>
+
+        <p><strong>7.2. Verbot von Änderungen, Verbot der Rückentwicklung.</strong></p>
+
+        <p>Sofern nicht ausdrücklich von Biganto erlaubt, haben Benutzer nicht das Recht, Teile der Dienste oder der Software zu modifizieren, zu übertragen, anzupassen oder zu übersetzen, den Quellcode oder Teile der Onlinedienste oder der Software zu rekonstruieren, dekompilieren, zu disassemblieren oder sonst zu ermitteln, zu kopieren oder sonst über die vereinbarten Zwecke zu verwenden.
+        </p>
+
+        <p>Biganto kann – unter Berücksichtigung der eigenen Urheber-, Leistungs- und Nutzungsrechte - nach eigenem Ermessen den Benutzern entsprechende Informationen über die Onlinedienste oder Software sowie Schnittstellen zur Verfügung stellen und dem Benutzer dabei angemessene Bedingungen (einschließlich angemessener Gebühren) auferlegen, um die Dienste oder Software zu dekompilieren. Eine Verpflichtung hierzu besteht seitens Biganto nicht.
+        </p>
+
+        <br>
+
+        <p><strong>8. Musterdateien</strong></p>
+
+        <p>Biganto stellt unter <a href="{{ url_for('front.index') }}">www.biganto.com</a> Demoversionen, Abbildungen, 3D-Modelle, fertige Szenen oder Audiodateien bereit (im Folgenden Musterdateien). Diese dienen der Anleitung der Benutzer oder von Biganto festgelegten anderen Vorführungszwecken. Die Musterdateien dürfen durch die Benutzer nicht zu anderen Zwecken, außer den oben genannten verwendet werden. Die Verbreitung dieser Musterdateien durch die Benutzer ist ausdrücklich nicht gestattet.
+        </p>
+
+        <br>
+
+        <p><strong>9. Urheber- und Nutzungsrechte</strong></p>
+
+        <p>Der Benutzer räumt Biganto sämtliche für die vertragsgegenständliche Nutzung erforderlichen Nutzungsrechte an Urheber-, sowie Leistungsschutzrechten und sonstigen gewerblichen Schutzrechten (u.a. Markenrechten), insbesondere das Recht zur Vervielfältigung, Verbreitung, öffentlichen Zugänglichmachung sowie Bearbeitung, und zwar zeitlich, örtlich und inhaltlich, in dem für die Durchführung des Vertrages erforderlichen Umfang, ein. Dies schließt auch die Übertragung dieser Nutzungsrechte bzw. die entsprechende Unterlizenzierung an Dritte ein, die von Biganto zur Vertragserfüllung beauftragt werden.
+        </p>
+
+        <p>Biganto ist berechtigt Inhalte des Benutzers in Absprache mit diesem zu verändern.
+        </p>
+
+        <p>Sämtliche Urheber-, Leistungsschutz- und sonstigen Rechte, an den von Biganto oder von Dritten im Auftrag von Biganto erstellten und ggf. realisierten Analysen, Konzepten und Inhalten verbleiben bei Biganto. Biganto räumt dem Kunden an den Analysen und Konzepten jedoch das zeitlich unbeschränkte Recht ein, diese in dem für eigene Marketingzwecke erforderlichen Umfang zu nutzen. Dies gilt auch über das Vertragsende hinaus.
+        </p>
+
+        <p>Machen Dritte gegen Biganto Ansprüche mit der Behauptung geltend, der oder die vom Benutzer mittels den Onlinediensten von Biganto erstellten Inhalt/e verstoße gegen gesetzliche Bestimmungen und/oder deren Veröffentlichung verletze ihre Rechte, wird der Benutzer Biganto von sämtlichen Ansprüchen Dritter auf erstes Anfordern freistellen. Der Benutzer wird etwaige Kosten und Schäden ersetzen, die Biganto durch die Inanspruchnahme einer angemessenen Rechtsverteidigung entstehen, soweit der Benutzer die Verletzung der Rechte Dritter bzw. die Verletzung gesetzlicher Bestimmungen zu vertreten hat.
+
+        </p>
+
+        <p>Der Benutzer ist verpflichtet, Biganto im Rahmen des Zumutbaren durch Bereitstellung von Informationen und Unterlagen bei der Rechtsverteidigung gegenüber Dritten zu unterstützen.
+
+        </p>
+
+        <br>
+
+        <p><strong>10. Referenzen</strong></p>
+
+        <p>Der Benutzer gestattet Biganto, ihn in die eigene Referenzliste auf www.biganto.com und anderen Werbe- und Präsentationsmaterialien sowie in den Social Media Accounts von Biganto aufzunehmen, insbesondere unter Nennung und Darstellung von Unternehmens-/Produktnamen, einem Screenshot der mittels den Onlinediensten erstellten Inhalte oder anderer für den Benutzer von Biganto erstellten Leistungen.</p>
+
+        <br>
+
+        <p><strong>11. Haftungsbeschränkung</strong></p>
+
+        <p><strong>11.1.</strong> Biganto haftet für Vorsatz und grobe Fahrlässigkeit. Ferner haftet Biganto für die fahrlässige Verletzung von Pflichten, deren Erfüllung die ordnungsgemäße Durchführung des Vertrages überhaupt erst ermöglicht, deren Verletzung die Erreichung des Vertragszwecks gefährdet und auf deren Einhaltung Sie als Benutzer regelmäßig vertrauen dürfen. Im letztgenannten Fall haftet Biganto jedoch nur für den vorhersehbaren, vertragstypischen Schaden. Biganto haftet nicht für die leicht fahrlässige Verletzung anderer als der in den vorstehenden Sätzen genannten Pflichten.
+        </p>
+
+        <p>Biganto haftet nicht für Verletzungen Dritter, die der Benutzer durch die Verwendung der Onlinedienste begeht. Ferner haftet Biganto nicht für die durch die Benutzer verlinkten Inhalte von oder auf die Website von Biganto.
+
+        </p>
+
+        <p>Die vorstehenden Haftungsausschlüsse gelten nicht bei Verletzung von Leben, Körper und Gesundheit. Die Haftung nach dem Produkthaftungsgesetz bleibt unberührt.
+
+        </p>
+
+        <p><strong>11.2.</strong> Die Datenkommunikation über das Internet kann nach dem derzeitigen Stand der Technik nicht fehlerfrei und/oder jederzeit verfügbar gewährleistet werden. Biganto haftet insoweit nicht für die ständige und ununterbrochene Verfügbarkeit der Onlinedienste.</p>
+
+        <p><strong>11.3.</strong> Biganto ist nicht verantwortlich für Handlungen, die Benutzer im Zusammenhang mit der Nutzung Onlinedienste wahrnehmen. Die Nutzung unserer Onlinedienste erfolgt auf eigenes Risiko der Benutzer, diese sind allein verantwortlich für Datenverluste oder Schäden an ihrem Computersystem, die sich aus der Nutzung der Onlinedienste oder Software und dem Zugriff darauf ergeben.</p>
+
+        <br>
+
+        <p><strong>12. Schlussbestimmungen</strong></p>
+
+        <br>
+
+        <p><strong>12.1. Änderungsvorbehalt, Änderungsmitteilung und Zustimmungsfiktion</strong></p>
+
+        <p>Die hier verfassten Nutzungsbedingungen unterliegen einem Änderungsvorbehalt. Bei Änderungen der Rechtslage, die Einfluss auf die Nutzung der Onlinedienste hat oder haben kann oder bei einer wesentlichen Änderung der von Biganto angebotenen Onlinedienste, können diese Nutzungsbedingung geändert werden.
+
+        </p>
+
+        <p>Im Fall einer Änderung dieser Nutzungsbedingungen, werden die Nutzer über die jeweiligen Änderungen transparent per E-Mail von Biganto informiert und erhalten Gelegenheit im Rahmen einer angemessenen Frist auf die Änderung der Nutzungsbedingungen zu reagieren.
+
+        </p>
+
+        <p>Reagiert der Benutzer nicht innerhalb der angemessenen Frist auf die Änderungsmitteilung, so gelten diese als durch den Benutzer akzeptiert. Hierüber wird Biganto in jedem Fall in der Änderungsmitteilung hinweisen.
+
+        </p>
+
+        <br>
+
+        <p><strong>12.2. Gerichtsstand</strong></p>
+
+        <p>Soweit der Benutzer bei Abschluss des Vertrages seinen Wohnsitz oder gewöhnlichen Aufenthalt in Deutschland hatte und entweder zum Zeitpunkt der Klageerhebung durch uns aus Deutschland verlegt haben oder seinen Wohnsitz oder seinen gewöhnlichen Aufenthaltsort zu diesem Zeitpunkt unbekannt ist, ist Gerichtsstand für alle Streitigkeiten der Sitz unseres Unternehmens in München.
+
+        </p>
+
+        <br>
+
+        <p><strong>12.3. Verbraucherstreitbeilegung</strong></p>
+
+        <p>Wir weisen Sie darauf hin, dass der Benutzer neben dem ordentlichen Rechtsweg –sofern er Verbraucher ist (siehe hierzu Ziff. 5 dieser Nutzungsbedingungen) - auch die Möglichkeit einer außergerichtlichen Beilegung von Streitigkeiten gemäß Verordnung (EU) Nr. 524/2013 hat. Einzelheiten dazu finden sich in Verordnung (EU) Nr. 524/2013 und unter der Internetadresse: <a href="http://ec.europa.eu/consumers/odr">http://ec.europa.eu/consumers/odr</a>
+        </p>
+
+        <p>Unsere E-Mail-Adresse lautet: info@biganto.com
+        </p>
+
+        <p>Wir weisen nach § 36 VSBG darauf hin, dass wir nicht verpflichtet sind, an einem außergerichtlichen Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
+
+        <br>
+
+        <p><strong>12.4. Maßgebliche Sprachfassung</strong></p>
+
+        <p>Für den Fall, dass diese Nutzungsbedingungen dem Benutzer in einer anderen Sprache als Deutsch zur Verfügung gestellt werden, hat Im Falle von Abweichungen zwischen der deutschen Fassung und einer Übersetzung die deutsche Fassung Vorrang.
+        </p>
+
+        <br>
+
+        <p><strong>12.5. Sollten einzelne Bestimmungen dieses Nutzungsbedingungen unwirksam sein, so werden hierdurch die Nutzungsbedingungen im Übrigen nicht berührt.</strong></p>
+
+        <br>
+
+        <p><strong>ANHANG: Widerrufsbelehrung für Verbraucher</strong></p>
+
+        <br>
+
+        <p><strong>Widerrufsrecht</strong></p>
+
+        <p>Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen den mit Biganto geschlossenen Vertrag zu widerrufen.
+        </p>
+
+        <p>Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses.
+            Um Ihr Widerrufsrecht auszuüben, müssen Sie uns, der Biganto GmbH, Schloßschmidstr. 5, 80639 München, Telefon +49 (89) 262-195-67, E-Mail info@biganto.com, mittels einer eindeutigen Erklärung (z.B. ein mit der  Post versendeter Brief oder E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.
+        </p>
+
+        <p>Sie können dafür das untenstehende Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist.
+        </p>
+
+        <p>Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.</p>
+
+        <br>
+
+        <p><strong>Folgen des Widerrufs</strong></p>
+
+        <p>Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, einschließlich etwaiger Lieferkosten (mit Ausnahme der zusätzlichen Kosten, die sich daraus ergeben, dass Sie eine andere Art der Lieferung als die von uns angebotene, günstigste Standardlieferung gewählt haben), unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf dieses Vertrags bei uns eingegangen ist. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Sie bei der ursprünglichen Transaktion eingesetzt haben, es sei denn, mit Ihnen wurde ausdrücklich etwas anderes vereinbart; in keinem Fall werden Ihnen wegen dieser Rückzahlung Entgelte berechnet.
+
+        </p>
+
+        <p>Haben Sie verlangt, dass die Dienstleistungen während der Widerrufsfrist beginnen soll, so haben Sie uns einen angemessenen Betrag zu zahlen, der dem Anteil der bis zu dem Zeitpunkt, zu dem Sie uns von der Ausübung des Widerrufsrechts hinsichtlich dieses Vertrags unterrichten, bereits erbrachten Dienstleistungen im Vergleich zum Gesamtumfang der im Vertrag vorgesehenen Dienstleistungen entspricht.
+
+        </p>
+
+        <br>
+
+        <p><strong>Ausschluss- bzw. Erlöschensgründe
+            </strong></p>
+
+        <p>Das Widerrufsrecht erlischt bei einem Vertrag zur Erbringung von Dienstleistungen, wenn der Unternehmer die Dienstleistung vollständig erbracht hat und mit der Ausführung der Dienstleistung erst begonnen hat, nachdem der Verbraucher dazu seine ausdrückliche Zustimmung gegeben hat und gleichzeitig seine Kenntnis davon bestätigt hat, dass er sein Widerrufsrecht bei vollständiger Vertragserfüllung durch den Unternehmer verliert.
+        </p>
+
+        <br>
+
+        <p><strong>Muster-Widerrufsformular</strong></p>
+
+        <br>
+
+        <p><strong>(Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses Formular aus und senden Sie es zurück.)</strong></p>
+
+        <p>An die</p>
+        <p>Biganto GmbH</p>
+        <p>Schloßschmidstr. 5</p>
+        <p>80639 München: </p>
+        <p>info@biganto.com</p>
+
+        <ul>
+            <li>Hiermit widerrufe(n) ich/ wir (*) den von mir/ uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/ die Erbringung der folgenden Dienstleistung (*)</li>
+            <li>Bestellt am (*)/ erhalten am (*)</li>
+            <li>Name des/ der Verbraucher(s)</li>
+            <li>Anschrift des/ der Verbraucher(s)</li>
+            <li>Unterschrift des/ der Verbraucher(s) (nur bei Mitteilung auf Papier)
+            </li>
+            <li>Datum</li>
+        </ul>
+
+        <p>(*) Unzutreffendes streichen.</p>
+
+        <br>
+
+    </div>
+{% endblock %}

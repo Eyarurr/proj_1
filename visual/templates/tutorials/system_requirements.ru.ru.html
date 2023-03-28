@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% set page_title = 'Системные требования' %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/system-requirements/system_requirements.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div class="content-page__wrapper">
+            <div class='content-page__main content-page__main--max-width'>
+                <p>Минимальные технические характеристики оборудования (компьютера) для работы Виртуального тура:
+                </p>
+                <ul>
+                    <li>Видеокарта и драйвер с поддержкой DirectX 10</li>
+                    <li>Не менее 4 ГБ ОЗУ</li>
+                    <li>Процессор не слабее Intel Core i5 или AMD A10</li>
+                    <li>Браузер и минимальная версия: Google Chrome 80, Firefox 78, Safari 14, Opera 66, Microsoft Edge 79</li>
+                    <li>Для мобильных устройств: Android 6 или новее, iOS 14 или новее совместимое устройство,
+                        минимум 3ГБ ОЗУ (рекомендовано 4)
+                        Важно: некоторые iOS совместимые устройства имеют меньше 3ГБ ОЗУ и могут испытывать
+                        проблемы с производительностью
+                    </li>
+                    <li>Для проверки корректной работы устройство браузер должны пройти тест на поддержку WebGL на странице: <a href="https://get.webgl.org/" target="_blank">https://get.webgl.org/</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

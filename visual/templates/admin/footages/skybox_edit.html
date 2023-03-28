@@ -1,0 +1,151 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'footages' %}
+
+
+{% block content %}
+    <h2>Панорама {{ skybox_id }} съёмки #{{ footage.id }}</h2>
+
+    {% include('admin/footages/_tabs.html') %}
+
+    <form method="post" enctype="multipart/form-data" class="form-horizontal" id="form-edit">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="row mb-3 bg-info align-items-center" style="--bs-bg-opacity: .1;">
+            <label class="col-1  offset-lg-1 text-lg-end">ID</label>
+            <div class="col-1 "><span class="form-control-static">{{ skybox_id }}</span></div>
+            <label class="col-2  text-lg-end">Ревизия</label>
+            <div class="col-1 "><span class="form-control-static">{{ skybox.get('revision', '—') }}</span></div>
+            <div class="col-auto ">
+                <div class="form-check form-check-inline">
+                    <label class="form-check-text"><input class="form-check-input" type="radio" name="render_type" value="vray" checked="checked">Vray</label>
+                </div>
+                    <div class="form-check form-check-inline">
+                    <label class="form-check-text"><input class="form-check-input" type="radio" name="render_type" value="corona">Corona</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="row align-items-center">
+                    <span class="col-auto  pe-0">Сжатие JPEG:</span>
+                    <div class="col-auto">
+                        <input type="number" min="10" max="100" name="jpeg_quality" value="65" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-check float-sm-end ">
+                    <label class="form-check-text"><input class="form-check-input" type="checkbox" name="disabled" {% if skybox.get('disabled') %}checked="checked"{% endif %}>Отключить</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="text-end col-lg-2">Панорама</label>
+            <div class="col col-lg-5">
+                {% if skybox %}
+                    <div class="text-center">
+                        {{ panorama(footage, footage.min_res, skybox_id, None, footage.meta['skyboxes'].get(skybox_id|string, {}).get('revision')) }}
+                    <p></p>
+                    </div>
+                {% endif %}
+                {{ form.panorama(class='form-control') }}
+            </div>
+        </div>
+        {% if footage.meta.get('binocular') %}
+            <div class="row mb-3">
+                <label class="text-end col-lg-2">Бинокулярные панорама</label>
+                <div class="col col-lg-5">
+                    {% if skybox %}
+                        <div class="text-center">
+                            {{ panorama(footage, footage.min_res, skybox_id, 'left', footage.meta['skyboxes'].get(skybox_id|string, {}).get('revision')) }}
+                        <p>Левая</p>
+                        </div>
+                    {% endif %}
+                    {{ form.panorama_binocular(class='form-control') }}
+                </div>
+                <div class="col-lg-5">
+                    {% if skybox %}
+                        <div class="text-center">
+                            {{ panorama(footage, footage.min_res, skybox_id, 'right', footage.meta['skyboxes'].get(skybox_id|string, {}).get('revision')) }}
+                        <p>Правая</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="row mb-3">
+            <label class="text-end col-lg-2">Координата</label>
+            <div class="col-lg-2">
+                <input type="text" name="pos" value="{{ skybox.get('pos', [])|join(', ') }}" class="form-control" placeholder="x, y, z">
+            </div>
+            <label class="text-end col-lg-2">Кватернион</label>
+            <div class="col-lg-3">
+                <input type="text" name="q" value="{{ skybox.get('q', [])|join(', ') }}" class="form-control" placeholder="x, y, z, w">
+            </div>
+            <label class="text-end col-lg-1">Этаж</label>
+            <div class="col-lg-2">
+                <select name="floor" class="form-control">
+                    {% for floor_id, floor in footage.meta.get('floors', {}).items() %}
+                        <option value="{{ floor_id }}" {% if skybox.get('floor')|int == floor_id|int %} selected {% endif %}>
+                            {% if floor.get('title') is mapping %}
+                                {{ floor.get('title').get('ru', floor_id) }}
+                            {% else %}
+                                {{ floor.get('title', floor_id) }}
+                            {% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-end start-q">Кватернион камеры</label>
+            <div class="col-lg-3 start-q">
+                <input type="text" name="start_q" class="form-control" value="{{ footage.meta.get('start', {}).get('q', [])|join(', ') }}" placeholder="x, y, z, w">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-10 offset-lg-2">
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+                {% if skybox_id != None %}
+                    <a href="#modal-delete" data-toggle="modal" class="btn btn-danger">Удалить</a>
+                {% endif %}
+                <a href="{{ url_for('.footage_skyboxes', footage_id=footage.id) }}" class="btn btn-outline-secondary">Отмена</a>
+            </div>
+        </div>
+    </form>
+
+    {% if skybox_id != None %}
+    <form method="post" action="{{ url_for('.footage_skybox_delete', footage_id=footage.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="skybox_id" value="{{ skybox_id }}">
+        <div class="modal" id="modal-delete"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Удалить скайбокс?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Это ведь навсегда.
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Удалять</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+            </div>
+        </div></div></div>
+    </form>
+    {% endif %}
+
+    <script type="text/javascript">
+    (function() {
+        var $form = $('#form-edit'), $is_start = $form.find('[name=is_start]');
+        function start_visibility() {
+            if($is_start.is(':checked')) {
+                $('.start-q').show();
+            } else {
+                $('.start-q').hide();
+            }
+        }
+        $is_start.click(start_visibility);
+        start_visibility();
+    })();
+    </script>
+
+
+
+{% endblock %}

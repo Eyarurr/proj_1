@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% set page_title = _("Cookie settings") %}
+
+{% block content %}
+    <div class="page-title page-title--textpage">
+        <div class="b-page__inner page-title__inner page-title__inner--align-left">
+            <h1 class="page-title__head h1">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg content-page content-page__license">
+        <div class="content-page__wrapper">
+            <div class="content-page__main">
+                <p><strong>Что такое cookie-файлы?</strong></p>
+                <p>Cookie — это небольшой текстовый файл, хранящий информацию о настройках интернет-браузеров. Эта технология используется практически на всех современных сайтах. Файлы cookie скачиваются браузером при первом посещении сайта. При повторном заходе на этот сайт с того же устройства файл cookie вместе с хранящейся в нем информацией либо отправляется обратно на исходный сайт(основной файл cookie), либо на сторонний сайт, которому он принадлежит(сторонний файл cookie). Таким образом, мы получаем информацию о повторном открытии сайта через тот же браузер, и в некоторых случаях может изменяться отображаемый контент.</p>
+                <p>Файлы cookie могут быть полезны и пользователю, при повторном заходе делая интерфейс сайта более удобным и персонализированным. Если Вы используете то же устройство и тот же браузер, cookie запомнят ваши предпочтения и адаптируют отображаемый контент в соответствии с вашими интересами и потребностями.</p>
+                <p>Также такие cookie упрощают переход с протокола HTTP на HTTPS при смене страниц, тем самым обеспечивая сохранность передаваемых данных. Кроме того, они используются для хранения согласия пользователей в отношении использования файлов cookie нашим сайтом. Для использования технических файлов cookie согласие пользователя не требуется.</p>
+                <p><strong>Мы используем следующие категории файлов cookie на нашем сайте:</strong></p>
+                <p><strong>Обязательные cookie</strong></p>
+                <p>Обязательные cookie файлы необходимы для работы основного функционала сайта. Наш сайт не может правильно работать на вашем устройстве без обязательных файлов cookie.</p>
+                <p><strong>Аналитические cookie</strong></p>
+                <p>Такие файлы позволяют нам лучше понять как используется сайт и как мы можем его улучшить. Аналитические cookie куки собирают информацию в агрегированной форме, анонимно и не отслеживают ваши действия на других сайтах.</p>
+                <p><strong>Рекламные cookie.</strong></p>
+                <p>Рекламные файлы cookie используются для оптимизации сайта и отображения рекламы на основе интересов на других сайтах. Они также используются для того, чтобы ограничивать число показов одного и того же рекламного объявления одному пользователю, и для измерения эффективности рекламных кампаний.</p>
+            </div>
+            <aside class="content-page__side">
+                <nav class="side-menu sticky cookie-settings " data-top-spacing="96" data-res="lg">
+                    <span class="cookie-settings__title">Настройки cookie</span>
+                    <div class="cookie-policy__checkboxes_wrapper">
+                        <label class="big-checkbox big-checkbox__group">
+                            <input id='essential-checkbox' class="big-checkbox__input" type="checkbox"
+                                name="email_notifications" value="1" checked disabled>
+                            <span
+                                class="big-checkbox__checkmark big-checkbox__checkmark--small big-checkbox__checkmark--disabled"></span>
+                            <span class="big-checkbox__label big-checkbox__label--small">Обязательные</span>
+                        </label>
+                        <label class="big-checkbox big-checkbox__group">
+                            <input id='functional-checkbox' class="big-checkbox__input" type="checkbox"
+                                name="email_notifications" value="1">
+                            <span class="big-checkbox__checkmark big-checkbox__checkmark--small"></span>
+                            <span class="big-checkbox__label big-checkbox__label--small">Аналитические</span>
+                        </label>
+                        <label class="big-checkbox big-checkbox__group">
+                            <input id='marketing-checkbox' class="big-checkbox__input" type="checkbox"
+                                name="email_notifications" value="1">
+                            <span class="big-checkbox__checkmark big-checkbox__checkmark--small"></span>
+                            <span class="big-checkbox__label big-checkbox__label--small">Рекламные</span>
+                        </label>
+                    </div>
+                    <div class='cookie-settings__bottom'>
+                        <div class='cookie-settings__bottom-button-group'>
+                            <button
+                                id='accept-recommended-cookie-settings'
+                                class='cookie-settings__bottom-button-group__accept-btn'
+                            >
+                                Принять все
+                            </button>
+                            <div>
+                                <button
+                                    id='save-cookie-settings'
+                                    class='cookie-settings__bottom-button-group__save-button'
+                                >
+                                    Сохранить настройки
+                                </button>
+                                <span
+                                    class='cookie-settings__bottom__saved-message hidden'
+                                    id='saved-message'
+                                >
+                                    Сохранено!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

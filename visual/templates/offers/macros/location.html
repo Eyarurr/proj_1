@@ -1,0 +1,22 @@
+{% macro location(offer) %}
+    {% if offer.template_data.location %}
+
+        {% if offer.template_data.location.address %}
+            <section class="b-address b-external__section">
+                <div class="b-external__inner clearfix">
+                    <div class="b-external__content clearfix">
+                        {{ offer.template_data.location.address }}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+
+        {% if offer.template_data.location.lat and offer.template_data.location.lon %}
+            <section class="b-map">
+                <div class="b-map__block" data-lat="{{ offer.template_data.location.lat }}" data-lon="{{ offer.template_data.location.lon }}"{% if offer.template_data.location.address %} data-address="{{ offer.template_data.location.address }}"{% endif %}>
+                </div>
+            </section>
+        {% endif %}
+
+    {% endif %}
+{% endmacro %}

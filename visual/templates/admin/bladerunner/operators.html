@@ -1,0 +1,98 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>
+    Операторы Capture services
+    {% if office %}
+        офиса «<a href="{{ url_for('.br_office_edit', office_id=office.id) }}">{{ office.title or "Без названия"}}</a>»
+    {% else %}
+        — все какие есть
+    {% endif %}
+</h1>
+<form method="get">
+    <div class="row table-filters justify-content-between">
+        <div class="col-lg-auto">
+            <div class="row mb-1">
+                <div class="col-lg-auto">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Сортировка</span>
+                        {{ filters.sort(class='form-select form-select-sm') }}
+                    </div>
+                </div>
+                <div class="col-lg-auto">
+                    {{ filters.search(class='form-control form-control-sm', placeholder='Поиск по имени и e-mail') }}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-auto">
+            <div class="btn-group btn-group-sm mb-1">
+                <button type="submit" class="btn btn-submit btn-primary">Показать</button>
+                {% if filters.is_dirty %}
+                    <a href="{{ url_for('.br_operators', **filters.default_values) }}" class="btn btn-secondary">Очистить</a>
+                {% endif %}
+            </div>
+            {% if office %}
+            <a class="btn btn-sm btn-outline-success mb-1" href="{{ url_for('.br_operator_edit', office_id=office.id) }}">
+                <i class="fa fa-plus-circle"></i> Создать оператора
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+{% if operators.total == 0 %}
+<div class="alert alert-info">
+    Операторов не найдено. <a href="{{ url_for('.br_operators') }}">Всех посмотреть.</a>
+</div>
+{% else %}
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-3">
+
+<thead>
+<tr>
+    <th>Офис</th>
+    <th class="break">Имя</th>
+    <th class="break" colspan="2">Время работы</th>
+    <th class="break">Действия</th>
+</tr>
+</thead>
+<tbody>
+
+{% for operator in operators.items %}
+<tr>
+    <td class="tt">
+        <a href="{{ url_for('.br_operators', office_id=operator.office_id) }}">{{ operator.office.title }}</a>
+    </td>
+    <td class="break tt">
+        <strong><a href="{{ url_for('.team_profile', user_id=operator.user_id) }}">{{ operator.user.name }}</a></strong>
+        {% if not operator.active %}<span class="bg-danger text-warning float-end"><i class="fas fa-ban"></i> НЕ РАБОТАЕТ</span>{% endif %}
+        <br>
+        {{ operator.user.email }}
+    </td>
+    <td class="break">{{ operator.work_start.strftime('%H:%M %z') }}</td>
+    <td class="break">{{ operator.work_end.strftime('%H:%M %z') }}</td>
+    <td class="break">
+        <a href="{{ url_for('.br_operator_edit', operator_id=operator.user_id, office_id=operator.office_id) }}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
+
+{{ render_pagination(operators, '.br_operators', **filters.as_dict()) }}
+
+{% endif %}
+{% if not office %}
+    <p class="alert alert-success">
+        Чтобы создать оператора, <a href="{{ url_for('.br_offices') }}">выберите какой-нибудь офис</a>.
+    </p>
+{% endif %}
+{% endblock %}

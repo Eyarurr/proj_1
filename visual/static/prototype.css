@@ -1,0 +1,41 @@
+body { padding-top: 70px; }
+
+ul.gallery {
+    font-size: 0;
+    list-style-type: none;
+    padding: 0;
+}
+ul.gallery li {
+    font-size: 14px;
+    position: relative;
+    display: inline-block;
+    vertical-align: top; /* fix for jquery ui glitches */
+    margin: 5px;
+    width: 256px;
+    height: 170px;
+}
+ul.gallery li.placeholder {
+    background: #eee;
+    border: 1px dashed #aaa;
+}
+ul.gallery .actions {
+    display: none;
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+}
+ul.gallery li:hover .actions { display: block; }
+ul.gallery p.title {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 5px;
+    background: black;
+    color: white;
+    opacity: .6;
+}
+ul.gallery li:hover p.title { display: none; }
+
+ul.gallery.mini li { width: 128px; height: 85px; }
+ul.gallery.mini p.title { font-size: 10px; }

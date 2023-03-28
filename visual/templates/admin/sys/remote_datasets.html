@@ -1,0 +1,44 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'sys' %}
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>Удалённый процессинг: датасеты</h1>
+
+    {% if datasets.total == 0 %}
+        <div class="alert alert-info">
+            Датасетов не найдено.
+        </div>
+    {% else %}
+        <table class="table table-bordered table-striped table-list">
+        <thead class="table-light">
+        <tr>
+            <th>Создан</th>
+            <th>Тип</th>
+            <th>ID (remote)</th>
+            <th>Владелец</th>
+            <th>Название</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for dataset in datasets.items %}
+        <tr>
+            <td>{{ dataset.created.strftime('%d.%m.%Y %H:%M:%S') }}</td>
+            <td><code>{{ dataset.type }}</code></td>
+            <td><code>{{ dataset.remote_id }}</code></td>
+            <td><a href="{{ url_for('.user_edit', user_id=dataset.user_id) }}">{{ dataset.user.email }}</a></td>
+            <td class="t">{{ dataset.title }}</td>
+            <td><a href="{{ url_for('.sys_remote_dataset', dataset_id=dataset.id) }}" class="btn btn-xs btn-info">События</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
+        {{ render_pagination(datasets, '.sys_remote_datasets') }}
+    {% endif %}
+{% endblock %}

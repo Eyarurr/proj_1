@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% set page_title = _("Editing tour assets") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/edit-assets/edit-assets.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div class="content-page__wrapper">
+            <div class="content-page__main">
+                <p>С помощью этой статьи вы научитесь редактировать содержимое тура для внесения изменений по проекту или исправления ошибок. Хотя процесс довольно прост, есть некоторые нюансы, знать которые бывает полезно перед началом редактирования.
+                </p>
+
+                <div id="replace_model" class="b-anchor"></div>
+                <h3>Замена модели</h3>
+
+                <p>Модель - незаменимая часть тура, ее замена - самое серьезное действие при редактировании тура. Производить замену модели следует только в том случае, если существенно изменилась геометрия тура.
+                </p>
+
+                <p><span class='warning'>Важно</span>: в большинстве случаев замена модели требует пересборки тура. Обработка тура займет какое то время и будет вычтена из месячного лимита на загрузку туров. 
+                    Тем не менее продвинутые пользователи могут вручную заменить модель, в случае если изменения в модели незначительны. См. статью <a href='{{ url_for('tutorials.model_replacement') }}'>"Замена модели вручную"</a>
+                </p>
+
+                <p>Чтобы заменить модель зайдите в ваш тур в личном кабинете и нажмите “Пересобрать тур”.
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit1.jpg" alt="">
+                </p>
+
+                <p>Вы увидите тот же интерфейс, который использовался при первоначальном создании тура. Замените модель и нажмите “Создать тур” чтобы продолжить.
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit2.jpg" alt="">
+                </p>
+
+                <p><span class='warning'>Важно</span>: если ваш тур находится в статусе “Опубликован”, первоначальные модель и панорамы были удалены из него, внутри таких туров хранятся только модифицированные версии. Если вы вернете такой тур на пересборку, его невозможно будет собрать без загрузки всех компонентов (панорам и модели) по новой. Пересобранные туры сохраняют свой ID и адрес по html ссылке. Туры в статусе “Тестирование” все еще хранят исходные панорамы внутри нашей системы, для них не требуется загружать ассеты по новой.
+                </p>
+
+                <div id="replace_panorama" class="b-anchor"></div>
+                <h3>Замена панорамы</h3>
+
+                <p>Вы можете свободно заменять панорамы в туре в любое время. Обратите внимание, что даже с заменой панорам, режим 3d панорамы не будет обновлен, для этого требуется пересборка тура.
+                </p>
+
+                <p>Чтобы заменить отдельное изображение, наведите курсор мыши на него в списке панорам и нажмите “Редактировать”:
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit3.jpg" alt="">
+                </p>
+
+                <p>Здесь вы сможете изменить несколько вещей, в том числе загрузить новое изображение.
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit4.jpg" alt="">
+                </p>
+
+                <p>Укажите путь к файлу или загрузите его с помощью drag and drop и выберите корректный рендер. Нажмите “Сохранить”. При замене отдельного изображения происходит загрузка напрямую в точку, которую вы редактируете, номер в имени файла изображения не актуален.
+                </p>
+
+                <div id='replace_all_panoramas' class="b-anchor"></div>
+                <h3>Замена всех панорам</h3>
+
+                <p>Чтобы заменить все панорамы, в списке панорам нажмите на кнопку следом за заголовком “По центру” и выберите “Загрузить заново все” из списка.
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit5.jpg" alt="">
+                </p>
+
+                <p>Как и ранее, не забудьте указать правильный рендер и загрузите изображения. Обратите внимание, что обновленные панорамы должны иметь те же номера в названии файла чтобы они загрузились в правильные точки.
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit6.jpg" alt="">
+                </p>
+
+                <div id='replace_binocular_panoramas' class="b-anchor"></div>
+                <h3>Замена бинокулярных панорам</h3>
+
+                <p>Замена бинокулярных панорам происходит точно так же, как и замена обычных:
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit7.jpg" alt="">
+                </p>
+
+                <div id='change_point_coordinates' class="b-anchor"></div>
+                <h3>Изменение координат точки</h3>
+
+                <p>Иногда обычной замены изображения недостаточно и также требуется изменить положение точки в пространстве тура. Чтобы это сделать необходимо изменить координаты данной точки.
+                </p>
+
+                <p><span class='warning'>Важно</span>: хотя вы можете изменить изображение без замены координат, обратное - не верно. Если вы меняете координаты точки, обязательна загрузите обновленную панораму. Старая панорама после изменения координат не будет совпадать с моделью тура.
+                </p>
+
+                <p>Чтобы получить координаты точки в правильном формате, воспользуйтесь нашим скриптом по созданию камеры. Перетащите его файл во вьюпорт 3ds Max и выгрузите .txt файл с координатами. Вы можете подробно узнать о данном процесс в статье <a href='{{ url_for('tutorials.setting_up_camera') }}#optional'>Создание камеры.</a>
+                </p>
+
+                <p>Просто скопируйте строку с нужным номером точки из .txt файла в соответствующее текстовой поле в списке панорам в туре или или во время замены изображения:
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit8.jpg" alt="">
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit9.jpg" alt="">
+                </p>
+
+                <p>Вы также можете изменить координаты всех точек сразу. Для этого в списке панорам  нажмите кнопку следом за заголовком “Координаты” и выберите “Заменить все”:
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit10.jpg" alt="">
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit11.jpg" alt="">
+                </p>
+
+                <div id='add_additional_points' class="b-anchor"></div>
+                <h3>Добавление новых точек</h3>
+
+                <p>Чтобы добавить новую точку вам потребуется ее координаты и панорама. Чтобы добавить точку нажмите “Добавить панорамы” над списком изображений:
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit12.jpg" alt="">
+                </p>
+
+                <p>Выберите рендер, загрузите новое изображение и скопируйте координаты в текстовое поле. Сохраните изменения.
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit13.jpg" alt="">
+                </p>
+
+                <div id='change_renderer' class="b-anchor"></div>
+                <h3>Изменение рендера</h3>
+
+                <p>Выбор правильного рендера позволяет правильно сориентировать модель и изображения. Если рендер выбран некорректно, скорее всего вы не сможете нормально перемещаться по туру.  Т.к. Virtoaster обрабатывает панорамы с учетом выбранного рендера, для его изменения требуется перезагрузить все панорамы.
+                </p>
+
+                <p>Чтобы это сделать, нажмите на кнопку следов за заголовком “По центру” в списке панорам и выберите “Загрузить заново все”.
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit14.jpg" alt="">
+                </p>
+
+                <p>При загрузке панорам выберите корректный рендер (VRay по умолчанию).
+                </p>
+
+                <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit15.jpg" alt="">
+                </p>
+
+                <p><span class='warning'>Важно</span>: если вы собрали тур с некорректно выбранным рендером, текстуры в режиме 3д панорамы будут неправильными. Изменения рендера недостаточно чтобы это исправить, потребуется полная пересборка тура (см. <a href="#replace_model" class="side-menu__link link-scroll-to">Замена модели</a>).
+                </p>
+
+            </div>
+
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-bottom-spacing="403" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#replace_model" class="side-menu__link link-scroll-to">Замена модели</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#replace_panorama" class="side-menu__link link-scroll-to">Замена панорамы</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#replace_all_panoramas" class="side-menu__link link-scroll-to">Замена всех панорам</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#replace_binocular_panoramas" class="side-menu__link link-scroll-to">Замена бинокулярных панорам</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#change_point_coordinates" class="side-menu__link link-scroll-to">Изменение координат точки</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#add_additional_points" class="side-menu__link link-scroll-to">Добавление новых точек</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#change_renderer" class="side-menu__link link-scroll-to">Изменение рендера</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

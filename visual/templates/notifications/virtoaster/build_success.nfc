@@ -1,0 +1,59 @@
+# Отправляется, когда виртостер собрал тур (visual/jobs/wrappers.py:81)
+#
+[CONTEXT]
+tour=Tour
+
+[COMMON]
+channel=virtoaster
+tone=success
+link={{ url_for('my.index', path='toast/{}/edit'.format(tour.id)) }}
+
+[EN]
+message=Tour <b>{{ tour.title or 'Untitled' }}</b> successfully created
+email_subject=Tour "{{ tour.title or 'Untitled' }}" successfully created
+email_html=<p>Good day!</p>
+    <p>
+        Your tour <a href="{{ url_for('my.index', path='toast/{}/edit'.format(tour.id), _external=True, _scheme='https') }}">«{{ tour.title or 'Untitled' }}»</a> is complete and
+        available in your account with «Testing» status.
+    </p>
+
+    <p>
+        Enter your account, check the tour and edit it if necessary. Do not forget to change tour status to «Published».
+    </p>
+
+    <p>
+        Keep in mind, that tours with «Testing» status have limited lifespan.
+    </p>
+email_text=Good Day!
+
+    Your tour «{{ tour.title or 'Untitled' }}» is complete and available in your account with «Testing» status:
+
+       {{ url_for('my.index', path='toast/{}/edit'.format(tour.id), _external=True, _scheme='https') }}
+
+    Enter your account, check the tour and edit it if necessary. Do not forget to change tour status to «Published».
+
+    Keep in mind, that tours with «Testing» status have limited lifespan.
+
+[RU]
+message=Тур <b>{{ tour.title or 'Untitled' }}</b> успешно собран
+email_subject=Тур "{{ tour.title or 'Untitled' }}" успешно собран
+email_html=<p>Добрый день!</p>
+    <p>
+        Ваш тур <a href="{{ url_for('my.index', path='toast/{}/edit'.format(tour.id), _external=True, _scheme='https') }}">«{{ tour.title or 'Untitled' }}»</a>
+        успешно собрался и доступен в личном кабинете в статусе «Тестирование».
+    </p>
+    <p>
+        Зайдите в личный кабинет, проверьте его, отредактируйте при необходимости и не забудьте опубликовать.
+    </p>
+    <p>
+        Обратите внимание, что туры в статусе «Тестирование» хранятся ограниченное время.
+    </p>
+email_text=Добрый день!
+
+    Ваш тур «{{ tour.title or 'Untitled' }}» успешно собрался и доступен в личном кабинете в статусе «Тестирование»:
+
+           {{ url_for('my.index', path='toast/{}/edit'.format(tour.id), _external=True, _scheme='https') }}
+
+    Зайдите в личный кабинет, проверьте его, отредактируйте при необходимости и не забудьте опубликовать.
+
+    Обратите внимание, что туры в статусе «Тестирование» хранятся ограниченное время.

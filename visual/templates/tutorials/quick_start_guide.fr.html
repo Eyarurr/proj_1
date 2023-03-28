@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+{% set page_title = _("Quick start guide") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/quick-start-guide/quick-start-guide.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+         style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        <div class="content-page__wrapper">
+
+            <div class="content-page__main">
+
+                <div id="basic" class="b-anchor"></div>
+                <p>
+                    This is a quick start guide to walk you through the process of tour creation from A to Z and make
+                    your experience better. Good way to learn is to do something yourself, so we prepared a sample tour
+                    with all assets required to create it included.
+                </p>
+                <p>There are two steps of this guide:</p>
+                <ul>
+                    <li>Step 1 - become familiar with tour creation interface</li>
+                    <li> Step 2 - become familiar with our tools for 3d max to create assets</li>
+                </ul>
+
+                <iframe style="width: 100%; height: 460px;" src="https://www.youtube.com/embed/E3jAPOUG9RM"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+
+                <h2>Step 1 - Create sample tour</h2>
+                <p>By following this guide you will create a tour like this:</p>
+                <iframe src="https://biganto.com/tour/21432/" frameborder="0"
+                        style="width: 100%; height: 460px;"></iframe>
+                <p class="italic">Sample tour</p>
+                <p>
+                    <a class="link-button" href="/static/downloads/virtoaster_trial_basic.rar">
+                        <button id="download-basic-components" type="submit"
+                                class="generate-form__button button button--small fill blue">
+                            Download Basic assets (382 mb)
+                        </button>
+                    </a>
+                </p>
+                <p>
+                    Start with downloading the asset package. Basic package contain final assets you can use as a
+                    reference or upload to the site as is:
+                </p>
+                <ul>
+                    <li>panoramic images with post production</li>
+                    <li>.obj file with 3d model</li>
+                    <li>optional .txt file with image coordinates</li>
+                </ul>
+                <p>
+                    If you’ve already registered your account you will have a Trial plan already set up, so you can
+                    upload a several tours for free. Otherwise, please create an account first.
+                </p>
+                <p>To create sample tour do the following:</p>
+                <ol>
+                    <li>Download and unpack archive with assets somewhere on your computer</li>
+                    <li>
+                        Press “Create tour” on the very top of the screen and create new folder for your tour or select
+                        existing one. You will be redirected to the tour creation screen.
+                        <img src="/static/public/img/tutorials/quick-start-guide/create-tour.png" alt="">
+                    </li>
+                    <li>
+                        <p>
+                            You will see three functional blocks, where you could upload tour assets. You can learn more
+                            details in <a href="/tutorials/uploading_assets/">Asset uploading article</a>. For now,
+                            simply upload required tour assets:
+                        </p>
+                        <ul>
+                            <li>
+                                <strong>3D model</strong> (highpoly.obj): press “select file” and select .obj file from
+                                the archive or drag’n’drop “highpoly.obj” to the “select file” area
+                            </li>
+                            <li>
+                                <strong>Select renderer</strong>: select render engine, select Corona for the sample
+                                tour
+                            </li>
+                            <li>
+                                <strong>Panoramas</strong> (Post_room_00xx.png files): press “select file” and select
+                                all images from the archive or drag’n’drop all images to the “select file” area
+                            </li>
+                            <li><strong>Coordinates</strong>: keep default flag “Recognize coordinates from .obj”</li>
+                        </ul>
+                    </li>
+                </ol>
+                <img src="/static/public/img/tutorials/quick-start-guide/basic-1.png" alt="">
+                <br/>
+                <br/>
+                <p>
+                    There are some additional options in the interface. You can learn more about them in our
+                    <a href="/tutorials/uploading_assets/">Asset uploading article</a>
+                    or by pressing additional options below.
+                </p>
+
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Additional options</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <ul>
+                        <li>
+                            Optimize 3d model: sometimes you can have a very simple 3d model (less than 200k polygons),
+                            so you can disable model optimisation we perform on a server side. Keep in mind that it is
+                            advised that you optimise your model anyway.
+                        </li>
+                        <li>
+                            Create 3d panorama view: 3d panorama mode is an experimental feature, allowing you to see
+                            the whole interior from bird’s perspective. You can turn this feature off and save a little
+                            time when creating a tour. You will not be able to create 3d panorama view separately
+                            though.
+                        </li>
+                        <li>
+                            Upload binocular panoramas: binocular panoramas have their own image for each eye and are
+                            being used to create better stereoscopic effect on VR headsets (e.g. to simulate stereo
+                            effect in reflections)
+                        </li>
+                        <li>
+                            Coordinates: there are two ways to set image coordinates. By default, our system will
+                            recognize coordinates from model (“Recognize coordinates from .obj” flag is checked),
+                            however this only works if you’ve followed the process precisely and use only our tools to
+                            create the camera in initial 3d scene. For troubleshooting purposes and unorthodox cases
+                            (e.g. you are using 3d package other than 3d max) we also have an option to upload
+                            coordinates as a text data. Receiving coordinates in the correct form is a separate topic
+                            and outside the scope of this guide however (see
+                            <a href="/tutorials/setting_up_camera/">Setting up camera</a> guide).
+                        </li>
+                    </ul>
+                </div>
+
+                <br>
+                <br>
+                <p>
+                    Once you’ve uploaded all required assets it’s basically done! However, before you press “Create
+                    tour”, take a moment and consider the following:
+                </p>
+                <ul>
+                    <li>
+                        In the bottom left corner of the screen you will see you tariff details: number of tours left,
+                        number of toasts (model uploads) left, etc. These are different, depending on your tariff. You
+                        cannot create tours if you exceed some of these limits.
+                    </li>
+                    <li>
+                        In the bottom right corner you will see error tracker. If there are some unresolved errors, you
+                        will not be able to create a tour.
+                    </li>
+                    <li>
+                        Some of the errors cannot be tracked when uploading assets. If something will go wrong, your
+                        tour will be returned to “loading assets” state and you will receive notification via your
+                        email.
+                    </li>
+                    <li>
+                        You can exit tour creation anytime, some of your progress will be kept. This is useful when
+                        you unable to resolve arising issues immediately and need some time to do it.
+                    </li>
+                </ul>
+
+                <img src="/static/public/img/tutorials/quick-start-guide/basic-2.png" alt="">
+
+                <br>
+                <br>
+                <p>
+                    Press “Create tour” to complete your first virtual tour! Once you do so, your tour will be placed in
+                    queue with all the other tours. Time to complete sample tour is about ten minutes, however more
+                    complex tours might require more time, you will see the approximate estimation of time required,
+                    once you will press “Create tour”.
+                </p>
+                <p>
+                    We hope that you will enjoy making this tour, if you want to proceed with asset creation, please
+                    open the second part of the guide.
+                </p>
+
+
+                <div id="advanced" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Step 2 - Create assets</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>
+                        <a class="link-button" href="/static/downloads/virtoaster_trial_advanced.rar">
+                            <button id="download-advanced-components" type="submit"
+                                    class="generate-form__button button button--small fill blue adaptive">
+                                Download Advanced assets (88 mb)
+                            </button>
+                        </a>
+                    </p>
+                    <br/>
+                    <br/>
+                    <p>
+                        This asset pack is intended to give you a playground, where you can practice creating assets for
+                        Virtoaster, without preparing new scene specifically for this purpose. You can also use your own
+                        scene instead, general principles are the same, just follow the guide carefully.
+                    </p>
+                    <p>Start with downloading the asset package. Advanced package contain:</p>
+                    <br/>
+                    <ul>
+                        <li>3d max scene, (3d max 2016 format, Corona render)</li>
+                        <li>
+                            We do not provide complete set of textures due to legal reasons and their size, thus
+                            materials are set to a simple gray shader (basic Corona Mtl) and very basic lighting
+                            environment (Corona Sky and Corona Sun).
+                        </li>
+                    </ul>
+                    <p>
+                        We’ve used Corona render to simplify the setup of the scene. If you are a VRay user, just add
+                        materials and apply basic light and render settings before proceeding with tutorial. Our scripts
+                        support both VRay and Corona, but you have to specify which render engine you’ve used when
+                        uploading assets (see first part of the guide).
+                    </p>
+                    <br/>
+                    <p>
+                        Next, download our tools:
+                        <a href="/static/scripts3d/Biganto-UTL_VirtoasterCamTools_0.73.ms">Virtoaster Camera tool</a>
+                        and <a href="/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms">Virtoaster Export
+                        tool</a>.
+                        Now you can begin making assets:
+                    </p>
+                    <br/>
+                    <p>
+                        <strong>Step 1. Set up camera.</strong>
+                    </p>
+                    <p>
+                        Open 3d max file. Start with camera setup (you can learn process in details in
+                        <a href="/tutorials/setting_up_camera/">Camera setup guide</a>
+                        and <a href="/tutorials/setting_up_render/">Setting up 360 render guide</a>).
+                    </p>
+                    <br/>
+                    <ul>
+                        <li>
+                            Go to the top projection in viewport (hotkey T), drag “Virtoaster cam tools” script into the
+                            viewport and press “Point”. Press left mouse button to place points where you want to travel
+                            through the tour. Click right mouse button to stop. Distribute points evenly throughout the
+                            space and only where it is physically possible to walk.
+                            <br/>
+                            <span class="warning">Important</span>: For the purpose of the tutorial you do not need more
+                            than 3-4 points, since you
+                            will have to render them, but it’s up to you.
+                        </li>
+                        <li>
+                            Now, select all points and place them at 1.5 meters above the floor. Do not forget to adjust
+                            for different elevation in different parts of the scene, e.g. if you have some points above
+                            the podium in the sample scene.
+                        </li>
+                        <li>
+                            Select all your points and press “Create camera”. Animated camera will be created, with each
+                            point corresponding to a single frame. Note, that some additional layers and objects will be
+                            created, once you press the button.
+                        </li>
+                        <li>
+                            With camera selected, press “Apply Virtoaster render settings” in the script. Script will
+                            automatically set the key settings for you and will return a message, to inform you about
+                            the changes it made.
+                        </li>
+                    </ul>
+                    <img src="/static/public/img/tutorials/quick-start-guide/camscript.jpg" alt="">
+                    <br/>
+                    <br/>
+                    <p>
+                        <span class="warning">Important</span>: script will only handle the most required settings to
+                        make renders compatible with our system. Design and visual style is up to you. Also, be aware
+                        that special effects like “sharp” should be disabled. You can learn more details in
+                        <a href="/tutorials/setting_up_camera/">Camera setup guide</a> and
+                        <a href="/tutorials/setting_up_render/">Setting up 360 render guide</a> render guide.
+                    </p>
+                    <br/>
+                    <p>
+                        In normal circumstances this will be the end of the process, you are ready to render now. There
+                        is one additional step, which will be useful to you though:
+                    </p>
+                    <br/>
+                    <ul>
+                        <li>
+                            By default our system will recognize coordinates from the scene. However you can manually
+                            upload a coordinates of all your points, which is explained more thoroughly in our
+                            <a href="/tutorials/uploading_assets/">Uploading assets” guide</a>“Uploading assets” guide.
+                            Press “Select camera” in “Create coordinates file” block and
+                            select Virtoaster camera. With camera selected, press “Create” in the script. You will be
+                            asked to select a location where to store .txt file with a coordinates on your PC.
+                        </li>
+                    </ul>
+                    <br/>
+                    <p>
+                        Please render all points you’ve made, you don’t have to render clean images or make any
+                        postproduction, but you need to keep the resolution set by camera script. Since the resolution
+                        is quite large, we suggest to set pass limit to only 2 or 3 passes, this is just a test tour and
+                        quality in not a goal here.
+                    </p>
+                    <br>
+                    <p>
+                        <span class="warning">Important</span>: because you have created new points with new
+                        coordinates, images from Basic guide
+                        will not be compatible, they will not align with new point coordinates.
+                    </p>
+
+
+                    <br/>
+                    <p>
+                        <strong>Step 2. Export geometry</strong>
+                    </p>
+                    <p>
+                        To export the model from .max file with appropriate settings please use Virtoaster Export tools
+                        (you can learn process in details in <a href="/tutorials/preparing_geometry/">Prepare
+                        geometry</a> article)
+                    </p>
+                    <br>
+                    <ul>
+                        <li>Drag “Virtoaster Export tools” script into the viewport</li>
+                        <li>
+                            Open “Delete modifiers” block and press buttons one by one to delete corresponding modifiers
+                            in the scene
+                        </li>
+                        <li>
+                            Open “Remove extra geometry” block and press buttons one by one to remove unnecessary
+                            objects (e.g. Corona portals in this particular scene).
+                        </li>
+                        <li>
+                            Open “Edit geometry” block. If there are some compound objects united by groups (e.g. group
+                            of table surface and table legs, or a chandelier with large number of elements) select this
+                            group and press “Collapse selected group” to receive single mesh. Repeat for other similar
+                            groups. This is not very relevant for this particular scene, but you can check “_books to
+                            collapse” layer for reference.
+                        </li>
+                        <li>
+                            Select transparent objects (e.g. window glass) and press “Make transparent”. See “_glass”
+                            layer in the scene for reference.
+                        </li>
+                        <li>
+                            Press “Convert proxy to mesh” to select all proxy objects and convert them to mesh (not
+                            relevant for sample scene).
+                        </li>
+                        <li>
+                            Open “Export geometry” block, select where to save your scene with “Save as” button. Press
+                            “Export” to export your scene.
+                        </li>
+                    </ul>
+                    <img src="/static/public/img/tutorials/quick-start-guide/export.jpg" alt="">
+                    <br/>
+                    <br/>
+                    <p>As a result you should have the following:</p>
+                    <br/>
+                    <ul>
+                        <li>several 360 panoramas, rendered on your own</li>
+                        <li>a high poly model of the scene, exported on your own</li>
+                        <li>.txt file with coordinates (optional)</li>
+                    </ul>
+                    <p>
+                        Now you can use these assets and create a tour, exactly as it is described in the Step 1 of this
+                        guide.
+                    </p>
+                    <br/>
+                    <p>
+                        <span class="warning">Important</span>: Trial plan can be limited in amount of tours you can
+                        have. If there are not enough
+                        tours, just delete the tour you’ve made, when reading the Step 1 guide.
+                    </p>
+                    <br/>
+                    <p>
+                        As you can see it is not that difficult to create 3d and VR tours using our tools, hopefully,
+                        this was useful to you!
+                    </p>
+                </div>
+
+            </div>
+
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#basic" class="side-menu__link link-scroll-to">Step 1 - Create sample tour</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#advanced" class="side-menu__link link-scroll-to">Step 2 - Create assets</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

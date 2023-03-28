@@ -1,0 +1,298 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'gallery' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/admin/tagify.css">
+    <style type="text/css">
+        #modal-decline-other { max-height: 300px; overflow: auto;}
+        .tags-look .tagify__dropdown__item{
+          display: inline-block;
+          border-radius: 3px;
+          padding: .3em .5em;
+          border: 1px solid #CCC;
+          background: #F3F3F3;
+          margin: .2em;
+          font-size: .85em;
+          color: black;
+          transition: 0s;
+        }
+
+        .tags-look .tagify__dropdown__item--active{
+          color: black;
+        }
+
+        .tags-look .tagify__dropdown__item:hover{
+          background: lightyellow;
+          border-color: gold;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+<h1 class="">
+    {% set h1 = {
+        '-': 'Новые туры для галереи',
+        '1': 'Туры в галерее',
+        '100': 'Туры на главной',
+        '0': 'Запрещённые для галереи туры'
+    } %}
+    {{ h1.get(filters.mode.data, '?') }}
+    <span class="badge bg-secondary align-middle rounded-pill fs-6 text-light">{{ tours.total }}</span>
+</h1>
+
+{% include 'admin/gallery/_tabs.html' with context %}
+
+    <form class="row table-filters">
+    {{ filters.mode() }}
+        <div class="col-lg pe-lg-0">
+            <div class="input-group input-group-sm mb-1 mb-lg-0">
+                <span class="input-group-text">Поиск по:</span>
+                {{ filters.search(class='form-control form-control-sm mb-1 mb-lg-0', placeholder='Поиск по названию') }}
+            </div>
+        </div>
+        <div class="col-lg-auto pe-lg-0">
+            <div class="input-group input-group-sm mb-1 mb-lg-0">
+                <span class="input-group-text">Сортировка по:</span>
+                {{ filters.sort(class='form-select') }}
+            </div>
+        </div>
+
+
+    <div class="col-lg">
+        <div class="input-group input-group-sm">
+        <span class="input-group-text">Тег:</span>
+        {{ filters.tag(class='form-control form-control-sm mb-1 mb-lg-0', placeholder='Поиск по тегу') }}
+        {% if filters.tag.data %}
+            <span class="input-group-text">
+            <a href="{{ url_for('.gallery', **filters.as_dict(tag=None)) }}" title="Показать все теги"><i class="fa fa-times-circle"></i></a></span>
+        {% endif %}
+        </div>
+    </div>
+    <div class="col">
+        <button type="submit" class="btn btn-sm btn-primary float-lg-end">Показать</button>
+    </div>
+    </form>
+
+
+{% if tours.total %}
+
+<table class="table table-list">
+{% for tour in tours.items %}
+<tr data-url-accept="{{ url_for('.gallery_accept', tour_id=tour.id, page=request.args.get('page'), **filters.as_dict()) }}"
+    data-url-decline="{{ url_for('.gallery_decline', tour_id=tour.id, page=request.args.get('page'), **filters.as_dict()) }}"
+    data-url-edit="{{ url_for('.gallery_edit', tour_id=tour.id, page=request.args.get('page'), **filters.as_dict()) }}"
+    data-user-id="{{ tour.user_id }}" data-folder-id="{{ tour.folder_id or '' }}">
+    <td>
+    <a href="{{ url_for('front.tour', tour_id=tour.id) }}" target="_blank">
+        {% if tour.preview %}
+            <img src="{{ tour.preview.url }}">
+        {% else %}
+            {{ no_image() }}
+        {% endif %}
+    </a>
+    </td>
+    <td class="t">
+        <p>
+            {% if tour.gallery_sort != None %}<span class="badge text-bg-secondary rounded-pill" title="Порядковый номер">{{ tour.gallery_sort }}</span>{% endif %}
+            {{ tour.created|utcinlocal|humantime }}
+            <a href="{{ url_for('.tours', user_id=tour.user.id) }}" class="text-underline-hover">{{ tour.user.name }}</a> /
+            <a href="{{ url_for('.tours', user_id=tour.user.id, folder_id=tour.folder_id) }}" class="text-underline-hover">{{ tour.folder.title }}</a>
+            <br><strong>{{ tour.title }}</strong>
+        </p>
+        <p>
+            {{ tour.footage|footage_type_label }}
+        </p>
+        <p>
+            {{ tour_features(tour) }}
+            {{ tour.footage.count_panoramas() }} точек
+        </p>
+        <p>
+            {% for tag in tour.gallery_tags %}
+                <a href="{{ url_for('.gallery', **filters.as_dict(tag=tag.tag)) }}" class="badge text-bg-secondary text-underline-hover">{{ tag.tag }}</a>
+            {% endfor %}
+        </p>
+    </td>
+    <td class="text-center">
+       <p>
+           {% if filters.mode.data == '-' %}
+               <a href="#modal-accept" class="btn btn-sm btn-success" data-bs-toggle="modal">Разрешить</a>
+               <a href="#modal-decline" class="btn btn-sm btn-danger" data-bs-toggle="modal">Запретить</a>
+           {% else %}
+               <a href="#modal-edit" class="btn btn-sm text-light btn-info" data-bs-toggle="modal">Свойства</a>
+           {% endif %}
+       </p>
+    </td>
+
+</tr>
+{% endfor %}
+</table>
+
+{% else %}
+    <p class="alert alert-info">Ничего не найдено.</p>
+{% endif %}
+
+{{ render_pagination(tours, '.gallery', **filters.as_dict()) }}
+
+<form method="post" id="form-accept">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="page" value="{{ request.args['page'] }}">
+<div class="modal" id="modal-accept"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Показывать тур в галерее</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <p>
+            <label>Теги:</label>
+            <textarea name="tags" class="form-control" rows="4"></textarea>
+        </p>
+        <p class="text-muted">Через запятую или Enter</p>
+        <div class="form-check">
+            <span class="form-check-label">Показывать на главной</span>
+                <input class="form-check-input" type="checkbox" name="featured">
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">Поместить в конец галереи</label>
+            <input class="form-check-input"type="checkbox" name="sendback">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Ok</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+</form>
+
+<form method="post" id="form-decline">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="page" value="{{ request.args['page'] }}">
+    <div class="modal" id="modal-decline"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Не пускать в галерею</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <p>
+            Тур не будет показываться в галерее, как того хочет его владелец.
+        </p>
+        <div class="form-check">
+        <span class="form-check-label">
+             И остальные туры в этой папке
+        </span>
+        <input type="checkbox" name="folder" class="form-check-input">
+        </div>
+        <ul id="modal-decline-other"></ul>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Ok</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+</form>
+
+<form method="post" id="form-edit" class="form-horizontal">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="modal" id="modal-edit"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Свойства тура в галерее</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <p>
+            <label>Теги:</label>
+            <textarea name="tags" class="form-control" rows="4"></textarea>
+        </p>
+        <p class="text-muted">Через запятую или Enter</p>
+
+        <p>
+            <label>Порядковый номер:</label>
+            <input type="number" required name="gallery_sort" class="form-control" style="width: 150px">
+        </p>
+
+        <p>
+            <label>Где показывать:</label>
+            <select name="gallery_admin" class="form-control">
+            {% for k, v in Tour.GALLERY_OPTIONS.items() %}
+                <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+            </select>
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+</form>
+
+
+<script type="text/javascript">
+$(function() {
+    let tagifyOptions = {
+        whitelist: [{% for tag in common_tags %}'{{ tag }}'{% if not loop.last %},{% endif %}{% endfor %}],
+        dropdown: {
+            maxItems: 60,           // <- mixumum allowed rendered suggestions
+            classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
+            enabled: 0,             // <- show suggestions on focus
+            closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+        }
+    };
+    let $modalAccept = $('#modal-accept'), $formAccept = $('#form-accept');
+    let $modalEdit = $('#modal-edit'), $formEdit = $('#form-edit');
+    let $modalDecline = $('#modal-decline'), $formDecline = $('#form-decline');
+
+    /** accept modal **/
+    let tagifyAccept = new Tagify($formAccept.find('[name=tags]')[0], tagifyOptions);
+    $modalAccept.on('shown.bs.modal', function (e) {
+        let $tr = $(e.relatedTarget).parents('tr');
+        $formAccept.attr('action', $tr.data('url-accept'));
+        $formAccept.find('[name=tags]').focus();
+        $.getJSON($tr.data('url-edit'), function (data) {
+            $formAccept.find('[name=tags]').val(data.tags);
+            $formAccept.find('.tour-title').text(data.title);
+            if (tagifyAccept) tagifyAccept.destroy();
+            tagifyAccept = new Tagify($formAccept.find('[name=tags]')[0], tagifyOptions);
+        });
+    });
+
+    /** reject modal **/
+    $modalDecline.on('shown.bs.modal', function (e) {
+        let $tr = $(e.relatedTarget).parents('tr');
+        let $other = $('#modal-decline-other');
+        $formDecline.attr('action', $tr.data('url-decline'));
+        $other.empty();
+        // Показываем список других туров в этой папке
+        let params = {user_id: $tr.data('user-id'), types: 'virtual,real'};
+        if ($tr.data('folder-id') !== "") {
+            params.folder_id = $tr.data('folder-id');
+        }
+        let url = api3Url('tours', params);
+        $.get(url, function (data) {
+            for (let tour of data.result) {
+                $other.append('<li class="text-primary">' + tour.title + '</li>');
+            }
+        });
+    });
+
+    /** edit modal **/
+    let tagifyEdit;
+    $modalEdit.on('shown.bs.modal', function (e) {
+        let $tr = $(e.relatedTarget).parents('tr'), url = $tr.data('url-edit');
+        $.getJSON(url, function (data) {
+            $formEdit.find('[name=tags]').val(data.tags);
+            $formEdit.find('[name=gallery_admin]').val(data.gallery_admin);
+            $formEdit.find('[name=gallery_sort]').val(data.gallery_sort);
+            $formEdit.find('.tour-title').text(data.title);
+            if (tagifyEdit) tagifyEdit.destroy();
+            tagifyEdit = new Tagify($formEdit.find('[name=tags]')[0], tagifyOptions);
+        });
+        $formEdit.attr('action', url);
+    });
+});
+</script>
+
+<script src="/static/admin/tagify.min.js"></script>
+
+{% endblock %}

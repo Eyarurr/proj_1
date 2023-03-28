@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% set page_title = _("Installing Oculus Quest/Go apps") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/installing-oculus/oculus_background.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--yellow">{{ _("support") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        <div class="oculus-tabs">
+            <div class="oculus-tabs__inner">
+                <ul class="oculus-tabs__list">
+                    <li id="toggler-quest" class="oculus-tabs__item is-active">
+                        <a href="#quest" class="oculus-tabs__link">{{ _("Oculus Quest") }}</a>
+                    </li>
+                    <li id="toggler-go" class="oculus-tabs__item">
+                        <a href="#go" class="oculus-tabs__link">{{ _("Oculus Go") }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="content-page__wrapper">
+            <div id='oculusGoTabContent'>
+                <div class='content-page__main oculus-go'>
+                    <p>Oculus Go is a standalone VR headset and requires specific process to install our app. To install Biganto Tour Player you will need a customer key you can generate on this page and Oculus Go VR headset paired with a mobile device.
+                    </p>
+                    <div id="pairing" class="b-anchor"></div>
+                    <h2>Pairing mobile device with Oculus Go</h2>
+                    <p>If you have experience installing apps with Go and already paired headset to your mobile device, you can proceed directly to the app installation. Otherwise, follow these four steps first:
+                    </p>
+                    <ol>
+                        <li>Install “Oculus” application on your mobile device and create an account to access Oculus store.
+                        </li>
+                        <li>Open the application and select “Settings” in the bottom of the screen</li>
+                        <li>Select “Pair New Headset”
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/2.jpg" alt=""></p>
+                        </li>
+                        <li>Select “Oculus Go” from the list and follow the instructions, provided by the app
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/3.jpg" alt=""></p>
+                        </li>
+                    </ol>
+                    <div id="installation" class="b-anchor"></div>
+                    <h2>App installation</h2>
+                    <p>When your Oculus is ready, you can proceed with Biganto Tour Player installation:</p>
+                    <ol>
+                        <li>
+                            <p>
+                                To install the application, you will require a customer key. We recommend to generate the key directly in mobile device browser, so you will be able to paste it in the mobile Oculus app. Press “Generate key” below:
+                            </p>
+                            <div>
+                                <form class="generate-form" id="generate-key-form" action="">
+                                    <div class="generate-form__container">
+                                        <button id="generate-oculus-go-key" type="submit"
+                                            class="generate-form__button button button--small fill blue">Generate key</button>
+                                        <div class="generate-form__key__container">
+                                            <div class="generate-form__key"></div>
+                                            <div class="generate-form__success-message"><span
+                                                    class="generate-form__emoji">✔️</span>
+                                                ️Link copied</div>
+                                        </div>
+                                    </div>
+                                    <div class="generate-form__section"></div>
+                                </form>
+                            </div>
+                            <div class="content-page__generate-input-wrapper">
+                                <input class="big-input big-input--small content-page__generate-input">
+                            </div>
+                        </li>
+                        <li>Open Oculus app on your mobile device and enter Settings.</li>
+                        <li>Scroll down and select “Redeem Code”
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/4.jpg" alt=""></p>
+                        </li>
+                        <li>Paste your redeem code into the field and press “Submit”.
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/5.jpg" alt=""></p>
+                        </li>
+                        <li>If successful, you will see the following notification about redeemed content:
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/6.jpg" alt=""></p>
+                        </li>
+                        <li>Press on the Biganto Tour Player app and select “Install on Oculus Go” in the bottom of the screen. The download will start shortly.
+                        </li>
+                    </ol>
+                    <div id="accessing" class="b-anchor"></div>
+                    <h2>Accessing the app from VR headset</h2>
+                    <p>To access the app from Oculus Go VR headset, do the following:</p>
+                    <ol>
+                        <li>Turn on VR headset and press “Oculus” button on the controller.</li>
+                        <li>Select “Navigate” in the menu using Go controller, select “Library” to show the list of installed apps.
+                            <p><img src="/static/public/img/tutorials/installing-oculus/7.jpg" alt=""></p>
+                        </li>
+                        <li>Select “Biganto Tour Player” from the list. Log in with Biganto account to access your tours.
+                        </li>
+                    </ol>
+
+                </div>
+
+                <aside class="content-page__side content-page__side--hide">
+                    <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                        <ul class="side-menu__list">
+                            <li class="side-menu__item">
+                                <a href="#pairing"
+                                    class="side-menu__link link-scroll-to">Pairing mobile device with Oculus Go</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#installation"
+                                    class="side-menu__link link-scroll-to">App installation</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#accessing"
+                                    class="side-menu__link link-scroll-to">Accessing the app from VR headset</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+            </div>
+            <div id="oculusQuestTabContent">
+                <div class='content-page__main oculus-tabs__quest-content'>
+                    <p>
+                        Oculus Quest is a standalone VR headset and requires specific process to install Biganto app.
+                        To install Biganto Tour Player on your Oculus Quest all you need is to open the 
+                        <a href="https://www.oculus.com/experiences/quest/6563777177027712/?utm_medium=share&utm_source=oculus">app page</a> 
+                        in the MetaStore. Open the page on your Oculus Quest or mobile device and press "Get" to install the app.
+                    </p>
+                    <div id="alternative" class="b-anchor"></div>
+                    <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                        <h3>Alternative Installation via SideQuest</h3>
+                    </div>
+                    <div class="troubleshooting__explanation">
+                        <p>
+                            To install  Biganto Tour Player you will require:
+                        </p>
+                        <ol>
+                            <li>To install side-loading application SideQuest on your PC
+                            </li>
+                            <li>Cable to transfer data from PC to Oculus Quest (be aware that cable that comes with your Quest device is not suited for data transfer)
+                            </li>
+                            <li>Smartphone with Oculus App installed
+                            </li>
+                        </ol>
+                        <p>
+                            <img class="content-page__oculus-img"
+                                src="/static/public/img/tutorials/installing-oculus/install-quest.png" alt="">
+                        </p>
+                        <p>
+                            SideQuest is a side-loading application and requires a PC in order to side-load from. Installing SideQuest to your actual Quest device to download apps and games directly within a headset without a PC is not possible due to code infringement concerns and security issues.
+                        </p>
+                        <p>
+                            After installing SideQuest to a PC and following the instructions you will be able to <a href='https://sidequestvr.com/app/661/biganto-tour-player' target='_blank'>download and install Bigato Tour Player</a> from SideQuests marketplace.
+                        </p>
+                        <p>
+                            <span class='warning'>Important:</span> SideQuest is not an official Oculus product, it requires some PC knowledge to install it. Proceed with caution and only if you are sure about your actions.
+                        </p>
+                        <p>
+                            To install SideQuest, please follow one of the instructions below:
+                        </p>
+                        <ul>
+                            <li>
+                                <a
+                                    target="_blank"
+                                    href="https://sidequestvr.com/setup-howto">Install SideQuest, guide from SideQuest website</a>
+                            </li>
+                            <li>
+                                <a
+                                    target="_blank"
+                                    href="https://github.com/the-expanse/SideQuest/wiki/SideQuest-Setup-&-How-To-install">Install SideQuest, GitHub Wiki</a>
+                            </li>
+                            <li>
+                                <a
+                                    target="_blank"
+                                    href="https://www.youtube.com/watch?v=SDljN6UqO34&t=65s">Video guide from “Cas and Chary VR” YouTube channel</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

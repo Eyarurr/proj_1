@@ -1,0 +1,113 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'statistics' %}
+
+
+{% block head %}
+    <style type="text/css">
+        .chart {
+            position: relative;
+            margin: 0 0 30px 0;
+        }
+        .chart__canvas {
+            height: 500px;
+        }
+        .chart__download {
+            position: absolute;
+            right: 13px;
+            top: -2px;
+            font-size: 16px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    <script>
+        var BG = {};
+        window.BG = BG;
+    </script>
+{% endblock %}
+
+
+{% block content %}
+<h1>Статистика сервиса</h1>
+
+{% include('admin/statistics/_tabs.html') %}
+
+<div class="chart">
+    <div class="chart__legend" id="legend-types"></div>
+    <div class="chart__canvas" id="chart-types"></div>
+</div>
+
+<h2>Модели мобильных</h2>
+<div class="chart">
+    <div class="chart__legend" id="legend-mobile"></div>
+    <div class="chart__canvas" id="chart-mobile"></div>
+</div>
+
+{% endblock %}
+
+
+{% block tail %}
+
+<script>
+    BG.CONST = {};
+    BG.CONST.LANG = 'ru';
+</script>
+<script>
+    var deviceTypes = {{ device_types|tojson|safe }};
+    var devices = {{ devices|tojson|safe }};
+
+    $(function() {
+        AmCharts.makeChart('chart-types', {
+            "type": "pie",
+            "dataProvider": deviceTypes,
+            "valueField": "n",
+            "titleField": "type",
+
+            "language": BG.CONST.LANG,
+            "theme": "light",
+            "innerRadius": "40%",
+            "fontFamily": "Verdana, Tahoma, Helvetica Neue, Lucida Grande, sans-serif",
+            "legend": {
+                "horizontalGap": 10,
+                "position": "top",
+                "align": "center",
+                "fontSize": 11,
+                "divId": "legend-types"
+            },
+            "responsive": { "enabled": true }
+        });
+
+        AmCharts.makeChart('chart-mobile', {
+            "type": "pie",
+            "dataProvider": devices,
+            "valueField": "n",
+            "titleField": "brand",
+            "groupPercent": 1,
+
+            "language": BG.CONST.LANG,
+            "theme": "light",
+            "innerRadius": "40%",
+            "fontFamily": "Verdana, Tahoma, Helvetica Neue, Lucida Grande, sans-serif",
+            "legend": {
+                "horizontalGap": 10,
+                "position": "top",
+                "align": "center",
+                "fontSize": 11,
+                "divId": "legend-devices"
+            },
+            "responsive": { "enabled": true }
+        });
+
+        $('input[name="daterange"]').daterangepicker({
+            locale: {
+                format: 'DD.MM.YYYY'
+            }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            console.log($('input[name="daterange"]').val())
+            $('#form-filters').submit();
+        });
+
+    });
+</script>
+{% include 'admin/statistics/js_libs.html' %}
+
+{% endblock %}

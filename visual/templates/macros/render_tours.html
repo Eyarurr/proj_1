@@ -1,0 +1,21 @@
+{% macro render_tours_items(tours, params) %}
+    {% for tour in tours.items %}
+        <li class="offers__item">
+            <a href="{{ url_for('front.gallery_tour', tour_id=tour.id, sort=params['sort']) }}" class="offers__link">
+                <div class="offers__media">
+                    {% if tour.preview %}
+                        <img src="{{ tour.preview.url }}" width="{{ tour.preview.width }}" height="{{ tour.preview.height }}" alt="{{ tour.title }}" class="offers__image">
+                    {% else %}
+                        <img src="/static/public/img/preview-empty.png" class="offers__image">
+                    {% endif %}
+                </div>
+                <div class="offers__name">{{ tour.title }}</div>
+            </a>
+            <div class="offers__tags">
+                {% for tag in tour.gallery_tags %}
+                    <a href="?tag={{ tag.tag }}" class="offers__tag">#{{ tag.tag }}</a>
+                {% endfor %}
+            </div>
+        </li>
+    {% endfor %}
+{% endmacro %}

@@ -1,0 +1,14 @@
+{% extends 'mail/base.html' %}
+{% block content %}
+            <p>
+                {{ _('Good day!') }}
+            </p>
+
+            <p>
+                {{ _('Your account will be deleted soon. You have %(days)s days to restore it.', days=days) }}
+            </p>
+
+            <p>
+                {{ _('You can restore account by following this <a href="%(link)s">link</a>', link=link) }}
+            </p>
+{% endblock %}

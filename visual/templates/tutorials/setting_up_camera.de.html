@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% set page_title = _("Setting up camera") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/preparing-geometry/preview_big.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+    <div class="content-page">
+        <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+            <div class="b-page__inner">
+                <div class="page-title__inner">
+                    <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                    <div class="page-title__tags tags">
+                        <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="b-page__inner b-page__mrg">
+
+            <div id="camera" class="b-anchor"></div>
+            <div class="content-page__wrapper">
+                <div id="short" class="b-anchor"></div>
+                <div class="content-page__main">
+
+                    <h2>Summary</h2>
+                    <ol>
+                        <li>Drag’n’drop <a href='/static/scripts3d/Biganto-UTL_VirtoasterCamTools_0.73.ms'>Virtoaster camera tool</a> to your scene to run the script</li>
+                        <li>Press “Point”, place point helpers where you want to go. Maintain 1,5-3m distance between them</li>
+                        <li>Set height of all created points at 1,5m above the floor</li>
+                        <li>Press “Create camera”</li>
+                        <li>Press “Select camera” and choose Virtoaster camera, then press “Apply Virtoaster render settings”</li>
+                        <li>Proceed with <a href='{{ url_for('tutorials.setting_up_render') }}'>“Render settings”</a></li>
+                    </ol>
+
+                    <iframe style="width: 100%; height: 460px;" src="https://www.youtube.com/embed/STpTi3apqJ8"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+
+                    <div id="more" class="b-anchor"></div>
+                    <h2>Full guide</h2>
+
+                    <p>Virtoaster tours require two key assets to be made: sequence of 360 panoramic renders and a 3d model of the scene. Here we will show you how to start the rendering process, kicking off with camera setup.</p>
+                    <p>To set up a camera, please download our <a href='/static/scripts3d/Biganto-UTL_VirtoasterCamTools_0.73.ms'>camera creation tool</a>. Open your scene and set viewport view to Top (hotkey T). Drag’n’drop camera creation tool to the viewport,  you will see the following interface:</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_1.jpg" alt=""></p>
+                    <p>Start with creating auxiliary Point objects. Press “Point” button in the script interface, press left mouse button to place points where you want to travel through the tour. Click right mouse button to stop.</p>
+                    <p>Each point will correspond to a single render, so set points only where you would want to go. Try to place points evenly through the scene and only in places where it is physically possible to walk, e.g. do not place points on top of tables, beds, etc.</p>
+                    <p><span class='warning'>Important:</span> do not place points too close to each other, it will be inconvenient, when travelling through the tour. We recommend to keep distance between the points at <strong>1,5-3 meters</strong>.</p>
+                    <p>You will be able to travel between the points only if there is a clear line of sight. There should be no solid obstacles between neighboring points, like closed doors, curtains or screens.</p>
+                    <p>To wrap it up, here are the main requirements:</p>
+                    <ol>
+                        <li>The distance between neighboring points should be no more than three meters.</li>
+                        <li>Points, between which there will be a transition, must be in line of sight.</li>
+                        <li>You should arrange  the points only where you can walk. For example, there should be no points above beds and tables.</li>
+                        <li>You should distribute the points across the room evenly.</li>
+                    </ol>
+                    <p>See the example of correct placement below:</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_5.jpg" alt="" width="720"></p>
+                    <p>Next, select all created points and set their height at 1,5 meters from the floor (average human eye height). If there are some ladders or there are several floors in your scene you should take that into account and set height relative to the corresponding floor level.</p>
+                    <p>Finally, select all your points and press “Create camera”. Animated camera will be created, with each point corresponding to a single frame.</p>
+                    <p><span class='warning'>Important:</span> by default 3d max create points at a height of zero. Make sure you placed your points at proper height before creating the camera.</p>
+                    <p>In addition to camera, extra geometry will be created for each point. It is used to determine the coordinates of the frame. These pieces of geometry are not renderable, so they will not impact your image.</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_13.jpg" alt="" width="300"></p>
+                    <p><span class='warning'>Important:</span> if, for any reasons you want to change the position of a point, please delete Camera and all auxiliary geometry first. Afterwards you should change point position and press Create camera again.</p>
+                    <p><span class='warning'>Important:</span> if there are some animated objects in your scene, our tool will prompt the following message, asking you to delete them:</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_14.jpg" alt=""></p>
+                    <p>Animated objects will interfere with rendering through the animated camera, e.g. position of animated door will not align with 3d model on different frames of the tour. Thus, the only animation allowed in the scene is a camera created with our tool.</p>
+
+                    <p>Press “Select camera” and choose Virtoaster camera, then press “Apply Virtoaster render settings”.  Script will automatically set the required settings for you and will return a message, to inform you about the changes it made: </p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_16.jpg" alt=""></p>
+                    <p>These are the primary settings to create required panoramic images. Though you can start rendering already , we still suggest that you will check <a href='{{ url_for('tutorials.setting_up_render') }}'>“Render settings”</a> article first. </p>
+
+
+                    <div id="optional" class="b-anchor"></div>
+                    <h2>Optional step</h2>
+                    <p>By default we determine coordinates of each frame from auxiliary geometry, created with our tool. However you can manually upload a coordinates of all your points, which is explained more thoroughly in our <a href='{{ url_for('tutorials.uploading_assets') }}'>“Uploading assets” guide</a>.</p>
+                    <p>You should use our camera creation tool to create .txt file with the coordinates. Press “Select camera” and choose Virtoaster camera, then press “Create”. You will be asked to select a location where to store file with a coordinates on your PC.</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_15.jpg" alt=""></p>
+
+                </div>
+                <aside class="content-page__side content-page__side--hide">
+
+                    <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                        <ul class="side-menu__list">
+                            <li class="side-menu__item">
+                                <a href="#short" class="side-menu__link link-scroll-to">Summary</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#more" class="side-menu__link link-scroll-to">Full guide</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#optional" class="side-menu__link link-scroll-to">Optional step</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </aside>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% set page_title = _("News") %}
+{% set corpus_class = 'news' %}
+{% set offset_content = True %}
+{% from '/macros/pagination.html' import render_pagination %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+    <div class="page-title">
+        <div class="b-page__inner page-title__inner page-title__inner--align-left">
+            <h1 class="page-title__head background-image-title h1">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg b-page__matter">
+        <section class="block news news--nobg">
+            <div class="block__content">
+                {%- if news.total > 0 -%}
+                    <ul class="news__list">
+                        {%- for item in news.items -%}
+                        <li class="news__item">
+                            <a class="news__link" href="{{ url_for('.news_detail', item_id=item.id) }}">
+                                <div class="news__info">
+                                    <p class="news__date">{{ item.created.strftime(date_format.get(g.lang, default_date_format)) }}</p>
+                                    <h3 class="news__title">{{ item.title }}</h3>
+                                    <p class="news__desc">{{ item.announce }}</p>
+                                </div>
+                                <div class="news__arrow">
+                                    <svg viewBox="0 0 39 39" class="news__icon icon__svg" width="39" height="39">
+                                        <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-right-border"></use>
+                                    </svg>
+                                </div>
+                            </a>
+                        </li>
+                        {%- endfor -%}
+                    </ul>
+                    {% if news.pages > 1 %}
+                        {{ render_pagination(news, '.news_list') }}
+                    {% endif %}
+                {%- else -%}
+                    <p>{{ _("No news there.") }}</p>
+                {%- endif -%}
+            </div>
+        </section>
+    </div>
+{% endblock %}

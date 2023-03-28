@@ -1,0 +1,94 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'estates' %}
+
+
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>
+    Ассеты объекта {{ estate.title }}  <span class="text-muted">({{ estate.id }})</span>
+</h1>
+
+<form method="post" action="{{ url_for('.estates_assets_copy', estate_id=estate.id) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-3">
+<thead>
+<tr>
+    <th>Дата</th>
+    <th class="break" >Тип</th>
+    <th class="break">Размер</th>
+    <th class="break px-0 text-center"><i class="fa fa-picture-o fa-lg" title="Превью"></i></th>
+    <th class="break">Ссылка</th>
+    <th class="break"><div class="form-check ">
+            <input type="checkbox" name="checkbox" class="form-check-input " value="a" id="all">
+            <label class="form-check-label align-top" for="">Все</label>
+        </div></th>
+</tr>
+</thead>
+<tbody>
+{% for asset in br_assets %}
+    {% if asset.type == 'tour' and asset.tour_id %}
+    {% set url = url_for('front.tour', tour_id=asset.tour.id) %}
+    {% set preview_url = asset.tour.preview.url if asset.tour else None %}
+    {% else %}
+    {% set url = asset.url %}
+    {% set preview_url = asset.preview_url %}
+    {% endif %}
+    <tr>
+    <td class="col-lg-1">
+        {{ asset.created.strftime('%d-%m-%Y %H:%M') }}
+    </td>
+    <td class="break col-lg-1">
+        {{ asset.type }}
+    </td>
+    <td class="break col-lg-1">
+        {{ asset.size or '' }}
+    </td>
+
+    <td class="break px-0 text-center col-lg-auto">
+        {% if preview_url %}
+        <a class="text-underline-hover" href="{{ preview_url }}"><span class="badge bg-success" title="{{ preview_url }}"><i class="fa fa-picture-o fs-5" ></i></span></a>
+        {% endif %}
+        </td>
+    <td class="break">
+        {% if url %}
+        {% if asset.type == 'tour' %}
+            <a class="text-underline-hover" href="{{ url }}">{{ url}}</a>
+        {% else %}
+            <a class="text-underline-hover" href="{{ url }}">{{ url|url_host_tail }}</a>
+        {% endif %}
+    </td>{% endif %}
+    <td class="break col-lg-1">
+    <input class="form-check-input align-middle" type="checkbox" value="{{ asset.id }}" id="flexCheckDefault" name="for_copy">
+
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+    <div class="row">
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Скопировать помеченные</button>
+        <a href="{{ url_for('.estate_assets', estate_id=estate.id) }}" class="btn btn-outline-secondary">Отмена</a>
+    </div>
+    </div>
+</form>
+<script type="text/javascript">
+        (function () {
+            $('#all').click(function () {
+                if ($(this).is(':checked')){
+                    $('input:checkbox').prop('checked', true);
+                } else {
+                    $('input:checkbox').prop('checked', false);
+                }
+            })
+        })();
+    </script>
+{% endblock %}

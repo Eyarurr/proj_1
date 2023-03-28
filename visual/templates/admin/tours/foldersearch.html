@@ -1,0 +1,29 @@
+{% extends 'admin/base-bs-3.html' %}
+
+
+{% block content %}
+<h1>Поиск по папкам</h1>
+
+{% if folders %}
+    <p>По запросу «{{ search }}» найдено {{ folders|length }} шт. папок:</p>
+
+    <ul>
+    {% for folder in folders %}
+        <li>
+            <a href="{{ url_for('.tours', user_id=folder.user_id) }}">{{ folder.user.name }}</a> /
+            <a href="{{ url_for('.tours', user_id=folder.user_id, folder_id=folder.id) }}">{{ folder.title }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Нет папок, содержащих «{{ search }}» в своём имени. Давайте попробуем ещё раз:</p>
+    <form class="form-inline table-filters">
+    <div class="form-group">
+        {{ filters.search(class='form-control', placeholder='Поиск по названию', style='width: 600px;', title='А ещё тут можно ввести # и ID тура для быстрого перехода по ID или /частьименипапки, чтобы поискать по названиям папкок.') }}
+    </div>
+    <div class="form-group pull-right">
+        <button type="submit" class="btn btn-sm btn-primary">Показать</button>
+    </div>
+{% endif %}
+
+{% endblock %}

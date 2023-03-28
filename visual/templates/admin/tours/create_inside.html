@@ -1,0 +1,15 @@
+{% extends 'admin/base-bs-3.html' %}
+
+{% block content %}
+<h1>Создан пустой Inside-тур «{{ tour.title }}»</h1>
+
+<p>
+    Наполняйте его содержимым, войдя в личный кабинет <a href="{{ url_for('.user_edit', user_id=tour.user_id) }}">{{ tour.user.name }}</a>
+    или <a href="{{ url_for('.tour_edit', tour_id=tour.id, user_id=tour.user_id) }}">редактируйте мету вручную</a>.
+</p>
+
+<p>
+    <a href="{{ url_for('.tours', user_id=tour.user_id, folder_id=tour.folder_id) }}" class="btn btn-primary">К списку туров</a>
+</p>
+
+{% endblock %}

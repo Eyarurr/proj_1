@@ -1,0 +1,9 @@
+{% macro description(offer) %}
+    <section class="b-description b-external__section">
+        <div class="b-external__inner clearfix">
+            <div class="b-external__content clearfix">
+                {{ offer.template_data.description|nl2br }}
+            </div>
+        </div>
+    </section>
+{% endmacro %}

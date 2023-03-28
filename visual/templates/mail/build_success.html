@@ -1,0 +1,17 @@
+{% extends 'mail/base.html' %}
+{% block content %}
+            <p>
+                {{ _('Good day!') }}
+            </p>
+            <p>
+                {{ _('Your tour <a href="%(tour_url_edit)s">«%(title)s»</a> is complete and available in your account with «Testing» status.', tour_url_edit=url_for('my.index', path='toast/{}/edit'.format(tour.id),  _external=True, _scheme='https'), title=(tour.title if tour.title else _('Untitled'))) }}
+            </p>
+
+            <p>
+                {{ _('Enter your account, check the tour and edit it if necessary. Do not forget to change tour status to «Published».') }}
+            </p>
+
+            <p>
+                {{ _('Keep in mind, that tours with «Testing» status have limited lifespan.') }}
+            </p>
+{% endblock %}

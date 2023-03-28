@@ -1,0 +1,119 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+{% set estate_id = request.view_args.get('estate_id') %}
+{% set asset_id = request.view_args.get('asset_id', 0)  %}
+
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+    {% if asset.id %}
+    <h1>Редактировать ассет {{ asset.id }}</h1>
+
+    {% else %}
+    <h1>Создать ассет</h1>
+    {% endif %}
+    <form id="form_asset" method="POST" id="form-edit" enctype="multipart/form-data">
+    {{ form.csrf_token() }}
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end ">Название:</label>
+            <div class="col-lg-10">
+                {{ form.title(class='form-control', id='title') }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Тип:</label>
+            <div class="col-lg-4">
+                {{ form.type(class='form-select', id='type_select') }}
+            </div>
+            <label class="col-lg-2 text-lg-end" >Size:</label>
+            <div class="col-lg-4">
+                {{ form.size(class='form-control', id='size') }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end ">Тур id:</label>
+            <div class="col-lg-4">
+                {{ form.tour_id(class='form-control', id='tour_id') }}
+
+            </div>
+            <label class="col-lg-2 text-lg-end ">Высота:</label>
+            <div class="col-lg-4">
+                {{ form.height(class='form-control', id='hight') }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Тур-видео id:</label>
+            <div class="col-lg-4">
+                {{ form.tour_video_id(class='form-control', id='video') }}
+            </div>
+            <label class="col-lg-2 text-lg-end">Длительность:</label>
+            <div class="col-lg-4">
+                {{ form.duration(class='form-control', id='duration') }}
+            </div>
+
+        </div>
+        <div class="row mb-3 ">
+            <label class="col-lg-2 text-lg-end invisible">Оператор:</label>
+            <div class="col-lg-4">
+            </div>
+            <label class="col-lg-2 text-lg-end">Ширина:</label>
+            <div class="col-lg-4">
+                {{ form.width(class='form-control', id='width') }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end ">Файл: </label>
+            <div class="col-lg">
+                {{ form.upload_file(class='form-control', id='file_upload') }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end ">Мета:</label>
+            <div class="col-lg">
+                {{ form.product_meta(class='form-control', rows=3, id='meta' ) }}
+            </div>
+        </div>
+    <div class="row justify-content-between mb-3">
+        <div class="col-lg-auto offset-lg-2">
+            <button class="btn btn-primary">Сохранить</button>
+            <a href="{{ url_for('.estate_assets', estate_id=estate_id) }}" class="btn btn-secondary">Отмена</a>
+        </div>
+        <div class="col-lg-auto">
+            {% if asset.id %}
+            <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger"><i class="fa fa-minus-square-o"></i> Удалить материал</a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+    <form method="post" action="{{ url_for('.estates_assets_delete', estate_id=estate_id, asset_id=asset_id) }}" >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-delete">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Удалить этот материал?</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                        <p>Для ассетов с типом <span class="text-danger">"tour" и "tour_video" </span>удалится только ссылка
+                            на существующий тур/тур_видео. Для ассетов других типов произойдет удаление соответствующих фалов из
+                            файлового хранилища</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отменить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+<script type="text/javascript">
+</script>
+{% endblock %}

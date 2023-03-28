@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% set page_ttl = _("Agents") %}
+{% set corpus_class = 'agents' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="agents">
+    <section class="agents__section-header">
+
+        <div class="agents__header">
+            <div class="agents__header-content">
+                <h3 class="agents__title">{{ _("Solution for realtors") }}</h3>
+                <h1 class="agents__H1">{{ _("Digital twins") }}</h1>
+                <h2 class="agents__H2">{{ _("help agents increase conversions and sales") }}</h2>
+            </div>
+        </div>
+        <div class="agents__preamble">
+            <div class="agents__preamble-content">
+                <h3>{{ _("Use modern technologies for presenting objects to your customers") }}</h3>
+                <p>{{ _("Digitization of real estate from Biganto allows you to replace the traditional photos and videos with an interactive virtual tour of the property. Biganto tours significantly improve customer engagement and information value of media materials for the clients.") }}
+                </p>
+            </div>
+        </div>
+        <div class="agents__header-picture-block">
+            <div class="agents__header-picture-empty">
+
+            </div>
+
+            <div class="agents__header-picture-wrapper">
+                <div class="agents__header-picture-room"> </div>
+                <div class="agents__header-picture-camera">
+                    <picture>
+                        <img class="agents-header__picture"
+                         src="/static/public/img/solutions/imgCam.png"
+                            srcset="/static/public/img/solutions/imgCam@2x.png 2x,
+                                    /static/public/img/solutions/imgCam@3x.png 3x"
+                             alt="">
+                    </picture>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="agents__comparison">
+        <div class="agents__comparison-header">
+            <p>{{ _("Most agents using Biganto tours report higher conversion rates and more deals overall") }}
+            </p>
+        </div>
+        <div class="agents__comparison-content">
+            <div class="agents__comparison-content-item__red">
+                <span class="agents__red-span">
+                    -25%
+                </span>
+                <p>
+                    {{ _("quicker decision time") }}
+
+                </p>
+            </div>
+
+            <div class="agents__comparison-content-item__green">
+                <span class="agents__green-span">
+                    +60%
+                </span>
+                <p>{{ _("time to get acquainted with the property for rent or sale") }}
+
+                </p>
+            </div>
+            <div class="agents__comparison-content-item__blue">
+                <span class="agents__blue-span">
+                    {{ _("Significant") }}
+
+                </span>
+                <p>{{ _("agent time savings by reducing the number of non-target property demonstrations") }}
+                </p>
+            </div>
+
+        </div>
+        <div>
+
+        </div>
+
+    </section>
+
+    <section class="agents__improve">
+        <div class="agents__improve-block">
+            <h2>{{ _("Improve") }}
+
+            </h2>
+            <h4>{{ _("real estate offers with the Biganto platform:") }}
+
+            </h4>
+            {% if config.JURISDICTION == 'ru' %}
+            <a href="https://biganto.ru/tour/3264/" target="_blank" rel="noreferrer">
+                <picture>
+                    <img src="/static/public/img/solutions/tour1.png" alt="Перейти">
+                </picture>
+            </a>
+            {% endif %}
+
+            {% if config.JURISDICTION == 'world' %}
+            <a href="https://biganto.com/tour/35189/" target="_blank" rel="noreferrer">
+                <picture>
+                    <img src="/static/public/img/solutions/tour1.png" alt="tour">
+                </picture>
+            </a>
+            {% endif %}
+
+            <span>{{ _("Photo tour for apartment with no finishing") }}</span>
+        </div>
+
+        <div class="agents__improve-block">
+            {% if config.JURISDICTION == 'ru' %}
+            <a href="https://biganto.ru/tour/3231/" target="_blank" rel="noreferrer">
+                <picture>
+                    <img src="/static/public/img/solutions/tour2.png" alt="Перейти">
+                </picture>
+            </a>
+            {% endif %}
+
+            {% if config.JURISDICTION == 'world' %}
+            <a href="https://biganto.com/tour/35185/" target="_blank" rel="noreferrer">
+                <picture>
+                    <img src="/static/public/img/solutions/tour2.png" alt="tour">
+                </picture>
+            </a>
+            {% endif %}
+
+            <span>{{ _("Photo tour for furnished apartment") }}</span>
+            <p>{{ _("Modern real estate buyers are more demanding on the quality of content. Biganto digital twins are a new technological standard for the presentation of objects and the organization of property displays. More and more agents are using Biganto virtual tours in their work.") }}
+            </p>
+        </div>
+
+    </section>
+
+    <section class="agents__functionality">
+        <div class="agents__functionality-header">
+            <h1>{{ _("Powerful Features") }}</h1>
+            <p>{{ _("The virtual demonstration process is not only as close as possible to a real visit to the object, but also provides additional opportunities:") }}</p>
+        </div>
+        <div class="agents__functionality-block">
+            <img src="/static/public/img/solutions/accessibility-icon.svg">
+            <h3>{{ _("Accessibility from any device") }}</h3>
+            <p>{{ _("Run tours in the browser, apps, desktop, mobile and VR.") }}
+            </p>
+        </div>
+        <div class="agents__functionality-block">
+            <img src="/static/public/img/solutions/three-dimensional-model-icon.svg">
+            <h3>{{ _("Three-dimensional model of the object") }}</h3>
+            <p>{{ _("View an interactive layout of the object in full 3D with the ability to rotate.") }}
+            </p>
+        </div>
+        <div class="agents__functionality-block">
+            <img src="/static/public/img/solutions/measurement-icon.svg">
+            <h3>{{ _("Measurement of dimensions and distances within the tour") }}
+                тура</h3>
+            <p>{{ _("Measure virtual space the same way you measure real space.") }}
+            </p>
+        </div>
+        <div class="agents__functionality-block">
+            <img src="/static/public/img/solutions/shared-viewing-icon.svg">
+            <h3>{{ _("Shared Viewing with Host Mode") }}</h3>
+            <p>{{ _("View tours together with the client remotely, on different parts of the world and on different platforms") }}
+            </p>
+        </div>
+        <div class="agents__functionality-block">
+            <img src="/static/public/img/solutions/multitours-agents-icon.svg">
+            <h3>{{ pgettext("agents", "Multitours") }}</h3>
+            <p>{{ _("Explore the same object in different designs and finishes.") }}
+
+            </p>
+        </div>
+        <div class="agents__functionality-block">
+            <img src="/static/public/img/solutions/integrated-plan-icon.svg">
+            <h3>{{ _("Integrated floor plan") }}</h3>
+            <p>{{ _("Add a floor plan for object navigation, compare the actual state with the planned one") }}
+            </p>
+        </div>
+        <div class="agents__functionality-block">
+            <img src="/static/public/img/solutions/branded-photos-icon.svg">
+            <h3>{{ _("Branded photos and videos") }}</h3>
+            <p>{{ _("Share media content automatically generated from tours with your logo embedded in it.") }}
+            </p>
+        </div>
+
+    </section>
+
+    <section class="agents__plans">
+        <div class="agents__plans-block-grey">
+            <picture>
+                <img src="/static/public/img/solutions/imgPlan.png"
+                    srcset="/static/public/img/solutions/imgPlan@2x.png 2x,/static/public/img/solutions/imgPlan@3x.png 3x" alt="">
+            </picture>
+            <div class="agents__plans-text">
+                <span>{{ _("Floor plan") }}</span>
+            </div>
+
+        </div>
+        <div class="agents__plans-block-black">
+            <picture>
+                <img src="/static/public/img/solutions/imgMap.png"
+                    srcset="/static/public/img/solutions/imgMap@2x.png 2x,/static/public/img/solutions/imgMap@3x.png 3x" alt="">
+            </picture>
+            <div class="agents__plans-text">
+                <span>{{ _("Digital twin generated floor plan") }}</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="agents__footer">
+        <h1>{{ _("Shall we start?") }}</h1>
+        <p>{{ _("To create an accurate and detailed digital twin of an existing property, use Biganto's real estate digitization service.") }}
+            
+        </p>
+        <p>{{ _("Contact us agents") }}
+        </p>
+        <div class="agents__contacts">
+            {% if config.JURISDICTION == 'ru' %}
+            <div>
+                <h2><a href="tel: +7495899-02-22">+7 (495) 899-02-22</a></h2>
+            </div>
+            <div>
+                <a href="mailto:ru.info@biganto.ru">
+                    <h2 class="agents__email">ru.info@biganto.ru</h2>
+                </a>
+
+            </div>
+            {% endif %}
+            {% if config.JURISDICTION == 'world' %}
+            <div>
+                <h2><a href="tel: +4989262-195-67">+49 (89) 262-195-67</a></h2>
+            </div>
+            <div>
+                <a href="mailto:info@biganto.com">
+                    <h2 class="agents__email">info@biganto.com</h2>
+                </a>
+
+            </div>
+            {% endif %}
+            {# <button>{{ _("Order return call") }}</button>#}
+
+        </div>
+
+    </section>
+
+</div>
+{% endblock %}

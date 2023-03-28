@@ -1,0 +1,46 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'feeds' %}
+
+
+{% block content %}
+
+<h1>
+    <a href="{{ url_for('.feeds_edit') }}" class="btn btn-success float-end"><i class="fa fa-plus"></i> Добавить новость</a>
+    Новости</h1>
+
+    {% if feeds_list.total == 0 %}
+        <div class="alert alert-info">
+            Новости отсутствуют.
+        </div>
+    {% else %}
+        <table class="table table-bordered">
+        <thead >
+        <tr>
+            <th style="width: 170px;">Дата создания</th>
+            <th>Название</th>
+            <th style="width: 200px;"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for feed in feeds_list.items %}
+            <tr {% if feed.hidden %} style="background: #eee" {% endif %}>
+                <td>{{ feed.created|utcinlocal|humantime}}</td>
+                <td>{{ feed.title|safe|nl2br }}</td>
+                <td>
+                    <a href="{{ url_for('.feeds_edit', feed_id=feed.id) }}?lang=en" class="btn btn-primary btn-sm">
+                        <i class="fa fa-edit"></i> Редактировать
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
+        {{ render_pagination(feeds_list , '.feeds') }}
+    {% endif %}
+
+
+{% endblock %}
+
+{% block tail %}
+{% endblock %}

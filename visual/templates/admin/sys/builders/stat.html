@@ -1,0 +1,258 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'sys' %}
+
+{% block head %}
+<style type="text/css">
+    .width-5{
+        width:5%;
+    }
+    .width-10{
+        width:10%;
+    }
+    .width-30{
+        width:30%;
+    }
+    .padd{
+        padding-left:50px !important;
+    }
+    .table-list .min { width: 10%; text-align: center; }
+    .table-list .avg { width: 10%; text-align: center; background-color: #f5f5f5; }
+    .table-list .max { width: 10%; text-align: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Статистика сборщика</h1>
+<br>
+
+<h4 class="text-muted">Общие показатели</h4>
+<div class="table-responsive-lg">
+<table class="table table-bordered table-hover table-list">
+    <tr>
+        <th></th>
+        <th class="min">min</th>
+        <th class="avg">avg</th>
+        <th class="max">max</th>
+    </tr>
+    <tr>
+        <td>Всего сборок</td>
+        <td colspan="3" align="right">{{ stat['builds_count'] }}</td>
+    </tr>
+    <tr>
+        <td>Из них с ошибками</td>
+        <td colspan="3" align="right">{{ stat['builds_false'] }} ({{ stat['builds_false_percentage'] }})</td>
+    </tr>
+    <tr>
+        <td>Время работы сборщика</td>
+        <td class="min">{{ stat['builds_time']['min']|int2ms }}</td>
+        <td class="avg">{{ stat['builds_time']['avg']|int2ms }}</td>
+        <td class="max">{{ stat['builds_time']['max']|int2ms }}</td>
+    </tr>
+    <tr>
+        <td>Входная модель, highpoly</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td class="padd">Размер, MB</td>
+        <td class="min">{{ stat['highpoly_props']['size_min'] }}</td>
+        <td class="avg">{{ stat['highpoly_props']['size_avg'] }}</td>
+        <td class="max">{{ stat['highpoly_props']['size_max'] }}</td>
+    </tr>
+    <tr>
+        <td class="padd">Полигонов, тыс</td>
+        <td class="min">{{ stat['highpoly_props']['faces_min'] }}</td>
+        <td class="avg">{{ stat['highpoly_props']['faces_avg'] }}</td>
+        <td class="max">{{ stat['highpoly_props']['faces_max'] }}</td>
+    </tr>
+    <tr>
+        <td class="padd">Объектов</td>
+        <td class="min">{{ stat['highpoly_props']['objects_min'] }}</td>
+        <td class="avg">{{ stat['highpoly_props']['objects_avg'] }}</td>
+        <td class="max">{{ stat['highpoly_props']['objects_max'] }}</td>
+    </tr>
+    <tr>
+        <td>Входная модель, lowpoly</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td class="padd">Размер, MB</td>
+        <td class="min">{{ stat['lowpoly_props']['size_min'] }}</td>
+        <td class="avg">{{ stat['lowpoly_props']['size_avg'] }}</td>
+        <td class="max">{{ stat['lowpoly_props']['size_max'] }}</td>
+    </tr>
+    <tr>
+        <td class="padd">Полигонов, тыс</td>
+        <td class="min">{{ stat['lowpoly_props']['faces_min'] }}</td>
+        <td class="avg">{{ stat['lowpoly_props']['faces_avg'] }}</td>
+        <td class="max">{{ stat['lowpoly_props']['faces_max'] }}</td>
+    </tr>
+    <tr>
+        <td class="padd">Объектов</td>
+        <td class="min">{{ stat['lowpoly_props']['objects_min'] }}</td>
+        <td class="avg">{{ stat['lowpoly_props']['objects_avg'] }}</td>
+        <td class="max">{{ stat['lowpoly_props']['objects_max'] }}</td>
+    </tr>
+    <tr>
+        <td>Выходная модель</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td class="padd">Размер, MB</td>
+        <td class="min">{{ stat['model_out_props']['size_min'] }}</td>
+        <td class="avg">{{ stat['model_out_props']['size_avg'] }}</td>
+        <td class="max">{{ stat['model_out_props']['size_max'] }}</td>
+    </tr>
+    <tr>
+        <td class="padd">Полигонов, тыс</td>
+        <td class="min">{{ stat['model_out_props']['faces_min'] }}</td>
+        <td class="avg">{{ stat['model_out_props']['faces_avg'] }}</td>
+        <td class="max">{{ stat['model_out_props']['faces_max'] }}</td>
+    </tr>
+    <tr>
+        <td>Количество удаленных объектов</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['objects_removed']['objects_avg'] }}</td>
+        <td class="max"></td>
+    </tr>
+</table>
+</div>
+<h4 class="text-muted">Низподох</h4>
+
+<table class="table table-bordered table-hover table-list">
+    <tr>
+        <th></th>
+        <th class="min">min</th>
+        <th class="avg">avg</th>
+        <th class="max">max</th>
+    </tr>
+    <tr>
+        <td>Среднее время работы</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['model_worker_time']|int2ms }}</td>
+        <td class="max"></td>
+    </tr>
+    <tr>
+        <td>Обработка highpoly-меша</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td class="padd">Время</td>
+        <td class="min">{{ stat['mesh_props_high']['time_min']|int2ms }}</td>
+        <td class="avg">{{ stat['mesh_props_high']['time_avg']|int2ms }}</td>
+        <td class="max">{{ stat['mesh_props_high']['time_max']|int2ms }}</td>
+    </tr>
+    <tr>
+        <td class="padd">Коэффициент сжатия, байты</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['mesh_props_high']['model_size_ratio_avg'] }}</td>
+        <td class="max"></td>
+    </tr>
+    <tr>
+        <td class="padd">Коэффициент сжатия, полигоны</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['mesh_props_high']['model_faces_ratio_avg'] }}</td>
+        <td class="max"></td>
+    </tr>
+    <tr>
+        <td class="padd">Среднее время на объект</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['mesh_props_high']['objects_time']|float2msm }}</td>
+        <td class="max"></td>
+    </tr>
+    <tr>
+        <td class="padd">Среднее время на 1 млн полигонов</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['mesh_props_high']['faces_time']|int2ms }}</td>
+        <td class="max"></td>
+    </tr>
+    <tr>
+        <td>Обработка lowpoly-меша</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td class="padd">Время</td>
+        <td class="min">{{ stat['mesh_props_low']['time_min']|int2ms }}</td>
+        <td class="avg">{{ stat['mesh_props_low']['time_avg']|int2ms }}</td>
+        <td class="max">{{ stat['mesh_props_low']['time_max']|int2ms }}</td>
+    </tr>
+    <tr>
+        <td class="padd">Коэффициент сжатия, байты</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['mesh_props_low']['model_size_ratio_avg'] }}</td>
+        <td class="max"></td>
+    </tr>
+    <tr>
+        <td class="padd">Коэффициент сжатия, полигоны</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['mesh_props_low']['model_faces_ratio_avg'] }}</td>
+        <td class="max"></td>
+    </tr>
+    <tr>
+        <td class="padd">Среднее время на 1 млн полигонов</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['mesh_props_low']['faces_time']|int2ms }}</td>
+        <td class="max"></td>
+    </tr>
+    <tr>
+        <td>Текстуризация</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td class="padd">Время</td>
+        <td class="min">{{ stat['texturing']['time_min']|int2ms }}</td>
+        <td class="avg">{{ stat['texturing']['time_avg']|int2ms }}</td>
+        <td class="max">{{ stat['texturing']['time_max']|int2ms }}</td>
+    </tr>
+    <tr>
+        <td class="padd">Среднее время на скайбокс</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['texturing']['time_point']|float2msm }}</td>
+        <td class="max"></td>
+    </tr>
+</table>
+
+<h4 class="text-muted">Нарезание панорам</h4>
+
+<table class="table table-bordered table-hover table-list">
+    <tr>
+        <th></th>
+        <th class="min">min</th>
+        <th class="avg">avg</th>
+        <th class="max">max</th>
+    </tr>
+    <tr>
+        <td>Время работы</td>
+        <td class="min">{{ stat['cutter']['time_min']|int2ms }}</td>
+        <td class="avg">{{ stat['cutter']['time_avg']|int2ms }}</td>
+        <td class="max">{{ stat['cutter']['time_max']|int2ms }}</td>
+    </tr>
+    <tr>
+        <td>Среднее время на скайбокс</td>
+        <td class="min"></td>
+        <td class="avg">{{ stat['cutter']['time_point']|float2msm }}</td>
+        <td class="max"></td>
+    </tr>
+</table>
+
+<h4 class="text-muted">Ошибки низподоха</h4>
+
+<table class="table table-bordered table-hover table-list">
+    <tr>
+        <th>Код</th>
+        <th>Текст</th>
+        <th class="n">N</th>
+        <th class="n">%</th>
+    </tr>
+    {% for code, error in stat['errors'].items()  %}
+    <tr>
+        <td>{{ code }}</td>
+        <td>{{ error.text|wordwrap(100)|replace('\n', '<br>')|safe }}</td>
+        <td class="n">{{ error.N }}</td>
+        <td class="n">{{ error.percentage }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+    <div class="pull-right text-muted"><small><i>Время генерации статистики: {{ stat['gen_time']|int2ms }}</i></small></div>
+
+{% endblock %}

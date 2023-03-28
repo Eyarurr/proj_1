@@ -1,0 +1,37 @@
+# Отправляется, когда фоновая задача сборщика туров обнаружила, что у юзера закончились обработки. Редкая ситуация, на самом деле,
+# потому что с 0 сборок на процессинг тур отправить нельзя, возникнет только из-за какого-нибудь race condition.
+[CONTEXT]
+
+[COMMON]
+channel=virtoaster
+tone=error
+link={{ url_for('virtoaster.pricing') }}
+
+[EN]
+message=Out of tours
+email_subject=Out of tours
+email_html=<p>Good day!</p>
+    <p>
+       It seems that you run out of tour processings in this period. Wait until the next period or
+       <a href="{{ url_for('virtoaster.pricing', _external=True, _scheme='https') }}">upgrade you plan</a>.
+    </p>
+
+email_text=Good Day!
+
+    It seems that you run out of tour processings in this period. Wait until the next period or upgrade you plan.
+
+    {{ url_for('virtoaster.pricing', _external=True, _scheme='https') }}
+
+[RU]
+message=Недостаточно обработок
+email_subject=Недостаточно обработок
+email_html=<p>Добрый день!</p>
+    <p>
+       Похоже у вас не осталось сборок тура в данном периоде. Подождите конца периода или
+       <a href="{{ url_for('virtoaster.pricing', _external=True, _scheme='https') }}">улучшите ваш тарифный план</a>.
+    </p>
+email_text=Добрый день!
+
+    Похоже у вас не осталось сборок тура в данном периоде. Подождите конца периода или
+
+    {{ url_for('virtoaster.pricing', _external=True, _scheme='https') }}

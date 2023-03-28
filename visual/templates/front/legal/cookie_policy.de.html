@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% set page_title = _("Cookie settings") %}
+
+{% block content %}
+    <div class="page-title page-title--textpage">
+        <div class="b-page__inner page-title__inner page-title__inner--align-left">
+            <h1 class="page-title__head h1">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg content-page content-page__license">
+        <div class="content-page__wrapper">
+            <div class="content-page__main">
+                <p><strong>What is a cookie?</strong></p>
+                <p>A cookie is a small file that stores Internet settings. Almost every website uses cookie technology. It
+                    is downloaded by your Internet browser on the first visit to a website. The next time this website is
+                    opened with the same user device, the cookie and the information stored in it is either sent back to the
+                    website that created it (first-party cookie) or sent to another website it belongs to (third-party
+                    cookie). This enables the website to detect that you have opened it previously with this browser and in
+                    some cases to vary the displayed content.</p>
+                <p>Some cookies are extremely useful, as they can improve the user experience on opening a website that you
+                    have already visited a number of times. Provided you use the same user device and the same browser as
+                    before, cookies remember for example your preferences, how you use a site, and adapt the displayed
+                    offerings to be more relevant to your personal interest and needs.</p>
+                <p>When switching sites, for example, such cookies also ensure the functionality of a change from http to
+                    https and thus compliance with increased security requirements for data transfer. Last but not least, a
+                    cookies also saves your decision with regard to the use of cookies on our website. Your consent is not
+                    required for the use of essential cookies.</p>
+                <p><strong>We use the following cookie categories on this website:</strong></p>
+                <p><strong>Essential cookies</strong></p>
+                <p>Essential cookies enable core site functionality. Our website cannot function properly on your device
+                    without these cookies.</p>
+                <p><strong>Analytics cookies</strong></p>
+                <p>Analytics cookies help us to better understand how the site is being used and how can we improve it.
+                    These cookies store information in aggregate form and collect anonymised information; they cannot track
+                    your movement on other websites.</p>
+                <p><strong>Marketing cookies</strong></p>
+                <p>Cookies for marketing purposes are used to extract advertisements on other sites that are relevant to
+                    specific users and adapted to their interests. They are also used to limit the frequency of appearance
+                    of an advertisement and to measure the effectiveness of advertising campaigns.</p>
+            </div>
+            <aside class="content-page__side">
+                <nav class="side-menu sticky cookie-settings " data-top-spacing="96" data-res="lg">
+                    <span class="cookie-settings__title">Cookie settings</span>
+                    <div class="cookie-policy__checkboxes_wrapper">
+                        <label class="big-checkbox big-checkbox__group">
+                            <input id='essential-checkbox' class="big-checkbox__input" type="checkbox"
+                                   name="email_notifications" value="1" checked disabled>
+                            <span
+                                class="big-checkbox__checkmark big-checkbox__checkmark--small big-checkbox__checkmark--disabled"></span>
+                            <span class="big-checkbox__label big-checkbox__label--small">Essential</span>
+                        </label>
+                        <label class="big-checkbox big-checkbox__group">
+                            <input id='functional-checkbox' class="big-checkbox__input" type="checkbox"
+                                   name="email_notifications" value="1">
+                            <span class="big-checkbox__checkmark big-checkbox__checkmark--small"></span>
+                            <span class="big-checkbox__label big-checkbox__label--small">Analytics</span>
+                        </label>
+                        <label class="big-checkbox big-checkbox__group">
+                            <input id='marketing-checkbox' class="big-checkbox__input" type="checkbox"
+                                   name="email_notifications" value="1">
+                            <span class="big-checkbox__checkmark big-checkbox__checkmark--small"></span>
+                            <span class="big-checkbox__label big-checkbox__label--small">Marketing</span>
+                        </label>
+                    </div>
+                    <div class='cookie-settings__bottom'>
+                        <div class='cookie-settings__bottom-button-group'>
+                            <button
+                                id='accept-recommended-cookie-settings'
+                                class='cookie-settings__bottom-button-group__accept-btn'
+                            >
+                                Accept all
+                            </button>
+                            <div>
+                                <button
+                                    id='save-cookie-settings'
+                                    class='cookie-settings__bottom-button-group__save-button'
+                                >
+                                    Save settings
+                                </button>
+                                <span
+                                    class='cookie-settings__bottom__saved-message hidden'
+                                    id='saved-message'
+                                >
+                                    Saved!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

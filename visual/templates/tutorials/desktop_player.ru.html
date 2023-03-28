@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% set page_title = _("Desktop player") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/desktop-player/desktop_player.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--yellow">{{ _("support") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div class="content-page__wrapper">
+            <div class="content-page__main">
+
+                <p>
+                    “Biganto tour player” это Windows приложение, позволяющее пользователям просматривать 3d туры офлайн и с использованием VR гарнитур, таких как Oculus Rift и HTC Vive.
+                </p>
+
+                <p><a href="https://biganto.com/static/downloads/BigantoPlayer.v.5.0.0.exe">Загрузить.</a></p>
+
+                <p>Загрузите установочный файл и установите приложение.</p>
+
+                <p>Запустите Biganto tour player. Вы попадете в раздел “Примеры”, где вы можете посмотреть демо туры Biganto.</p>
+
+                <p><span class='warning'>Важно:</span> если поддерживаемое VR устройство подключено к вашему ПК и Steam VR включен, вы увидите&nbsp;<span class="cardboard"></span> иконку для переключения между десктопным ПК и VR устройством. Когда режим VR включен, экран вашего ПК будет служить в качестве второго экрана. Вы можете переключить режим в любое время.
+                </p>
+                <p>Чтобы получить доступ к вашим турам, вам необходим аккаунт Biganto. Нажмите “Мои туры” и введите данные вашего аккаунта.</p>
+                <p><img style="max-width: 400px;" src="/static/public/img/tutorials/desktop-player/login.jpg" alt="" ></p>
+
+                <p>Для просмотра демо-туров наличие аккаунта не требуется. Чтобы войти в любую папку с турами, просто нажмите на нее. Нажмите на обложку тура, чтобы открыть тур. Если вы видите следующую иконку рядом с обложкой тура
+                <svg viewBox="0 0 64 64" class="icon--inline" width="34" height="34">
+                    <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-download"></use>
+                </svg>, это значит что требуется загрузка компонентов тура. Это может занять некоторое время, в зависимости от размера тура и скорости вашего интернет соединения.
+                </p>
+                <p><img src="/static/public/img/tutorials/desktop-player/gallery.jpg" alt="" ></p>
+                <p>Вы также можете открыть тур использую HTTP ссылку или ID тура. Нажмите <svg viewBox="0 0 64 64" class="icon--inline" width="34" height="34">
+                    <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-launch"></use>
+                </svg> в правом верхнем углу и вставьте ссылку или ID тура:</p>
+
+                <p><img style="max-width: 400px;" src="/static/public/img/tutorials/desktop-player/launch.jpg" alt="" ></p>
+                <p>Вы можете получить доступ к настройкам плеера нажав <svg viewBox="0 0 64 64" class="icon--inline" width="34" height="34">
+                    <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-options"></use>
+                </svg> в правом верхнем углу. Здесь вы можете сменить пользователя, язык, управлять загруженными турами и изменить некоторые настройки воспроизведения.
+                </p>
+                <ul>
+                    <li>Поворот стиком/мышью - включает/выключает возможность использовать мышь или стик контроллера VR устройства для поворотов при использовании VR гарнитуры.
+                    </li>
+                    <li>Дистанция телепортации - устанавливает дистанцию между переходами, на которой вместо плавного перемещения будет использована “fade in/fade out” телепортация. Используется, например, для перемещения в удаленную точку тура. Вы можете установить значение 0, чтобы использовать телепортацию всегда.
+                    </li>
+                </ul>
+                <p><img style="max-width: 400px;" src="/static/public/img/tutorials/desktop-player/settings.jpg" alt="" ></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

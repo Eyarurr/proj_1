@@ -1,0 +1,115 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'statistics' %}
+
+
+{% block head %}
+    <style type="text/css">
+        .chart {
+            position: relative;
+            margin: 0 0 30px 0;
+        }
+        .chart__canvas {
+            height: 500px;
+        }
+        .chart__download {
+            position: absolute;
+            right: 13px;
+            top: -2px;
+            font-size: 16px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    <script>
+        var BG = {};
+        window.BG = BG;
+    </script>
+{% endblock %}
+
+
+{% block content %}
+<h1>Статистика сервиса</h1>
+
+{% include('admin/statistics/_tabs.html') %}
+
+<h2>Операционные системы</h2>
+<div class="chart">
+    <div class="chart__legend" id="legend-oses"></div>
+    <div class="chart__canvas" id="chart-oses"></div>
+</div>
+
+<h2>Браузеры</h2>
+<div class="chart">
+    <div class="chart__legend" id="legend-browsers"></div>
+    <div class="chart__canvas" id="chart-browsers"></div>
+</div>
+
+{% endblock %}
+
+
+{% block tail %}
+
+<script>
+    BG.CONST = {};
+    BG.CONST.LANG = 'ru';
+</script>
+<script>
+    var oses = {{ oses|tojson|safe }};
+    var browsers = {{ browsers|tojson|safe }};
+
+    $(function() {
+        AmCharts.makeChart('chart-oses', {
+            "type": "pie",
+            "dataProvider": oses,
+            "valueField": "n",
+            "titleField": "os",
+            "groupPercent": 1,
+
+            "language": BG.CONST.LANG,
+            "theme": "light",
+            "innerRadius": "40%",
+            "fontFamily": "Verdana, Tahoma, Helvetica Neue, Lucida Grande, sans-serif",
+            "legend": {
+                "horizontalGap": 10,
+                "position": "top",
+                "align": "center",
+                "fontSize": 11,
+                "divId": "legend-oses"
+            },
+            "responsive": { "enabled": true }
+        });
+
+        AmCharts.makeChart('chart-browsers', {
+            "type": "pie",
+            "dataProvider": browsers,
+            "valueField": "n",
+            "titleField": "browser",
+            "groupPercent": 1,
+
+            "language": BG.CONST.LANG,
+            "theme": "light",
+            "innerRadius": "40%",
+            "fontFamily": "Verdana, Tahoma, Helvetica Neue, Lucida Grande, sans-serif",
+            "legend": {
+                "horizontalGap": 10,
+                "position": "top",
+                "align": "center",
+                "fontSize": 11,
+                "divId": "legend-devices"
+            },
+            "responsive": { "enabled": true }
+        });
+
+        $('input[name="daterange"]').daterangepicker({
+            locale: {
+                format: 'DD.MM.YYYY'
+            }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            console.log($('input[name="daterange"]').val())
+            $('#form-filters').submit();
+        });
+
+    });
+</script>
+{% include 'admin/statistics/js_libs.html' %}
+
+{% endblock %}

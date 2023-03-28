@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% set submenu_current = '' %}
+
+{% block page_title %}{{ _("Newsletter status") }}{% endblock %}
+
+{% block page_content %}
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p>{{ _("You have successfully unsubscribed from a newsletter.") }} {{ mailing_list.title }}</p>
+                        </div>
+                    </div>
+
+{% endblock %}
+
+{% block tail %}{% endblock %}

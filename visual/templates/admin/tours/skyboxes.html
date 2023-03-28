@@ -1,0 +1,74 @@
+{% extends 'admin/base.html' %}
+
+{% set menu_current = 'tours' %}
+
+{% block head %}
+    <style type="text/css">
+        .pans label {
+            font-weight: normal;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+    <h2>Тур «{{ tour.title }}»</h2>
+
+    {% include('admin/tours/_tabs.html') %}
+
+    <h2>
+        Панорамы
+    </h2>
+
+    <div class="alert alert-info">
+        Сами панорамы хранятся в съёмке. Если вы хотите добавить их, удалить, изменить бинокулярность или разрешение —
+        <a href="{{ url_for('.footage_skyboxes', footage_id=tour.footage_id) }}">вам туда</a>.
+        Здесь можно только отключать панорамы. Подписи и стартовую точку редактируйте в
+        <a href="{{ url_for('front.tour_edit', tour_id=tour.id) }}">WYSIWYG-редакторе</a>.
+    </div>
+
+    {% if not tour.footage.meta.get('skyboxes') %}
+        <div class="alert alert-info">В съёмке нет панорам.</div>
+    {% else %}
+        <form method="post" class="form-horizontal" id="form-skyboxes">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="start" value="{{ tour.meta.get('start', {}).get('skybox') or '' }}">
+            <table class="table table-bordered table-list table-skyboxes">
+            {% for box_id, fbox in tour.footage.meta.get('skyboxes', {})|dictsort %}
+                {% set tbox = tour.meta.get('skyboxes', {}).get(box_id, {}) %}
+                <tr {% if 'disabled' in tour.footage.meta['skyboxes'].get(box_id|string, {}) %} class="warning" title="Деактивирован" {% endif %}>
+                    <td class="id" data-id="{{ box_id }}">
+                        {{ box_id }}
+                        {% if box_id == tour.meta.get('start', {}).get('skybox')|int %}
+                            <i class="fa fa-flag-checkered"></i>
+                        {% endif %}
+                    </td>
+
+                    <td class="pans">
+                        <p>
+                            {{ panorama(tour.footage, tour.footage.min_res, box_id, None, tour.footage.meta['skyboxes'].get(box_id|string, {}).get('revision')) }}
+                        </p>
+                    </td>
+
+                    <td class="props t">
+                        <textarea name="title.{{ box_id }}" class="form-control" placeholder="Подпись" rows="2">{{ tbox.get('title', '') }}</textarea>
+                        <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="disabled" value="{{ box_id }}"{% if 'disabled' in tbox %} checked="checked"{% endif %}>
+                        <label class="form-check-label" for="">Панорама отключена в этом туре</label></div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    {% endif %}
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript">
+$(function() {
+
+});
+</script>
+{% endblock %}

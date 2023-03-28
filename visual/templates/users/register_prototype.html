@@ -1,0 +1,25 @@
+{% extends 'prototype.html' %}
+
+{# Это тупо для тестирования регистрации, удалить перед деплоем #}
+
+{% block content %}
+<form method="POST" action="{{ url_for('users.register') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <p>
+        <label>Email:</label>
+        <input type="text" name="email">
+    </p>
+    <p>
+        <label>Password:</label>
+        <input type="text" name="password">
+    </p>
+    <p>
+        <label>Name:</label>
+        <input type="text" name="name">
+    </p>
+    <p>
+        <label><input type="checkbox" name="email_notifications"> email_notifications</label>
+    </p>
+    <button type="submit">Sign up</button>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<p>Добрый день.</p>
+
+<p>Вы заказывали загрузку туров, всё готово:</p>
+<ul>
+{% for m in messages %}
+  <li>{{ m }}</li>
+{% endfor %}
+</ul>
+
+В админке их можно <a href="{{ url_for('admin.tours', user_id=user_id, folder_id=folder_id, _external=True) }}">найти тут</a>.
+
+</body>
+</html>
+

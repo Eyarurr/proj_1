@@ -1,0 +1,58 @@
+{% macro register_form() %}
+    <form class="form-modal registration__form" method="post" action="{{ url_for('users.register') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="recaptcha_response" value="">
+        <div class="form-modal__section login__section">
+            <div class="form-modal__label">{{ _("E-mail") }} </div>
+            <div class="form-modal__field login__field">
+                <input type="text" class="big-input registration__email" value="" placeholder="{{ _("Your e-mail") }}" name="email" tabindex="1">
+            </div>
+        </div>
+        <div class="form-modal__section login__section">
+            <div class="form-modal__label clearfix">
+                {{ _("Password") }}
+            </div>
+            <div class="form-modal__field login__field">
+                <input type="password" name="password" class="big-input registration__password" value="" placeholder="{{ _("Password") }}" tabindex="2">
+                <div class="login__password-toggle" title="{{ _("Show the password") }}">
+                    <svg viewBox="0 0 32 24" class="login__eye login__eye-o icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#eye-o"></use></svg>
+                    <svg viewBox="0 0 32 24" class="login__eye login__eye-c icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#eye-c"></use></svg>
+                    <span class="login__password-label">{{ _("Show the password") }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-modal__section login__section">
+
+            <div class="form-modal__label clearfix">
+                {{ _("Name") }}
+            </div>
+            <div class="form-modal__field login__field">
+                <input type="text" class="big-input registration__name" value="" placeholder="{{ _("Name") }}" name="name" tabindex="3">
+            </div>
+        </div>
+        <div class="form-modal__section">
+            {{ _("Biganto would like to keep you informed about the status of the services we provide, including your 3d tour status.") }}
+        </div>
+        <label class="big-checkbox big-checkbox__group">
+            <input class="big-checkbox__input" type="checkbox" name="email_notifications" value="1">
+            <span class="big-checkbox__checkmark big-checkbox__checkmark--small"></span>
+            <span class="big-checkbox__label big-checkbox__label--small">{{ _("I agree to receive notifications by e-mail") }}</span>
+        </label>
+
+        <label class="big-checkbox big-checkbox__group">
+            <input class="big-checkbox__input" type="checkbox" name="accept_policy" value="1">
+            <span class="big-checkbox__checkmark big-checkbox__checkmark--small big-checkbox__label--inline"></span>
+            <span class="big-checkbox__label big-checkbox__label--small big-checkbox__label--inline">{{ _("I agree that I have read and accepted the <a class=\"link\" href='%(agreement)s' target='_blank'>User Agreement</a> and <a class='link' href='%(policy)s' target='_blank'>Privacy Policy.</a>", agreement=url_for('front.user_agreement'), policy=url_for('front.privacy_policy')) }}</span>
+        </label>
+
+        <div class="form-modal__section login__submit clearfix">
+            {% if config.get('GOOGLE_RECAPTCHA_ENABLED') %}
+                <div class="registration__recaptcha-container">
+                    <div id="registration__recaptcha" class="registration__recaptcha"></div>
+                </div>
+                <br />
+            {% endif %}
+            <button type="submit" class="button fill blue modal-custom__button-wide registration__submit" tabindex="4" disabled>{{ _("Create account") }}</button>
+        </div>
+    </form>
+{% endmacro %}

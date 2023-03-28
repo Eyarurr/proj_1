@@ -1,0 +1,62 @@
+# Отправляется, когда пришло событие processing.failed: процессинг не удался
+#
+[CONTEXT]
+dataset=RemoteDataset
+errors=list
+
+[COMMON]
+channel=filincam
+tone=error
+link={{ url_for('my.index', path='scenes/', _anchor='scene-' + dataset.remote_id) }}
+
+[RU]
+message=Ошибка обработки сцены <b>{{ dataset.title or 'Untitled' }}</b>
+    {%- if errors %}: {{ errors[0] }} {% if errors|length > 1 %}(+{{ errors|length - 1 }}){% endif %} {% endif %}
+email_subject=Не удалось обработать сцену "{{ dataset.title or 'Untitled' }}"
+email_html=<p>
+        Во время обработки сцены <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        произошли ошибки:
+     </p>
+     <ul>
+         {% for error in errors %}
+             <li>{{ error }}</li>
+         {% endfor %}
+    </ul>
+    {% if warnings %}
+        <p>Также случились следующие предупреждения:</p>
+        <ul>
+            {% for warning in warnings %}
+                <li>{{ warning }}</li>
+            {% endfor %}
+       </ul>
+    {% endif %}
+    <p>
+       Вы можете <a href="{{ url_for('my.index', path='scenes/', _external=True, _anchor='scene-' + dataset.remote_id) }}">запустить обработку</a>
+       сцены с другими настройками, попробовать переснять её или <a href="mailto:{{ config['SUPPORT_EMAIL'] }}">обратитсья в техподдержку</a>.
+    </p>
+
+[EN]
+message=Error processing scene <b>{{ dataset.title or 'Untitled' }}</b>
+    {%- if errors %}: {{ errors[0] }} {% if errors|length > 1 %}(+{{ errors|length - 1 }}){% endif %} {% endif %}
+email_subject=Error processing scene "{{ dataset.title or 'Untitled' }}"
+email_html=<p>
+        During processing of scene <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        some errors encountered:
+     </p>
+     <ul>
+         {% for error in errors %}
+             <li>{{ error }}</li>
+         {% endfor %}
+    </ul>
+    {% if warnings %}
+        <p>Also there were some warnings:</p>
+        <ul>
+            {% for warning in warnings %}
+                <li>{{ warning }}</li>
+            {% endfor %}
+       </ul>
+    {% endif %}
+     <p>
+        You can try to <a href="{{ url_for('my.index', path='scenes/', _external=True, _anchor='scene-' + dataset.remote_id) }}">start processing</a>
+        with different options, retake the scene or <a href="mailto:{{ config['SUPPORT_EMAIL'] }}">contact support</a>.
+     </p>

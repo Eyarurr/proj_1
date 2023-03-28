@@ -1,0 +1,21 @@
+{#<p>#{{ issue.number }} / {{ issue.created.strftime('%d.%m.%Y %H:%M') }}</p>#}
+<p>#{{ issue.number }} / {{ issue.created|utcinlocal|humantime(not_today=True) }}</p>
+
+<p>{{ _("Subject") }}:<br>
+{{ issue.SUBJECTS.get(issue.subject, issue.subject) }}</p>
+
+{% if issue.tour_link %}
+<p>{{ _("Tour link") }}:<br>
+{{ issue.tour_link }}</p>
+{% endif %}
+
+<p>{{ _("Description") }}:<br>
+{{ issue.text }}</p>
+
+<p>{{ _("Contact email") }}:<br>
+{{ issue.contact_email }}</p>
+
+{% if issue.user_id %}
+<p>{{ _("User profile") }}:<br>
+{{ url_for('admin.tours', user_id=user_id) }}</p>
+{% endif %}

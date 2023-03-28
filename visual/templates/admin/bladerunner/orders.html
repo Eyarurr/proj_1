@@ -1,0 +1,95 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>
+    Заказы Capture services
+    {% if office %}
+        офиса «<a href="{{ url_for('.br_office_edit', office_id=office.id) }}">{{ office.title }}</a>»
+    {% else %}
+        — все какие есть
+    {% endif %}
+</h1>
+<form method="get">
+    <div class="row table-filters justify-content-between">
+        <div class="col-lg-auto">
+            <div class="row mb-1">
+                <div class="col-lg-auto">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Сортировка</span>
+                        {{ filters.sort(class='form-select form-select-sm') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-auto">
+            <div class="btn-group btn-group-sm mb-1">
+                <button type="submit" class="btn btn-submit btn-primary">Показать</button>
+                {% if filters.is_dirty %}
+                    <a href="{{ url_for('.br_operators', **filters.default_values) }}" class="btn btn-secondary">Очистить</a>
+                {% endif %}
+            </div>
+            {% if office %}
+            <a class="btn btn-sm btn-outline-success mb-1" href="{{ url_for('.br_order_edit', office_id=office.id) }}">
+                <i class="fa fa-plus-circle"></i> Создать заказ
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+{% if orders.total == 0 %}
+<div class="alert alert-info">
+    Заказов не найдено. <a href="{{ url_for('.br_operators') }}">Всех посмотреть.</a>
+</div>
+{% else %}
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-3">
+
+<thead>
+<tr>
+    <td colspan="2">#</td>
+    <th class="break">Время</th>
+    <th class="break">TTS</th>
+    <th class="break">Адрес</th>
+    <th class="break">Оператор</th>
+    <th class="break"></th>
+</tr>
+</thead>
+<tbody>
+
+{% for order in orders.items %}
+<tr>
+    <td class="">{{ order.id }}</td>
+    <td><span class="badge bg-primary">{{ order.status }}</span></td>
+    <td class="break">{{ order.start or '—' }}</td>
+    <td class="break">{{ order.tts }} мин</td>
+    <td class="break t">{{ order.address }}</td>
+    <td class="break"><a href="{{ url_for('.br_operator_edit', office_id=office.id, operator_id=order.operator_id) }}">{{ order.operator.name }}</a></td>
+    <td class="break">
+        {% set btn_style = 'btn-info' if order.cnt_assets else 'btn-outline-secondary' %}
+        <a href="{{ url_for('.br_order_edit', office_id=order.office_id, order_id=order.id) }}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+        <a href="{{ url_for('.br_assets', office_id=order.office_id, order_id=order.id) }}" class="btn btn-sm btn-outline-secondary">Материалы</a>
+        <a href="{{ url_for('.br_assets_download', office_id=order.office_id, order_id=order.id) }}" class="btn btn-sm btn-outline-secondary">Скачать все</a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
+
+{{ render_pagination(orders, '.br_orders', **filters.as_dict()) }}
+
+{% endif %}
+{% if not office %}
+    <p class="alert alert-success">
+        Чтобы создать заказ, <a href="{{ url_for('.br_offices') }}">выберите какой-нибудь офис</a>.
+    </p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'users' %}
+
+
+
+{% block content %}
+    <h1>{{ user.name }}: Биллинг</h1>
+
+    {% include('admin/users/_tabs.html') %}
+
+    {% if not customer %}
+        <div class="alert alert-info">
+            У этого пользователя нет Customer в Stripe.
+        </div>
+        {% if stripe_error %}
+            <div class="alert alert-danger">
+                При попытке получить данные из API Stripe произошла ошибка: {{ stripe_error }}
+            </div>
+        {% endif %}
+    {% else %}
+        <h2>Subscriptions</h2>
+        {% if not customer.subscriptions %}
+            <div class="alert alert-warning">Нет подписок</div>
+        {% else %}
+            <table class="table table-bordered table-hover table-list">
+            <thead class="table-light">
+            <tr>
+                <th>Создано</th>
+                <th>CPS</th>
+                <th>CPE</th>
+                <th>Статус</th>
+                <th>План</th>
+            </tr>
+            </thead>
+            {% for sub in customer.subscriptions.data %}
+                <tr>
+                <td>{{ sub.created|sec2datetime }}</td>
+                <td>{{ sub.current_period_start|sec2datetime }}</td>
+                <td>{{ sub.current_period_end|sec2datetime }}</td>
+                <td><strong>{{ sub.status }}</strong></td>
+                <td class="t">{{ sub.plan.id }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% endif %}
+
+        <h2>PaymentMethods</h2>
+        <table class="table table-bordered table-hover table-list">
+        <thead class="table-light">
+        <tr>
+            <th>Создано</th>
+            <th>Карта</th>
+            <th>Адрес</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for payment_method in payment_methods %}
+            <tr {% if payment_method.id == customer.invoice_settings.get('default_payment_method') %} class="active" {% endif %}>
+                <td>{{ payment_method.created|sec2datetime }}</td>
+                <td>
+                    {{ payment_method.card.brand }} {{ payment_method.card.country }} <code>&bull;&bull;&bull;&bull; {{ payment_method.card.last4 }}</code>
+                    {{ payment_method.card.exp_month }}/{{ payment_method.card.exp_year }}
+                </td>
+                <td>
+                    {{ payment_method.billing_details.email }} {{ payment_method.billing_details.name }}
+                    {{ payment_method.billing_details.address.country }} {{ payment_method.billing_details.address.city }} {{ payment_method.billing_details.address.line1 }}
+                </td>
+                <td>
+                    <a href="#modal-payment-method-{{ payment_method.id }}" data-bs-toggle="modal" class="btn-xs btn-info pull-right">more...</a>
+                </td>
+            </tr>
+            <div class="modal modal-payment-method" id="modal-payment-method-{{ payment_method.id }}"><div class="modal-dialog"><div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">PaymentMehtod</h4>
+                </div>
+                <div class="modal-body">
+                    <pre>{{ payment_method }}</pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                </div>
+            </div></div></div>
+        {% endfor %}
+        </tbody>
+        </table>
+
+        <p class="text-center">
+            <a href="#modal-customer" data-bs-toggle="modal" class="btn btn-default">Посмотреть объект Customer</a>
+            <a href="{{ url_for('.user_edit', user_id=user.id) }}"class="btn btn-info">Вернуться к свойствам юзера</a>
+        </p>
+
+            <div class="modal" id="modal-customer"><div class="modal-dialog"><div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">Customer</h4>
+                </div>
+                <div class="modal-body">
+                    <pre class="code">{{ customer }}</pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Ok</button>
+                </div>
+            </div></div></div>
+
+    {% endif %}
+
+{% endblock content %}

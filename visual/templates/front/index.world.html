@@ -1,0 +1,51 @@
+﻿{% extends 'base.html' %}
+{% from '/macros/topper.html' import topper %}
+{% from '/macros/examples_look.html' import examples_look %}
+{% from '/macros/products.html' import products %}
+{% from '/macros/offers.html' import offers %}
+{% from '/macros/types_customers.html' import types_customers %}
+{% from '/macros/player_features.html' import player_features %}
+{% from '/macros/multiplatform.html' import multiplatform %}
+{% from '/macros/news_block.html' import news_block %}
+{% from '/macros/text_block.html' import text_block %}
+{% set corpus_class = 'main' %}
+
+{% block content %}
+
+    {{ topper(current_user=current_user) }}
+
+    {{ examples_look(
+        items=demo_tours,
+        interface_color='blue',
+        link={
+            'url': url_for('front.gallery'),
+            'text': _("View Full Gallery") ~ ' →',
+        },
+    ) }}
+
+    {{ products() }}
+
+    {#{{ offers(tours=featured_tours) }}#}
+
+    {{ types_customers() }}
+
+    {#{{ player_features() }}#}
+
+    {{ multiplatform(
+        has_android_app=has_android_app,
+        android_app=android_app,
+        has_ios_app=has_ios_app,
+        ios_app=ios_app,
+        has_windowsplayer=has_windowsplayer,
+        windowsplayer=windowsplayer,
+    ) }}
+
+    {#{{ news_block(items=news) }}#}
+
+    {{ text_block(
+        container_class='inverted block-about',
+        title=_("About biganto"),
+        text=_("Biganto is an IT company founded in 2014. We specialize in software and hardware development and innovative technologies in real estate marketing. Biganto VR and 3d virtual tours allow viewers to freely and seamlessly move through the interior or exterior of a space, thus creating an immersive experience. Our tours are unique with the combination of high image quality, ease of production and wide range of features and platforms they are available on, from internet browsers to applications for mobile and VR devices.")
+    ) }}
+
+{% endblock %}

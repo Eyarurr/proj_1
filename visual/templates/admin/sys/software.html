@@ -1,0 +1,146 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'sys' %}
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>Версии софта</h1>
+
+    <form class="row table-filters">
+    <div class="col-auto">
+    <div class="input-group input-group-sm">
+        <label class="input-group-text">Приложение:</label>
+        <select name="app_id" class="form-select">
+            <option value="">Выберите</option>
+            {% for app in config.APPLICATIONS.keys() %}
+                <option value="{{ app }}" {% if app == app_id %} selected {% endif %}>{{ app }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    </div>
+    <div class="col text-start">
+        <button type="submit" class="btn btn-sm btn-primary">Показать</button>
+    </div>
+    </form>
+
+    {% if app_id %}
+        {% if versions %}
+            <table class="table table-bordered table-list">
+            <thead class="table-light">
+            <tr>
+                <th>Когда</th>
+                <th>Кем</th>
+                <th>Версия</th>
+                <th>Ссылка/файл</th>
+                <th></th>
+            </tr>
+            </thead>
+            {% for version in versions %}
+            <tr data-id="{{ version.id }}">
+                <td>{{ version.created|utcinlocal|humantime }}</td>
+                <td><a href="{{ url_for('.team_profile', user_id=version.created_by) }}" class="text-underline-hover">{{ version.creator.name }}</a></td>
+                <td>{{ version.version|join('.') }}</td>
+                <td class="t">
+                    {% if version.download_url %}
+                        <a href="{{ version.download_url }}" target="_blank" class="text-underline-hover">{{ version.download_url }}</a>
+                    {% else %}
+                        <a href="{{ version.file.url }}" class="text-underline-hover">{{ version.filename }}</a>
+                        {% if version.filesize %}
+                            ({{ version.filesize|filesizeformat }})
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td><a href="#modal-delete" class="btn btn-sm btn-danger" data-toggle="modal" title="Удалить"><i class="fas fa-ban"></i></a></td>
+            </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            <div class="alert alert-info">Не загружено ни одной версии приложения {{ app_id }}.</div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">Выберите приложение</div>
+    {% endif %}
+
+
+    {% if app_id %}
+    <h2>Загрузить приложение ({{ request.args.get('app_id') }})</h2>
+    <form method="post" action="{{ url_for('.sys_software_upload', app_id=request.args['app_id']) }}" id="form-upload" class="form-horizontal" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row mb-3">
+        <label class="col-lg-1 text-end text-right">Ver</label>
+        <div class="col-lg">
+            <input type="text" name="version" placeholder="Major.Minor.Revision" class="form-control">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-1 text-end">
+            <label class="radio">
+                <input type="radio" name="type" value="url" checked>
+            </label>
+        </div>
+        <div class="col-lg">
+            <input type="text" name="download_url" class="form-control" placeholder="URL для установки приложения">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-1 text-end">
+            <label class="radio">
+                <input type="radio" name="type" value="file">
+            </label>
+        </div>
+        <div class="col">
+            <input type="file" name="file" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-11 offset-lg-1">
+            <button type="submit" class="btn btn-primary">Ok</button>
+        </div>
+    </div>
+    </form>
+
+    <script type="text/javascript">
+        (function() {
+            let $form = $('#form-upload');
+            $form.find('[name=download_url]').focus(function() {
+                $form.find('[name=type]').filter('[value=url]').prop('checked', true);
+            });
+            $form.find('[name=file]').focus(() => {
+                $form.find('[name=type]').filter('[value=file]').prop('checked', true);
+            });
+        })();
+    </script>
+
+    <form method="post" action="{{ url_for('.sys_software_delete', app_id=app_id) }}" id="form-delete">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="version_id" value="">
+        <div class="modal" id="modal-delete"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">Удалить версию приложения?</h4>
+            </div>
+            <div class="modal-body">
+                Это ведь навсегда.
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+            </div>
+        </div></div></div>
+    </form>
+    <script type="text/javascript">
+        (function() {
+            let $form = $('#form-delete'), $modal = $('#modal-delete');
+
+            $modal.on('shown.bs.modal', function(e) {
+                $form.find('[name=version_id]').val($(e.relatedTarget).parents('tr').data('id'));
+            });
+        })();
+    </script>
+
+    {% endif %}
+
+{% endblock %}

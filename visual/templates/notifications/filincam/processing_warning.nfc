@@ -1,0 +1,18 @@
+# Отправляется, когда пришло событие processing.warning: предупреждение во время процессинга
+#
+[CONTEXT]
+dataset=RemoteDataset
+warnings=list
+
+[COMMON]
+channel=filincam
+tone=warning
+link={{ url_for('my.index', path='scenes/', _anchor='scene-' + dataset.remote_id) }}
+
+[RU]
+message=Обработка <b>{{ dataset.title or 'Untitled' }}</b>
+    {%- if warnings %}: {{ warnings[0] }} {% if warnings|length > 1 %}(+{{ warnings|length - 1 }}){% endif %} {% endif %}
+
+[EN]
+message=Processing <b>{{ dataset.title or 'Untitled' }}</b>
+    {%- if warnings %}: {{ warnings[0] }} {% if warnings|length > 1 %}(+{{ warnings|length - 1 }}){% endif %} {% endif %}

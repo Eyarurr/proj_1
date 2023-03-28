@@ -1,0 +1,6 @@
+{% for article in articles %}
+<article>
+    <p>{{ article.message|safe|nl2br }}</p>
+    <p class="news-meta">{{ article.author.name }} — {{ article.created|utcinlocal|humantime(not_today=True) }}</p>
+</article>
+{% endfor %}

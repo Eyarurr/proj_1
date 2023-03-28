@@ -1,0 +1,191 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'tours' %}
+
+
+{% macro select(name, options, selected=None) %}
+    <select name="{{ name }}" class="form-select">
+        {% for val, label in options %}
+            <option value="{{ val }}" {% if val == selected %} selected {% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+
+{% macro screen_checkbox(name, options, selected=None) %}
+    {% set selected = selected if selected in [False, ''] else True %}
+    <div class="form-check row mb-3">
+        {% for val, label in options %}
+                <label class="form-check-label">
+                    <input class="form-check-input mb-2" type="radio" name="{{ name }}" value="{{ val }}" {% if val == selected %}checked{% endif %}>
+                    {{ label }}
+                </label>
+            {% if val == True %}
+                <div class="row">
+                <input type="file" class="mt-1 form-control form-control-sm" name="screen" {% if selected != True %}disabled{% endif %}></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+
+{% macro color(name, options) %}
+    <div class="input-group colorpicker-component color" id="colorpicker_{{ name }}">
+        {% if options.get(name) %}
+            {% set value = 'rgba(%d, %d, %d, %f)'|format(*options[name]) %}
+        {% else %}
+            {% set value = '' %}
+        {% endif %}
+        <input type="text" name="{{ name }}" class="form-control" value="{{ value }}">
+        <span class="input-group-text input-group-addon"><i></i></span>
+    </div>
+{% endmacro %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="/static/admin/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <style type="text/css">
+        .colorpicker-element .add-on i, .colorpicker-element .input-group-addon i {
+            border: 1px solid black; }
+        .colorpicker-2x .colorpicker-saturation {
+            width: 200px;
+            height: 200px;
+        }
+
+        .colorpicker-2x .colorpicker-hue,
+        .colorpicker-2x .colorpicker-alpha {
+            width: 30px;
+            height: 200px;
+        }
+
+        .colorpicker-2x .colorpicker-color,
+        .colorpicker-2x .colorpicker-color div {
+            height: 30px;
+        }
+        .form-splash__file {
+            margin-top: 10px;
+        }
+        .form-splash__h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    {{ super() }}
+    <h2>Тур «{{ tour.title }}»</h2>
+
+    {% include('admin/tours/_tabs.html') %}
+
+    {% set splash = tour.meta.get('splash', {}) %}
+
+    <form method="post" id="form-splash" enctype="multipart/form-data" class="form-horizontal form-splash">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Прогресс-бар:</label>
+            <div class="col-lg-2">
+                {{ select('progress', [('', 'Показывать'), (False, 'Не показывать')], splash.get('progress')) }}
+            </div>
+            <label class="col-lg-2 text-lg-end">Цвет фона:</label>
+            <div class="col-lg-6">{{ color('bg_color', splash) }}</div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Фоновая картинка:</label>
+            <div class="col-lg-4">
+                {{ screen_checkbox('bg_url', [(False, 'Не показывать'), ('', 'Показывать обложку'), (True, 'Произвольная картинка')], splash.get('bg_url', '')) }}
+            </div>
+
+            <div class="col-lg-6">
+                {% if splash.get('bg_url', '') == '' and tour.screen.url %}
+                <a href="{{ tour.screen.url }}" target="_blank" title="{{ tour.screen.width }}x{{ tour.screen.height }}px">
+                    <img src="{{ tour.preview.url }}" width="{{ tour.preview.width }}">
+                </a>
+                {% elif splash.get('bg_url') %}
+                <img src="{{ tour.files.url + '/' + splash.get('bg_url') }}" width="{{ tour.preview.width }}">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Редирект:</label>
+            <div class="col-lg-10">
+                <input type="text" name="redirect" value="{{ splash.get('redirect', '') }}" class="form-control">
+                <p class="text-muted">
+                    Если сюда ввести URL, то плеер вместо тура редиректнет туда. Например, если тур заменили на другой, а ссылку на него уже отлили в бетоне.
+                </p>
+            </div>
+        </div>
+
+
+        <h2 class="form-splash__h2">Отмена загрузки тура</h2>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Время появления, мс.:</label>
+            <div class="col-lg-2">
+                <input type="number" class="form-control" name="cancel_timeout" min="0" value="{{ splash.get('cancel_timeout', '') }}">
+            </div>
+                <label class="col-lg-2 text-lg-end">Текст кнопки:</label>
+                <div class="col-lg-6">
+                    {{ string_i18n_input(languages=tour.meta.get('languages', {}), language=tour.meta.get('default_lang', 'en'), name='cancel_text', value=splash.get('cancel_text', '')) }}
+                </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Открывать в:</label>
+            <div class="col-lg-2">
+                {{ select('cancel_target', [('', 'в текущем окне'), ('_blank', 'в новом окне'), ('_top', 'в родительском окне')], splash.get('cancel_target', '')) }}
+            </div>
+            <label class="col-lg-2 text-lg-end">URL кнопки:</label>
+            <div class="col-lg-6">
+                <input type="text" name="cancel_url" value="{{ splash.get('cancel_url', '') }}" class="form-control">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">HTML-код:</label>
+            <div class="col-lg-10">
+                {{ string_i18n_area(languages=tour.meta.get('languages', {}), language=tour.meta.get('default_lang', 'en'), name='cancel_html', value=splash.get('cancel_html', '')) }}
+            </div>
+        </div>
+        <div class="col offset-1">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-outline-secondary action-reset">Сбросить всё</button>
+        </div>
+
+    </form>
+{% endblock %}
+
+{% block tail %}
+    <script type="text/javascript" src="/static/admin/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <script type="text/javascript">
+        $('.color').colorpicker({
+            format: 'rgba',
+            customClass: 'colorpicker-2x',
+            sliders: {
+                saturation: {
+                    maxLeft: 200,
+                    maxTop: 200
+                },
+                hue: {
+                    maxTop: 200
+                },
+                alpha: {
+                    maxTop: 200
+                }
+            }
+        });
+        $('#form-splash [type=radio]').click(function() {
+            if ($(this)[0].value == 'True') {
+                $('#form-splash [name=screen]').attr("disabled", false);
+            } else {
+                $('#form-splash [name=screen]').attr("disabled", true);
+            }
+        });
+        $('#form-splash .action-reset').click(function() {
+            $('#form-splash :input:not([type=hidden])').val('');
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% set page_title = _("Releasing your tour") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/releasing-tour/releasing-your-tour.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <div id="more" class="b-anchor"></div>
+                <p>So, you’ve received an email notification that 3d tour is ready. Now it is available in your tour list and you can view it, but there is still a couple of things left to do.
+                </p>
+                <p>To open the tour you can follow the link in the email or you can access it from your account. Press right mouse button on your account name and select “Tours” from dropdown menu, you will enter folder list.
+                </p>
+                <p>There are three ways you can interact with a tour:</p>
+                <ul>
+                    <li>View only mode</li>
+                    <li>Editing mode</li>
+                    <li>Assets editing mode</li>
+                </ul>
+                <p>“View only” is the default way you see a tour, no special tools are available here. You can access it by pressing “View tour” or “Open in new window” buttons, or by following the link in your email.
+                </p>
+                <p>“Editing mode” is an alternative mode of web player. You can travel across the space the same way you do in “View only” mode, but “Editing mode” also contains a set of tools to add extra features.
+                </p>
+                <p>“Asset editing mode” is a web page, where you can add, edit, change and replace assets and points in your tour. You can access it by pressing on the tour thumbnail in your tour list. Asset editing mode is where you might spend some time, when you will need to reflect changes in your 3d scene or if any errors in a tour will occur.
+                </p>
+                <p>Now, when you know how to access different view modes, you might want to test the tour and add some final details:
+                </p>
+                <ul>
+                    <li>enter View mode and check if everything works fine and your renders look good in a tour. If you would like to fix a render or something is not working right in a tour, please, check our <a href='{{ url_for('tutorials.troubleshooting') }}'>troubleshooting guide</a>
+                    </li>
+                    <li>enter Editing mode and change starting point if necessary. Add extra features like tour navigation, interactive objects, prerecorded routes, etc. You can learn more details in <a href='{{ url_for('tutorials.tour_editing_mode') }}'>this article</a>.
+                    </li>
+                    <li>enter Asset editing mode and add a minimap to your tour (see <a href='{{ url_for('tutorials.rendering_floor_plan') }}'>“Rendering floor plan”</a> article).
+                    </li>
+                </ul>
+                <p>You may have already noticed, that your tour has “Testing” status. You can share and edit this tour, however you should know that tours with “Testing” status have limited lifespan and will be deleted sometime in future (this is because original assets are kept in tours with “Testing” status, thus they can take several gigabytes of space).
+                </p>
+                <p>To avoid deletion, you are required to change tour status to “Published”. Open asset editing mode and change the status, when you are ready. Note, that original assets will be deleted and you will not be able to edit some parts of the tour without assembling it again.
+                </p>
+                <p>You can share a tour with http link. In your tour list, hover over the tour with mouse and look for “Copy link” icon.
+                </p>
+                <p><img src="/static/public/img/tutorials/releasing-tour/image_1.jpg" alt=""></p>
+                <p>You can also get a link for the tour or even a link to specific place in a tour from view mode. Open a tour in View mode and look for the “Tour link” icon in the toolbar.
+                </p>
+                <p>Finally you can embed a tour to your website or blog with an iFrame. iFrame is a web technology that allows to add different embedded content in a separate space on the web page, very similar to adding a Youtube video.
+                </p>
+                <p>To get your embed code, hover over the tour with mouse and look for “Get embed code” icon.
+                </p>
+                <p><img src="/static/public/img/tutorials/releasing-tour/image_2.jpg" alt=""></p>
+                <p>Click on the icon, your embed code will be generated. You may change embed window size in the interface, these changes will be reflected in iFrame code immediately.
+                </p>
+                <p><img src="/static/public/img/tutorials/releasing-tour/image_3.jpg" alt="" width="480"></p>
+                <p>Finally, your tour is ready and can be shared! To make it even better, you can also <a href='{{ url_for('tutorials.rendering_floor_plan') }}'>add minimap</a>, <a href='{{ url_for('tutorials.creating_interactive_objects') }}'>interactive objects</a> and <a href='{{ url_for('tutorials.tour_editing_mode') }}'>other features</a> to make the most out of your project!
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

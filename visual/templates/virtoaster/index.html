@@ -1,0 +1,431 @@
+{% extends 'base.html' %}
+{% set page_title = _("Virtoaster") %}
+{% set corpus_class = 'virtoaster' %}
+{% from '/macros/examples_look.html' import examples_look %}
+
+{% block content %}
+<script>
+    FRONT_PRICING_URL = '{{ url_for('virtoaster.pricing') }}'
+    FRONT_MY_TOURS_URL = '{{ url_for('my.index') }}'
+</script>
+
+<div class="topper topper_v">
+    <div class="topper__inner">
+        <div class="topper__header b-page__header">
+            {% include 'header.'+ config.JURISDICTION + '.html' %}
+        </div>
+        <section class="topper__content reality reality_v">
+            <div class="b-page__inner reality__inner">
+                <h1 class="reality__head reality_v__head">{{ _("Convert your 3D model into 3d virtual tour with VR support with freedom of movement") }}</h1>
+                <div class="reality__bottom">
+                    <div class="reality__bottom__container">
+                        <a href="{{ url_for('my.index') }}" id="virtoaster-create-tour" class="button fill blue reality__button">{{ _("Create tour") }}</a>
+                        <div class="reality__bottom--desc">{{ _("*You’ll need a PC to create a tour") }}</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% if demo_tours|length %}
+{{ examples_look(
+    items=demo_tours,
+    interface_color='blue',
+    container_class='examples-look_v',
+    old_style=True,
+) }}
+
+{% if featured_tours|length > 0 %}
+<section class="block offers">
+    <div class="b-page__inner block__inner">
+        <div class="block__head">
+            <h2 class="block__title offers__title">{{ _("Featured tours") }}</h2>
+            <div class="block__button">
+                <a href="{{ url_for('front.gallery') }}" class="button mini border gray block__button">{{ _("See all
+                    tours") }} →</a>
+            </div>
+        </div>
+        <div class="block__content">
+            <ul class="offers__list">
+                {% for tour in featured_tours %}
+                <li class="offers__item">
+                    <a href="{{ url_for('front.gallery_tour', tour_id=tour.id) }}" class="offers__link">
+                        <div class="offers__media">
+                            {% if tour.preview %}
+                            <img src="{{ tour.preview.url }}" width="{{ tour.preview.width }}"
+                                 height="{{ tour.preview.height }}" alt="{{ tour.title }}" class="offers__image">
+                            {% else %}
+                            <img src="/static/public/img/preview-empty.png?{{ config.get('RELEASE_VERSION') }}"
+                                 class="offers__image">
+                            {% endif %}
+                        </div>
+                        <div class="offers__name">{{ tour.title }}</div>
+                    </a>
+                    <div class="offers__tags">
+                        {% for tag in tour.gallery_tags %}
+                        <a href="{{ url_for('front.gallery', tag=tag.tag) }}" class="offers__tag">#{{ tag.tag }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="block">
+        <div class="virtoaster-about">
+            <div class="b-page__inner">
+                <div class="virtoaster-about__container">
+                <div class="virtoaster-about__content">
+                    <div class="virtoaster-about__info">
+                        <h2 class="virtoaster-about__head">{{ _("What is Virtoaster?") }}</h2>
+                        <p class="virtoaster-about__text">
+                            {{ _("Virtoaster is a service, allowing 3d artists, interior designers and architecture visualizers to create VR and 3d virtual tours on their own, within short time frame. Using already available assets, Virtoaster is a simple and powerful tool to turn 3d models into interactive presentations of your projects.") }}
+                        </p>
+                    </div>
+                </div>
+                <div class="virtoaster-about__image">
+                    <picture class="virtoaster-about__picture-wrapper">
+                        <img class="virtoaster-about__picture" src="/static/public/img/pic-virtoaster.png" srcset="/static/public/img/pic-virtoaster@2x.png 2x,
+                                                    /static/public/img/pic-virtoaster@3x.png 3x"
+                            alt="{{ _("Use virtoaster") }}">
+                    </picture>
+                </div></div>
+            </div>
+        </div>
+</section>
+
+<section class="block tour-components">
+    <div class="b-page__inner block__inner">
+        <div class="block__head">
+            <h2 class="block__title">{{ _("How it works?") }}</h2>
+        </div>
+        <div class="block__content">
+            <ul class="tour-components__list tour-components_v__list">
+                <li class="tour-components__item tour-components__model">
+                    <div class="tour-components__image tour-components_v__image">
+                        <img src="/static/public/img/icon-model.png"
+                             srcset="/static/public/img/icon-model@2x.png 2x,
+                                         /static/public/img/icon-model@3x.png 3x"
+                             width="125" height="122"
+                             alt="" class="tour-components__icon">
+                    </div>
+                    <div class="tour-components__info">
+                        <h3 class="tour-components__title">{{ _("3D scene") }}</h3>
+                        <p class="tour-components__desc">
+                            {{ _("Your project in 3d Max, scene you want to transform into visual tour") }}
+                        </p>
+                    </div>
+                </li>
+                <li class="tour-components__item tour-components__renders">
+                    <div class="tour-components__image tour-components_v__image">
+                        <img src="/static/public/img/icon-renders.png"
+                             srcset="/static/public/img/icon-script@2x.png 2x,
+                                         /static/public/img/icon-script@3x.png 3x"
+                             width="114" height="114"
+                             alt="" class="tour-components__icon">
+                    </div>
+                    <div class="tour-components__info">
+                        <h3 class="tour-components__title">{{ _("Prepare assets") }}</h3>
+                        <p class="tour-components__desc">
+                            {{ _("Prepare renders and export model with the help of our tools and guides.") }}
+                        </p>
+                    </div>
+                </li>
+                <li class="tour-components__item tour-components__scripts">
+                    <div class="tour-components__image tour-components_v__image">
+                        <img src="/static/public/img/pic-room.svg"
+                             width="136" height="109"
+                             alt="" class="tour-components__icon">
+                    </div>
+                    <div class="tour-components__info">
+                        <h3 class="tour-components__title">{{ _("Create and share the tour") }}</h3>
+                        <p class="tour-components__desc">
+                            {{ _("Upload assets and assemble tour through the web interface. Share it with a link!") }}
+                        </p>
+                    </div>
+                </li>
+            </ul>
+            <p class="tour-components__more">
+                {{ _('For more information <a href="%(url)s">visit the \"Tutorials\" page</a> and see <a href="%(urlVideo)s">video demonstration</a>',
+                urlVideo='https://youtu.be/WeEma6cpT0s',
+                url=url_for('tutorials.index')) }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="pricing">
+    <div class="b-page__inner pricing__inner">
+        <div class="pricing__head-container">
+            <h2 class="pricing__head--title">{{ _("Pricing") }}</h2>
+            <a class="pricing__head--btn" href="{{ url_for('virtoaster.pricing') }}">{{ _("See all plans →") }}</a>
+        </div>
+        <div class="pricing__content">
+            {% set currency_price = '&eur;' %}
+            {% if products.virtoaster.plans[10] %}
+            {% set plan = products.virtoaster.plans[10] %}
+            <a class="pricing__title" id="virtoaster_demo_pricing_section">{{ _("Start your <span class=\"pricing-accent\">free trial<span>") }}</a>
+
+            <div class="pricing__label" id="redirect_to_pricing">
+                <div class="pricing__label-title-container">
+                    <div class="pricing__label-title">{{ plan.title }}</div>
+                    <div class="pricing__label-title"><span>{{ plan.price }} €/{{ _("month") }}</span></div>
+                </div>
+
+                <div class="pricing__label-line">
+                    <div class="pricing__label-line-block">
+                            <span class="pricing__label-line-block--title">
+                                <span>{{ _("Tours") }}</span>
+                                <svg class="tooltip-place" data-tooltip-content="#tooltip_tours" viewBox="0 0 32 32"
+                                     class="icon__svg" width="24" height="24"><use
+                                        xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                                <div class="tooltip_templates">
+                                        <span id="tooltip_tours" class="tooltip_content tooltip_content--compact">
+                                            {{ _("Number of tours you can simultaneously have in your account.") }}
+                                            <div class="tooltip_more">
+                                                <a href="{{ url_for('tutorials.index') }}" target="_blank">{{ _("learn more") }}</a>
+                                            </div>
+                                        </span>
+                                </div>
+                            </span>
+                        <span class="pricing__label-line-block--desc">{{ plan.meta['storage'] }}</span>
+                    </div>
+
+                    <div class="pricing__label-line-block">
+                            <span class="pricing__label-line-block--title">
+                                <span>{{ _("Tours per month") }}</span>
+                                <svg class="tooltip-place" data-tooltip-content="#tooltip_toasts" viewBox="0 0 32 32"
+                                     class="icon__svg" width="24" height="24"><use
+                                        xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                                <div class="tooltip_templates">
+                                    <span id="tooltip_toasts" class="tooltip_content tooltip_content--compact">
+                                        {{ _("Number of tours you can optimize with our algorithm, both when uploading tour for the first time or when making changes.") }}
+                                        <div class="tooltip_more">
+                                            <a href="{{ url_for('tutorials.index') }}" target="_blank">{{ _("learn more") }}</a>
+                                        </div>
+                                    </span>
+                                </div>
+                            </span>
+                        <span class="pricing__label-line-block--desc">{{ plan.meta['processings'] }}</span>
+                    </div>
+
+                    <div class="pricing__label-line-block">
+                            <span class="pricing__label-line-block--title">
+                                <span>{{ _("Points per tour") }}</span>
+                                <svg class="tooltip-place" data-tooltip-content="#tooltip_spots" viewBox="0 0 32 32"
+                                     class="icon__svg" width="24" height="24"><use
+                                        xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                                <div class="tooltip_templates">
+                                    <span id="tooltip_spots" class="tooltip_content tooltip_content--compact">
+                                        {{ _("Every tour has a number of points you can move around. This is the maximum number of points you can have in a single tour.") }}
+                                        <div class="tooltip_more">
+                                            <a href="{{ url_for('tutorials.index') }}" target="_blank">{{ _("learn more") }}</a>
+                                        </div>
+                                    </span>
+                                </div>
+                            </span>
+                        <span class="pricing__label-line-block--desc">{{ plan.meta['max_skyboxes'] }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="customers-allowing">
+    <div class="b-page__inner">
+        <div class="block__head">
+            <h2 class="block__title customers-allowing__title">{{ _("Next generation 3d and VR tours is a sure way to make a lasting impression on your customers") }}</h2>
+        </div>
+        <div class="customers-allowing__content">
+            <ul>
+                <li>{{ _("Highlight your works") }}</li>
+                <li>{{ _("Reach new customers and expand available services to existing ones") }}</li>
+                <li>{{ _("Create VR ready 3d tours without special knowledge, using only existing assets") }}</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="block promo">
+    <div class="promo__inner">
+        <div class="promo__column promo__column--virtoaster visualize-your-ideas">
+            <div class="promo__wrapper">
+                <div class="promo__content">
+                    <div class="promo__info">
+                        <h2 class="promo__head">{{ _("Visualize your ideas") }}</h2>
+                        <p class="promo__text" style="max-width: 357px">
+                            {{ _("No 3d model? Order a 3d scene, created by your specs from one of our partners - visualisation studios, with experience in virtual tour creation") }}
+                        </p>
+                        <div class="promo__link__wrapper">
+                            <a href="{{  url_for('front.partners') }}" class="promo__link">
+                                {{ _("OUR PARTNERS") }}&nbsp;→
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="promo__column promo__column--filincam">
+            <div class="promo__wrapper">
+                <div class="promo__content">
+                    <div class="promo__info">
+                        <h2 class="promo__head">{{ _("Digitize existing space") }}</h2>
+                        <p class="promo__text">
+                            {{ _("Have existing premises? Create digital doubles for real estate with FilinCam - high definition 3d camera with laser scanning.") }}
+                        </p>
+                        <div class="promo__text--coming">{{ _("coming soon") }}</div>
+                    </div>
+                </div>
+                <div class="promo__image">
+                    <picture class="promo__picture-wrapper">
+                        <img class="promo__picture" src="/static/public/img/pic-filincam.png" srcset="/static/public/img/pic-filincam@2x.png 2x,
+                                                        /static/public/img/pic-filincam@3x.png 3x"
+                             alt="{{ _("coming soon") }}" >
+                    </picture>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="virtoaster-adv">
+    <div class="virtoaster-adv__inner">
+        <ul class="virtoaster-adv__list">
+            <li class="virtoaster-adv__item-v virtoaster-adv__freedom">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image">
+                        <img src="/static/public/img/bighub/pic-freedom.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/bighub/pic-freedom@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/bighub/pic-freedom@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Freedom of movement") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _("In traditional virtual tours, there is only one viewpoint per room with «jumping» to another room. Our tours allow you to move smoothly through the virtual space, to navigate quickly and understand the space planning, without breaking the immersion.") }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v virtoaster-adv__freedom">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image">
+                        <img src="/static/public/img/pic-toast-cards.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/pic-toast-cards@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/pic-toast-cards@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Easy to make") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _('Intuitive web interface and our tools saves you time and effort, it takes less than half an hour to extract the model and prepare 3d scene for rendering with them. No need to learn new software or other special training to create VR ready interactive tours, everything important is already collected on our <a href="%(url)s" class="underline">\"Tutorials\"</a> page.', url=url_for('tutorials.index')) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v virtoaster-adv__multi">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image">
+                        <img src="/static/public/img/bighub/pic-multi.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/bighub/pic-multi@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/bighub/pic-multi@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Multiplatformity") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _("Biganto tours work on computers, tablets and smartphones. Easy access to the tour for all website visitors and wide audience coverage are provided by a demonstration via the Internet browser or offline with our applications.") }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image">
+                        <img src="/static/public/img/pic-player.png?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/pic-player@2x.png?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/pic-player@3x.png?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture">
+                    </div>
+                    <div class="virtoaster-adv__info">
+                        <h3 class="virtoaster-adv__caption">{{ _("Wide functionality") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <ul>
+                                <li>{{ _("Clickable objects show detailed information about furniture items and decoration") }}</li>
+                                <li>{{ _("Three-dimensional view from above") }}</li>
+                                <li>{{ _("Measuring tape for measuring distances") }}</li>
+                                <li>{{ _("Anchor links to a specific location in the tour") }}</li>
+                                <li>{{ _("Recording and subsequent playback of the route") }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="virtoaster-adv__item-v virtoaster-adv__vr">
+                <div class="virtoaster-adv__wrap b-page__inner">
+                    <div class="virtoaster-adv__image virtoaster-adv__image__vr">
+                        <img src="/static/public/img/bighub/pic-vr.jpg?{{ config.get('RELEASE_VERSION') }}"
+                             srcset="/static/public/img/bighub/pic-vr@2x.jpg?{{ config.get('RELEASE_VERSION') }} 2x,
+                                         /static/public/img/bighub/pic-vr@3x.jpg?{{ config.get('RELEASE_VERSION') }} 3x"
+                             class="virtoaster-adv__picture">
+                    </div>
+                    <div class="virtoaster-adv__info virtoaster-adv__info__vr">
+                        <h3 class="virtoaster-adv__caption">{{ _("VR support") }}</h3>
+                        <div class="virtoaster-adv__desc">
+                            <p>{{ _("Any virtual Biganto tour works in VR mode. For this purpose, use Oculus Rift / Oculus Go / HTC Vive virtual reality headsets or cardboards for mobile devices.") }}</p>
+                            <div class="virtoaster-adv__line">
+                                <img src="/static/public/img/bighub/ic-oculus.svg?{{ config.get('RELEASE_VERSION') }}" class="virtoaster-adv__micro">
+                                <img src="/static/public/img/bighub/ic-vive.svg?{{ config.get('RELEASE_VERSION') }}" class="virtoaster-adv__micro">
+                                <img src="/static/public/img/bighub/ic-cardboard.svg?{{ config.get('RELEASE_VERSION') }}" class="virtoaster-adv__micro">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+{% if news|length > 0 %}
+<section class="block news">
+    <div class="b-page__inner block__inner">
+        <div class="block__head">
+            <h2 class="block__title">{{ _("News") }}</h2>
+            <div class="block__button">
+                <a href="{{ url_for('front.news_list') }}" class="button mini border gray">{{ _("See all news") }} →</a>
+            </div>
+        </div>
+        <div class="block__content">
+            <ul class="news__list">
+                {% for item in news %}
+                <li class="news__item">
+                    <a href="{{ url_for('front.news_detail', item_id=item.id) }}" class="news__link">
+                        <div class="news__info">
+                            <p class="news__date">{{ item.created.strftime(date_format.get(g.lang, default_date_format))
+                                }}</p>
+                            <h3 class="news__title">{{ item.title }}</h3>
+                            <p class="news__desc">{{ item.announce }}</p>
+                        </div>
+                        <div class="news__arrow">
+                            <svg viewBox="0 0 39 39" class="news__icon icon__svg" width="39" height="39">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-right-border"></use>
+                            </svg>
+                        </div>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}

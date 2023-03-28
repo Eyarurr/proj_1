@@ -1,0 +1,95 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>
+    Офисы Capture services
+</h1>
+<form method="get">
+    <div class="row table-filters justify-content-between">
+        <div class="col-lg-auto">
+            <div class="row mb-1">
+                <div class="col-lg-auto">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Сортировка</span>
+                        {{ filters.sort(class='form-select form-select-sm') }}
+                    </div>
+                </div>
+                {#
+                <div class="col-lg-auto">
+                    {{ filters.search(class='form-control form-control-sm', placeholder='Поиск по имени и e-mail') }}
+                </div>
+                #}
+            </div>
+        </div>
+        <div class="col-lg-auto float-end">
+            <div class="btn-group btn-group-sm mb-1">
+                <button type="submit" class="btn btn-submit btn-primary">Показать</button>
+                {% if filters.is_dirty %}
+                    <a href="{{ url_for('.br_offices', **filters.default_values) }}" class="btn btn-secondary">Очистить</a>
+                {% endif %}
+            </div>
+            <a class="btn btn-sm btn-outline-success mb-1" href="{{ url_for('.br_office_edit') }}">
+                <i class="fa fa-plus-circle"></i> Создать офис
+            </a>
+        </div>
+    </div>
+</form>
+
+{% if offices.total == 0 %}
+<div class="alert alert-info">
+    Офисов не найдено. <a href="{{ url_for('.br_offices') }}">Всех посмотреть.</a>
+</div>
+{% else %}
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-3">
+
+<thead>
+<tr>
+    <th>Создан</th>
+    <th class="break">Менеджер</th>
+    <th class="break">Адрес</th>
+    <th class="break">Время работы</th>
+    <th class="break">Название</th>
+    <th class="break">Действия</th>
+</tr>
+</thead>
+<tbody>
+
+{% for office in offices.items %}
+<tr>
+    <td>{{ office.created | humantime }}</td>
+    <td class="break"><a href="{{ url_for('.team_profile', user_id=office.manager_id) }}">{{ office.manager.name }}</a></td>
+    <td class="tt break">
+        г. {{ office.city.name or office.city.name_en }}<br>
+        {{ office.address }}
+    </td>
+    <td class="break">
+        {{ office.work_start.strftime('%H:%M %z') }}<br>
+        {{ office.work_end.strftime('%H:%M %z') }}
+    </td>
+    <td class="tt break">
+        <strong>{{ office.title }}</strong>
+        {% if not office.active %}<span class="bg-danger text-warning text-nowrap float-end"><i class="fas fa-ban"></i> НЕ РАБОТАЕТ</span>{% endif %}
+    </td>
+    <td class="break">
+        <a href="{{ url_for('.br_office_edit', office_id=office.id) }}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+        <a href="{{ url_for('.br_operators', office_id=office.id) }}" class="btn btn-sm btn-outline-secondary">Операторы</a>
+        <a href="{{ url_for('.br_orders', office_id=office.id) }}" class="btn btn-sm btn-outline-secondary">Заказы</a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
+{{ render_pagination(offices, '.br_offices', **filters.as_dict()) }}
+
+{% endif %}
+
+{% endblock %}

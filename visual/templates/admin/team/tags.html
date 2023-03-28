@@ -1,0 +1,113 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'team' %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+    <h1>Добавить теги {{ user.name }}</h1>
+
+    <form method="POST" action="" id="form" enctype="multipart/form-data">
+        {{ form.csrf_token() }}
+        <div class="row mb-3 ">
+            <div class="col-lg-2 text-end">Имя</div>
+            <div class="col-lg-7">{{ form.name(class="form-control") }}</div>
+            <p class="text-muted offset-lg-2">Смысл тега. Всегда какое-то слово латиницей, уникально среди всех тегов юзера. </p>
+            <div class="col-lg-2 text-end">Лейбел</div>
+            <div class="col-lg-7">{{ form.label(class="form-control") }}</div>
+            <p class="text-muted offset-lg-2">Подпись к тегу. Используется в шаблонах презентаций. До 1024 символов.</p>
+            <div class="col-lg-2 text-end">crm_key</div>
+            <div class="col-lg-7">{{ form.crm_key(class="form-control") }}</div>
+            <p class="text-muted offset-lg-2">Название свойства в объекте ответа CRM</p>
+            <div class="col-lg-2 text-end">Суффикс</div>
+            <div class="col-lg-7">{{ form.suffix(class="form-control desabled") }}</div>
+            <p class="text-muted offset-lg-2">Суффикс, который нужно поставить после значения тега при его выводе.</p>
+            <div class="col-lg-2 text-end">Префикс</div>
+            <div class="col-lg-7">{{ form.prefix(class="form-control") }}</div>
+            <p class="text-muted offset-lg-2">Префикс, который нужно поставить после значения тега при его выводе.</p>
+            <div class="col-lg-2 text-end">Словарь значений</div>
+            <div class="col-lg-7">{{ form.display_dict(class="form-control") }}</div>
+            <p class="text-muted offset-lg-2">Словарь значений</p>
+        </div>
+
+        <div class="row mb-3">
+            <div class="offset-lg-1">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-life-ring"></i>Добавить</button>
+                <a href="{{ url_for('.team_profile', user_id=user.id) }}" class="btn btn-secondary">Отменить</a>
+            </div>
+        </div>
+    </form>
+    <div class="table-responsive-lg">
+
+    <h1>Список тегов</h1>
+    <div class=" offset-lg-1 table-responsive-lg">
+        <table class="table table-hover table-list mt-3">
+            <thead>
+            <tr>
+                <th class="break">#</th>
+                <th class="break">Id</th>
+                <th class="break">Имя</th>
+                <th class="break">Лейбел</th>
+                <th class="break">Префикс</th>
+                <th class="break">Суффикс</th>
+                <th class="break ">Словарь значений</th>
+                <th class="break border-end"><a href="#modal-delete" data-bs-toggle="modal"><i
+                    class="fa text-danger fa-trash-o fs-5" title="Удалить выбранные теги"></i></></a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tag in tags %}
+                <form method="post" action="{{ url_for('.team_tags_delete',user_id=user.id) }}">
+                <tr>
+                    <td class="break  ">{{ loop.index }}</td>
+                    <td class="break  ">{{ tag.id }}</td>
+                    <td class="break  ">{{ tag.name }}</td>
+                    <td class="break  ">{{ tag.label }}</td>
+                    <td class="break ">
+                        {{ tag.suffix or '' }}
+                    </td>
+                    <td class="break ">
+                        {{ tag.prefix or '' }}
+                    </td>
+                    <td class="break text-wrap col-lg-3">
+                        {{ tag.display_dict or '' }}
+                    </td>
+                    <td class="border">
+                        <div class="form-check ">
+                            <input class="form-check-input align-middle" type="checkbox" value="{{ tag.id }}"
+                                   id="flexCheckDefault" name="for_delete">
+                            <div class="">
+                                <i class="fa align-middle invisible"></i>
+                            </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal" id="modal-delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Удалить помеченные теги?</h4>
+                    </div>
+            <div class="modal-body">
+                <p>
+                    Будут удалены помеченные теги
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+            </div>
+        </div></div></div>
+    </form>
+
+    <div class="row">
+    <div class="col offset-lg-1"><a href="#modal-delete" class="btn btn-danger" data-bs-toggle="modal">Удалить теги</a></div>
+    </div>
+{% endblock %}

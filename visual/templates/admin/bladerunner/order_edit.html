@@ -1,0 +1,147 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+
+{% block head %}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey={{ config.YANDEX_MAPS_API_KEY }}&lang=ru_RU" type="text/javascript"></script>
+    <style type="text/css">
+        #map {height: 400px; border: 1px solid black;}
+        #btn-start-now { cursor: pointer; }
+        #freetime.error { color: red; }
+        #freetime b { border-bottom: 1px dashed blue; cursor: pointer; }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+    <h1>{% if order.id %}Свойства заказа #{{ order.id }}{% else %}Создать заказ{% endif %} для офиса «{{ office.title }}»</h1>
+
+    <form method="POST" id="form-edit" enctype="multipart/form-data" data-office-coords="{{ office.coords|join(',') }}" data-city-id="{{ office.city_id }}">
+    {{ form.csrf_token() }}
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Клиент (email)</label>
+        <div class="col-lg-4">
+            {{ form.customer_email(class='form-control') }}
+        </div>
+        <label class="col-lg-1 col-form-label">Оператор</label>
+        <div class="col-lg-2">
+            {{ form.operator_id(class='form-select') }}
+        </div>
+        <label class="col-lg-1 col-form-label">Статус</label>
+        <div class="col-lg-2">
+            {{ form.status(class='form-select') }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Адрес</label>
+        <div class="col-lg-7">
+            {{ form.address(class='form-control') }}
+        </div>
+        <label class="col-lg-1 col-form-label">Координаты:</label>
+        <div class="col-lg-2">
+            <div class="input-group">
+                {{ form.coords_lat(class='form-control', placeholder='Широта', readonly=True) }}
+                <span class="input-group-text">,</span>
+                {{ form.coords_lon(class='form-control', placeholder='Долгота', readonly=True) }}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-10 offset-2">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Время начала</label>
+        <div class="col-lg-3">
+            <div class="input-group">
+                {{ form.start(class='form-control', placeholder='YYYY-MM-DD HH:MM:SS+TZ:TZ') }}
+                <span class="input-group-text" id="btn-start-now">сейчас</span>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <button type="button" id="btn-get-freetime" class="btn btn-secondary">Когда можно?</button>
+        </div>
+        <label class="col-lg-2 col-form-label">Время на работу, минут</label>
+        <div class="col-lg-1">
+            {{ form.tts(class='form-control') }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-10 offset-2" id="freetime"></div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label"><code>BROrder.contacts</code></label>
+        <div class="col-lg-10">{{ form.contacts(class='form-control code', rows=5, readonly=True) }}</div>
+    </div>
+
+    {# Шаблон для строки формы одного контакта #}
+    <script type="text/template" id="contacts-row-template">
+        <div class="row mb-3">
+            <label class="col-lg-1 col-form-label">Имя</label>
+            <div class="col-lg-5">
+                <input type="text" class="form-control name">
+            </div>
+            <label class="col-lg-1 col-form-label">Телефон</label>
+            <div class="col-lg-5">
+                <input type="text" class="form-control phone">
+            </div>
+        </div>
+    </script>
+    <div class="row">
+        <div class="col-lg-2">
+            <label class="col-form-label">Контакты собственника</label>
+        </div>
+        <div class="col-lg-10" id="contacts-container">{# Сюда JS-код навставляет инпутов #}</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-10 offset-2">
+            <button type="button" id="contacts-btn-add" class="btn btn-sm btn-secondary">Добавить строчку</button>
+        </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Примечание заказчика</label>
+        <div class="col-lg-10">
+            {{ form.customer_comment(class='form-control', rows=3) }}
+            <p class="text-muted">Видно всем.</p>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Примечание оператора</label>
+        <div class="col-lg-10">
+            {{ form.operator_comment(class='form-control', rows=3) }}
+            <p class="text-muted">Видно только оператору и менеджеру.</p>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Примечание менеджера</label>
+        <div class="col-lg-10">
+            {{ form.manager_comment(class='form-control', rows=3) }}
+            <p class="text-muted">Видно только менеджеру.</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-between mb-3">
+        <div class="col-lg-auto offset-lg-2">
+            <button class="btn btn-primary">Сохранить</button>
+            <a href="{{ url_for('.br_orders', office_id=office.id) }}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </div>
+
+    <div class="alert alert-danger offset-2">
+        На этой странице заказ создаётся безо всяких проверок: успеет ли туда оператор, может ли заказ иметь такой статус и т.д.
+    </div>
+
+</form>
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript" src="/static/admin/bladerunner/order_edit.js"></script>
+{% endblock %}

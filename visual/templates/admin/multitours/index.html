@@ -1,0 +1,130 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'multitours' %}
+{% if user %}{% set user_id = user.id %}{% else %}{% set user_id = None %}{% endif %}
+
+
+{% block content %}
+    <h1>
+    {% if user %}
+        Мультитуры юзера {{ user.name }} ({{ offers.total }})
+    {% else %}
+        Мультитуры ({{ offers.total }})
+    {% endif %}
+    {% if user %}
+        <div class="float-lg-end">
+            <a class="btn btn-sm btn-success" href="{{ url_for('.user_edit', user_id=user.id) }}"><i class="fas fa-user"></i> Юзер</a>
+            <a class="btn btn-sm btn-success" href="{{ url_for('.footages', user_id=user.id) }}"><i class="fas fa-user"></i> Съёмки</a>
+            <a class="btn btn-sm btn-success" href="{{ url_for('.tours', user_id=user.id) }}"><i class="fas fa-user"></i> Туры</a>
+            <a href="#modal-new" data-bs-toggle="modal" class="btn btn-sm btn-success"><i class="fas fa-plus-circle"></i> Создать мультитур</a>
+        </div>
+    {% endif %}
+    </h1>
+
+    <form class="table-filters row mb-3">
+        <div class="col-lg-auto mb-1 mb-lg-0">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text">Поиск по: </span>
+                {{ filters.search(class='form-control form-control-sm', placeholder='Поиск по названию') }}
+            </div>
+        </div>
+
+        <div class="col-lg-auto mb-1 mb-lg-0">
+        <div class="input-group input-group-sm">
+        <span class="input-group-text">Сортировать по: </span>
+        {{ filters.sort(class='form-select') }}
+    </div>
+
+    </div>
+    <div class="col">
+        <button type="submit" class="btn btn-sm btn-primary float-lg-end">Показать</button>
+    </div>
+    </form>
+
+    {% if offers.total == 0 %}
+        <p class="alert alert-info">Мультитуров нет.</p>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped table-list">
+                <thead class="table-light">
+                <tr>
+                    <th>Создано</th>
+                    <th>{% if user %}Папка{% else %}Юзер / папка{% endif %}</th>
+                    <th class="t">Названия</th>
+                    <th title="Количество туров">T</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for offer in offers.items %}
+                    <tr>
+                        <td>{{ offer.created|utcinlocal|humantime }}</td>
+                        <td class="tt">
+                            {% if not user %}
+                                <a href="{{ url_for('.multitours', user_id=offer.user_id) }}"
+                                   class="text-underline-hover">{{ offer.user.name }}</a>
+                            {% endif %}
+                            {% if not user and offer.folder_id %} / {% endif %}
+                            {% if offer.folder_id %}
+                                <a href="{{ url_for('.multitours', user_id=offer.user_id, folder_id=offer.folder_id) }}">{{ offer.folder.title }}</a>
+                            {% endif %}
+                        </td>
+                        <td class="tt">
+                            {{ offer.title_en }} /
+                            {{ offer.title_de }} /
+                            {{ offer.title_ru }} /
+                            {{ offer.title_fr }}
+                        </td>
+                        <td>{{ offer.cnt_tours or '' }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.multitour_tours', user_id=user_id, offer_id=offer.id) }}"
+                               class="btn btn-sm btn-success" title="Туры"><i class="fas fa-cube"></i> Туры</a>
+                            <a href="{{ url_for('admin.multitour_edit', user_id=user_id, offer_id=offer.id) }}"
+                               class="btn btn-sm btn-success" title="Свойства"><i class="fas fa-edit"></i> Свойства</a>
+                            <a href="{{ url_for('front.offer', offer_id=offer.id) }}"
+                               class="btn btn-sm btn-info text-light" title="Посмотреть"><i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {{ render_pagination(offers, '.multitours', folder_id=request.args.get('folder_id'), **filters.as_dict()) }}
+    {% endif %}
+
+    {% if user %}
+        <form method="post" action="{{ url_for('.multitour_edit', user_id=user.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="then" value="tours">
+        <div class="modal" id="modal-new" tabindex="-1"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Создать мультитур</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label>В какой папке:</label>
+                    <select name="folder_id" class="form-control">
+                        <option value="0">В корне</option>
+                        {% for folder in user.folders %}
+                            <option value="{{ folder.id }}">{{ folder.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <span> Названия:</span>
+                    {% for lang in ('en', 'de', 'ru', 'fr') %}
+                    <div class="input-group">
+                        <span class="input-group-text">{{ lang|upper }}</span>
+                        <input type="text" name="title_{{ lang }}" class="form-control" value="">
+                    </div>
+                    {% endfor %}
+                <input type="hidden" name="options" value="{}">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Создать</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+            </div>
+        </div></div></div>
+        </form>
+    {% endif %}
+
+{% endblock %}

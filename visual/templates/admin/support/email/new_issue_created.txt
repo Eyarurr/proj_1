@@ -1,0 +1,20 @@
+#{{ issue.number }} / {{ issue.created.strftime('%d.%m.%Y %H:%M') }}
+
+{{ _("Subject") }}: 
+{{ issue.SUBJECTS.get(issue.subject, issue.subject) }}
+
+{% if issue.tour_link %}
+{{ _("Tour link") }}:
+{{ issue.tour_link }}
+{% endif %}
+
+{{ _("Description") }}:
+{{ issue.text }}
+
+{{ _("Contact email") }}:
+{{ issue.contact_email }}
+
+{% if issue.user_id %}
+{{ _("User profile") }}:
+{{ url_for('admin.tours', user_id=user_id) }}
+{% endif %}

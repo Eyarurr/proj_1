@@ -1,0 +1,1461 @@
+{% extends 'admin/base.html' %}
+
+{% block head %}
+<style type="text/css">
+    dd { margin: 0 0 15px 30px; }
+    .prop {
+        width: 10%;
+    }
+    .type {
+        width: 15%;
+    }
+    .default {
+        width: 15%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <p class="pull-right">
+        <em>v 1.0.0</em>
+    </p>
+
+    <h1>Описание формата 3D-туров</h1>
+
+    <p>
+        Тур представляет собой директорию со статикой и метаданные в виде объекта, который инициализируется в tour.html:
+    </p>
+
+    <pre>
+&lt;script type="text/javascript"&gt;
+    var Tour = {
+        ...
+    }
+&lt;/script&gt;</pre>
+
+    <p>
+        Структура директории — произвольная, все пути до нужных файлов прописаны в метаданных.
+    </p>
+    <p>
+        Описание тура идет в системе координат: Z — вверх, Y — от себя, X — вбок.
+    </p>
+
+    <p>
+        Далее перечислены свойства всех используемых объектов. Вопросительный знак после типа свойства означает,
+        что свойство опционально. После двоеточия могут быть перечислены все возможные значения свойства.
+        Помимо стандартных типов JSON, введём вспомогательные:
+    </p>
+    <dl>
+        <dt>url</dt>
+        <dd>
+            URL. Относительные урлы считаются от директории тура, то есть, если значение начинается с <code>'/'</code> или <code>'http(s?)://'</code>,
+            то URL считается абсолютным и используется без изменений, в противном случае в начало дописываем <code>Tour.baseurl</code>.
+        </dd>
+        <dt>rgba</dt>
+        <dd>
+            Цвет с прозрачностью. Определяется как массив <code>[int r, int g, int b, float alpha]</code>, r, g, b ∈ [0, 255], alpha ∈ [0, 1].
+        </dd>
+        <dt>vector2</dt>
+        <dd>
+            Двухмерный вектор: <code>[double x, double y]</code>.
+        </dd>
+        <dt>vector3</dt>
+        <dd>
+            Координата в трёхмерном пространстве. Определяется как массив <code>[double x, double y, double z]</code>.
+        </dd>
+        <dt>quaternion</dt>
+        <dd>
+            Кватернион: <code>[double x, double y, double z, double w]</code>.
+            Кватернион задаётся относительно положения камеры по умолчанию — вдоль оси Y по направлению от себя.
+        </dd>
+        <dt>string_i18n</dt>
+        <dd>
+            Мультиязычная строка. Значение может быть как обычной строкой (тогда оно используется для всех языков), так и объектом вида
+            <code>{lang_code: translation, ...}</code>
+        </dd>
+    </dl>
+
+    <h2 id="class-Tour">Tour</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">id</td>
+            <td class="type">int</td>
+            <td class="descr">ID тура</td>
+        </tr>
+        <tr>
+            <td class="prop">type</td>
+            <td class="type">string: 'real'|'virtual'</td>
+            <td class="descr">
+                Тип тура: фототур или виртуальный тур. Отличий по формату данных нет.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">languages</td>
+            <td class="type">{string code: string title, ...}</td>
+            <td class="descr">Доступные языки в туре. code — всегда 2 латинских символа.</td>
+        </tr>
+        <tr>
+            <td class="prop">lang</td>
+            <td class="type">string</td>
+            <td class="descr">Двухбуквенный код языка для строк типа <code>string_i18n</code>. Значение по умолчанию — <code>en</code>. Не хранится в базе данных, устанавливается бэком.</td>
+        </tr>
+        <tr>
+            <td class="prop">default_lang</td>
+            <td class="type">string</td>
+            <td class="descr">Двухбуквенный код языка, который нужно выбирать в интернационализированных сообщениях, если в них отсутствует перевод на <code>Tour.lang</code>. Значение по умолчанию — <code>en</code>.</td>
+        </tr>
+        <tr>
+            <td class="prop">title</td>
+            <td class="type">string</td>
+            <td class="descr">Название тура. Всегда будет на языке <code>Tour.lang</code></td>
+        </tr>
+        <tr>
+            <td class="prop">baseurl</td>
+            <td class="type">string?</td>
+            <td class="descr">
+                Базовый URL для всех файлов съёмки — obj, mtl, скайбоксы, материалы для доллхаус-режима, виды сверху для минимапов.
+                Если указан, то соответствующие свойства типа <code>url</code> конкатенируются с этим значением.
+                Если не указан, предполагается, что все урлы абсолютные. Не хранится в базе, устанавливается бэком.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">tour_baseurl</td>
+            <td class="type">string?</td>
+            <td class="descr">
+                Базовый URL для всех файлов тура — превьюшки навигатора, кастомные текстуры кликабельных маркеров и т.п.
+                Если указан, то соответствующие свойства типа <code>url</code> конкатенируются с этим значением.
+                Если не указан, предполагается, что все урлы абсолютные. Не хранится в базе, устанавливается бэком.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">model</td>
+            <td class="type">url</td>
+            <td class="descr">URL низкополигональной модели.</td>
+        </tr>
+        <tr>
+            <td class="prop">model_format</td>
+            <td class="type">string?: 'obj'</td>
+            <td class="descr">Формат модели. Сейчас поддерживается только OBJ.</td>
+        </tr>
+        <tr>
+            <td class="prop">mtl</td>
+            <td class="type">url?</td>
+            <td class="descr">URL для mtl. Если свойство отсутствует или пустое, то доллхаус не показываем.</td>
+        </tr>
+        <tr>
+            <td class="prop">options</td>
+            <td class="type"><a href="#class-Options">Options</a>?</td>
+            <td class="descr">Настройки плеера.</td>
+        </tr>
+        <tr>
+            <td class="prop">resolutions</td>
+            <td class="type">[int resolution, ...]</td>
+            <td class="descr">
+                Доступные разрешения панорам. Просто список размеров рендеров (они всегда квадратные). Например: <code>[256, 1024, 1540, 65535]</code>
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">floors</td>
+            <td class="type">{int floor_id: <a href="#class-Floor">Floor</a>, ...}</td>
+            <td class="descr">Этажи. Всегда определён хотя бы один этаж. В навигации по этажам сортируем их по убыванию <code>floor_id</code>.</td>
+
+        </tr>
+        <tr>
+            <td class="prop">skyboxes</td>
+            <td class="type">{int skybox_id: <a href="#class-Skybox">Skybox</a>, ...}</td>
+            <td class="descr">Скайбоксы.</td>
+        </tr>
+        <tr>
+            <td class="prop">start</td>
+            <td class="type">{
+    "skybox": int skybox_id,
+    "q": quaternion
+}</td>
+            <td class="descr">
+                Стартовая точка. skybox_id — ID скайбокса, q — кватернион камеры.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">passways</td>
+            <td class="type">[[int id1, int id2], ...]?</td>
+            <td class="descr">
+                Пары ID скайбоксов, между которыми возможен переход (находящиеся в прямой видимости друг от друга).
+                Если свойства нет, то считать в плеере.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">clickable</td>
+            <td class="type">[<a href="#class-Clickable">Clickable</a>, ...]?</td>
+            <td class="descr">
+                Список кликабельных объектов, с которыми можно производить разные действия. Кликабельным может
+                быть либо какой-нибудь объект в модели (выбирается по id), либо маркер, расположенный в произвольной
+                точке сцены.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">toolbar</td>
+            <td class="type">[<a href="#class-Button">Button</a>, ...]?</td>
+            <td class="descr">
+                Дополнительные кнопки тулбара. Выводятся после основных кнопок.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">navigator</td>
+            <td class="type">[<a href="#class-Navigation">Navigation</a>, ...]?</td>
+            <td class="descr">Список картинок и координат для навигатора.</td>
+        </tr>
+        <tr>
+            <td class="prop">screenshot_actions</td>
+            <td class="type">[
+    {"title": string, "url": string},
+    ...
+]?</td>
+            <td class="descr">
+                Действия для скриншота. Если массив пустой или свойство отсутствует, то скриншот можно только сохранить на диске.
+                <code>title</code> — название пункта меню, <code>url</code> — URL, куда нужно отправить POST-запрос
+                с Content-Type=application/x-www-form-urlencoded и полем images.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">audio</td>
+            <td class="type">{string clip_id: <a href="#class-AudioClip">AudioClip</a>, ...}?</td>
+            <td class="descr">Звуки, используемые в туре.</td>
+        </tr>
+        <tr>
+            <td class="prop">branding</td>
+            <td class="type"><a href="#class-Branding">Branding</a>?</td>
+            <td class="descr">Брендирование плеера. Это свойство можно менять только в админке.</td>
+        </tr>
+        <tr>
+            <td class="prop">binocular</td>
+            <td class="type">bool?</td>
+            <td class="descr">
+                Устанавливается в true для бинокулярных туров. Панорамы для правого и левого глаза лежат в
+                <code>$resolution/left</code> и <code>$resolution/right</code>.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">walk</td>
+            <td class="type">[<a href="#class-WalkStep">WalkStep</a>, ...]?</td>
+            <td class="descr">
+                Записанный маршрут. В туре можно записать последовательность действий: переходы между точками,
+                повороты камеры и воспроизвести их. Обязательное требование — первым элементов в списке должен
+                идти переход в скайбокс с указанием кватерниона поворота камеры.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">splash</td>
+            <td class="type"><a href="#class-Splash">Splash</a>?</td>
+            <td class="descr">
+                Заставка — что показывать, пока загружается тур.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">_bg_jobs</td>
+            <td class="type">{'job_id': job_data, ...}?</td>
+            <td class="descr">
+                Какие фоновые работы сейчас производятся с туром. Сейчас здесь может быть только один
+                ключ <code>passways</code>, если в фоне пересчитывается <code>Tour.passways</code>,
+                в значении — время старта треда.
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+    <h2 id="class-Options">Options</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">cross</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить кросс-доменные запросы к статике.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">cursor_color</td>
+            <td class="type">rgba</td>
+            <td class="descr">Цвет курсора.</td>
+            <td class="default">[0, 255, 0, 127]</td>
+        </tr>
+        <tr>
+            <td class="prop">markers_color</td>
+            <td class="type">rgba</td>
+            <td class="descr">Цвет маркеров.</td>
+            <td class="default">[255, 255, 255, 127]</td>
+        </tr>
+        <tr>
+            <td class="prop">markers</td>
+            <td class="type">bool</td>
+            <td class="descr">Показывать ли маркеры при старте тура. Пользователь может показывать/скрывать маркеры кнопкой H.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">fov</td>
+            <td class="type">int</td>
+            <td class="descr">FOV камеры.</td>
+            <td class="default">70</td>
+        </tr>
+        <tr>
+            <td class="prop">debug</td>
+            <td class="type">bool</td>
+            <td class="descr">Режим отладки.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">fps</td>
+            <td class="type">bool</td>
+            <td class="descr">Показывать ли счётчик FPS.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">fullscreen</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить полноэкранный режим.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">pro</td>
+            <td class="type">bool</td>
+            <td class="descr">Pro-режим, включает всякие инженерные функции.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">load</td>
+            <td class="type">string 'all'|'step'|'one'</td>
+            <td class="descr">Загрузка текстур: все сразу, по мере перемещения или только следующий скайбокс.</td>
+            <td class="default">'step'</td>
+        </tr>
+        <tr>
+            <td class="prop">movement</td>
+            <td class="type">string: 'step'|'fly'</td>
+            <td class="descr">Режим перемещения: к ближайшей по направлению клика точке или к ближайшей к клику точке.</td>
+            <td class="default">'fly'</td>
+        </tr>
+        <tr>
+            <td class="prop">route</td>
+            <td class="type">bool</td>
+            <td class="descr">Перемещение по маршруту. Не имеет смысла при <code>movement='fly'</code></td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">clickable_fill_color</td>
+            <td class="type">rgba</td>
+            <td class="descr">Цвет подсветки кликабельных объектов модели.</td>
+            <td class="default">[0, 255, 0, 127]</td>
+        </tr>
+        <tr>
+            <td class="prop">help</td>
+            <td class="type">bool</td>
+            <td class="descr">Показывать ли справку при первом запуске плеера.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">mapshow</td>
+            <td class="type">string: 'icon'|'small'|'big'</td>
+            <td class="descr">
+                Как показывать миникарту при старте плеера. 'icon': свернутой в иконку, иначе — соответствующее свойство из
+                <a href="#class-Floor">Floor</a>.
+            </td>
+            <td class="default">'small'</td>
+        </tr>
+        <tr>
+            <td class="prop">mapsize</td>
+            <td class="type">[int w, int h]</td>
+            <td class="descr">Размеры окна с картой в обычном размере.</td>
+            <td class="default">[500, 200]</td>
+        </tr>
+        <tr>
+            <td class="prop">mapbg</td>
+            <td class="type">rgba</td>
+            <td class="descr">Цвет фона карты.</td>
+            <td class="default">[102, 102, 102, 0]</td>
+        </tr>
+        <tr>
+            <td class="prop">mapmarkers</td>
+            <td class="type">string: 'small'|'big'|'all'|'none'</td>
+            <td class="descr">Управление видимостью маркеров на минимапе: 'small' — показывать маркеры только на маленькой карте, 'big' — на большой, 'all' — на всех, 'none' — не показывать</td>
+            <td class="default">'all'</td>
+        </tr>
+        <tr>
+            <td class="prop">navigator_show</td>
+            <td class="type">string: 'icon'|'open'</td>
+            <td class="descr">
+                Как показывать навигатор при старте плеера. 'icon': свернутым в иконку, 'open' — в раскрытом виде.
+            </td>
+            <td class="default">'small'</td>
+        </tr>
+        <tr>
+            <td class="prop">dollhouse</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить dollhouse.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">clickable</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить активные объекты (при наличии Tour.clickable).</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">screenshot</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить скриншотилку.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">navigator</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить навигатор (при наличии Tour.navigator)</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">vr</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить переход в VR-режим на мобильном устройстве.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">roulette</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить рулетку</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">roulette_line</td>
+            <td class="type">rgba</td>
+            <td class="descr">Цвет линии рулетки.</td>
+            <td class="default">[0, 0, 255, 1]</td>
+        </tr>
+        <tr>
+            <td class="prop">roulette_cone</td>
+            <td class="type">rgba</td>
+            <td class="descr">Цвет стрелок рулетки.</td>
+            <td class="default">[0, 0, 255, 1]</td>
+        </tr>
+        <tr>
+            <td class="prop">roulette_text</td>
+            <td class="type">rgba</td>
+            <td class="descr">Цвет подписи на рулетке.</td>
+            <td class="default">[255, 255, 255, 1]</td>
+        </tr>
+        <tr>
+            <td class="prop">roulette_shadow</td>
+            <td class="type">rgba</td>
+            <td class="descr">Цвет тени подписи на рулетке.</td>
+            <td class="default">[0, 0, 0, 1]</td>
+        </tr>
+        <tr>
+            <td class="prop">buffer_fly</td>
+            <td class="type">bool</td>
+            <td class="descr">Буфер перемещения. Если опция включена, то во время полёта к точке клик будет запоминаться и, когда мы долетим, то сразу полетим к точке, соответствующей этому клику.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">link_generator</td>
+            <td class="type">bool</td>
+            <td class="descr">Инструмент "Получить ссылку" в тулбаре. Даёт ссылки на тур и на конкретное место в туре.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">toolbar</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить дополнительные кнопки тулбара.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">look_limit_up</td>
+            <td class="type">int</td>
+            <td class="descr">Минимально допустимый угол относительно положительного направления оси Z, ∈ [0, 90].</td>
+            <td class="default">30 &ndash; для виртуальных, 50 &ndash; для реальных</td>
+        </tr>
+        <tr>
+            <td class="prop">look_limit_down</td>
+            <td class="type">int</td>
+            <td class="descr">Минимально допустимый угол относительно отрицательного направления оси Z, ∈ [0, 90].</td>
+            <td class="default">30 &ndash; для виртуальных, 50 &ndash; для реальных</td>
+        </tr>
+        <tr>
+            <td class="prop">walk</td>
+            <td class="type">string</td>
+            <td class="descr">Проигрывание маршрута: 'on' — включить, 'off' — отключить, 'play' — запустить при загрузке тура.</td>
+            <td class="default">'on'</td>
+        </tr>
+        <tr>
+            <td class="prop">walk_write</td>
+            <td class="type">bool</td>
+            <td class="descr">Разрешить запись маршрута, доступен только в режиме PRO.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">skybox_preloader</td>
+            <td class="type">string</td>
+            <td class="descr">
+                Отображение лоадера загрузки текстур скайбоксов: 'true' — показывать всегда, 'false' — не показывать никогда, 'not_in_walk' — не показывать при проигрывании маршрута.
+            </td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">pan_speed</td>
+            <td class="type">int?</td>
+            <td class="descr">
+                Скорость вращения с клавиатуры.
+            </td>
+            <td class="default">50</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>
+        Все опции могут быть переопределены в GET-параметрах. Если переопределяется свойство Options с типом "массив",
+        то в GET-параметрах его значения перечисляются через запятую: <code>cursor=255,0,0,100</code>
+    </p>
+    <p>
+        Из реализованных ныне опций устарели cursor (заменяется cursor=0,0,0,0), а zoommode теперь всегда 2, то есть,
+        миникарты показываются как сейчас на сайте.
+    </p>
+
+
+
+    <h2 id="class-Floor">Floor</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">title</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Название этажа. Если не указано, то выводим в переключателе этажей _('Этаж ') + floor_id.</td>
+        </tr>
+        <tr>
+            <td class="prop">small</td>
+            <td class="type">url?</td>
+            <td class="descr">URL картинки с маленькой планировкой этажа.</td>
+        </tr>
+        <tr>
+            <td class="prop">big</td>
+            <td class="type">url?</td>
+            <td class="descr">URL картинки с крупной планировкой этажа.</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+    <h2 id="class-Skybox">Skybox</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">disabled</td>
+            <td class="type">bool?</td>
+            <td class="descr">Использовать ли этот скайбокс. По умолчанию — false.</td>
+        </tr>
+        <tr>
+            <td class="prop">floor</td>
+            <td class="type">int?</td>
+            <td class="descr">
+                ID этажа. Если свойство не указано, то ID этажа считается из модели: стреляем в пол, берём ID объекта модели, который должен быть
+                построен по паттерну <code><i>NAME</i>_group<i>X</i>_sub<i>SUB</i></code>. ID нашего этажа = <code>int(<i>X</i>) + 1</code>.
+                Это поведение не поощряется, сохраняется для обратной совместимости и будет удалено в следующих версиях. В новых турах у всех
+                скайбоксов этаж должен быть указан явно.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">pos</td>
+            <td class="type">vector3</td>
+            <td class="descr">Координата камеры в скайбоксе.</td>
+        </tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion</td>
+            <td class="descr">Кватернион камеры при рендере/съёмке.</td>
+        </tr>
+        <tr>
+            <td class="prop">title</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Подпись к точке; может содержать произвольный HTML-код.</td>
+        </tr>
+        <tr>
+            <td class="prop">markerZ</td>
+            <td class="type">double?</td>
+            <td class="descr">Z-координата маркера. Если не указана, то маркер лежит на полу в центре скайбокса.</td>
+        </tr>
+        <tr>
+            <td class="prop">revision</td>
+            <td class="type">int?</td>
+            <td class="descr">
+                Версия статических файлов. Если указана, то пишется в <code>QUERY_STRING</code>
+                при запросах к панорамам.
+            </td>
+        </tr>
+        <tr>
+            <td class="prop">audio</td>
+            <td class="type">{string audio_id: {override}, ...}</td>
+            <td class="descr">
+                Когда пользователь стоит в этой точке, звучат аудиофайлы, описанные в Tour.audio. Свойства volume, loop и pause
+                объекта Audio можно изменить для данного скайбокса в {override}. Например:
+<pre>
+    "audio": {
+        "bg": {"url": "bg.mp3"},            // Фоновая музыка
+        "kitchen": {"url": "kitchen.mp3"}   // Рассказ о том, какая это удобная кухня
+    },
+    "skyboxes": {
+        // В этой точке просто играет bg.mp3
+        1: {
+            ...
+            "audio": {"bg": {}}
+        },
+
+        // А здесь bg.mp3 будет звучать в половину громкости, зато заиграет kitchen.mp3
+        2: {
+            ...
+            "audio": {
+                "bg": {"volume": 0.5},
+                "kitchen": {}
+            }
+        }
+    }
+</pre>
+                При переходе из скайбокса в другой скайбокс, звуки, которые используются в обеих скайбоксах, не запускаются
+                заново, а продолжают играть. Звуки, которые не используются в новом скайбоксе, ставятся на паузу, чтобы когда мы вернёмся
+                в это место, рассказ продолжался.
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>
+        Пути к файлу грани скайбокса строится по формуле:<br>
+        <code>Tour.baseurl + '/' + RESOLUTION + '/' + point_id + '-' + FACE + '.jpg' + '?' + Skybox.revision</code>,<br>
+        где:<br>
+        <code>RESOLUTION</code> - выбранное разрешение<br>
+        <code>point_id</code> - ID текущего скайбокса<br>
+        <code>FACE</code> - грань скайбокса, [0, 5]
+    </p>
+    <p>
+        Например:
+    </p>
+    <pre>
+Tour.baseurl = '/assets/tours/tour/00/00/00/239-abcdef/'
+RESOLUTION = 1024
+point_id = 1
+FACE = 0
+Skybox.revision = 5
+URL = '/assets/tours/tour/00/00/00/239-abcdef/1540/1-0.jpg?5'</pre>
+
+
+
+    <h2 id="class-Clickable">Clickable</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">type</td>
+            <td class="type">string: 'marker' | 'object'</td>
+            <td class="descr">
+                Тип объекта: маркер или объект из модели. Маркер находится в произвольной точке пространства сцены,
+                объект модели — именованный объект в низкополигональной модели.
+            </td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">title</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Подсказка при наведении на объект.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">action</td>
+            <td class="type"><a href="#class-Action">Action</a>?</td>
+            <td class="descr">Действие по клику.</td>
+            <td class="default"></td>
+        </tr>
+        <tr><td colspan="4"><h3>type='marker'</h3></td></tr>
+        <tr>
+            <td class="prop">pos</td>
+            <td class="type">vector3</td>
+            <td class="descr">Координаты маркера.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">intersect</td>
+            <td class="type">vector3</td>
+            <td class="descr">Координаты пересечения нормали с моделью.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">size</td>
+            <td class="type">int?</td>
+            <td class="descr">
+                Размер маркера. Задаётся только для графических маркеров, для текстовых
+                размер определяется размером шрифта.
+            </td>
+            <td class="default">34</td>
+        </tr>
+        <tr>
+            <td class="prop">img</td>
+            <td class="type">int? | url? | [url, url]?</td>
+            <td class="descr">
+                Идентификатор из библиотеки или URL картинки для маркера.
+                Если задан массив из двух URL, то в первом элементе адрес картинки маркера,
+                во втором — картинка для hover.
+            </td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">label</td>
+            <td class="type"><a href="#class-Label">Label</a>? | [<a href="#class-Label">Label</a>, <a href="#class-Label">Label</a>]?</td>
+            <td class="descr">Содержимое маркера.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">perspective</td>
+            <td class="type">bool?</td>
+            <td class="descr">Активировать перспективу.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">normal</td>
+            <td class="type">bool?</td>
+            <td class="descr">Показать нормаль.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">normal_color</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет нормали.</td>
+            <td class="default">[255, 255, 255, 1]</td>
+        </tr>
+        <tr>
+            <td class="prop">fixed_orientation</td>
+            <td class="type">bool?</td>
+            <td class="descr">Зафиксировать ориентацию.</td>
+            <td class="default">false</td>
+        </tr>
+
+
+        <tr><td colspan="4"><h3>type='object'</h3></td></tr>
+        <tr>
+            <td class="prop">object_id</td>
+            <td class="type">string</td>
+            <td class="descr">ID объекта в модели.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">color</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет подсветки объекта при наведении курсора.</td>
+            <td class="default">Tour.options.clickable_fill_color</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2 id="class-Button">Button</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">icon</td>
+            <td class="type">string</td>
+            <td class="descr">SVG иконки</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">bg</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет фона кнопки.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">title</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Подсказка при наведении на кнопку.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">action</td>
+            <td class="type"><a href="#class-Action">Action</a></td>
+            <td class="descr">Действие по клику.</td>
+            <td class="default"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+    <h2 id="class-Action">Action</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">type</td>
+            <td class="type">string</td>
+            <td class="descr">Что делать? Все остальные свойства зависят от этого значения.</td>
+            <td class="default"></td>
+        </tr>
+
+
+        <tr><td colspan="4"><h3>type='popup'</h3></td></tr>
+        <tr>
+            <td class="prop">bg</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет фона попапа.</td>
+            <td class="default">[0,0,0,100]</td>
+        </tr>
+        <tr>
+            <td class="prop">size</td>
+            <td class="type">[string, string]?</td>
+            <td class="descr">Размер попапа в px или %.</td>
+            <td class="default">[60%, 50%]</td>
+        </tr>
+        <tr>
+            <td class="prop">html</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">
+                HTML-код содержимого попапа (пишется в <code>.b-modal__inner</code>). Должны быть определены
+                либо <code>html</code>,
+                либо <code>html_get</code>,
+                либо <code>iframe</code>,
+                либо <code>title</code>, <code>body</code>, <code>buttons</code>.
+            </td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">html_get</td>
+            <td class="type">url?</td>
+            <td class="descr">URL, откуда взять GET-запросом содержимое попапа. Используется вместо <code>html</code>.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">iframe</td>
+            <td class="type">url?</td>
+            <td class="descr">URL, для iframe, который будет показываться в попапе.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">title</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Заголовок попапа.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">body</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Тело попапа</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">buttons</td>
+            <td class="type">[{
+    "text": string_i18n,
+    "url": url,
+    "class": string?
+}, ...]?</td>
+            <td class="descr">Кнопки в конце попапа. <code>class</code> — CSS-класс.</td>
+            <td class="default"></td>
+        </tr>
+
+
+        <tr><td colspan="4"><h3>type='goto'</h3></td></tr>
+        <tr>
+            <td class="prop">skybox</td>
+            <td class="type">int</td>
+            <td class="descr">ID скайбокса, куда нужно перейти.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion</td>
+            <td class="descr">Кватернион камеры в целевом скайбоксе.</td>
+            <td class="default"></td>
+        </tr>
+
+        <tr><td colspan="4"><h3>type='sound'</h3></td></tr>
+        <tr>
+            <td class="prop">url</td>
+            <td class="type">url</td>
+            <td class="descr">URL mp3-файла.</td>
+            <td class="default"></td>
+        </tr>
+
+
+        <tr><td colspan="4"><h3>type='video'</h3></td></tr>
+        <tr>
+            <td class="prop">urls</td>
+            <td class="type">{string format: url, ...}</td>
+            <td class="descr">URL видеофайла в разных форматах.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">size</td>
+            <td class="type">[string, string]?</td>
+            <td class="descr">Размер попапа в px или %.</td>
+            <td class="default">[60%, 50%]</td>
+        </tr>
+
+
+        <tr><td colspan="4"><h3>type='href'</h3></td></tr>
+        <tr>
+            <td class="prop">url</td>
+            <td class="type">url</td>
+            <td class="descr">URL</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">target</td>
+            <td class="type">string?</td>
+            <td class="descr">Значение атрибута target: '_self' — открыть в текущем окне, '_top' — в окне верхнего уровня (родительском), '_blank' — в новом окне.</td>
+            <td class="default">'_self'</td>
+        </tr>
+
+
+        <tr><td colspan="4"><h3>type='tour'</h3></td></tr>
+        <tr>
+            <td class="prop">id</td>
+            <td class="type">int</td>
+            <td class="descr">Идентификатор целевого тура.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">keep_position</td>
+            <td class="type">bool?</td>
+            <td class="descr">Добавить в хеш к ссылке на тур позицию и поворот камеры. По умолчанию — false.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">skybox</td>
+            <td class="type">int?</td>
+            <td class="descr">ID скайбокса, куда нужно перейти.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion?</td>
+            <td class="descr">Кватернион камеры после перехода.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">target</td>
+            <td class="type">string?</td>
+            <td class="descr">Значение атрибута target: '_self' — открыть в текущем окне, '_top' — в окне верхнего уровня (родительском), '_blank' — в новом окне.</td>
+            <td class="default">'_self'</td>
+        </tr>
+
+
+        <tr><td colspan="4"><h3>type='offer'</h3></td></tr>
+        <tr>
+            <td class="prop">id</td>
+            <td class="type">int</td>
+            <td class="descr">Идентификатор целевого оффера.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">tour_id</td>
+            <td class="type">int?</td>
+            <td class="descr">Идентификатор целевого тура.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">skybox</td>
+            <td class="type">int?</td>
+            <td class="descr">ID скайбокса, куда нужно перейти.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion?</td>
+            <td class="descr">Кватернион камеры после перехода.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">target</td>
+            <td class="type">string?</td>
+            <td class="descr">Значение атрибута target: '_self' — открыть в текущем окне, '_top' — в окне верхнего уровня (родительском), '_blank' — в новом окне.</td>
+            <td class="default">'_self'</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2 id="class-Label">Label</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">text</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Текст метки.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">aspect_ratio</td>
+            <td class="type">float?</td>
+            <td class="descr">Соотношение сторон.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">padding</td>
+            <td class="type">integer?</td>
+            <td class="descr">Величина отступов.</td>
+            <td class="default">0</td>
+        </tr>
+        <tr>
+            <td class="prop">text_align</td>
+            <td class="type">string?</td>
+            <td class="descr">Выравнивание текста.</td>
+            <td class="default">'center'</td>
+        </tr>
+        <tr>
+            <td class="prop">font_family</td>
+            <td class="type">string?</td>
+            <td class="descr">Шрифт: с засечками `serif` или без `sans-serif`.</td>
+            <td class="default">'sans-serif'</td>
+        </tr>
+        <tr>
+            <td class="prop">font_color</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет текста.</td>
+            <td class="default">rgba(0,0,0,1)</td>
+        </tr>
+        <tr>
+            <td class="prop">font_weight</td>
+            <td class="type">bool?</td>
+            <td class="descr">Жирность.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">font_italic</td>
+            <td class="type">bool?</td>
+            <td class="descr">Курсивное начертание.</td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">font_stroke_width</td>
+            <td class="type">int?</td>
+            <td class="descr">Ширина обводки.</td>
+            <td class="default">0</td>
+        </tr>
+        <tr>
+            <td class="prop">font_stroke_color</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет обводки.</td>
+            <td class="default">rgba(0,0,0,1)</td>
+        </tr>
+        <tr>
+            <td class="prop">bg_color</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет фона.</td>
+            <td class="default">rgba(0,0,0,0)</td>
+        </tr>
+        <tr>
+            <td class="prop">border_color</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет рамки.</td>
+            <td class="default">rgba(0,0,0,0)</td>
+        </tr>
+        <tr>
+            <td class="prop">border_width</td>
+            <td class="type">int?</td>
+            <td class="descr">Толщина рамки.</td>
+            <td class="default">0</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2 id="class-Navigation">Navigation</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">img</td>
+            <td class="type">url?</td>
+            <td class="descr">URL картинки для навигатора.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">title</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Подпись под картинкой в навигаторе.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">skybox</td>
+            <td class="type">int</td>
+            <td class="descr">ID скайбокса, куда нужно перейти по клику.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion</td>
+            <td class="descr">Кватернион камеры после перехода.</td>
+            <td class="default"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2 id="class-AudioClip">AudioClip</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">url</td>
+            <td class="type">url</td>
+            <td class="descr">URL MP3-файла.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">volume</td>
+            <td class="type">float?</td>
+            <td class="descr">Громкость от 0 до 1.</td>
+            <td class="default">1</td>
+        </tr>
+        <tr>
+            <td class="prop">loop</td>
+            <td class="type">bool?</td>
+            <td class="descr">Зацикливать ли звук.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">pause</td>
+            <td class="type">float?</td>
+            <td class="descr">При loop==true, пауза между повторами в миллисекундах.</td>
+            <td class="default">0</td>
+        </tr>
+        <tr>
+            <td class="prop">revision</td>
+            <td class="type">int?</td>
+            <td class="descr">
+                Версия статических файлов. Если указана, то пишется в <code>QUERY_STRING</code>
+                при запросах к аудио-файлам.
+            </td>
+            <td class="default"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2 id="class-Branding">Branding</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">copyright_map</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">
+                Строка над минимапом. Если значение отсутствует, то выводится стандартное сообщение. Может быть пустой строкой,
+                чтобы не выводить ничего.
+            </td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">copyright_help</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Подпись под обозначениями клавиш в хелпе ("Сделано в biganto.com").</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">logo_help</td>
+            <td class="type">url?</td>
+            <td class="descr">Логотип. Ссылка на картинку.</td>
+            <td class="default"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2 id="class-WalkStep">WalkStep</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">action</td>
+            <td class="type">string</td>
+            <td class="descr">Действие.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">duration</td>
+            <td class="type">int</td>
+            <td class="descr">Продолжительность действия.</td>
+            <td class="default"></td>
+        </tr>
+
+        <tr><td colspan="4"><h3>action='goto'</h3>Перейти в другой скайбокс.</td></tr>
+        <tr>
+            <td class="prop">skybox</td>
+            <td class="type">int</td>
+            <td class="descr">ID скайбокса для перехода</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion</td>
+            <td class="descr">Кватернион камеры в целевом скайбоксе.</td>
+            <td class="default"></td>
+        </tr>
+
+        <tr><td colspan="4"><h3>action='pan'</h3>Повернуть камеру.</td></tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion</td>
+            <td class="descr">Кватернион поворота.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">easing</td>
+            <td class="type">string?: 'cubic'|'linear'</td>
+            <td class="descr">Функция плавности.</td>
+            <td class="default">'cubic'</td>
+        </tr>
+
+        <tr><td colspan="4"><h3>action='pause'</h3>Пауза.</td></tr>
+        <tr><td colspan="4"><h3>action='tour'</h3>Открыть другой тур с ?walk=1.</td></tr>
+        <tr>
+            <td class="prop">tour_id</td>
+            <td class="type">int</td>
+            <td class="descr">ID тура.</td>
+            <td class="default"></td>
+        </tr>
+        <tr><td colspan="4"><h3>action='dollhouse'</h3>Войти в режим dollhouse.</td></tr>
+        <tr>
+            <td class="prop">pos</td>
+            <td class="type">vector3</td>
+            <td class="descr">Положение камеры на орбите.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion</td>
+            <td class="descr">Кватернион камеры относительно дефолтного направления.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">zoom</td>
+            <td class="type">float</td>
+            <td class="descr">Масштаб (от 1 до 20).</td>
+            <td class="default"></td>
+        </tr>
+        <tr><td colspan="4"><h3>action='dollhouse_zoom'</h3>Изменить масштаб в режиме dollhouse.</td></tr>
+        <tr>
+            <td class="prop">zoom</td>
+            <td class="type">float</td>
+            <td class="descr">Масштаб (от 1 до 20).</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">easing</td>
+            <td class="type">string?: 'cubic'|'linear'</td>
+            <td class="descr">Функция плавности.</td>
+            <td class="default">'cubic'</td>
+        </tr>
+        <tr><td colspan="4"><h3>action='dollhouse_rotate'</h3>Поворот в режиме dollhouse.</td></tr>
+        <tr>
+            <td class="prop">q</td>
+            <td class="type">quaternion</td>
+            <td class="descr">Кватернион поворота.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">easing</td>
+            <td class="type">string?: 'cubic'|'linear'</td>
+            <td class="descr">Функция плавности.</td>
+            <td class="default">'cubic'</td>
+        </tr>
+        <tr><td colspan="4"><h3>action='dollhouse_move'</h3>Сдвиг в режиме dollhouse.</td></tr>
+        <tr>
+            <td class="prop">move</td>
+            <td class="type">vector2</td>
+            <td class="descr">Вектор перемещения по координатам x и y.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">easing</td>
+            <td class="type">string?: 'cubic'|'linear'</td>
+            <td class="descr">Функция плавности.</td>
+            <td class="default">'cubic'</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2 id="class-Splash">Splash</h2>
+    <table class="table table-bordered class-definition">
+        <thead>
+        <tr>
+            <th>Свойство</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Значение по умолчанию</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="prop">bg_color</td>
+            <td class="type">rgba?</td>
+            <td class="descr">Цвет фона заставки.</td>
+            <td class="default">[41, 35, 35, 100]</td>
+        </tr>
+        <tr>
+            <td class="prop">bg_url</td>
+            <td class="type">url|bool?</td>
+            <td class="descr">URL картинки для фона. false — не показываем никакую картинку, true — показываем <code>Tour.screen</code>.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">progress</td>
+            <td class="type">string|bool?</td>
+            <td class="descr">Показывать ли прогресс-бар и какой. True — показывать стандартный прогресс-бар.</td>
+            <td class="default">true</td>
+        </tr>
+        <tr>
+            <td class="prop">cancel_timeout</td>
+            <td class="type">int?</td>
+            <td class="descr">
+                Время в миллисекундах, после которого появляется кнопка отмены. Если значение равно 0,
+                кнопка появляется немедленно. Кнопка никогда не появляется, если свойство отсутствует или равно false.
+            </td>
+            <td class="default">false</td>
+        </tr>
+        <tr>
+            <td class="prop">cancel_html</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">HTML-код кнопки отмены. Должны быть определены
+                либо <code>cancel_html</code>,
+                либо <code>cancel_text</code> + <code>cancel_url</code>.
+            </td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">cancel_text</td>
+            <td class="type">string_i18n?</td>
+            <td class="descr">Текст кнопки отмены.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">cancel_url</td>
+            <td class="type">string?</td>
+            <td class="descr">URL кнопки отмены.</td>
+            <td class="default"></td>
+        </tr>
+        <tr>
+            <td class="prop">cancel_target</td>
+            <td class="type">string?</td>
+            <td class="descr">Значение атрибута <code>target</code>: '_self' — открыть в текущем окне, '_top' — в окне верхнего уровня (родительском), '_blank' — в новом окне.</td>
+            <td class="default">'_self'</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h1>Требования к модели</h1>
+
+    <p>Для туров требуется низкополигональная модель в формате OBJ.</p>
+    <p>Зарезервированные конструкции в названиях объектов модели:</p>
+    <dl>
+        <dt>_glass</dt>
+        <dd>
+            Объект становится прозрачным, на него не проецируются скайбоксы и не применяются текстуры.
+        </dd>
+        <dt>_glassinside</dt>
+        <dd>
+            Объект становится прозрачным в режиме inside, на него не проецируются скайбоксы.
+        </dd>
+        <dt>_fake</dt>
+        <dd>
+            Объект не учитывается при определении размеров модели для минимапа.
+        </dd>
+        <dt>_group{floor}</dt>
+        <dd>
+            Задает этаж, к которому относится объект: <code>int</code>. Нумерация этажей начинается с нуля.
+            Используется для подсвечивания этажей в режиме dollhouse.
+        </dd>
+    </dl>
+
+{% endblock %}

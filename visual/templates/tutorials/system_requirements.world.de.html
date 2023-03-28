@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% set page_title = _("Requirements") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/system-requirements/system_requirements.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div class="content-page__wrapper">
+            <div class='content-page__main content-page__main--max-width'>
+
+        <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+            <h3>System requirements:</h3>
+        </div>
+        <div class="troubleshooting__explanation">
+          <p>Minimum technical characteristics of equipment (computer) for running Virtual Tour:</p>
+            <ul>
+                <li>DirectX 10-supported video card and driver</li>
+                <li>At least 4 Gbyte RAM</li>
+                <li>No less than Intel Core i5 or AMD A10 processor</li>
+                <li>Browser and minimum version: Google Chrome 48, Firefox 44, Safari 8, Opera 40, Microsoft Edge 79</li>
+                <li>For mobile devices: Android 6 or newer, iOS 14 or newer compatible devices, at least 3 Gbyte RAM (4 is recommended)
+                  Important: some iOS compatible devices, e.g. iPhone SE have less than 3 Gbyte RAM and can experience performance issues
+                  </li>
+                <li>To check the correct operation, the device and browser shall be tested for WebGL support on: <a href="https://get.webgl.org/" target="_blank">https://get.webgl.org/</a></li>
+            </ul>
+        </div>
+
+        <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+            <h3>General requirements:</h3>
+        </div>
+        <div class="troubleshooting__explanation">
+            <ul>
+                <li>assets should be exported with our tools for 3d Max (<a href='/static/scripts3d/Biganto-UTL_VirtoasterCamTools_0.73.ms'>Camera tool</a> и <a href='/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms'>Export tool</a>). Scripts were tested on 3d Max 2018-2020, we do not guarantee the same performance on earlier 3d Max versions.
+                </li>
+                <li>at the moment we do not support alternative 3d packages (i.e. UE or Maya). Nevertheless, if you know what you are doing, you can still prepare assets from these packages, like some of our customers do.
+                </li>
+            </ul>
+        </div>
+
+        <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+            <h3>Image requirements:</h3>
+        </div>
+        <div class="troubleshooting__explanation">
+            <p>File format  - .jpg or .png (recommended)</p>
+            <p>Image format - cubemap panoramic image 6x1</p>
+            <p>Image resolution - 9216х1536</p>
+            <p>File name for each image should end with sequential number - so called point number, which should correspond to the correct coordinates, e.g. "panorama01.png"</p>
+            <p>Supported renderers - VRay, Corona*</p>
+            <p>*- <i class='workflow__text--italic'>VRay и Corona renderers can render cubemaps by default. For alternative renderers cubemaps may be different.</i></p>
+        </div>
+
+        <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+            <h3>Model requirements:</h3>
+        </div>
+        <div class="troubleshooting__explanation">
+            <p>File format - .obj</p>
+            <p>Maximum high poly model size, mb - 2048</p>
+            <p>Maximum high poly model size (uploading without optimization), mb - 50</p>
+            <p>Maximum number of objects in the model - 6000</p>
+            <p>Maximum number of vertices in polygons in the scene - 200</p>
+            <p>Maximum scene size (bounding box size of a model, in any of three dimensions), m - 1000</p>
+            <p>Maximum polygon count (for comfortable tour view) - 300000</p>
+            <p>Maximum polygon count (maximum technically possible) - 2000000</p>
+            <p>Maximum distance from camera to the model, m - 6</p>
+        </div>
+
+        </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

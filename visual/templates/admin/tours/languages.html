@@ -1,0 +1,118 @@
+{% extends 'admin/base.html' %}
+
+{% set menu_current = 'tours' %}
+
+
+{% block content %}
+    {{ super() }}
+    <h2>Тур «{{ tour.title }}»</h2>
+
+    {% include('admin/tours/_tabs.html') %}
+
+    {% if not tour.meta.get('languages') %}
+        <div class="alert alert-info">В этом туре нет мультиязычности.</div>
+    {% else %}
+        <div class="col-lg-5">
+        <table class="table table-bordered table-list"  id="table-langs">
+        {% for code, title in tour.meta.get('languages', {})|dictsort %}
+            <tr data-code="{{ code }}" {% if code == tour.meta.get('default_lang') %} class="hl" {% endif %}>
+                <td>{{ code|upper }}</td>
+                <td class="t">{{ title }}</td>
+                <td class="text-end">
+                    {% if code != tour.meta.get('default_lang') %}
+                        <button type="button" class="btn btn-sm btn-success action-set-default" title="Сделать языком по умолчанию"><i class="fa fa-check"></i></button>
+                    {% endif %}
+                    <a href="#" data-bs-toggle="modal" class="btn btn-sm btn-info" title="Переименовать" data-bs-target="#modal-edit"><i class="far fa-edit"></i></a>
+                    <a href="#" data-bs-toggle="modal" class="btn btn-sm btn-danger" title="Удалить" data-bs-target="#modal-delete"><i class="fas fa-times-circle"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+        <form method="post" id="form-set-default" action="{{ url_for('.tour_language_default', tour_id=tour.id, user_id=user_id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="code">
+        </form>
+        <script type="text/javascript">
+        (function() {
+            $('#table-langs').on('click', '.action-set-default', function(e) {
+                $('#form-set-default').find('input[name=code]').val($(this).parents('tr').data('code')).end().submit();
+            });
+        })();
+        </script>
+    {% endif %}
+
+    <form method="post" class="row col-lg-8" action="{{ url_for('.tour_language_edit', tour_id=tour.id, user_id=user_id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-lg-1 pe-lg-1 mb-1 mb-lg-0"><input type="text" name="code"  placeholder="Код" maxlength="2" class="form-control px-1"></div>
+        <div class="col-lg-auto px-lg-0 mb-1 mb-lg-0"><input type="text" name="title" placeholder="Название" class="form-control"></div>
+        <div class="col-lg-auto px-lg-0 mb-1 mb-lg-0"><button type="submit" class="btn btn-success ms-1">Добавить</button></div>
+    </form>
+
+    <form method="post" action="{{ url_for('.tour_language_edit', tour_id=tour.id, user_id=user_id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="code">
+
+        <div class="modal" id="modal-edit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Переименовать язык</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                    <label>Новое название</label>
+                    <input type="text" class="form-control" name="title">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Ok</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+            </div>
+        </div></div></div>
+    </form>
+    <script type="text/javascript">
+    (function() {
+        var $modal = $('#modal-edit'), $form = $modal.parent('form');
+        $modal.on('show.bs.modal', function(e) {
+            var $tr = $(e.relatedTarget).parents('tr');
+            $form.find('input[name=code]').val($tr.data('code'));
+            $form.find('input[name=title]').val($tr.find('td.t').text());
+        }).on('shown.bs.modal', function() {
+            $form.find('input[name=title]').focus();
+        });
+    })();
+    </script>
+
+
+    <form method="post" action="{{ url_for('.tour_language_delete', tour_id=tour.id, user_id=user_id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="code">
+        <div class="modal" id="modal-delete"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Удалить язык?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Язык будет более недоступен в выборе языка тура. Переводы могут быть удалены.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Ok</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+            </div>
+        </div></div></div>
+    </form>
+    <script type="text/javascript">
+    (function() {
+        var $modal = $('#modal-delete'), $form = $modal.parent('form');
+        $modal.on('show.bs.modal', function(e) {
+            var $tr = $(e.relatedTarget).parents('tr');
+            $form.find('input[name=code]').val($tr.data('code'));
+        });
+    })();
+    </script>
+
+
+
+{% endblock %}

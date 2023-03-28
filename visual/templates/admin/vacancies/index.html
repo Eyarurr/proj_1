@@ -1,0 +1,98 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'content' %}
+
+
+{% block content %}
+    <h1>
+        <a href="{{ url_for('.vacancy_edit', lang=lang) }}" class="btn btn-outline-success float-end"><i class="fa fa-plus"></i> Добавить вакансию</a>
+        Вакансии
+    </h1>
+
+    <ul class="nav nav-tabs">
+    {% for code, props in config.LANGUAGES.items() %}
+        {% set active = "active" if code == lang%}
+        <li class="nav-items" >
+            <a href="{{ url_for('.vacancies', lang=code) }}" class="nav-link {{ active }}">
+                {{- props['title'] }}
+                {% if stats[code] %}<span class="badge">{{ stats[code] }}</span>{% endif %}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+    {% if not vacancies %}
+        <div class="alert alert-info">
+            Нет ни одной вакансии для этого языка.
+        </div>
+    {% else %}
+        <table class="table table-bordered table-hover table-list">
+        <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Зарплатная вилка</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for vacancy in vacancies %}
+        <tr data-id="{{ vacancy.id }}" {% if vacancy.hidden %} style="background: #eee" {% endif %}>
+            <td><i class="fa fa-sort handle"></i></td>
+            <td>{{ vacancy.id or '' }}</td>
+            <td>
+                <p>{{ vacancy.title or '' }}</p>
+            </td>
+            <td class="t">
+                <p>{{ vacancy.salary or '' }}</p>
+            </td>
+            <td>
+                <p>
+                    <a href="{{ url_for('.vacancy_edit', lang=vacancy.lang, vacancy_id=vacancy.id) }}" class="btn btn-primary btn-sm">
+                        <i class="fa fa-edit"></i> Редактировать
+                    </a>
+                </p>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block tail %}
+
+<form method="post" action="{{ url_for('.vacancies_reorder', lang=lang) }}" id="form-reorder">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
+
+<script type="text/javascript" src="/static/jquery-sortable-min.js"></script>
+<script type="text/javascript" src="//yastatic.net/jquery/form/3.14/jquery.form.min.js"></script>
+<script type="text/javascript">
+(function() {
+    var $table = $('.table-list'), $formReorder = $('#form-reorder');
+
+    $formReorder.ajaxForm();
+
+    $table.sortable({
+        containerSelector: 'table',
+        itemPath: '> tbody',
+        itemSelector: 'tr',
+        placeholder: '<tr class="placeholder"><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>',
+        handle: 'i.fa-sort',
+        delay: 200,
+        onDrop: function ($item, container, _super) {
+            $formReorder.find('input[name^=sort]').remove();
+            $.each($table.sortable("serialize").get()[0], function(i) {
+                $('<input type="hidden">').attr('name', 'sort.' + this.id).val(i).appendTo($formReorder);
+            });
+            $formReorder.submit();
+
+            _super($item, container);
+        }
+    });
+})();
+</script>
+{% endblock %}

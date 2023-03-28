@@ -1,0 +1,17 @@
+<p>
+    Вы выбрали следующие товары в туре <a href="{{ url_for('front.tour', tour_id=tour.id, _external=True) }}">{{ tour.title }}</a>
+</p>
+
+<table border="1" cellspacing="1" cellpadding="5">
+    {% for row in table %}
+    <tr>
+        <td>{{ row.title }}</td>
+        <td style="text-align:right">{{ "{:,.2f}".format(row.price) }} руб.</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td style="text-align:right">{{ _('Total') }}:</td>
+        <td style="text-align:right;">{{ "{:,.2f}".format(total_price) }} руб.</td>
+    </tr>
+</table>
+

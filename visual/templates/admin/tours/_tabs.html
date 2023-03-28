@@ -1,0 +1,59 @@
+{% if tour.id %}
+    {% if tour.footage.type in ('real', 'virtual') and tour.footage.status in ('published', 'testing', 'banned') %}
+        {% set tabs = [
+            (('admin.tour_edit', ), 'Свойства'),
+            (('admin.tour_skyboxes', 'admin.tour_skybox_edit'), 'Панорамы (' + tour.footage.meta.get('skyboxes', {})|length|string + ')'),
+            (('admin.tour_options', ), 'Опции' + if_value(tour.meta.get('options', {})|length, ' (', ')')),
+            (('admin.tour_splash', ), 'Заставка'),
+            (('admin.tour_languages', ), 'Языки' + if_value(tour.footage.meta.get('languages', {})|length, ' (', ')')),
+            (('admin.tour_branding', ), 'Брендинг'),
+            (('admin.tour_statistics', ), 'Статистика'),
+            (('admin.tour_json', ), 'Мета'),
+            (('admin.tour_files', ), 'Файлы'),
+        ] %}
+    {% else %}
+        {% set tabs = [
+            (('admin.tour_edit', ), 'Свойства'),
+            (('admin.tour_statistics', ), 'Статистика'),
+            (('admin.tour_json', ), 'Мета'),
+            (('admin.tour_files', ), 'Файлы'),
+
+        ] %}
+    {% endif %}
+{% endif %}
+
+<ul class="nav nav-tabs mb-3">
+{% for endpoints, title in tabs %}
+    {% if endpoints[0] == request.endpoint %}
+        {% set active = "active" %}
+    {% endif %}
+    <li class="nav-item">
+        {% if endpoints[0] == 'admin.tour_files' %}
+            <a href="{{ url_for(endpoints[0], obj_id=tour.id, user_id=user_id) }}" class="nav-link {{ active }}">
+                {{ title }}
+            </a>
+        {% else %}
+            <a href="{{ url_for(endpoints[0], tour_id=tour.id, user_id=user_id) }}" class="nav-link {{ active }}">
+            {{ title }}
+        </a>
+        {% endif %}
+    </li>
+{% endfor %}
+
+<li class="nav-item">
+    <li class="nav-item dropdown ms-auto">
+        <a href="#" class="dropdown-toggle nav-link text-success" data-bs-toggle="dropdown"><i class="fas fa-video"></i> Съёмка</a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item text-success" href="{{ url_for('admin.footage_edit', footage_id=tour.footage_id) }}">Свойства</a></li>
+            {% if tour.footage.type in ('real', 'virtual') and tour.footage.status in ('published', 'testing', 'banned') %}
+                <li><a class="dropdown-item text-success" href="{{ url_for('admin.footage_model', footage_id=tour.footage_id) }}">Модель</a></li>
+            {% endif %}
+            <li><a class="dropdown-item text-success" href="{{ url_for('admin.footage_json', footage_id=tour.footage_id) }}">Мета</a></li>
+            <li><a class="dropdown-item text-success" href="{{ url_for('admin.footage_files', obj_id=tour.footage_id) }}">Файлы</a></li>
+            <li><a class="dropdown-item text-success" href="{{ url_for('admin.footage_skyboxes', footage_id=tour.footage_id) }}">Панорамы</a></li>
+        </ul>
+    </li>
+    <a href="{{ url_for('front.tour', tour_id=tour.id) }}" id="tour-link" class="nav-link text-success">
+        <i class="fa fa-eye"></i> Посмотреть</a>
+    </li>
+</ul>

@@ -1,0 +1,37 @@
+{% if footage.id %}
+    {% if footage.type in ('real', 'virtual') and footage.status in ('published', 'testing', 'banned') %}
+        {% set tabs = [
+            (('admin.footage_edit', ), 'Свойства'),
+            (('admin.footage_model', ), 'Модель'),
+            (('admin.footage_skyboxes', ), 'Панорамы' + if_value(footage.meta.get('skyboxes', {})|length|string, ' (', ')')),
+            (('admin.footage_json', ), 'Мета'),
+            (('admin.tours', ), 'Туры' + if_value(footage.tours|length, ' (', ')')),
+            (('admin.footage_files', ), 'Файлы'),
+        ] %}
+    {% else %}
+        {% set tabs = [
+            (('admin.footage_edit', ), 'Свойства'),
+            (('admin.tours', ), 'Туры' + if_value(footage.tours|length, ' (', ')')),
+            (('admin.footage_json', ), 'Мета'),
+
+
+        ] %}
+    {% endif %}
+<ul class="nav nav-tabs mb-3">
+        {% for endpoints, title in tabs %}
+            {% if endpoints[0] == request.endpoint %}
+                {% set active = "active" %}
+            {% endif %}
+        <li  class="nav-item" >
+            {% if endpoints[0] == 'admin.footage_files' %}
+                <a href="{{ url_for(endpoints[0], obj_id=footage.id) }}"  class="nav-link {{ active }}">
+                    {{ title }}</a>
+            {% else %}
+                <a href="{{ url_for(endpoints[0], footage_id=footage.id) }}" class="nav-link {{ active }}">
+                    {{ title }}
+                </a>
+            {% endif %}
+        </li>
+        {% endfor %}
+</ul>
+{% endif %}

@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% set page_title = _("Tutorials") %}
+{% set corpus_class = 'tutorials' %}
+
+{% from 'macros/knowledgeList.html' import knowledgeList %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title">
+        <div class="b-page__inner page-title__inner page-title__inner--align-left page-title--with-bottom-padding">
+            <h1 class="h1 page-title__head background-image-title-knowledge">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        <div class="knowledge-list">
+            <ul class="knowledge-list__ul">
+                {% if config.JURISDICTION !='ru' %}
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.how_it_works') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/how-it-works/how-it-works.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title"> {{ _("How it works?") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                    <button data-src="https://www.youtube.com/embed/WeEma6cpT0s" data-title="{{ _("How it works?") }}" class="knowledge-list__video">
+                        <svg viewBox="0 0 64 64" class="icon__svg" width="40" height="40">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-video"></use>
+                        </svg>
+                    </button>
+                </li>
+                {% endif %}
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.system_requirements') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/system-requirements/system_requirements.jpg');">
+                        </div>
+                        {% if config.JURISDICTION =='ru' %}
+                        <span class="knowledge-list__title"> Системные требования</span>
+                        {% endif %}
+                        {% if config.JURISDICTION !='ru' %}
+                        <span class="knowledge-list__title"> {{ _("Requirements") }}</span>
+                        {% endif %}
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                </li>
+                {% if config.JURISDICTION !='ru' %}
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.quick_start_guide') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                             style="background-image: url('/static/public/img/tutorials/quick-start-guide/quick-start-guide.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title"> {{ _("Quick start guide") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                    <button data-src="https://www.youtube.com/embed/E3jAPOUG9RM" data-title="{{ _("Quick start guide") }}" class="knowledge-list__video">
+                        <svg viewBox="0 0 64 64" class="icon__svg" width="40" height="40">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-video"></use>
+                        </svg>
+                    </button>
+                </li>
+                {% endif %}
+            </ul>
+
+            {% if config.JURISDICTION !='ru' %}
+            <h2 class="knowledge-list__head">{{ _("Apply our tools") }}</h2>
+            <ul class="knowledge-list__ul">
+                <li class="knowledge-list__item knowledge-list__item--light">
+                    <a href="{{ url_for('tutorials.setting_up_camera') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/setting-camera/preview.jpg');">
+                        </div>
+                        <span class="knowledge-list__title"> {{ _("Setting up camera") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                    <button data-src="https://www.youtube.com/embed/STpTi3apqJ8" data-title="{{ _("Setting up camera") }}" class="knowledge-list__video">
+                        <svg viewBox="0 0 64 64" class="icon__svg" width="40" height="40">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-video"></use>
+                        </svg>
+                    </button>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.preparing_geometry') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/preparing-geometry/preview.jpg');">
+                        </div>
+                        <span
+                            class="knowledge-list__title">{{ _("Preparing geometry for Virtoaster, Export tool") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                    <button data-src="https://www.youtube.com/embed/vvz6r3p7r6E" data-title="{{ _("Preparing geometry for Virtoaster, Export tool") }}" class="knowledge-list__video">
+                        <svg viewBox="0 0 64 64" class="icon__svg" width="40" height="40">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-video"></use>
+                        </svg>
+                    </button>
+                </li>
+            </ul>
+
+            <h2 class="knowledge-list__head">{{ _("Render and upload assets") }}</h2>
+            <ul class="knowledge-list__ul">
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.setting_up_render') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/setting-up-render/preview.jpg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Setting up 360 render") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.post_production') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/post-production/preview.jpg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Post production") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.uploading_assets') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/uploading-assets/assets-uploading.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Assets uploading") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
+
+            {% if config.JURISDICTION =='ru' %}
+            <h2 class="knowledge-list__head">Редактирование и просмотр 3d тура</h2>
+            {% endif %}
+            {% if config.JURISDICTION !='ru' %}
+            <h2 class="knowledge-list__head">{{ _("Edit and share 3d tour") }}</h2>
+            {% endif %}
+            <ul class="knowledge-list__ul">
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.releasing_tour') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/releasing-tour/releasing-your-tour.jpeg');">
+                        </div>
+                        {% if config.JURISDICTION =='ru' %}
+                        <span class="knowledge-list__title">Управление 3д туром</span>
+                        {% endif %}
+                        {% if config.JURISDICTION !='ru' %}
+                        <span class="knowledge-list__title">{{ _("Releasing your tour") }}</span>
+                        {% endif %}
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                </li>
+                {% if config.JURISDICTION !='ru' %}
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.edit_assets') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                             style="background-image: url('/static/public/img/tutorials/edit-assets/edit-assets.jpg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Editing tour assets") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.model_replacement') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/model-replacement/title_bg.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Manual model replacement") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.rendering_floor_plan') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/rendering-floor-plan/rendering-floor-plan.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Rendering floor plan") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.branding') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                             style="background-image: url('/static/public/img/tutorials/branding/branding-tile.jpg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Tour Branding") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                        </div>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.tour_editing_mode') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/tour-editing-mode/tour-editing-mode.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Tour editing mode") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.creating_interactive_objects') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/creating-interactive-objects/creating-interactive-objects.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Creating interactive objects") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.interactive_meshes') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/interactive-meshes/interactive-meshes.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Interactive meshes") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                        </div>
+                    </a>
+                </li>
+                {% if config.JURISDICTION !='ru' %}
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.shades') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                             style="background-image: url('/static/public/img/tutorials/shades/shade_tile.jpg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Shades") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.troubleshooting') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/troubleshooting/troubleshooting.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Troubleshooting") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--yellow">{{ _("support") }}</span>
+                        </div>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.installing_oculus') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/installing-oculus/oculus_background.jpeg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Installing Oculus Quest/Go apps") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--yellow">{{ _("support") }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="knowledge-list__item">
+                    <a href="{{ url_for('tutorials.desktop_player') }}" class="knowledge-list__link">
+                        <div class="knowledge-list__background"
+                            style="background-image: url('/static/public/img/tutorials/desktop-player/desktop_player.jpg');">
+                        </div>
+                        <span class="knowledge-list__title">{{ _("Desktop player") }}</span>
+                        <div class="knowledge-list__tags tags">
+                            <span class="tags__item tags__item--yellow">{{ _("support") }}</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        {{ knowledgeList() }}
+    </div>
+</div>
+{% endblock %}

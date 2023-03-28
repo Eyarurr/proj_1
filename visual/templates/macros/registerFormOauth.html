@@ -1,0 +1,33 @@
+{% macro register_form_oauth() %}
+{% set oauth_name = session.pop('oauth_name', False) %}
+    <form class="form-modal registration-oauth__form" method="post" action="{{ url_for('users.register_oauth') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="form-modal__section login__section">
+            <div class="form-modal__label clearfix">
+                {{ _("Name") }}
+            </div>
+            <div class="form-modal__field login__field">
+                <input type="text" class="big-input registration-oauth__name" value="{{ oauth_name }}" placeholder="{{ _("Name") }}" name="name" tabindex="3">
+            </div>
+        </div>
+        <div class="form-modal__section">
+            {{ _("Biganto would like to keep you informed about the status of the services we provide, including your 3d tour status.") }}
+        </div>
+        <label class="big-checkbox big-checkbox__group">
+            <input class="big-checkbox__input" type="checkbox" name="email_notifications" value="1">
+            <span class="big-checkbox__checkmark big-checkbox__checkmark--small"></span>
+            <span class="big-checkbox__label big-checkbox__label--small">{{ _("I agree to receive notifications by e-mail") }}</span>
+        </label>
+
+        <label class="big-checkbox big-checkbox__group">
+            <input class="big-checkbox__input registration-oauth__accept-policy" type="checkbox" name="accept_policy" value="1">
+            <span class="big-checkbox__checkmark big-checkbox__checkmark--small big-checkbox__label--inline"></span>
+            <span class="big-checkbox__label big-checkbox__label--small big-checkbox__label--inline">{{ _("I agree that I have read and accepted the <a class=\"link\" href='%(agreement)s' target='_blank'>User Agreement</a> and <a class='link' href='%(policy)s' target='_blank'>Privacy Policy.</a>", agreement=url_for('front.user_agreement'), policy=url_for('front.privacy_policy')) }}</span>
+        </label>
+
+        <div class="form-modal__section login__submit clearfix">
+            <button type="submit" class="button fill blue modal-custom__button-wide registration-oauth__submit" tabindex="4" disabled>{{ _("Sign in") }}</button>
+        </div>
+    </form>
+{% endmacro %}

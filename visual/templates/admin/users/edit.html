@@ -1,0 +1,416 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'users' %}
+
+{% block head %}
+    <style type="text/css">
+    .roles-list {
+        list-style-type: none;
+        margin-left: 0;
+        padding-left: 0;
+    }
+    #btn-create-password { cursor: pointer; }
+    #warn-create-password { display: none; }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+    {% if user.id %}
+        <h1>
+            Свойства юзера «{{ user.name }}»
+            <div class="float-end">
+                <a class="btn btn-sm btn-success" href="{{ url_for('.footages', user_id=user.id) }}"><i class="fas fa-user"></i> Съёмки</a>
+                <a class="btn btn-sm btn-success" href="{{ url_for('.tours', user_id=user.id) }}"><i class="fas fa-user"></i> Туры</a>
+                <a class="btn btn-sm btn-success" href="{{ url_for('.multitours', user_id=user.id) }}"><i class="fas fa-user"></i> Мультиуры</a>
+            </div>
+        </h1>
+    {% else %}
+        <h1>Создать юзера</h1>
+    {% endif %}
+
+    {% include('admin/users/_tabs.html') %}
+
+    {% if user.id %}
+    <form id="form-delete" class="" method="post" action="{{ url_for('.user_delete', user_id=user.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    </form>
+    {% endif %}
+
+    <form method="POST" id="form-edit" class="" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% if user.id %}
+            <div class="row mb-3" style="--bs-bg-opacity: .1;">
+                <div class="col-lg-3">
+                    <div class="row">
+                        <label class="col-auto">Создан</label>
+                        <div class="col offset-lg-1">
+                            {{ user.created|utcinlocal|humantime }}
+                            {% if user.created_by %}
+                                — <a href="{{ url_for('.team_profile', user_id=user.created_by) }}"
+                                    class="team-member">{{ user.creator.name }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="row">
+                        <label class="col-auto">Был на сайте</label>
+                        <div class="col">{{ user.last_active|utcinlocal|humantime('Никогда') }}</div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="row">
+                        <label class="col-auto">Нотификации по почте</label>
+                        <div class="col">{{ {0: 'нет', 1: 'да'}.get(user.email_notifications) }}</div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    {% if user.team_member %}
+                        <a href="{{ url_for('.team_profile', user_id=user.id) }}"><i class="far fa-handshake"></i> Член команды</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% if user.deleted %}
+        <div class="row mb-3">
+            <div class="col-lg-10 col-lg-offset-2">
+                <p class="form-control-static">
+                    <span class="text-danger">Юзер самоудалился </span>{{ user.deleted.strftime('%d.%m.%Y %H:%M:%S') }}
+                </p>
+            </div>
+        </div>
+    {% endif %}
+    <!-- Основная форма -->
+    <div class="row mb-3">
+        <label for="{{ form.name.name }}" class="col-lg-1 ">{{ form.name.label }}</label>
+        <div class="col-lg-11">
+            {{ form.name(class='form-control') }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg">
+            <div class="row mb-3">
+                <label for="{{ form.email.name }}" class="col-lg-1">{{ form.email.label }}</label>
+                <div class="col-lg">
+                    {{ form.email(class='form-control') }}
+                </div>
+                <div class="col-lg  offset-lg-1">
+                    <div class="form-check">
+                    <label
+                    class="form-check-label">{{ form.email_confirmed(class="form-check-input") }}E-mail
+                    подтверждён</label></div>
+                </div>
+            </div>
+            <div class="row mb-3">
+            <label for="{{ form.password.name }}" class="col-lg-1">{{ form.password.label }}</label>
+            <div class="col-lg">
+                <div class="input-group">
+                    {% if user.password_hash %}
+                        {{ form.password(class='form-control', placeholder='пароль задан') }}
+                    {% else %}
+                        {{ form.password(class='form-control') }}
+                    {% endif %}
+                    <div id="btn-create-password" class="input-group-text" data-toggle="tooltip" data-placement="right"
+                         title="Сгенерировать новый пароль">
+                        <i class="far fa-lightbulb"></i>
+                    </div>
+                </div>
+                {% if user.id %}
+                    <p class="text-warning" id="warn-create-password">У пользователя уже был пароль. Если не хотите его
+                        менять, просто очистите это поле.</p>
+                {% endif %}
+            </div>
+
+            <div class="col-lg offset-lg-1">
+                <div class="form-check">
+                    <label class="form-check-label">{{ form.banned(class="form-check-input") }} Вход заблокирован</label>
+                </div>
+            </div>
+            </div>
+            <div class="row mb-3">
+            <label class="col-lg-1">Временная зона</label>
+            <div class="col-lg">
+                <select name="timezone" class="form-select">
+                    {% if not user.timezone %}
+                        <option value="UTC" selected></option>{% endif %}
+                    {% for code, title in config['TIMEZONES'].items() %}
+                        <option value="{{ code }}"
+                                {% if user.timezone ==  code %}selected{% endif %}>{{ title['ru'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg offset-lg-1">
+                <label class="form-check-label">Язык: {{ user.lang or 'ХЗ' }}</label>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-lg-1">Аватар</label>
+        <div class="col-lg-5">
+            {% if user.avatar %}
+                <img src="{{ user.avatar.url }}">
+                <div class="form-check">
+                    {{ form.avatar_delete(class='form-check-input') }}
+                    <label class="form-check-label" for="avatar_delete">Удалить</label>
+                </div>
+            {% endif %}
+            {{ form.avatar_(class='form-control') }}
+        </div>
+    </div>
+
+    {{ form.contacts() }}
+    {# Шаблон для строки формы одного контакта #}
+    <script type="text/template" id="contacts-row-template">
+        <div class="row mb-3">
+            <div class="col-lg-1">
+                <input type="text" class="form-control sort" placeholder="№">
+            </div>
+            <label class="col-lg-1 col-form-label">Тип</label>
+            <div class="col-lg-2">
+                <select class="form-select type">
+                    <option value=""></option>
+                    {% for type, title in user.CONTACT_TYPES.items() %}
+                    <option value="{{ type }}">{{ title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <label class="col-lg-1 col-form-label">Значение</label>
+            <div class="col-lg-3">
+                <input type="text" class="form-control value">
+            </div>
+            <label class="col-lg-1 col-form-label">Примечание</label>
+            <div class="col-lg-3">
+                <input type="text" class="form-control note">
+            </div>
+        </div>
+    </script>
+    <div class="row">
+        <div class="col-lg-1">
+            <label class="col-form-label">Контакты</label>
+        </div>
+        <div class="col-lg-11" id="contacts-container">{# Сюда JS-код навставляет инпутов #}</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-11 offset-1">
+            <button type="button" id="contacts-btn-add" class="btn btn-sm btn-secondary">Добавить строчку</button>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <label class="col-lg-1">Примечание</label>
+        <div class="col-lg-11">
+            {{ form.admin_comment(class='form-control', rows=6) }}
+            <p class="help-block">Это поле видно только в админке.</p>
+        </div>
+    </div>
+
+
+
+<!-- Основная форма конец-->
+
+
+    <div class="row">
+        <label class="col-lg-1">Настройки</label>
+        <div class="col-lg-11">
+            <pre class="code p-2">{{ user.settings_obj.as_dict(skip_defaults=True)|json_neat }}</pre>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="row mb-2">
+            <label for="{{ form.stripe_customer_id.name }}" class="col-lg-1">Stripe customer</label>
+            <div class="col-lg-5">
+                {{ form.stripe_customer_id(class='form-control') }}
+            </div>
+            <div class="col-lg">
+                <p><strong class="text-danger">Осторожнее тут!!!</strong></p>
+            </div>
+        </div>
+    </div>
+
+    {% if user.auth %}
+    <h3>OAuth-авторизации</h3>
+    {% for auth in user.auth %}
+    <div class="row">
+        <div class="col-lg-1 col-lg-offset-2">
+            <b>{{ auth.provider }}</b>
+        </div>
+        <div class="col-lg-2">
+            {{ auth.created|utcinlocal|humantime(not_today=True) }}
+        </div>
+        <div class="col-lg-7">
+            id={{ auth.remote_id }}
+            {% if auth.url %}
+                <a href="{{ auth.url }}">{{ auth.url }}</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <div class="mb-4"></div>
+    {% endif %}
+
+    {% if user.email_confirm_tokens %}
+    {% for token in user.email_confirm_tokens %}
+        <div class="row">
+            <label class="col-lg-2">Подтверждение почты</label>
+            <div class="col-lg">
+                <p class="form-control-static">
+                    {{ token.created|utcinlocal|humantime(not_today=True) }}
+                </p>
+            </div>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" name="confirm_email_link" value="{{ url_for('users.confirm_email', user_id=user.id, token=token.token, _external=True) }}">
+            </div>
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="row justify-content-between">
+        <div class="col-lg-auto offset-lg-1 mb-3">
+            <button class="btn btn-primary">Сохранить</button>
+            {% if user.id %}
+                <button type="button" id="btn-delete" class="btn btn-danger">Удалить</button>
+            {% endif %}
+            <a href="{{ url_for('.users') }}" class="btn btn-secondary">Отмена</a>
+        </div>
+        <div class="col-lg-auto mb-3">
+           {% if user.id %}
+                <a href="" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-authas">Войти в личный кабинет</a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+
+
+<script type="text/javascript">
+(function() {
+    var $form = $('#form-edit'), $btnPassword = $('#btn-create-password');
+
+    $btnPassword.click(function(e) {
+        e.preventDefault();
+        var letters = 'abvgdezkmnoprstufhz23456789', pwd = '', i;
+        for(i = 0; i < 6; i++) {
+            pwd = pwd + letters.substr(Math.floor(Math.random() * letters.length), 1);
+        }
+        $form.find('[name=password]').val(pwd).change();
+    });
+
+    $form.find('[name=password]').on('change keyup', function() {
+        if($(this).val() == '') $('#warn-create-password').hide(200);
+        else $('#warn-create-password').show(200);
+    });
+
+    $form.find('[name=confirm_email_link]').focus(function(e) {
+        $(this).select();
+    });
+})();
+</script>
+
+{% if user.id %}
+    <form method="post" action="{{ url_for('.user_authas') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+
+        <div class="modal modal-payment-method" id="modal-authas"><div class="modal-dialog"><div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Войти в личный кабинет</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Сейчас вы выйдите из админки и войдёте в личный кабинет пользователя {{ user.name }},
+                        как будто вы ввели его логин и пароль на сайте.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-success">Войти</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+        </div></div></div>
+    </form>
+
+    <script type="text/javascript">
+    $("#btn-delete").on("click", function(e) {
+        if (confirm("Вы действительно хотите удалить пользователя {{ user.name }}?")) {
+            e.preventDefault();
+            $("#form-delete").submit();
+        }
+    });
+    </script>
+{% endif  %}
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript">
+function initContacts() {
+
+    let elForm = document.getElementById('form-edit'),
+        elContacts = document.getElementById('contacts'),
+        contacts = {},
+        elContactsContainer = document.getElementById('contacts-container'),
+        rowTemplate = document.getElementById('contacts-row-template').innerHTML,
+        elBtnAdd = document.getElementById('contacts-btn-add'),
+        max_id = 0;
+
+    if(elContacts.value) {
+        contacts = JSON.parse(elContacts.value);
+    }
+    if(contacts == null) {
+        contacts = [];
+    }
+
+    for(let contact_id in contacts) {
+        contact_id = parseInt(contact_id);
+        if (max_id < contact_id) { max_id = contact_id; }
+        let contact = contacts[contact_id];
+        let elRow = document.createElement('div');
+        elRow.innerHTML = rowTemplate;
+        elRow.dataset.id = contact_id;
+        let elSort = elRow.getElementsByClassName('sort')[0];
+        let elType = elRow.getElementsByClassName('type')[0];
+        let elValue = elRow.getElementsByClassName('value')[0];
+        let elNote = elRow.getElementsByClassName('note')[0];
+        elSort.value = contact.sort ?? '';
+        elType.value = contact.type;
+        elValue.value = contact.value ?? '';
+        elNote.value = contact.note ?? '';
+        elContactsContainer.append(elRow);
+    }
+
+    elBtnAdd.addEventListener('click', function(e) {
+        let elRow = document.createElement('div');
+        elRow.innerHTML = rowTemplate;
+        elRow.dataset.id = ++max_id;
+        elContactsContainer.append(elRow);
+    });
+
+    elForm.addEventListener('submit', function(e) {
+        // Собираем данные из всех полей для контактов в объект contacts
+        contacts = {};
+        for(let elRow of elContactsContainer.children) {
+            let contact = {}
+            let contact_id = elRow.dataset.id;
+            let sort = parseInt(elRow.getElementsByClassName('sort')[0].value) ?? null;
+            let type = elRow.getElementsByClassName('type')[0].value ?? null;
+            let value = elRow.getElementsByClassName('value')[0].value ?? null;
+            let note = elRow.getElementsByClassName('note')[0].value ?? null;
+            if(!type) { continue; }
+
+            contact = {type};
+            if (sort) { contact.sort = sort; }
+            if (value) { contact.value = value; }
+            if (note) { contact.note = note; }
+            contacts[contact_id] = contact;
+        }
+        elContacts.value = JSON.stringify(contacts);
+    });
+};
+
+initContacts();
+</script>
+{% endblock %}

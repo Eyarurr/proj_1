@@ -1,0 +1,58 @@
+{% extends 'admin/base-bs-3.html' %}
+{% set menu_current = 'mailing' %}
+
+
+{% block content %}
+
+<style type="text/css">
+#filters { margin-top: 20px; }
+#filters h1 { margin-top: 0; }
+#table-lists td.svg { min-width: 40px; }
+#table-lists td.name { font-weight: bold; width: 40%; }
+#table-lists td.applies { font-size: .9em; white-space: nowrap; }
+#table-lists td.actions { white-space: nowrap; }
+#table-lists form { display: inline-block; }
+.table tbody > tr > td { vertical-align: middle; }
+</style>
+
+<div class="row" id="filters">
+    <div class="col-sm-4">
+        <h1>Списки рассылки</h1>
+    </div>
+    <div class="col-sm-8 text-right">
+        <a id="action-create" class="btn btn-success" href="{{ url_for('.create_mailing_list') }}"><i class="fa fa-plus"></i> Создать список</a>
+    </div>
+</div>
+
+{% if lists.items %}
+<table class="table table-bordered table-list clear-fix" id="table-lists">
+<thead>
+<tr>
+    <th>Название</th>
+    <th>Системный</th>
+    <th></th>
+</tr>
+</thead>
+    {% for lst in lists.items %}
+    <tr data-id="{{ lst.id }}">
+        <td class="title t">{{ lst.title }}</td>
+        <td class="system">{{ lst.system|yesno }}</td>
+        <td class="actions">
+            <a class="btn btn-default" href="{{ url_for('.mailing_list', id=lst.id) }}">
+                Редактировать
+            </a>
+            <a class="btn btn-default" href="{{ url_for('.mails', list_id=lst.id) }}">
+                Письма
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+    <div class="alert alert-info">
+        Не создано ни одного листа рассылки
+    </div>
+{% endif %}
+
+{% endblock %}

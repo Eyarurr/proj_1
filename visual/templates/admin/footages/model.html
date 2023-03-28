@@ -1,0 +1,239 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'footages' %}
+<style>
+    .modal {
+        width: 800px !important;
+    }
+</style>
+
+{% block content %}
+
+    <h2>Модель съёмки #{{ footage.id }}</h2>
+
+    {% include('admin/footages/_tabs.html') %}
+
+    <h2>Директория {{ models_dirname }}</h2>
+
+    {% if bgstate %}
+        {% if bgstate.status == 'processing' %}
+            <div class="alert alert-success">
+                <strong>Модель обрабатывается</strong>
+                с {{ bgstate.started.strftime('%H:%M:%S %d.%m.%Y') }}: {{ bgstate.wtf }}<br>
+                <span title="Вот нахера, спрашивается, изобретали компьютеры, чтобы они не могли сами себе сраную страницу обновить?!">Обновляйте страницу</span>,
+                чтобы увидеть, когда это закончится.
+            </div>
+        {% elif bgstate.status == 'error' %}
+            <div class="alert alert-danger">
+                <strong>При обработке модели произошла ошибка!</strong>
+                {{ bgstate.wtf }}
+            </div>
+        {% elif bgstate.status != 'done' %}
+            <div class="alert alert-info">
+                {{ bgstate.status }}: {{ bgstate.wtf }}
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {% if model_dir %}
+        <table class="table table-bordered table-hover" id="files">
+            <thead class="table-light">
+            <tr>
+                <th></th>
+                <th>Создано</th>
+                <th>Файл</th>
+                <th>Размер</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set total_size = [0] %}
+            {% for entry in model_dir %}
+                <tr data-filename="{{ entry.name }}">
+                    <td>
+                        {% if models_dirname + '/' + entry.name == footage.meta.get('model') %}
+                            <span class="badge bg-success">Модель</span>
+                        {% elif models_dirname + '/' + entry.name == footage.meta.get('mtl') %}
+                            <span class="badge bg-success">MTL</span>
+                        {% elif not bgstate.status == 'processing' and entry.name.lower().endswith('.obj') or entry.name.lower().endswith('.mtl') %}
+                            <a href="#" class="btn btn-default btn-sm action-use">Использовать</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ (entry.stat.st_mtime | sec2datetime)|utcinlocal|humantime(not_today=True) }}
+                    </td>
+                    <td class="t">
+                        {% if entry.is_dir %}<i class="fa fa-folder" title="Директория"></i>{% endif %}
+                        <a href="/assets/{{ footage.files.path }}/{{ models_dirname }}/{{ entry.name }}" class="text-underline-hover">{{ entry.name }}</a>
+                        {% if models_dirname + '/' + entry.name == footage.meta.get('model') %}
+                            <small>(в сжатом виде
+                                весит {{ footage.meta.get('model_size_gz', 0)|filesizeformat }})</small>
+                        {% endif %}
+                    </td>
+                    <td class="text-right">
+                        {{ entry.stat.st_size | filesizeformat }}a
+                    </td>
+                    <td class="b text-nowrap">
+                        {% if not entry.is_dir %}
+                            <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-sm btn-danger" title="Удалить"><i
+                                    class="fa fa-fire"></i></a>
+                        {% endif %}
+                        {% if entry.name.lower().endswith('obj') %}
+                            <a href="#modal-info" data-bs-toggle="modal" class="btn btn-sm btn-info text-light"
+                               title="Информация о модели"><i class="fa fa-info-circle"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {# Жинжа ёбаная!!! #}
+                {% if total_size.append(total_size.pop() + entry.stat.st_size) %}{% endif %}
+            {% endfor %}
+            </tbody>
+            <tfoot class="table-light">
+            <tr>
+                <td colspan="3" class="text-right">Итого:</td>
+                <td class="text-right">{{ total_size[0] | filesizeformat }}</td>
+                <td></td>
+            </tr>
+            </tfoot>
+        </table>
+    {% else %}
+        <div class="alert alert-info">Пуста, как голова твоей бывшей.</div>
+    {% endif %}
+
+
+    <h2>Добавить файлов:</h2>
+    <form method="post" id="form-upload" enctype="multipart/form-data" class="form-horizontal"
+          action="{{ url_for('.footage_model_upload', footage_id=footage.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="row">
+            <div class="col-lg-6 mb-1">
+                <input type="file" name="files" class="form-control" multiple>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <button type="submit" class="btn btn-primary">Загрузить</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-8">
+                <p class="help-block">
+                    <img src="/static/admin/leopold.png" height="96" style="float: left; margin-right: 10px;">
+                    Файлы просто будут загружены в директорию с моделями. Чтобы использовать конкретные .obj- и
+                    .mtl-файлы в туре,
+                    нажмите около них кнопку «Использовать».
+
+                    Существующие файлы перезаписываться не будут. Использование файлов с одинаковым именем, но разным
+                    содержимым не рекомендуется: у пользователей из кешей могут браться устаревшие версии файлов.
+                </p>
+            </div>
+        </div>
+    </form>
+
+    {% if true or bgstate.status != 'processing' %}
+        <h3>Граф достижимости</h3>
+        {% if not footage.meta.get('passways') %}
+            <div class="alert alert-warning">
+                У этой съёмки не вычислен граф достижимости.
+            </div>
+        {% endif %}
+        <form method="post" action="{{ url_for('.footage_passways_recalc', footage_id=footage.id) }}"
+              id="form-passways-recalc">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if footage.meta.get('model') %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="calc_size" checked title="Пересчитывается вес модели">
+                    <span class="form-check-text"> Посчитать вес модели</span>
+                </div>
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="compare"
+                       title="Сравнить существующий граф с записанным, в базу ничего не писать.">
+                    <span class="form-check-text"> Сравнить существующий граф с записанным.</span></div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" name="no_recalc" title="Не считать passways, если они уже есть">
+                    <span class="form-check-text"> Не считать passways.</span>
+                </div>
+                <button type="submit" class="btn btn-warning" title="Пересчитать passways">Пересчитать</button>
+            {% else %}
+                <div class="alert alert-warning">
+                    У этой съёмки отсутствуют файлы модели.
+                </div>
+            {% endif %}
+
+        </form>
+    {% endif %}
+
+
+{% endblock %}
+
+
+{% block tail %}
+    <form method="post" id="form-delete" action="{{ url_for('.footage_model_delete_file', footage_id=footage.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal" id="modal-delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Удалить файл?</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="filename">
+                        Ой, да ладно, удалить файл <code class="filename"></code>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Серьёзно, удаляем</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Ой.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {# модалка#}
+    <div class="modal" id="modal-info">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Информация о модели</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Ясно</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Понятно</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" id="form-use" action="{{ url_for('.footage_model_use', footage_id=footage.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="filename">
+    </form>
+
+    <script type="text/javascript">
+        (function () {
+            var $formRecalc = $('#form-passways-recalc'), $modalUse = $('#modal-use');
+
+            $('#modal-delete').on('shown.bs.modal', function (e) {
+                var filename = $(e.relatedTarget).parents('tr').data('filename');
+                $('#modal-delete .filename').text(filename);
+                $('#form-delete [name=filename]').val(filename);
+            });
+
+            $('#files').on('click', '.action-use', function (e) {
+                e.preventDefault();
+                var filename = $(this).parents('tr').data('filename'), $form = $('#form-use');
+                $form.find('[name=filename]').val(filename).end().submit();
+            });
+
+            let $modalInfo = $('#modal-info');
+            $modalInfo.on('shown.bs.modal', function (e) {
+                let filename = $(e.relatedTarget).parents('tr').data('filename');
+                $modalInfo
+                    .find('.modal-body')
+                    .html('<p class="text-center"><img src="/static/admin/wait.gif"><br><br><em>Я изучаю модель...</em></p>')
+                    .load('{{ url_for('.footage_model_info', footage_id=footage.id) }}' + '?filename=' + filename);
+            });
+        })();
+    </script>
+{% endblock %}

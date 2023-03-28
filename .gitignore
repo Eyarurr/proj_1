@@ -1,0 +1,101 @@
+# Мусор от IDE, GDE, менеджеров пакетов и самого питона
+.idea/
+*.iml
+.DS_Store
+node_modules/
+/visual/static/cache/
+bower_components/
+__pycache__/
+*.pyc
+*.egg-info
+*.egg
+*.pid
+.sass-cache/
+/.cache/
+/cache/
+Thumbs.db
+*.mo
+.coverage
+*.log
+.vscode/
+Session.vim
+yarn.lock
+.eslintcache
+
+# Всякие бинарники, которые ставятся отдельно
+/bin/
+
+# Локальные конфиги
+/visual/config.local.py
+/visual/config.test.py
+
+# Файлы, создаваемые приложением
+/var/
+/var
+/test/var/
+
+# В эту директорию админка помещает файлы для скачивания, например, ZIP-архивы туров и съёмок
+/visual/static/admin/downloads
+
+/visual/static/public/js/base.*
+/visual/static/public/js/main.*
+/visual/static/public/css/bootstrap.*
+/visual/static/public/css/styles.*
+/visual/static/public/css/lk.*
+/visual/static/public/css/pdf*
+/visual/static/public/css/*.min.css
+/visual/static/public/css/blocks/
+/visual/static/public/img/icons.svg
+
+/visual/static/public/player/css/*
+/visual/static/public/player/js/*.js
+/visual/static/public/player/js/main.js
+/visual/static/public/player/js/editable.js
+/visual/static/public/outside/css/*.css
+/visual/static/public/outside/css/*.map
+
+/visual/static/offers/css/*
+/visual/static/offers/js/*
+/visual/static/gallery/js/*
+/visual/static/gallery/css/*
+/visual/static/offers/img/icons.svg
+
+/visual/static/my/dist
+/visual/static/my/buildcache
+
+/visual/static/devcon/build
+/visual/static/devcon/buildcache
+
+/visual/static/bladerunner/build
+/visual/static/bladerunner/buildcache
+
+/visual/static/uploads/
+
+/visual/templates/_pixels_top.html
+/visual/templates/_pixels_bottom.html
+
+# Папка dist для сгенерированных при билде js фалов outside плеера
+/visual/static/public/outside/js
+/visual/static/common/build/
+
+
+# Кэш сгенерированных модулей и фрагменты веб-пакетов, для увеличения скорость сборки
+/visual/static/public/player/buildcache
+/visual/static/common/buildcache
+
+
+# Конфиги
+/conf/
+/biganto.prod
+
+# Player
+# /visual/static/public/player/**/*.sass.d.ts
+
+# robots.txt
+/visual/static/robots.txt
+
+/tests/cov_html/
+/visual/static/public/outside/js/
+/visual/static/public/player/js/
+/visual/static/public/player/buildcache
+/visual/static/common/build/

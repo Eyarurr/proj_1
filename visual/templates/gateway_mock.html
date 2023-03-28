@@ -1,0 +1,14 @@
+{% extends 'prototype.html' %}
+
+
+{% block content %}
+    <h1>Фейковый платёжный шлюз</h1>
+
+    <p>
+        Заплатить {{ price }} EUR?
+    </p>
+    <p>
+        <a href="{{ redirect_ok }}" class="btn btn-success">Заплатить</a>
+        <a href="{{ redirect_fail }}" class="btn btn-danger">Изобразить ошибку</a>
+    </p>
+{% endblock %}

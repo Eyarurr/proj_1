@@ -1,0 +1,622 @@
+{%- from '/macros/favicon.html' import favicon -%}
+{% if tour.title %}
+    {%- set page_title = tour.title + ' - ' + _('Biganto Virtual Tour') -%}
+{% else %}
+    {%- set page_title = _('Biganto Virtual Tour') -%}
+{% endif %}
+
+{% set isNakedMode = request.args.get('interface') == 'off' %}
+{% set hasSplash = tour.meta_full().get('splash')|default(false) %}
+{% set splashImage = ((false if tour.meta_full().get('splash').bg_url == false else
+tour.meta_full().get('splash').bg_url) if tour.meta_full().get('splash').bg_url is defined else true) if hasSplash else
+true %}
+{% set splashColor = (hasSplash and tour.meta_full().get('splash').bg_color) or [41, 35, 35, 1] %}
+{% if splashImage %}
+{%- if splashImage == true -%}
+{%- set splashUrl = tour.meta_full().screen -%}
+{%- else -%}
+{%- set splashUrl = tour.meta_full().tour_baseurl + splashImage -%}
+{% endif %}
+{% endif %}
+
+{#
+    Иконка карандаша
+    @param {string} cl - классы
+    @param {string} title - тайтл
+#}
+{%- macro iconPencil(cl, title) -%}
+    <svg width="18" height="18" viewBox="0 0 678.955 678.95"{% if title %} title="{{ title }}"{% endif %}{% if cl %} class="{{ cl }}"{% endif %}><path d="M233.963,619.213c.723-.723,416.172-416.159,439.689-439.659a18,18,0,0,0,5.3-12.763C678.955,74.825,604.121,0,512.164,0a18.065,18.065,0,0,0-12.771,5.293c-4.017,4.017-19.484,19.5-42.386,42.385,0,.009-.018.018-.018.026-.018.009-.018.018-.018.026C345.9,158.8,60.336,444.361,59.737,444.96a18.028,18.028,0,0,0-4.686,8.1L.618,656.243a18.033,18.033,0,0,0,22.09,22.091L225.859,623.9A18.036,18.036,0,0,0,233.963,619.213ZM519.44,36.281A130.893,130.893,0,0,1,642.666,159.515c-5.249,5.25-13.529,13.539-24.169,24.17l-61.6-61.6v-.009l-.018-.009L495.253,60.458C505.893,49.819,514.19,41.539,519.44,36.281Zm-49.7,49.7,48.885,48.859L146.842,506.6,97.983,457.733C152.338,403.378,366.548,189.19,469.745,85.976ZM114.138,616.491,62.46,564.814l19.352-72.227L186.347,597.14Zm58.2-84.382,371.8-371.765,48.85,48.85C489.774,312.4,275.556,526.6,221.192,580.968Z"/></svg>
+{%- endmacro -%}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{{ page_title }}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        {%- if tour.screen -%}
+            {%- set meta_image = tour.screen.url|absurl -%}
+        {%- else -%}
+            {%- set meta_image = url_for('static', filename='public/img/share/logo1.png', _external=True) -%}
+        {%- endif %}
+
+        <meta property="og:title" content="{{ page_title }}" />
+        <meta property="og:image" content="{{ meta_image }}" />
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ page_title }}">
+        <meta name="twitter:description" content="{{ tour.title }}">
+        <meta name="twitter:image" content="{{ meta_image }}">
+
+        <link rel="preload" href="/static/public/player/img/marker.png" as="image">
+        <link rel="preload" href="/static/public/player/img/marker--current.png" as="image">
+        <link rel="preload" href="/static/public/player/img/cursor.png" as="image">
+        <link rel="preload" href="/static/public/player/img/cursor--x.png" as="image">
+        <link rel="preload" href="/static/public/player/img/label.png" as="image">
+        <link rel="preload" href="/static/public/player/img/label--hover.png" as="image">
+
+        {{- favicon() -}}
+
+        <link rel="stylesheet" type="text/css" href="/static/public/player/css/styles.css?{{ config.get('RELEASE_VERSION') }}">
+        <link rel="stylesheet" type="text/css" href="/static/public/player/css/main.css?{{ config.get('RELEASE_VERSION') }}">
+        <script>
+
+            {# Тут инициализируется глобальная переменная current_user с тем же содержимым, как если бы обратились к методу API `GET /my` #}
+            {% if not current_user.is_authenticated %}
+                var current_user = {
+                    is_authenticated: false,
+                    name: ''
+                }
+            {% else %}
+                var current_user = {{ current_user.current_user_api_repr(is_authenticated=True) | tojson }}
+            {% endif %}
+            
+            const TOUR_LANG = "{{ g.lang }}";
+
+            const LANGUAGES = {{ config.get('LANGUAGES').items() | tojson }};
+
+            var STAT_SESSION = '{{ session.session_key or '' }}',
+                HIT_TIME = {{ config.get('PLAYER_HIT_TIME') }},
+                STAT_HIT = "{% if tour.id %}{{ url_for('front.tour_stat_hit', tour_id=tour.id) }}{% endif %}",
+                STAT_ACTION = "{% if tour.id %}{{ url_for('front.tour_stat_action', tour_id=tour.id) }}{% endif %}",
+                TOUR_IN_EDIT_MODE = false,
+                {# тур попадает в открытый доступ только при статусе `published` #}
+                IS_READY = {{ tour.showable|lower }},
+                UPSCALE_UNDESIRABILITY = '{{ config.get("UPSCALE_UNDESIRABILITY") }}',
+
+                Tour = {{ tour.meta_full()|tojson }},
+                PAID_FEATURES = {
+                    branding: {
+                        price: {{ config['PAID_FEATURES']['branding']['price'] }},
+                        notAvailableAtPlans: {{ config['PAID_FEATURES']['branding']['not_available_at_plans']|tojson }},
+                    },
+                },
+
+                MESSAGES = {
+                ADD_TO_SELECTED_OBJECT: "{{ _("Add to selected object") }}",
+                CLONE: "{{ _("Clone") }}",
+                DELETE_FROM_TOUR: "{{ _("Delete from tour") }}",
+                REMOVE_FROM_SELECTED_OBJECT: "{{ _("Remove from selected object") }}",
+                TOUR_NOTE: "{{ _("Tour note") }}",
+                NOTES: "{{ _("Notes") }}",
+                FLOORS: "{{ _("Floors") }}",
+                ALL_FLOORS: "{{ _("All floors") }}",
+                FLOOR: "{{ _("Floor") }}",
+                ENTER_EMAIL_TITLE: "{{ _("Enter email") }}",
+                ENTER_EMAIL_TEXT: "{{ _("Please, enter the email we should send shopping list to:") }}",
+                SEND_PRICES_BUTTON: "{{ _("Send") }}",
+                SEND_PRICES_SUCCESS: "{{ _("Shopping list was sent to your email!") }}",
+
+                LINK_ON_THE_TOUR: "{{ _("Link on the tour") }}",
+                MAGIC_LINK_ON_THE_TOUR: '{{ _("Magic link on the tour") }}',
+                MAGIC_LINK_ON_THE_PLACE_IN_THE_TOUR: '{{ _("Magic link on this place in the tour") }}',
+                DEVCON_LINK_ON_THE_TOUR: '{{ _("DevCon link on the tour") }}',
+                DEVCON_LINK_ON_THE_PLACE_IN_THE_TOUR: '{{ _("DevCon link on this place in the tour") }}',
+                LINK_ON_THE_PLACE_IN_THE_TOUR: "{{ _("Link on this place in the tour") }}",
+                QR_CODES: "{{ _("QR codes") }}",
+                QR_CODE_TOUR: "{{ _("QR code for tour") }}",
+                QR_CODE_PLACE: "{{ _("QR code for this place") }}",
+                LOAD: "{{ _("Error has occurred while downloading the virtual tour.") }}",
+                DEFAULT: "{{ _("Unfortunately the server is temporarily not available. Please, try again later.") }}",
+                HTML_GET_ERROR: "{{ _("Requested resource can not be accessed. Url is not correct, target web page is not working or not allowed to share its content.") }}",
+                HTML_GET_CORS_ERROR: "{{ _("Target website denied access due to its CORS policy (Cross-Origin Resource Sharing). In order to use this URL in a tour, please contact the target website administration.") }}",
+                ERROR: "{{ _("Error") }}",
+                ERROR_OFFLINE: "{{ _("Please check your network connection and try again.") }}",
+                ERROR_NOT_AUTHORIZED: "{{ _("You have attempted to access a page for which you are not authorized. Please <a href='/my/login/'>login</a>.") }}",
+                ERROR_PERMISSION: "{{ _("You don't have permission to access on this server.") }}",
+                ERROR_400: "{{ _("Server cannot process the request.") }}",
+                ERROR_UNEXPECTED: "{{ _("An unexpected error occurred. Changes could not be saved.") }}",
+                ERROR_WALK_DEFAULT: "{{ _("Error playing route.") }}",
+                QUERY_FAIL: "{{ _("Action failed.") }}",
+                QUERY_SUCCESS: "{{ _("Changes saved.") }}",
+                SCREENSHOT_SAVE: "{{ _("Save picture on disk.") }}",
+                SCREENSHOT_ERROR: "{{ _("Failed to download an image. Try again later.") }}",
+                SCREENSHOT_SUCCESS: "{{ _("Screenshot saved.") }}",
+                SUPPORT_WEBGL_CARD: "{{ _("Unfortunately, your video card doesn't support WebGL. Please, follow the link to learn details.") }}",
+                SUPPORT_WEBGL_BROWSER: "{{ _("Unfortunately, your web browser doesn't support WebGL. Please, follow the link to learn details.") }}",
+                SUPPORT_WEBGL_BUTTON: "{{ _("More details") }}",
+                DOLLHOUSE_CONTROL: "{{ _("Drag mouse for rotating model, move with a right button or with an Alt button.") }}",
+                DOLLHOUSE_CONTROL_GETSTURE: "{{ _("Drag mouse for rotating model, move with an Alt button.") }}",
+                DOLLHOUSE_FAIL: "{{ _("Error loading 3D panorama. Try again later.") }}",
+                UNITS_MM: "{{ _("mm") }}",
+                JOINT_ACTION_NOT_ALLOWED: "{{ _("Action not allowed in joint mode") }}",
+                JOINT_FOLLOWING_ACTION_NOT_ALLOWED: "{{ _("Action not allowed in following mode") }}",
+
+                TOUR_BEGINNING_WAS_SET: "{{ _("Tour beginning was set") }}",
+
+                TOUR_LOADING: "{{ _("You can look around, while tour is loading") }}",
+                TOUR_LOADED: "{{ _("Tour is loaded, now you can move around") }}",
+                DOLLHOUSE_LOADING: "{{ _("Loading 3D panorama") }}",
+                SKYBOX_QUALITY_AUTO: "{{ _("Auto") }}",
+                GO_TO_POINT: "{{ _("Go to point") }}",
+                CANCEL: "{{ _("Cancel") }}",
+                COPY: "{{ _("Copy") }}",
+                DISABLED_FEATURE: "{{ _("Feature is not available in this tour") }}",
+                RESET_ZOOM: "{{ _("Reset Zoom") }}",
+                SCROLL_ZOOM: "{{ _("+ Scroll to Zoom in/out") }}",
+                ZOOM_IN_OUT: "{{ _("Scroll to Zoom in/out") }}",
+                ONLY_FOR_LEADER: "{{ _("Only for room leader") }}",
+                DISABLED_IN_JOINT: "{{ _("Unavailable in joint view") }}",
+                SWAP_TOURS: "{{ _("Swap tours") }}",
+
+                {# Служебные сообщения не переводим. #}
+                PASSWAYS_SUCCESS: 'Граф достижимости успешно сохранен.',
+                PASSWAYS_ERROR: 'Не удалось сохранить граф достижимости. Пожалуйста, повторите попытку позже.',
+                WRONG_SKYBOX: 'Неудалось найти скайбокс с таким id',
+                {# Режим редактирования #}
+                SET: "{{ _("Set") }}",
+                CURRENT_WINDOW: "{{ _("Open in current window") }}",
+                PARENT_WINDOW: "{{ _("Open in parent window") }}",
+                NEW_WINDOW: "{{ _("Open in new one window") }}",
+                POPUP_STANDART: "{{ _("Standart") }}",
+                HTML_CODE: "{{ _("HTML-code") }}",
+                POPUP_HTML_GET: "{{ _("Url") }}",
+                POPUP_HTML_GET_PLACEHOLDER: "{{ _("Enter target URL here. Keep in mind that not all websites allow external access. Usually this is regulated by target website\'s CORS policy (Cross-Origin Resource Sharing)") }}",
+                BUTTONS: "{{ _("Buttons") }}",
+                SIZES: "{{ _("Sizes") }}",
+                BACKGROUND_COLOR: "{{ _("Background color") }}",
+                UPLOAD_IMAGE: "{{ _("Upload image") }}",
+                CHOOSE_FILE: "{{ _("Choose file") }}",
+                FILE_UPLOADING: "{{ _("File uploading") }}",
+                FILE_UPLOADED: "{{ _("Uploaded") }}",
+                LOADING_INTERRUPTED: "{{ _("File upload was interrupted, action not saved.") }}",
+                ADD: "{{ _("ADD") }}",
+                DESCRIPTION: "{{ _("Description") }}",
+                HOVER_HINT: "{{ _("Hover hint") }}",
+                NAME: "{{ _("Name") }}",
+                COLOR: "{{ _("Color") }}",
+                GREEN: "{{ _("Green") }}",
+                RED: "{{ _("Red") }}",
+                GREY: "{{ _("Grey") }}",
+                COLOR_ON_HOVER: "{{ _("Color on hover") }}",
+                MODE: "{{ _("Mode") }}",
+                HIDE_CURSOR: "{{ _("Hide cursor on hover") }}",
+                REGULAR: "{{ _("Regular") }}",
+                INTERACTIVE: "{{ _("Interactive") }}",
+                OR: "{{ _("Or") }}",
+                WIDTH: "{{ _("Width") }}",
+                BORDER: "{{ _("Border") }}",
+                SIZE: "{{ _("Size") }}",
+                USE_HOVER_IMAGE: "{{ _("Use hover image") }}",
+                PERSPECTIVE: "{{ _("Perspective") }}",
+                SHOW_IN_DOLLHOUSE: "{{ _("Show in 3d panorama mode") }}",
+                FACE_TO_CAMERA: "{{ _("Face to camera") }}",
+                LINE_COLOR: "{{ _("Line color") }}",
+                SHOW_ARROWS: "{{ _("Show arrows") }}",
+                ARROW_COLOR: "{{ _("Arrow color") }}",
+                ACTIONS: "{{ _("Actions") }}",
+                ACTION: "{{ _("Action") }}",
+                ADD_NEW_BUTTON: "{{ _("Add new button") }}",
+                CREATE_NEW_ACTION: "{{ _("Create new") }}",
+                ADD_EXISTING_ACTION: "{{ _("Add existing") }}",
+                ADD_EXISTING_ACTION_TOOLTIP: "{{ _("Adds existing action to overlay. Changes to this action will affect all related overlays") }}",
+                CLONE_EXISTING_ACTION: "{{ _("Clone existing") }}",
+                CLONE_EXISTING_ACTION_TOOLTIP: "{{ _("Creates a copy of existing action and adds it to this overlay. Existing action and its copy can be edited independently") }}",
+                SELECT_ACTION: "{{ _("Select action") }}",
+                ALL_ACTIONS: "{{ _("All actions") }}",
+                SELECT_EXISTING_BUTTON: "{{ _("Select existing button") }}",
+                SELECT_BUTTON: "{{ _("Select button") }}",
+                ALL_BUTTONS: "{{ _("All buttons") }}",
+                COORDINATES: "{{ _("Coordinates") }}",
+                CAPTION: "{{ _("Caption") }}",
+                START_TOUR_HERE: "{{ _("Start tour here") }}",
+                TOUR_STARTS_HERE: "{{ _("Tour starts here") }}",
+                CREATE_TOUR_COVER: "{{ _("Create tour cover") }}",
+                NAVIGATOR: "{{ _("Navigator") }}",
+                ICON: "{{ _("Icon") }}",
+                SMALL: "{{ _("Small") }}",
+                EXPANDED: "{{ _("Expanded") }}",
+                COLLAPSED: "{{ _("Collapsed") }}",
+                BIG: "{{ _("Big") }}",
+                BUTTON_NAME: "{{ _("Button name") }}",
+                CLASS: "{{ _("Class") }}",
+                NEW_BUTTON: "{{ _("New button") }}",
+                BUTTON: "{{ _("Button") }}",
+                DISCARD: "{{ _("Discard") }}",
+                SAVE: "{{ _("Save") }}",
+                ADD_TO_NAVIGATOR: "{{ _("Add to navigator") }}",
+                OBJECTS: "{{ _("Objects") }}",
+                MESHES: "{{ _("Meshes") }}",
+                PAUSE_ROUTE: "{{ _("Pause route") }}",
+                PLAY_ROUTE: "{{ _("Play route") }}",
+                CLEAR_PAUSES: "{{ _("Clear pauses") }}",
+                SAVE_ROUTE: "{{ _("Save route") }}",
+                DELETE_ROUTE: "{{ _("Delete route") }}",
+                DISCARD_ROUTE: "{{ _("Discard changes") }}",
+                RECORD_ROUTE: "{{ _("Record route") }}",
+                SAVING: "{{ _("Saving") }}",
+                START_RECORDING: "{{ _("Start recording") }}",
+                PAUSE_RECORDING: "{{ _("Pause recording") }}",
+                RESUME_RECORDING: "{{ _("Resume recording") }}",
+                TURN: "{{ _("TURN") }}",
+                CURSOR_COLOR: "{{ _("Cursor color") }}",
+                FONT_COLOR: "{{ _("Font color") }}",
+                MARKERS_COLOR: "{{ _("Markers color") }}",
+                INTERACTIVE_OBJECT_COLOR: "{{ _("Interactive object color") }}",
+                PANORAMA_BACKGROUND_COLOR: "{{ _("3D panorama background color") }}",
+                MAP_DISPLAY_STATUS: "{{ _("Map display status at start") }}",
+                NAV_DISPLAY_STATUS: "{{ _("Navigator display status at start") }}",
+                BORDER_RADIUS: "{{ _("Border radius") }}",
+                SQUARE: "{{ _("Square") }}",
+                PADDING: "{{ _("Padding") }}",
+                OUTLINE_WIDTH: "{{ _("Outline width") }}",
+                OUTLINE_COLOR: "{{ _("Outline color") }}",
+                BILLBOARD: "{{ _("Face to camera") }}",
+                LOCK_Z_AXIS: "{{ _("Lock Z axis") }}",
+                INSERT: "{{ _("insert") }}",
+                TEXT: "{{ _("Text") }}",
+                IMAGE: "{{ _("Image") }}",
+                LINE: "{{ _("Line") }}",
+                POLYLINE: "{{ _("Line") }}",
+                POLYGON: "{{ _("Polygon") }}",
+                ELLIPSE: "{{ _("Ellipse") }}",
+                RECTANGLE: "{{ _("Rectangle") }}",
+                NAVIGATION: "{{ _("Navigation") }}",
+                TOUR_OPTIONS: "{{ _("Tour options") }}",
+                PREVIEW: "{{ _("Preview") }}",
+                MOVE: "{{ _("Move") }}",
+                ROTATE: "{{ _("Rotate") }}",
+                SCALE: "{{ _("Scale") }}",
+                DUPLICATE: "{{ _("Duplicate") }}",
+                DELETE: "{{ _("Delete") }}",
+                UNSAVED_CHANGES: "{{ _("Do you want to save unsaved changes?") }}",
+                DISCARD_CHANGES: "{{ _("Discard changes") }}",
+                SAVE_CHANGES: "{{ _("Save changes") }}",
+                POINTS: "{{ _("Points") }}",
+                POINT: "{{ _("Point") }}",
+                SAVE_POINT: "{{ _("Save point") }}",
+                ADD_NEW: "{{ _("+ Add new") }}",
+                SELECT_EXISTING: "{{ _("+ Select existing") }}",
+                DELETE_OBJECT: "{{ _("Delete object") }}",
+                DISCARD_OBJECT_CHANGES: "{{ _("Discard object changes") }}",
+                SAVE_OBJECT_CHANGES: "{{ _("Save object changes") }}",
+                NEW_ACTION: "{{ _("New action") }}",
+                GO_TO_TOUR: "{{ _("Go to another tour") }}",
+                GO_TO_POINT: "{{ _("Go to point") }}",
+                OPEN_POPUP: "{{ _("Open popup") }}",
+                OPEN_LINK: "{{ _("Open link") }}",
+                PLAY_VIDEO: "{{ _("Play video") }}",
+                PLAY_AUDIO: "{{ _("Play audio") }}",
+                SWITCH_SHADES: "{{ _("Switch shades") }}",
+                ACTION_NAME: "{{ _("Action name") }}",
+                ACTION_TYPE: "{{ _("Action type") }}",
+                LIBRARY_TITLE: "{{ _("Image library") }}",
+                LIBRARY_RECENTLY_USED:  "{{ _("Recently used") }}",
+                LIBRARY_ADD:  "{{ _("Add image") }}",
+                LIBRARY_ALL:  "{{ _("All") }}",
+                LIBRARY_DROP:  "{{ _("Drop files here") }}",
+                DELETE_ACTION_TITLE: "{{ _("Are you sure?") }}",
+                DELETE_ACTION_MESSAGE: "{{ _("You are about to delete an action not only from this object but from the whole tour, action will be removed from all objects.") }}",
+                DELETE_ACTION: "{{ _("Delete action")}}",
+                DELETE_ACTION_FROM_OBJECT: "{{ _("Delete action from object") }}",
+                DELETE_ACTION_FROM_TOUR: "{{ _("Delete action from tour") }}",
+                BEGINNING_OF_TOUR: "{{ _("Beginning of the tour") }}",
+                TOUR: "{{ _("Tour") }}",
+                OPEN: "{{ _("Open") }}",
+                SAVE_CAMERA_POSITION: "{{ _("Save camera position") }}",
+                LINK: "{{ _("Link") }}",
+                TITLE: "{{ _("Title") }}",
+                POPUP_TYPE: "{{ _("Popup type") }}",
+                KEEP_POSITION: "{{ _("Keep position") }}",
+                SHADOWS: "{{ _("Shades") }}",
+                SWITCH_MODE: "{{ _("Switch mode") }}",
+                SELECT_ALL: "{{ _("Select all") }}",
+                DEFAULT_SHADE_TITLE: "{{ _("Default") }}",
+                UNTITLED_SHADE: "{{ _("Untitled") }}",
+                PREV: "{{ _("Previous") }}",
+                NEXT: "{{ _("Next") }}",
+                RANDOM: "{{ _("Random") }}",
+                CYCLE: "{{ _("Cycle") }}",
+                OR_PASTE_LINK: "{{ _("Or paste link") }}",
+                HEADER: "{{ _("Header") }}",
+                CONTENT: "{{ _("Content") }}",
+                POPUP_BODY: "{{ _("Body") }}",
+                CM: "{{ _("cm") }}",
+                NO_OPTIONS: "{{ _("No options") }}",
+                SELECT_TOUR: "{{ _("Select tour") }}",
+                SELECT_ANOTHER_TOUR: "{{ _("Select another tour") }}",
+                MY_TOURS: "{{ _("My tours") }}",
+                VIEW_TOUR: "{{ _("View") }}",
+                TOUR_URL: "{{ _("Tour url") }}",
+                UNTITLED_TOUR: "{{ _("Untitled") }}",
+                // statuses
+                loading: "{{ _("loading") }}",
+                enqueued: "{{ _("in a queue") }}",
+                processing: "{{ _("processing") }}",
+                testing: "{{ _("testing") }}",
+                published: "{{ _("published") }}",
+                banned: "{{ _("banned") }}",
+                hidden: "{{ _("hidden") }}",
+                LOADING: "{{ _("Loading") }}",
+                ANONYMOUS: '{{ _("Anonymous") }}',
+                FILTERS_TITLE: '{{ _("Filters") }}',
+                RESET_ALL: '{{ _("Reset all") }}',
+                SHOWING_RESULTS: "{{ _("Showing {count, number} {count, plural, =1 {result} other {results}}") }}",
+                NO_RESULT: '{{ _("No results") }}',
+                SELECT_ANY: '{{ _("None selected") }}',
+                VR_MODAL_MESSAGE: '{{ _("You have entered VR mode of a 3D tour, please use compatible virtual reality headset. To walk around the space, look at the point you want to go for a moment. Press «OK» and insert your smartphone into the headset when ready.")}}',
+                VR_MODAL_SUBMIT: '{{ _("Continue") }}',
+                VR_MODAL_DECLINE: '{{ _("Cancel") }}',
+                OK: '{{ _("Ok") }}',
+                NO_SUPPORT_WEBM_VIDEO: '{{ _("Your browser does not support webm video format") }}',
+
+                CLEAR_ALL_RULERS: '{{ _("Clear all rulers") }}',
+                DELETE_ALL_RULERS: '{{ _("Delete all rulers?") }}',
+                CANCEL: '{{ _("Cancel") }}',
+                COPIED_TO_CLIPBOARD: '{{ _("Copied to clipboard") }}',
+                REGULAR_LINK: '{{ _("Regular link") }}',
+                MAGIC_LINK: '{{ _("Magic link") }}',
+                DEVCON_LINK: '{{ _("DevCon") }}',
+                USER_REQUIRE_PASSWORD: '{{ _("User will require password to enter.") }}',
+                USER_REQUIRE_NO_PASSWORD: "{{ _("Instead of entering a password, users can access the tour using a special link with a password embedded in the link. However, if you change the password the link will change as well and the old one will no longer be valid. While this feature is active, all users accessing the tour using a regular link should provide the password before accessing the tour.") }}",
+                USER_REQUIRE_DEVCON: "{{ _("User must be a registered member of this project to enter") }}",
+                NO_SPLIT: '{{ _("No split") }}',
+                VERTICAL_SPLIT: '{{ _("Vertical split") }}',
+                HORIZONTAL_SPLIT: '{{ _("Horizontal split") }}',
+
+                UNABLE_LOAD_OVERLAYS: '{{ _("Unable to load some overlays, overlay image is likely missing") }}',
+                PICK_MESH: '{{ _("Pick mesh") }}',
+                };
+
+            {# путь до бандла плеера #}
+            var XHR_REQUEST = new XMLHttpRequest();
+            XHR_REQUEST.open('GET', '/static/public/player/js/{{ bundle }}.js?{{ config.get("RELEASE_VERSION") }}', true);
+            {# Размер бандла, если сервер не вернул его при загрузке в Content-Lentgh, используется в start.js для прогрессбара #}
+            var BUNDLE_SIZE = {{ static_filesize(url_for('static', filename='public/player/js/' + bundle + '.js')) }};
+
+            var TOOLBAR_HELP = [
+                    {
+                        name: 'help',
+                        title: "{{ _("Help") }}",
+                    }
+                ],
+                TOOLBAR_FULLSCREEN = [
+                    {
+                        name: 'fullscreen',
+                        title: "{{ _("Full screen") }}",
+                    },
+                    {
+                        name: 'fullscreen',
+                        title: "{{ _("Quit a full screen format") }}",
+                    }
+                ],
+                TOOLBAR_MODE = [
+                    {
+                        name: 'dollhouse',
+                        title: "{{ _("3D panorama") }}",
+                    },
+                    {
+                        name: 'dollhouse',
+                        title: "{{ _("Back to tour") }}",
+                    }
+                ],
+                TOOLBAR_NAVIGATOR = [
+                    {
+                        name: 'navigator',
+                        title: "{{ _("Navigator") }}",
+                    }
+                ];
+
+            var LIB_LABELS = [
+                {
+                    id: 1,
+                    default: 'disk_red.png',
+                    hover: 'disk_red_hover.png',
+                    size: 34,
+                    perspective: false
+                },
+                {
+                    id: 2,
+                    default: 'tag_red.png',
+                    hover: 'tag_red_hover.png',
+                    size: 34,
+                    perspective: false
+                },
+                {
+                    id: 3,
+                    default: 'info_red.png',
+                    size: 34,
+                    perspective: false
+                },
+                {
+                    id: 4,
+                    default: 'door_green.png',
+                    hover: 'door_green_hover.png',
+                    size: 10,
+                    perspective: true
+                }
+            ];
+
+            var HELP_POPUP = {
+                mouseControlDesc: '{{ _("Look around: use a mouse or I, J, K, L buttons") }}',
+                keyControlDesc: '{{ _("Walk by using W, A, S, D or arrow buttons") }}',
+                keyControlDescWithScroll: '{{ _("Walk by using W, A, S, D, arrow buttons or ") }}',
+                scrollControlDesc: '{{ _("scroll") }}',
+                centerView: '{{ _("Center view") }}',
+                linkTour: '{{ _("Tour link") }}',
+                forActiveSubscriptions: '{{ _("(Only for active subscriptions)") }}',
+                measurementTape: '{{ _("Measurement tape") }}',
+                screenshot: '{{ _("Make a screenshot") }}',
+                walkthrough: '{{ _("Play prerecorded route") }}',
+                sound: '{{ _("Sound on/off") }}',
+                joint: '{{ _("Joint viewing") }}',
+                quality: '{{ _("Select graphics quality") }}',
+                navigator: '{{ _("Toggle navigation bar") }}',
+                dollhouse: '{{ _("Enter 3D panorama") }}',
+                multitour: '{{ _("Toggle multitour menu") }}',
+                minimap: '{{ _("Toggle minimap") }}',
+                fullscreen: '{{ _("Fullscreen") }}',
+                tourNavigation: '{{ _("Tour navigation") }}',
+                functions: '{{ _("Features") }}',
+                or: '{{ _("or") }}',
+                vr: '{{ _("VR mode") }}',
+                gyro: '{{ _("View by gyroscope") }}'
+            };
+
+            var CREATE_JOINT_ROOM_POPUP = {
+                title: '{{ _("Joint viewing") }}',
+                description:' {{ _("Explore the tour together with your family, friends or clients. Follow the leader, lead your guests, select your own path and use chat to communicate. Private room will be created in a new window.") }}',
+                roomName: '{{ _("Room name") }}',
+                roomNamePlaceholder: '{{ _("Enter your room name") }}',
+                passwordProtectedRoom: '{{ _("Password protected room") }}',
+                passwordProtectedRoomPlaceholder: '{{ _("No password") }}',
+                useTourPassword: '{{ _("Use tour password") }}',
+                setCustomPassword: '{{ _("Set custom password") }}',
+                username: '{{ _("Username") }}',
+                usernamePlaceholder: '{{ _("Enter your username") }}',
+                createNewRoom: '{{ _("Create new room") }}',
+            };
+
+            var TOOLBAR_TOOLTIPS = {
+                multitour: '{{ _("Multitour") }}',
+                quality: '{{ _("Quality") }}',
+                plan: '{{ _("Plan") }}',
+                roulette: '{{ _("Tape measure") }}',
+                joint: '{{ _("Joint viewing") }}',
+                walkOn: '{{ _("Play prerecorded route") }}',
+                walkOff: '{{ _("Stop prerecorded route") }}',
+                audioOn: '{{ _("Sound on") }}',
+                audioOff: '{{ _("Sound off") }}',
+                addPoint: '{{ _("Add point") }}',
+                movePoint: '{{ _("Move point") }}',
+                removePoint: '{{ _("Remove point") }}',
+                SHPerimeter: '{{ _("Show/hide perimeter") }}',
+                MISystem: '{{ _("Metric/Imperial system") }}',
+            };
+
+            var TOUR_ID = {{ tour.meta_full().id }};
+            var TOUR_SPLASH_IMAGE = '{{ splashUrl }}';
+            var TOUR_SPLASH_COLOR = {{ splashColor }};
+        </script>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% block content %}
+        <main id='ui-container' class='main-container prevent-animation'>
+            <aside id='left-sidebar' class='main-container__left-sidebar'>
+            </aside>
+
+            <div id='content-container' class='main-container__content'>
+                <header id='header-container' class='main-container__header'></header>
+                <div id='player-root' class="b-page b-page--{{ bundle }}" data-csrf="{{ csrf_token() }}">
+                    <div class="b-page__render" id="container"></div>
+                    <div id="player-ui"></div>
+
+                    {# параметры заставки #}
+                    {% set hasSplash = tour.meta_full().get('splash')|default(false) %}
+                    {% set splashImage = ((false if tour.meta_full().get('splash').bg_url == false else tour.meta_full().get('splash').bg_url) if tour.meta_full().get('splash').bg_url is defined else true) if hasSplash else true %}
+                    {% set splashColor = (hasSplash and tour.meta_full().get('splash').bg_color) or [41, 35, 35, 1] %}
+                    {% set splashProgress = (false if tour.meta_full().get('splash').progress == false else true) if hasSplash else true %}
+
+                    {# оверлей #}
+                    <div id="overlay"
+                        class="b-overlay b-overlay--init{% if splashImage %} b-overlay--preview{% endif %}"
+                        style="
+                            {%- if splashImage -%}
+                                background-image: url({%- if splashImage == true -%}{{ tour.meta_full().screen }}{%- else -%}{{ tour.meta_full().tour_baseurl }}{{ splashImage }}{%- endif -%});
+                            {%- endif -%}
+                            {%- if splashColor -%}background-color: rgba{{ splashColor[0], splashColor[1], splashColor[2], splashColor[3] }};{%- endif -%}
+                        "></div>
+
+                    <div class="b-message" id="message">
+                        <div class="b-message__cell">
+                            <div class="b-message__loader">
+                                <div class="preloading is-static" id="message-loader">
+                                    <div class="preloading__inner">
+                                    <svg class="b-message__loader-icon" height="100" width="100">
+                                        <defs>
+                                            <circle id="circle" cx="50" cy="50" r="49" />
+                                            <circle id="circle2" cx="50" cy="50" r="45" />
+                                        </defs>
+                                        <g>
+                                            <use xlink:href="#circle"  fill="#000000" fill-opacity="0.64" />
+                                            <use id="preloader" xlink:href="#circle2" stroke="#7ed321" stroke-width="9" stroke-dasharray="283"  stroke-dashoffset="283" fill="none" />
+                                        </g>
+                                    </svg>
+                                    <div class="b-message__progress"></div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="b-message__content is-hidden"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <aside id='right-sidebar' class='main-container__right-sidebar'>
+            </aside>
+        </main>
+
+        {# лоадер #}
+        <div id="loader-fly" class="preloading{% if tour.meta_full().get('options', {}).get('skybox_preloader')|string|lower in ['false', '0'] %} is-hidden{% endif %}" style="display: none;">
+            <svg class="preloading__ico" x="0" y="0" width="50" height="50" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                <path d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"></path>
+            </svg>
+        </div>
+
+
+        {% if not isNakedMode %}
+            {# вывод флешей #}
+            {% for category, messages in flashes().items() %}
+                <div class="b-topline">
+                    <ul class="b-topline__flashes">
+                        <li class="b-topline__flashes-item">{{ messages | join('</li><li class="b-topline__flashes-item">') | safe }}</li>
+                    </ul>
+                    <div class="b-topline__close">&times;</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {# селект выбора этажа - используется в dollhouse режиме #}
+        <div id="bottom" class="b-bottom">
+            <div class="b-bottom__floors">
+
+            </div>
+        </div>
+        {% endblock %}
+
+        {% block body_scripts %}
+        {#
+            У разных режимов плеера своя логика инициализации, в некоторых случая может использоваться темплейт другого
+            режима.
+            Функция инициализации режима записывается в глобальную переменную.
+            Если было загружено несколько режимов, то будет использоваться функциа инициализации последнего загруженного
+            режима.
+        #}
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                window.init();
+            });
+        </script>
+        {% endblock %}
+
+    {% block init_script %}
+        {# проверка поддержки WebGL и загрузка бандла плеера #}
+        <script src="/static/public/player/js/start.js?{{ config.get('RELEASE_VERSION') }}"></script>
+    {% endblock %}
+
+    </body>
+</html>

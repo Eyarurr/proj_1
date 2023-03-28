@@ -1,0 +1,165 @@
+{% macro tariff_modals() %}
+<script type="text/template" class="template-modal" id="tmpl__tariff-buy">
+    <div class="b-overlay">
+        <div class="modal-custom">
+            <div class="modal-custom__inner">
+                <div class="modal-custom__header">
+                    <div class="modal-custom__close">
+                        <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use>
+                        </svg>
+                    </div>
+                    <div class="modal-custom__title">
+                        <%= rc.title || '' %>
+                    </div>
+                </div>
+                <div class="modal-custom__content">
+                    <form class="tariff-buy" method="post" action="{{ url_for('virtoaster.plan_buy') }}">
+                        <div class="tariff-buy__section tariff-buy__errors"></div>
+                        <div class="tariff-buy__section">
+                        </div>
+                        <ul class="tariff-buy__section tariff-buy__section--text-column">
+                            <% if (rc.action === 'upgrade') { %>
+                                <li class="tariff-buy__footnote">{{ _("Unused time on Virtoaster will be stored on your user balance and will be accounted for when calculating cost of the following subscriptions. Your plan will be updated shortly.")}}</li>
+                                <li class="tariff-buy__footnote tariff-buy__footnote--with-margin">{{ _("Please update your <a  href='%(url_user_settings)s'>Payment Details</a> if you want to change payment method.", url_user_settings=url_for('my.index', path='settings/payment')) }}</li>
+                                <li class="tariff-buy__footnote tariff-buy__footnote--with-margin">{{ _("Plus and Business plans are available to legal entities only, you will be asked to fill in your Tax number if it was not specified before") }}</li>
+                            <% } else { %>
+                                <li class="tariff-buy__footnote">{{ _("Please update your <a  href='%(url_user_settings)s'>Payment Details</a> if you want to change payment method.", url_user_settings=url_for('my.index', path='settings/payment')) }}</li>
+                            <% } %>
+
+                            <div class="tariff-buy__value tariff-buy__period"></div>
+                        </ul>
+                        <div class="tariff-buy__submit clearfix">
+                            <button type="submit" class="button fill blue tariff-buy__button">
+                                <svg viewBox="0 0 50 50" class="button__spinner">
+                                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="3"
+                                            stroke="currentColor"></circle>
+                                </svg>
+                                <span class="button__text">{{ _("Proceed") }}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" class="template-modal" id="tmpl__tariff-downgrade">
+    <div class="b-overlay">
+        <div class="modal-custom">
+            <div class="modal-custom__inner">
+                <div class="modal-custom__header">
+                    <div class="modal-custom__close">
+                        <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use>
+                        </svg>
+                    </div>
+                    <div class="modal-custom__title">
+                        <%= rc.title || '' %>
+                    </div>
+                </div>
+                <div class="modal-custom__content">
+                    <form class="tariff-buy" method="post" action="{{ url_for('virtoaster.plan_buy') }}">
+                        <div class="tariff-buy__section tariff-buy__errors"></div>
+                        <ul class="tariff-buy__section tariff-buy__section--text-column">
+                            <% if (rc.action === 'downgrade') { %>
+                            <li class="tariff-buy__footnote">{{ _("Unused time on Virtoaster will be stored on your user balance and will be accounted for when calculating cost of the following subscriptions. Your plan will be updated shortly.")}}</li>
+                            <li class="tariff-buy__footnote tariff-buy__footnote--with-margin">{{ _("Please update your <a  href='%(url_user_settings)s'>Payment Details</a> if you want to change payment method.", url_user_settings=url_for('my.index', path='settings/payment')) }}</li>
+                            <% } %>
+                        </ul>
+                        <div class="tariff-buy__submit clearfix">
+                            <button type="submit" class="button fill blue tariff-buy__button">
+                                <svg viewBox="0 0 50 50" class="button__spinner">
+                                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="3"
+                                            stroke="currentColor"></circle>
+                                </svg>
+                                <span class="button__text">{{ _("Proceed") }}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" class="template-modal" id="tmpl__tariff-unsubscribe">
+    <div class="b-overlay">
+        <div class="modal-custom">
+            <div class="modal-custom__inner">
+                <div class="modal-custom__header">
+                    <div class="modal-custom__close">
+                        <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use>
+                        </svg>
+                    </div>
+                    <div class="modal-custom__title">
+                        <%= rc.title || '' %>
+                    </div>
+                </div>
+                <div class="modal-custom__content">
+                    <form class="tariff-buy" method="post" action="{{ url_for('.plan_buy') }}">
+                        <div class="tariff-buy__section tariff-buy__errors"></div>
+                        <div class="tariff-buy__section">
+                            <% if (rc.action === 'unsubscribe') { %>
+                            <div>
+                                <p class="tariff-buy__label">{{ _("Are you sure you want to cancel your subscription?") }}
+                                </p>
+                                <div>{{ _("<span class='warning'>Important: </span> subscription will be cancelled in the end of prepaid period. Your tours will be stored for 6 months after subscription exipiry.") }}</div>
+                            </div>
+                            <% } %>
+                        </div>
+                        <div class="tariff-buy__submit clearfix">
+                            <button type="submit" class="button fill blue tariff-buy__button">
+                                <svg viewBox="0 0 50 50" class="button__spinner">
+                                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="3"
+                                            stroke="currentColor"></circle>
+                                </svg>
+                                <span class="button__text">{{ _("Proceed") }}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" class="template-modal" id="tmpl__tariff-message">
+    <div class="b-overlay">
+        <div class="modal-custom">
+            <div class="modal-custom__inner">
+                <div class="modal-custom__header">
+                    <div class="modal-custom__close">
+                        <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use>
+                        </svg>
+                    </div>
+                    <div class="modal-custom__title">
+                        <%= rc.title || '' %>
+                    </div>
+                </div>
+                <div class="modal-custom__content">
+                        <div class="modal-custom__content">
+                            <div class="tariff-buy__section tariff-buy__section--text-center"><%= rc.message || '' %></div>
+                        </div>
+                    <button type="submit" class="button fill blue tariff-buy__button-message ">
+                        <span class="button__text">{{ _("OK") }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script>
+    var URL_PLAN_BUY = '{{ url_for('virtoaster.plan_buy') }}';
+    var MESSAGES_MODAL_HEADER = {
+        "buy-now": "{{ _("Buy {plan} plan") }}",
+        "buy-more": "{{ _("Buy {plan} plan") }}",
+        "downgrade": "{{ _("Downgrade to {plan} plan") }}",
+        "upgrade": "{{ _("Upgrade to {plan} plan") }}"
+    }
+</script>
+{% endmacro %}

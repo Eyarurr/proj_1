@@ -1,0 +1,109 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'multitours' %}
+{% if user %}{% set user_id = user.id %}{% else %}{% set user_id = None %}{% endif %}
+
+
+{% block content %}
+    <h2>
+        {% if offer.id %}
+            Свойства мультитура {{ offer.title }}
+        {% else %}
+            Создать мультитур
+        {% endif %}
+    </h2>
+
+
+    <form method="post" enctype="multipart/form-data" class="form-horizontal" id="form-edit">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="row mb-3">
+            <label class="col-lg-2 text-end">Папка:</label>
+            <div class="col-lg-10">
+                {{ form.folder_id(class='form-control') }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-end">Название:</label>
+            <div class="col-lg-10">
+                {% for lang in ('en', 'de', 'ru', 'fr') %}
+                <div class="input-group">
+                    <span class="input-group-text">{{ lang|upper }}</span>
+                    <input type="text" name="title_{{ lang }}" class="form-control" value="{{ offer|attr('title_' + lang) or '' }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-end">Сохранение позиции:</label>
+            <div class="col">
+                <input type="checkbox" class="form-check-input" name="keep_position" {{ '' if offer.template_data and offer.template_data.get('keep_position', True) == False else 'checked' }} >
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-end ">Splitscreen enabled: </label>
+            <div class="col">
+                <input type="checkbox" class="form-check-input" name="splitscreen"
+                    {{ '' if offer.template_data and offer.template_data.get('splitscreen_enabled', True) == False else 'checked' }} >
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-end">meta.options:</label>
+            <div class="col-lg-10">
+                {{ form.options(rows=12, class='form-control code') }}
+                <p class="text-muted">Если вы не знаете, что такое <code>meta.options</code>, не трогайте это поле.</p>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-10 offset-lg-2">
+                <button type="submit" class="btn btn-success"><i class="fa fa-life-ring"></i> Сохранить</button>
+                {% if offer.id %}
+                    <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger">Удалить</a>
+                {% endif %}
+                <a href="{{ url_for('.multitours', user_id=user_id) }}" class="btn btn-outline-secondary">Отмена</a>
+
+            </div>
+        </div>
+    </form>
+
+
+    {% if offer.id %}
+    <form method="post" action="{{ url_for('.multitour_delete', offer_id=offer.id, user_id=user_id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal" id="modal-delete"><div class="modal-dialog modal-md"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Удалить мультитур?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Сами туры выживут.
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Да</button>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Нет</button>
+            </div>
+        </div></div></div>
+    </form>
+    {% endif %}
+
+    <script type="text/javascript">
+    (function() {
+        var $form = $('#form-edit'), $keep_position = $form.find('[name=keep_position]'),
+            $splitscreen = $form.find('[name=splitscreen]'),
+        json_str = $('#options').val();
+        json_str = (json_str == 'null') ? '{}': json_str;
+        options = JSON.parse(json_str);
+
+        $keep_position.click(function(){
+            options['keep_position'] = $(this).prop('checked');
+            $('#options').val(JSON.stringify(options, undefined, 4));
+        })
+
+        $splitscreen.click(function(){
+            options['splitscreen_enabled'] = $(this).prop('checked');
+            $('#options').val(JSON.stringify(options, undefined, 4));
+        })
+    })();
+    </script>
+
+{% endblock %}
+

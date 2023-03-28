@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% set page_title = _("Preparing geometry for Virtoaster, Export tool") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/preparing-geometry/preview_big.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div class="content-page__wrapper">
+
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <h2>Summary</h2>
+                <ol>
+                    <li>Drag’n’drop <a href='/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms'>Virtoaster export tool</a> to your scene to run the script</li>
+                    <li>Open “Delete modifiers” block and press buttons one by one to delete corresponding modifiers in the scene</li>
+                    <li>Open “Remove extra geometry” block and press buttons one by one to remove unnecessary objects</li>
+                    <li>Open “Edit geometry” block. If you have compound objects united by groups (e.g. group of table surface and table legs) select these groups one by one and press “Collapse selected group” to receive single mesh</li>
+                    <li>Select transparent objects (e.g. window glass) and press “Make transparent”</li>
+                    <li>Press “Convert proxy to mesh” to select all proxy objects and convert them to mesh</li>
+                    <li>Open “Export geometry” block, select where to save your scene with “Save as” button. Press “Export” to export your scene.</li>
+                    <li>Proceed with <a href='{{ url_for('tutorials.setting_up_render') }}'>Rendering</a> or <a href='{{ url_for('tutorials.uploading_assets') }}'>Asset uploading</a></li>
+                </ol>
+
+                <iframe style="width: 100%; height: 460px;" src="https://www.youtube.com/embed/vvz6r3p7r6E" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+
+                <div id="more" class="b-anchor"></div>
+                <h2>Full guide</h2>
+
+                <p>The defining feature of Virtoaster is a use of lightweight 3d Model underneath 2d 360 panoramic images. Models we use in Virtoaster tours usually contain less than 200k polygons, so they can be easily processed by VR and mobile devices. While our optimization algorithm perform well in majority of the cases, it still somewhat depends on the quality of the initial geometry.</p>
+                <p>While, technically you can download your model as is, we strongly recommend to look through the instructions. By following them, you would proactively eliminate most of the potential problems with scene geometry and will reduce size of .obj file to upload. Most of actions can be done in several clicks with our tools for 3d Max. Below you will see a button by button description of “Virtoaster Export Tool”, which you can download <a href='/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms'>here</a>.</p>
+                <p>In order to use this tool you may simply follow script tooltips and pop-up messages while going through all the tools, step by step chronologically (meaning, you can press every button from start to end - it will be sufficient to prepare geometry).</p>
+                <p><span class='warning'>Important:</span> this set of tools will alter scene geometry, so your renders will change. Use <a href='/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms'>Export tool</a> in a separate scene or only after you’ve already completed all renders.</p>
+
+                <h3>1. Delete modifiers</h3>
+                <p>This set of tools will delete corresponding modifiers from objects (including some external plugins, such as “Quad Chamfer”), thus reducing polycount. It will not remove any modifiers located below “Editable poly” or “Editable mesh” in modifier stack.</p>
+                <p><img src="/static/public/img/tutorials/preparing-geometry/image_1.jpg" alt="" width="360"></p>
+
+                <h3>2. Remove extra geometry</h3>
+                <p>This set of tools will remove unnecessary geometry from the scene, such as Corona portals (objects with CoronaPortalMtl) and will disable different scatters.</p>
+                <p>If you still want to see scattered objects in your scene, convert them to mesh before using “Disable Scatters” button. However, keep in mind that there are some technical limitations regarding large number of objects, e.g. there is no point in converting the lawn with millions of grass objects. In this case either grass will be removed during model optimization or scene will not be processed at all and will return with an error message while assembling the tour.</p>
+                <p><img src="/static/public/img/tutorials/preparing-geometry/image_2.jpg" alt="" width="360"></p>
+
+                <h3>3. Edit geometry</h3>
+                <p><img src="/static/public/img/tutorials/preparing-geometry/image_5.jpg" alt="" width="360"></p>
+                <p>“Collapse selected group” button will attach all objects in a group into single mesh. Because our model optimization algorithm works on an object level, this will help to preserve as much geometry as possible. Here’s an example:</p>
+                <p>The chandelier consist of 60 separate objects and each one of them will be evaluated when optimizing model. These objects either will be removed if they are too small or they will be optimized individually. This will result in higher polycount and worse shape preservation, compared to optimizing chandelier as a solid mesh. You don’t need to collapse every group, but we recommend to process some groups in your scene, so every separate object is a separate mesh.</p>
+                <p><img src="/static/public/img/tutorials/preparing-geometry/image_3.jpg" alt="" width="600"></p>
+                <p><span class='warning'>Important:</span> objects smaller than 5 square mm or bigger than 200m in any dimension will be deleted from the model. Such objects are too small to impact 3d model or too big to be processed efficiently. There should be no more than 6000 objects in the scene.</p>
+                <p><span class='warning'>Important:</span> geometry optimization works on object level. If for any reasons there is a stray geometry, not belonging to any object in .obj file, than 3d model will not be correct.</p>
+                <p>“Make transparent” will add “_glass” suffix to selected objects name. This will disable render projection for these objects to simulate transparency. Only select objects you want to see through, without attached non-transparent elements (e.g. window glass, but not window frame).</p>
+                <p>“Convert proxy to mesh” will detect what kind of proxy you are using (VRay or Corona) and will transform proxies into meshes. By default proxy objects are being exported to .obj exactly as you will see them in viewport (e.g. you will receive a box when using bounding box display mode). Using this tool may result in a framerate drop in 3d Max viewport. If you have significant amount of complex objects, we suggest to transform them to mesh and optimize manually.</p>
+
+                <h3>4. Export geometry</h3>
+                <p>“Export geometry” section will help you to set export settings automatically. You don’t need to change anything or export manually, instead you only need to specify where to save .obj file. By default it is set to the location of your 3d Max file. Exporting complex scenes might take some time.</p>
+                <p><span class='warning'>Important:</span> there is a technical limitation of no more than 5000 objects in the scene. It your scene has higher object count, than you will receive an error message. Use  “Collapse selected groups” tool in the script to reduce object count.</p>
+                <p><img src="/static/public/img/tutorials/preparing-geometry/image_4.jpg" alt="" width="360"></p>
+                <p>Once geometry is exported and your renders are complete, you may proceed with <a href='{{ url_for('tutorials.uploading_assets') }}'>asset uploading.</a></p>
+
+            </div>
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#short" class="side-menu__link link-scroll-to">Summary</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#more" class="side-menu__link link-scroll-to">Full guide</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+

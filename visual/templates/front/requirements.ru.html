@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% set page_title = _("Requirements") %}
+
+{% block content %}
+<div class="b-page__content">
+    <div class="page-title">
+        <div class="page-title__inner b-page__inner">
+            <h1 class="page-title__head h1">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        <h2>Материалы для создания экстерьера проекта:</h2>
+        <ol>
+            <li>Чертежи домов (DWG) (планы и фасады со спецификацией материалов отделки фасадов);</li>
+            <li>Генплан (DWG);</li>
+            <li>Проект благоустройства и озеленения (PDF);</li>
+            <li>3D-модели</li>
+        </ol>
+        <br /><br />
+        <h2>Материалы для создания интерьера проекта:</h2>
+        <ol>
+            <li>Планировки в формате DWG (выбранных апартаментов / МОПов);</li>
+            <li>Дизайн-проекты (апартаментов / МОПов);</li>
+            <li>Спецификация на окна и высота потолков;</li>
+            <li>Сферические панорамы для видов из окон</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}

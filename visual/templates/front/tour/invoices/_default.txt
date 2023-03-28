@@ -1,0 +1,6 @@
+{{ _('You have selected the following items in tour "%(title)s" (%(url)s):', url=url_for('front.tour', tour_id=tour.id, _external=True), title=tour.title) }}
+
+{% for row in table %}
+    {{ row.title }} ... {{ "{:,.2f}".format(row.price) }} {{ _('RUR') }}
+{% endfor %}
+    Итого: {{ "{:,.2f}".format(total_price) }} {{ _('RUR') }}

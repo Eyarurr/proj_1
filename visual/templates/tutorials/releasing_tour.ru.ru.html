@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% set page_title = 'Управление 3д туром' %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/releasing-tour/releasing-your-tour.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="tour_access" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <h2>Доступ к туру</h2>
+
+                <p>Чтобы открыть тур вы можете использовать ссылку, которую вы получили по email или воспользоваться вашим личным кабинетом. Все туры доступны в списке ваших туров и вы можете путешествовать в их виртуальном пространстве. Нажмите левой клавишей мыши на имя аккаунта на сайте и выберите “Туры” из выпадающего списка чтобы открыть список ваших папок и туров.
+                </p>
+                <p>Существует три способа взаимодействия с туром:</p>
+                <ul>
+                    <li>Режим просмотра</li>
+                    <li>Режим редактирования</li>
+                    <li>Редактирование настроек тура</li>
+                </ul>
+                <p>“Режим просмотра” - режим по умолчанию, без доступа к инструментам редактирования. Чтобы открыть тур в режиме просмотра нажмите кнопку  “Посмотреть тур” или “Открыть в новом окне”. Все ссылки на тур открывают его в режиме просмотра.
+                </p>
+                <p>“Режим редактирования” - альтернативный режим Web-плеера. В данном режиме вы можете путешествовать по туру аналогично режиму просмотра, но также получаете доступ к набору инструментов для добавления специальных возможностей и интерактивных объектов.Здесь вы можете изменять стартовую точку тура, добавьте дополнительные интерактивные объекты, навигацию, маршруты и т.д. если необходимо. Подробнее вы можете узнать в разделе <a href='{{ url_for('tutorials.tour_editing_mode') }}'>Режим редактирования тура</a>
+                </p>
+                <p>“Редактирование настроек тура” - web-страница, на которой вы можете изменять некоторые опции в туре. Чтобы открыть данный режим нажмите на строку тура в списке.
+                </p>
+
+                <div id="share_tour" class="b-anchor"></div>
+                <h2>Поделиться туром</h2>
+                <p>Вы можете создать ссылку для просмотра тура. Для этого в списке туров наведите курсор мыши на тур и выберите “Копировать ссылку”.
+                </p>
+                <p><img src="/static/public/img/tutorials/releasing-tour/image_1ru.png" alt=""></p>
+                <p>В режиме просмотра вы также можете сгенерировать ссылку на конкретное место в туре, для этого воспользуйтесь кнопкой “Ссылка на тур” в панели инструментов.
+                </p>
+
+                <div id="tour_to_site" class="b-anchor"></div>
+                <h2>Встроить тур на сайт</h2>
+                <p>Наконец, вы можете добавить тур как встроенный контент на сайт с помощью т.н. iFrame. iFrame это web-технология, с помощью которой встроенный контент можно просматривать непосредственно на определенной странице, например видео с YouTube в статье или блоге на стороннем сайте.
+                </p>
+                <p>Чтобы сгенерировать iFrame код, наведите курсор мыши на тур в списке и нажмите “Получить встраиваемый код”.
+                </p>
+                <p><img src="/static/public/img/tutorials/releasing-tour/image_2ru.png" alt=""></p>
+                <p>По нажатию на кнопку будет сгенерирован код. Вы можете изменить размер окна, в котором будет показан тур, что будет отражено в iFrame коде.
+                </p>
+                <p><img src="/static/public/img/tutorials/releasing-tour/image_3ru.png" alt="" width="480"></p>
+                <p>Теперь ваш тур готов и вы можете поделиться им с вашими заказчиками и коллегами! Добавьте <a href='{{ url_for('tutorials.creating_interactive_objects') }}'>интерактивные объекты</a>, навигацию и <a href='{{ url_for('tutorials.tour_editing_mode') }}'>другие возможности</a> в тур, чтобы получить максимум из вашего проекта!
+                </p>
+            </div>
+
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#tour_access" class="side-menu__link link-scroll-to">Доступ к туру</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#share_tour" class="side-menu__link link-scroll-to">Поделиться туром</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#tour_to_site" class="side-menu__link link-scroll-to">Встроить тур на сайт</a>
+                        </li>                        
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

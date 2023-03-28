@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% set page_title = _("Biganto applications") %}
+
+{% block content %}
+    {% set icons = {
+        'iosplayer': {
+            'viewBox': '0 0 2048 2048',
+            'id': 'os_ios',
+            'name': 'iOS'
+        },
+        'androidplayer': {
+            'viewBox': '0 0 56.693 56.693',
+            'id': 'os_android',
+            'name': 'Android'
+        },
+        'windowsplayer': {
+            'viewBox': '0 0 512 512',
+            'id': 'os_windows',
+            'name': 'Windows'
+        },
+        'osxplayer': {
+            'viewBox': '0 0 512.00003 512',
+            'id': 'os_mac',
+            'name': 'OS X'
+        }
+    } %}
+    <script>
+        var APPLICATIONS = { {%- for key, item in config['APPLICATIONS'].items() -%}
+            {%- if item != None -%}
+            {{ key }}: '{{ item.get('download_url', '') }}',
+            {%- endif -%}
+        {%- endfor -%} };
+    </script>
+    <div class="page-title">
+        <div class="b-page__inner page-title__inner">
+            <h1 class="page-title__head backgorund-image-title h1">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg content-page">
+        <div class="apps">
+            <div class="apps__progress">
+                <img src="/static/public/img/loader.svg" alt="" class="apps__loader">
+            </div>
+            <div class="apps__unknown is-hidden">
+                <p class="apps__result is-hidden">{{ _("Application not found for your operating system.") }}</p>
+                <ul class="apps__list">
+                    {% for key, item in config['APPLICATIONS'].items() %}
+                        {% if item != None %}
+                            <li class="apps__item apps__{{ key }}">
+                                <a href="{{ item.get('download_url', '#') }}" class="apps__link" target="_blank" rel="nofollow noopener">
+                                    <div class="apps__image">
+                                        <svg viewBox="{{ icons.get(key, {}).get('viewBox') }}" class="apps__icon icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#{{ icons.get(key, {}).get('id') }}"></use></svg>
+                                    </div>
+                                    <p class="apps__text">{{ icons.get(key, {}).get('name') }}</p>
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

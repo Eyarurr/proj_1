@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% set page_title = _("Setting up camera") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/preparing-geometry/preview_big.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+    <div class="content-page">
+        <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+            <div class="b-page__inner">
+                <div class="page-title__inner">
+                    <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                    <div class="page-title__tags tags">
+                        <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="b-page__inner b-page__mrg">
+
+            <div id="camera" class="b-anchor"></div>
+            <div class="content-page__wrapper">
+                <div id="short" class="b-anchor"></div>
+                <div class="content-page__main">
+
+                    <h2>Краткое руководство</h2>
+                    <ol>
+                        <li>Перетяните скрипт <a href='/static/scripts3d/Biganto-UTL_VirtoasterCamTools_0.73.ms'>Virtoaster camera tool</a> во вьюпорт сцены для его запуска</li>
+                        <li>Нажмите “Point”, поместите вспомогательные объекты туда, где вы хотите перемещаться по туру. Сохраняйте дистанцию 1,5-3м между ними.</li>
+                        <li>Поместите все вспомогательные объекты на высоту 1,5 м над полом</li>
+                        <li>Нажмите “Create camera”</li>
+                        <li>Нажмите “Select camera” и выберите созданную  камеру, затем нажмите “Apply Virtoaster render settings”</li>
+                        <li>Перейдите к разделу <a href='{{ url_for('tutorials.setting_up_render') }}'>“Настройка рендера”</a></li>
+                    </ol>
+
+                    <iframe style="width: 100%; height: 460px;" src="https://www.youtube.com/embed/STpTi3apqJ8"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+
+                    <div id="more" class="b-anchor"></div>
+                    <h2>Полное руководство</h2>
+
+                    <p>Для создания Virtoaster тура необходимы два основных компонента: набор панорамных 360 рендеров и 3d модель сцены. Здесь мы расскажем как правильно выполнить рендер и начнем с настройки камеры.</p>
+                    <p>Чтобы установить камеру, загрузите наш <a href='/static/scripts3d/Biganto-UTL_VirtoasterCamTools_0.73.ms'>скрипт</a> для её настройки. Откройте сцену и перейдите во вьюпорт в проекции Top (горячая клавиша T). Перетащите скрипт камеры во вьюпорт, вы увидите следующий интерфейс:</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_1.jpg" alt=""></p>
+                    <p>Начните с создания вспомогательных объектов типа “Point”. Нажмите “Point” в интерфейсе скрипта и используйте левую клавишу мыши чтобы расставить объекты в те места, в которые вы хотите перемещаться в туре. Нажмите правую клавишу мыши чтобы завершить.</p>
+                    <p>Каждый объект “Point” соответствует одному рендеру, поэтому расставляйте точки только там, где вы хотите перемещаться. Расставляйте точки только в тех местах, где физически возможно перемещаться, например не ставьте точки над столами, шкафами и т.д.</p>
+                    <p><span class='warning'>Важно:</span> не расставляйте точки слишком близко друг к другу, т.к. тогда будет не удобно перемещаться по туру. Мы советуем соблюдать дистанцию между точками в <strong>1,5-3 метра.</strong></p>
+                    <p>Перемещение между точками будет возможно, только если между ними есть линия прямой видимости. Между такими точками не должно быть препятствий, таких как закрытые двери, шторы, экраны и т.д.</p>
+                    <p>Вкратце, основные требования к расстановке точек:</p>
+                    <ol>
+                        <li>Расстояние между соседними точками должно быть не более трёх метров.</li>
+                        <li>Точки, между которыми будет переход, должны находиться в прямой видимости.</li>
+                        <li>Точки должны быть расставлены только в местах, где возможно перемещение (например, не должно быть точек над столами, постелью и т.п.).</li>
+                        <li>Точки должны быть распределены равномерно по помещению.</li>
+                    </ol>
+                    <p>Пример правильного расположения точек:</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_5.jpg" alt="" width="720"></p>
+                    <p>Далее, поместите все созданные точки на высоту 1,5 метра над полом (средняя высота, с которой смотрит человек). При наличии лестниц и нескольких этажей в вашей сцене не забудьте выставить высоту соответственно. </p>
+                    <p>Наконец, выберите все точки и нажмите “Create camera”. Будет создана анимированная камера, каждая точка будет соответствовать одному кадру.</p>
+                    <p><span class='warning'>Важно:</span> по умолчанию 3d Max создает объекты “Point” на нулевой высоте. Убедитесь, что высота точек выставлена правильно перед тем как создавать камеру.</p>
+                    <p>В дополнение к камере для каждой точке будет создана дополнительная геометрия. Она используется для определения координат кадра. Данная геометрия не влияет на рендер.</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_13.jpg" alt="" width="300"></p>
+                    <p><span class='warning'>Важно:</span> если по какой либо причине вам необходимо изменить положение точки, сперва удалите камеру и дополнительную геометрию. Затем измените позицию точки и снова нажмите “Create camera”.  </p>
+                    <p><span class='warning'>Важно:</span> если в вашей сцене есть анимированные объекты, скрипт предложит удалить анимацию из сцены:</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_14.jpg" alt=""></p>
+                    <p>Анимация может привести к разному положению объектов на различных кадрах, например к открытой\закрытой двери на соседних кадрах тура и, соответственно несовпадению с 3d моделью. Таким образом в сцене может быть единственный анимированный объект - камера, созданная с помощью наших инструментов.</p>
+
+                    <p>Нажмите “Select camera” и выберите созданную  камеру, затем нажмите “Apply Virtoaster render settings”. Скрипт автоматически установить необходимые настройки рендера и выведет сообщение о внесенных изменениях:</p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_16.jpg" alt=""></p>
+                    <p>Скрипт установил основные настройки рендера и, хотя вы уже можете начать рендер, мы настоятельно советуем изучить раздел <a href='{{ url_for('tutorials.setting_up_render') }}'>“Настройка рендера”</a></p>
+
+
+                    <div id="optional" class="b-anchor"></div>
+                    <h2>Опциональный этап:</h2>
+                    <p>По умолчанию координаты точек определяются с помощью дополнительной геометрии, создаваемой с помощью наших инструментов. Вы также можете загрузить координаты точек вручную, о чем подробнее рассказано в статье <a href='{{ url_for('tutorials.uploading_assets') }}'>“Загрузка контента”</a>. </p>
+                    <p>Чтобы выгрузить координаты точек в .txt файл, воспользуйтесь скриптом Virtoaster Cam tool. Нажмите “Select camera” и выберите Virtoaster-камеру, затем нажмите “Create”. Вам будет предложено выбрать где сохранить файл с координатами на вашем компьютере. </p>
+                    <p><img src="/static/public/img/tutorials/setting-camera/image_15.jpg" alt=""></p>
+
+                </div>
+                <aside class="content-page__side content-page__side--hide">
+
+                    <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                        <ul class="side-menu__list">
+                            <li class="side-menu__item">
+                                <a href="#short" class="side-menu__link link-scroll-to">Краткое руководство</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#more" class="side-menu__link link-scroll-to">Полное руководство</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#optional" class="side-menu__link link-scroll-to">Опциональный этап:</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </aside>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

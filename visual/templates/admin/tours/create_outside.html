@@ -1,0 +1,318 @@
+{% extends 'admin/base.html' %}
+
+{% block head %}
+    <style type="text/css">
+        #resolutions-list span.label { margin: 0 10px 0 0; }
+        #resolutions-list span.label a { color: #405a5b; border-left: 1px solid; margin-left: 5px; padding-left: 2px; }
+        #model-upload-progress { display: none; }
+
+        .form-set { border-bottom: 1px solid #ccc; margin-bottom: 15px; }
+        .form-set .progress { display: none; }
+        .form-set textarea.coords { font-size: 9px; }
+        #form-set-template { display: none; }
+
+        .frames-list { list-style: none; padding-left: 0; max-height: 300px; overflow: auto; }
+        .frames-list li { margin: 5px 0; }
+
+        #problems { color: red; }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+<h1>Создать Outside-тур # {{ tour.id }} / {{ tour.footage.id }}</h1>
+
+<span id="upload-token" data-url="{{ url_for('front.flow_upload', token='') }}" data-token="{{ upload_token }}"></span>
+
+<form method="post" action="{{ url_for('.tour_create_outside_title', tour_id=tour.id, user_id=user_id) }}" class="form-horizontal" id="form-title">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row mb-3">
+        <label class="control-label col-sm-2">Название</label>
+        <div class="col-sm-10"><input type="text" name="title" value="{{ tour.title }}" class="form-control"></div>
+    </div>
+</form>
+
+<form method="post" action={{ url_for('.tour_create_outside_resolutions', tour_id=tour.id, user_id=user_id) }} class="form-horizontal" id="form-resolutions">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row mb-3">
+        <label class="control-label col-sm-2">Разрешения</label>
+        <div class="col-sm-10">
+            <p class="form-control-static">
+                <span id="resolutions-list">
+                    {% for res in tour.footage.meta.get('resolutions', []) %}
+                        <span class="label label-info badge bg-info" data-resolution="{{ res[0] }}x{{ res[1] }}">
+                            {{ res[0] }}&times;{{ res[1] }}<a href="#"><i class="fas fa-ban"></i></a>
+                            <input type="hidden" name="res" value="{{ res[0] }}x{{ res[1] }}">
+                        </span>
+                    {% endfor %}
+                </span>
+
+                <a href="#" data-bs-toggle="modal" class="btn btn-sm btn-outline-success float-end" data-bs-target="#modal-resolution-add">
+                    <i class="fas fa-plus-circle"></i> Добавить разрешение</a>
+            </p>
+        </div>
+    </div>
+</form>
+
+<form method="post" action="{{ url_for('.tour_create_outside_model', tour_id=tour.id, user_id=user_id) }}"
+      class="form-horizontal" id="form-model">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="upload_token" value="{{ upload_token }}-model">
+    <input type="hidden" name="filename">
+    <div class="row mb-3">
+        <label class="control-label col-sm-2">Модель</label>
+        <div class="col-sm-10 form-model-main">
+            <p class="form-control-static" id="model-info">
+                {% if tour.footage.meta.get('model') %}
+                    {{ tour.footage.meta['model'] }}
+                    {{ tour.footage.meta.get('model_size')|filesizeformat }}
+
+                    <a href="#modal-model-delete" data-bs-toggle="modal" class="text-danger" title="Удалить"><i class="fas fa-ban"></i></a>
+                {% else %}
+                    <span class="text-primary">Не загружена.</span>
+                {% endif %}
+            </p>
+
+            <button type="button" class="btn btn-outline-secondary btn-sm mb-3" id="btn-model-browse"><i class="fas fa-plus-circle"></i> Загрузить модель</button>
+
+            <div class="progress" id="model-upload-progress">
+                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 0"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{# Сеты #}
+<div id="set-forms">
+    {% for set in tour.footage.meta['sets'].values() %}
+    {# Изменяя эту форму, не забудь поправить шаблон такой же формы #form-set-template!!! #}
+    {% set this_token = upload_token + '-set-' + set.id|string %}
+    <form method="post" action="{{ url_for('.tour_create_outside_set', tour_id=tour.id, user_id=user_id) }}"
+          class="form-horizontal form-set"
+          data-id="{{ set.id }}"
+          data-upload-complete-url="{{ url_for('.tour_create_outside_frames_complete', tour_id=tour.id, user_id=user_id) }}"
+    >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="id" value="{{ set.id }}">
+        <div class="row mb-3">
+            <label class="control-label col-sm-2">Сет #{{ set.id }}</label>
+            <div class="col-sm-10">
+                <input type="text" name="title" class="form-control" value="{{ set.title }}" placeholder="Название сета">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-2 text-right">
+                <button type="button" class="btn btn-xs btn-danger btn-set-delete" title="Удалить сет"><i class="fas fa-ban"></i></button>
+            </div>
+            <div class="col-sm-4">
+                <label>Фреймы:</label>
+                <ul class="frames-list">
+                {% for frame_id, frame in set['frames'].items()|sort %}
+                    <li data-eye="center" data-id="{{ frame_id }}">
+                        <a href="" data-bs-toggle="modal" title="#modal-frame-delete" data-bs-target="#modal-frame-delete"><i class="fas fa-ban text-danger"></i></a>
+                        <a href="{{ tour.footage.files.url }}/frames/{{ set.id }}/{{ frame.filename }}" target="_blank">
+                            {{ frame_id }}: {{ frame.filename }}
+                        </a>
+                        {% if 'pos' not in frame %}
+                            <i class="fas fa-exclamation-circle text-danger" title="Нет координаты для этого фрейма!"></i>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+                <button type="button" class="btn btn-outline-secondary btn-upload btn-sm"><i class="fas fa-plus-circle"></i> Загрузить фреймы</button>
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-info progress-bar-striped"></div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <p>
+                    <label>Центр вращения:</label>
+                    <input type="text" name="center" value="{{ set['center']|join(', ') }}" class="form-control" placeholder="x, y, z">
+                </p>
+                <p>
+                    <label>Координаты:</label>
+                    <textarea name="coords" class="form-control code coords" rows="16">
+                        {%- for id, data in set.get('coords', {}).items()|sort %}
+                            {{- id }};   {{ data.pos|join(', ') }};    {{ data.angle|join(', ') }};    {{ data.fov }}{{ "\n" }}
+                        {%- endfor -%}
+                    </textarea>
+                </p>
+                <p class="help-block">ID; Px, Py, Pz; Ax, Ay, Az; FOV</p>
+            </div>
+        </div>
+    </form>
+    {% endfor %}
+</div>
+
+<form method="post" action="{{ url_for('.tour_create_outside_set_add', tour_id=tour.id, user_id=user_id) }}" class="form-horizontal" id="form-set-add">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row mb-4">
+        <div class="col-sm-auto offset-sm-2">
+            <button type="submit" class="btn btn-outline-secondary btn-sm"><i class="fas fa-plus-circle"></i> Добавить сет</button>
+        </div>
+    </div>
+</form>
+
+<form method="post" action="{{ url_for('.tour_create_outside_set_delete', tour_id=tour.id, user_id=user_id) }}" class="form-horizontal" id="form-set-delete">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="id">
+</form>
+
+<form method="post" action="{{ url_for('.tour_create_outside_frame_delete', tour_id=tour.id, user_id=user_id) }}"
+      class="form-horizontal" id="form-frame-delete">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="set_id">
+<input type="hidden" name="eye">
+<input type="hidden" name="frame_id">
+<div class="modal" id="modal-frame-delete"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Удалить фрейм?</h4>
+        <button type="button" class="btn-close" aria-label="Закрыть" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-danger">Удалить</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+
+</form>
+
+<form method="post" action="{{ url_for('.tour_create_outside_set', tour_id=tour.id, user_id=user_id) }}"
+      class="form-set" id="form-set-template" data-upload-complete-url="{{ url_for('.tour_create_outside_frames_complete', tour_id=tour.id, user_id=user_id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="id">
+        <div class="row mb-3">
+            <label class="control-label col-sm-2">Сет #<span class="set-id"></span></label>
+            <div class="col-sm-10">
+                <input type="text" name="title" class="form-control" placeholder="Название сета">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-2 text-right">
+                <button type="button" class="btn btn-xs btn-danger btn-set-delete" title="Удалить сет"><i class="fas fa-ban"></i></button>
+            </div>
+            <div class="col">
+                <label>Фреймы:</label>
+                <ul class="frames-list"></ul>
+                <button type="button" class="btn btn-default btn-upload">Загрузить</button>
+                <div class="progress">
+                    <div class="progress-bar bg-info progress-bar-striped"></div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <p>
+                    <label>Центр вращения:</label>
+                    <input type="text" name="center" placeholder="x, y, z">
+                </p>
+                <p>
+                    <label>Координаты:</label>
+                    <textarea name="coords" class="form-control code coords" rows="16"></textarea>
+                </p>
+                <p class="help-block">ID; Px, Py, Pz; Ax, Ay, Az; FOV</p>
+            </div>
+        </div>
+</form>
+
+
+
+
+
+<div class="row mb-3">
+    <div class="col-sm-auto offset-2">
+    <div class="btn-group btn-group-sm">
+        <a href="#modal-build" data-bs-toggle="modal" class="btn btn-lg btn-outline-success" id="btn-build" {% if tour.footage.meta.get('problems') %} disabled {% endif %}>
+            <i class="fas fa-cogs text-sm-nowrap" data-bs-target="#modal-build"></i> Собрать outside-тур
+        </a>
+        <button type="button" class="btn btn-danger" href="#modal-delete" data-bs-toggle="modal">Удалить</button>
+
+        <a class="btn btn-secondary" href="{{ url_for('.tours', user_id=user_id, folder_id=tour.folder_id or 0) }}">Отмена</a>
+    </div></div>
+    <div class="col-sm-5">
+        <ul id="problems">
+            {% for problem in tour.footage.meta.get('problems') %}
+            <li>{{ problem }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+<form method="post" action="{{ url_for('.footage_delete', footage_id=tour.footage.id, referer=url_for('.tours', user_id=user_id)) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-delete"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Удалить недособраный тур?</h4>
+            <button type="button" class="btn-close" aria-label="Закрыть" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+</form>
+
+<form id="form-resolution-add">
+<div class="modal" id="modal-resolution-add"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Добавить разрешение</h4>
+        <button type="button" class="btn-close" aria-label="Закрыть" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row justify-content-center">
+            <div class="col-md-3 "><input type="text" name="w" class="form-control text-right" placeholder="W"></div>
+            <div class="btn-close"></div>
+            <div class="col-md-3"><input type="text" name="h" class="form-control" placeholder="H"></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Добавить</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+</form>
+
+<form method="post" action="{{ url_for('.tour_create_outside_model_delete', tour_id=tour.id, user_id=user_id) }}" id="form-model-delete" >
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="modal" id="modal-model-delete"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+        <h4 class="modal-title">Удалить модель?</h4>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Удалить</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+</form>
+
+<form method="post" action="{{ url_for('.tour_create_outside_build', tour_id=tour.id, user_id=user_id) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="modal" id="modal-build"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Собрать тур</h4>
+        <button type="button" class="btn-close" aria-label="Закрыть" data-bs-dismiss="modal"></button>
+
+    </div>
+    <div class="modal-body">
+        Сборка тура проходит в фоновом режиме и занимает несколько минут. Обновляйте страницу со списком тура, чтобы увидеть,
+        когда она завершится.
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary">Собрать тур</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+
+</form>
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript" src="//yastatic.net/jquery/form/3.14/jquery.form.min.js"></script>
+<script type="text/javascript" src="/static/admin/flow.min.js"></script>
+<script type="text/javascript" src="/static/admin/tour_create_outside.js"></script>
+{% endblock %}

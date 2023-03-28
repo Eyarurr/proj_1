@@ -1,0 +1,25 @@
+{% macro knowledgeList() %}
+<script type="text/template" class="template-modal" id="tmpl__tariff-buy">
+    <div class="b-overlay">
+        <div class="modal-custom modal-custom--full">
+            <div class="modal-custom__inner">
+                <div class="modal-custom__header">
+                    <div class="modal-custom__close">
+                        <svg viewBox="0 0 32 32" class="icon__svg" width="40" height="40">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use>
+                        </svg>
+                    </div>
+                    <div class="modal-custom__title">
+                        <%= rc.title || '' %>
+                    </div>
+                </div>
+                <div class="modal-custom__content modal-custom__content--no-padding">
+                    <div class="videoWrapper">
+                        <iframe width="560" height="349" allowfullscreen style="border:none;" title="Virtoaster by Biganto" src="<%= rc.src || '' %>"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+{% endmacro %}

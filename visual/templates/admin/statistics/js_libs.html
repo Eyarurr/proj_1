@@ -1,0 +1,70 @@
+{# компоненты #}
+<script src="/static/public/js/moment/moment.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+{% if not g.lang in config.LANGUAGES and g.lang == 'en' and 'site' in config.LANGUAGES[g.lang]['applicable'] -%}
+    <script src="/static/public/js/moment/lang/{{ g.lang }}.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+{%- endif %}
+<script src="/static/public/js/datetimepicker.min.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<script src="/static/public/js/daterangepicker.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+
+{# графики #}
+<script src="/static/public/js/amcharts/amcharts.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<script src="/static/public/js/amcharts/serial.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<script src="/static/public/js/amcharts/pie.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<script src="/static/public/js/amcharts/light.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+{% if not g.lang == 'en' -%}
+    <script src="/static/public/js/amcharts/lang/{{ g.lang }}.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+{%- endif %}
+
+{# экспорт графиков #}
+<script src="/static/public/js/amcharts/plugins/export/libs/fabric.js/fabric.min.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<script src="/static/public/js/amcharts/plugins/export/libs/FileSaver.js/FileSaver.min.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<script src="/static/public/js/amcharts/plugins/export/libs/pdfmake/pdfmake.min.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<script src="/static/public/js/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<script src="/static/public/js/amcharts/plugins/export/export.min.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+<link rel="stylesheet" href="/static/public/js/amcharts/plugins/export/export.css?{{ config.get('RELEASE_VERSION') }}">
+
+<script>
+    BG.CONST.STAT = {
+        MESSAGES: {
+            PARAMS_EMPTY: "{{ _("No tours or objects are selected to display statistics. Select one or more items in the left menu.") }}",
+            DATA_EMPTY: "{{ _("There is no data for the selected period.") }}",
+            INTERSECTION_EMPTY: "{{ _("The selected elements do not intersect.") }}",
+            ERROR_DEFAULT: "{{ _("Invalid query parameters.") }}",
+            DOWNLOAD_AS: "{{ _("Download as...") }}",
+            PRINT: "{{ _("Print") }}"
+        },
+        FIELDS: {
+            "visits": "{{ _("Sessions") }}",
+            "users": "{{ _("Users") }}",
+            "country": "{{ _("Country") }}",
+            "city": "{{ _("City") }}",
+            "city_country": "{{ _("City and country") }}",
+            "iframe": "{{ _("View type") }}",
+            "iframe_true": "{{ _("Embedded") }}",
+            "iframe_false": "{{ _("Link") }}",
+            "referer_host": "{{ _("Source") }}",
+            "not_defined": "{{ _("Not defined") }}",
+            "others": "{{ _("Others") }}",
+            "median": "{{ _("Median") }}",
+            "maximum": "{{ _("Maximum") }}",
+            "not_selected": "{{ _("Not selected") }}",
+            "today": "{{ _("Today") }}",
+            "yesterday": "{{ _("Yesterday") }}",
+            "last_two_days": "{{ _("Last 2 days") }}",
+            "week": "{{ _("Week") }}",
+            "month": "{{ _("Month") }}",
+            "year": "{{ _("Year") }}",
+            "quarter": "{{ _("Quarter") }}",
+            "last_3_years": "{{ _("Last 3 Years") }}",
+            "this_year": "{{ _("This Year") }}",
+            "last_year": "{{ _("Last Year") }}",
+            "custom_range": "{{ _("Custom Range") }}",
+        }
+    };
+    BG.CONST.HISTORY_DEPTH = {
+        HOURS: {{ config.get('HISTORY_DEPTH_HOURS') }},      // В днях
+        DAYS: {{ config.get('HISTORY_DEPTH_DAYS') }},        // В годах
+        MONTHS: {{ config.get('HISTORY_DEPTH_MONTHS') }},    // В годах
+        YEARS: {{ config.get('HISTORY_DEPTH_YEARS') }}       // В годах
+    };
+</script>

@@ -1,0 +1,321 @@
+{# Выводит заглушку, размером со стандартный preview, намекающую на то, что у кого-то нет картинки #}
+{% macro no_image(message='Нет картинки!') %}
+    <div class="no-image"><p><i class="fas fa-exclamation-triangle"></i><br>{{ message }}</p></div>
+{% endmacro %}
+
+{% macro render_pagination(pagination, endpoint) %}
+    {% if pagination.pages > 1 %}
+        <nav>
+            <ul class="pagination">
+                {%- for page in pagination.iter_pages() %}
+                    {% if page %}
+                        {% if page != pagination.page %}
+                            <li><a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a></li>
+                        {% else %}
+                            <li class="active"><a href="#">{{ page }} <span class="sr-only">(current)</span></a></li>
+                        {% endif %}
+                    {% else %}
+                        <li><span class=ellipsis>…</span></li>
+                    {% endif %}
+                {%- endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endmacro %}
+
+{% macro count(val) -%}
+    {% if val %} <small>({{ val }})</small>{% endif %}
+{%- endmacro %}
+
+{% macro string_i18n(languages, language, value, default='', multiple=True) %}
+    {% set isMultilang = value is mapping %}
+    {% if value %}
+        {% if isMultilang %}
+            {% if multiple %}
+                {% for lang, lang_title in languages|dictsort %}
+                    <p>{{ lang_title }}: {{ value.get(lang, '<strong class="text-danger">Отсутствует перевод!</strong>')| safe }}</p>
+                {% endfor %}
+            {% else %}
+                <p>{{ languages.get(language, '') }}: {{ value.get(language, '<strong class="text-danger">Отсутствует перевод!</strong>')| safe }}</p>
+            {% endif %}
+        {% else %}
+            {{ value }}
+        {% endif %}
+    {% else %}
+        {{ default }}
+    {% endif %}
+{% endmacro %}
+
+{% macro string_i18n_input(languages, language, name, value='', standard=None, folded=false) %}
+    {% set isMultilang = value is mapping %}
+    <div class="input-i18n" data-lang="{{ language }}" data-state="{{ isMultilang|int }}"{% if folded and isMultilang %} data-folded="1"{% endif %}{% if languages == {} %} data-disable="1"{% endif %}{% if not standard == None %} data-standard="{{ standard|int }}"{% endif %}>
+        <div class="input-i18n__toggle"><span class="caret"></span></div>
+        <div class="input-group input-i18n__item input-i18n__one">
+            <span class="input-group-addon input-i18n__lang"><span class="input-i18n__star">*</span></span>
+            <input type="text" name="{{ name }}" value="{% if isMultilang %}{{ '' }}{% else %}{{ value or '' }}{% endif %}" class="form-control"{% if isMultilang or standard == True %} disabled="disabled"{% endif %}{% for index in kwargs %} {{ index }}="{{ kwargs[index] }}"{% endfor %}>
+        </div>
+        {% for lang, lang_title in languages|dictsort %}
+            <div class="input-group input-i18n__item{% if lang == language %} input-i18n__default{% endif %}" data-lang="{{ lang }}">
+                <a href="#modal-langs-delete" class="input-group-addon input-i18n__lang" title="{{ lang_title }}{% if lang == language %}{% endif %}">{{ lang }}</a>
+                <input type="text" name="{{ name }}.{{ lang }}" value="{% if isMultilang %}{{ value.get(lang, '') or '' }}{% else %}{% endif %}" class="form-control"{% if not isMultilang or standard == True %} disabled="disabled"{% endif %}{% for index in kwargs %} {{ index }}="{{ kwargs[index] }}"{% endfor %}>
+            </div>
+        {% endfor %}
+        {% if not standard == None %}
+            <div class="input-i18n__standard">
+                <label><input type="checkbox" class="input-i18n__disable" name="{{ name }}_null"{% if standard == True %} checked="checked"{% endif %}> Стандартный</label>
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro string_i18n_area(languages, language, name, value='', class='') %}
+    {% set isMultilang = value is mapping %}
+    <div class="area-i18n" data-lang="{{ language }}" data-state="{{ isMultilang|int }}"{% if languages == {} %} data-disable="1"{% endif %}>
+        <ul class="nav nav-tabs area-i18n__tabs">
+            <li class="area-i18n__tab">
+                <span href="#" class="area-i18n__lang"><span class="area-i18n__star">*</span></span>
+            </li>
+            {% for lang, lang_title in languages|dictsort %}
+                <li class="area-i18n__tab{% if lang == language %} area-i18n__default{% endif %}{% if isMultilang and lang == language %} is-active{% endif %}">
+                    <a href="#modal-langs-delete" class="area-i18n__lang" title="{{ lang_title }}{% if lang == language %}{% endif %}">{{ lang }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="area-i18n__item area-i18n__one{% if not isMultilang %} is-active{% endif %}">
+            <textarea class="form-control {{ class }}" name="{{ name }}"{% if not kwargs['rows'] %} rows="5"{% endif %}{% if isMultilang %} disabled="disabled"{% endif %}{% for index in kwargs %} {{ index }}="{{ kwargs[index] }}"{% endfor %}>{% if isMultilang %}{{ '' }}{% else %}{{ value or '' }}{% endif %}</textarea>
+        </div>
+        {% for lang, lang_title in languages|dictsort %}
+            <div class="area-i18n__item{% if isMultilang and lang == language %} is-active{% endif %}" data-lang="{{ lang }}">
+                <textarea class="form-control {{ class }}" name="{{ name }}.{{ lang }}"{% if not kwargs['rows'] %} rows="5"{% endif %}{% if not isMultilang %} disabled="disabled"{% endif %}{% for index in kwargs %} {{ index }}="{{ kwargs[index] }}"{% endfor %}>{% if isMultilang %}{{ value.get(lang, '') or '' }}{% else %}{% endif %}</textarea>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro panorama(panorama_container, res, box_id, position=None, revision=None) %}
+    <div class="panorama pull-right">
+    {%- for plane in range(4) -%}
+        <img src="{{ panorama_container.files.url }}/{{ res }}/{% if position %}{{ position }}/{% endif %}{{ box_id }}-{{ plane }}.jpg{% if revision %}?{{ revision }}{% endif %}" width="100">
+    {%- endfor -%}
+    </div>
+{% endmacro %}
+
+
+{% macro input_addon(name, value, addon) %}
+    <div class="input-group">
+        <div class="input-group-addon">{{ addon }}</div>
+        <input type="text" name="{{ name }}" class="form-control" value="{{ value }}">
+    </div>
+{% endmacro %}
+
+{% macro footage_type_icon(type) %}
+    {% set icons = {'virtual': '<i class="fas fa-laptop"></i>', 'real': '<i class="fas fa-camera-retro"></i>', 'outside': '<i class="fas fa-globe"></i>'} %}
+    {% set titles = {'virtual': 'Виртуальный', 'real': 'Фототур', 'outside': 'Осмотр объекта'} %}
+    <span title="{{ titles.get(type, type) }}">{{ icons.get(type, type)|safe }}</span>
+{% endmacro %}
+
+{% macro tour_features(tour) %}
+    {% set features = tour.features_strings() %}
+    {% if 'shadows' in features %}
+        <i class="fab fa-buffer" title="Тени"></i>
+    {% endif %}
+    {% if 'active_meshes' in features %}
+        <i class="fas fa-object-ungroup" title="Активных мешей: {{ tour.meta['active_meshes']|length }} шт."></i>
+    {% endif %}
+    {% if 'overlays' in features %}
+        <i class="far fa-hand-pointer" title="Оверлеев: {{ tour.meta['overlays']|length }} шт."></i>
+    {% endif %}
+    {% if 'audio' in features %}
+        <i class="fas fa-headphones" title="Звук"></i>
+    {% endif %}
+    {% if 'walk' in features %}
+        <i class="fas fa-blind" title="Записанный маршрут ({{ tour.meta['walk']|length }} шагов)"></i>
+    {% endif %}
+    {% if 'binocular' in features %}
+        <i class="fas fa-binoculars" title="Бинокулярный тур"></i>
+    {% endif %}
+    {% if 'dollhouse' in features %}
+        <i class="fas fa-cube" title="Доллхаус"></i>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro tour_paid_features(tour) %}
+    {% set features = tour.paid_features_time_left() %}
+    {% if 'branding' in features %}
+        <i class="fas fa-copyright icon-paid-feature" title="Брендинг $$$"></i>
+    {% endif %}
+{% endmacro %}
+
+{# Ренддерит строку с главным хостом, в зависимости от юрисдикции #}
+{% macro hostname() %}
+    {{ config.JURISDICTIONS_HOSTS.get(config.JURISDICTION, {'host': 'biganto.unknown'})['host'] }}
+{% endmacro %}
+
+{% set menu = [
+    ('team',
+    [('team',url_for('admin.team'), 'Команда'),
+    ('hardware',url_for('admin.hardware'), 'Учет техники')], 'Команда'
+    ),
+    ('users', url_for('admin.users'), 'Пользователи'),
+    ('footages', url_for('admin.footages'), 'Съёмки'),
+    ('tours', url_for('admin.tours'), 'Туры'),
+    ('multitours', url_for('admin.multitours'), 'Мультитуры'),
+    ('gallery', url_for('admin.gallery'), 'Галерея'),
+    ('support', url_for('admin.issues'), 'Техподдержка'),
+    (
+        'sys',
+        [
+            ('statistics', url_for('admin.statistics'), 'Статистика посещаемости туров'),
+            ('builders_log', url_for('admin.builders_log'), 'Журнал сборщика'),
+            ('builders_stat', url_for('admin.builders_stat'), 'Статистика сборщика'),
+            ('builders_logs_list', url_for('admin.builders_logs_list'), 'Логи сборщика'),
+            ('testmail', url_for('admin.sys_testmail'), 'Проверка sendmail'),
+            ('software', url_for('admin.sys_software'), 'Версии софта'),
+            ('remote_processing', url_for('admin.sys_remote_datasets'), 'Удалённый процессинг'),
+        ],
+        'Системное'
+    ),
+    (
+        'content',
+        [
+            ('partners', url_for('admin.partners'), 'Партнёры'),
+            ('vacancies', url_for('admin.vacancies'), 'Вакансии'),
+            ('sources_player', url_for('admin.sources_player'), 'Распечатать код плеера'),
+            ('feeds', url_for('admin.feeds'), 'Новости'),
+            ('links', url_for('admin.links'), 'Ссылки'),
+            ('keys', url_for('admin.keys'), 'Ключи распространения'),
+            ('tours_moved', url_for('admin.tours_moved'), 'Перенесенные туры'),
+            ('multitours_moved', url_for('admin.multitours_moved'), 'Перенесенные мультитуры'),
+        ],
+        'Разное'
+    ),
+] %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% if config.ENV != 'production' %}[{{ config.ENV[:3] }}]{% endif %} {{ hostname() }}: Админка</title>
+    <link rel="stylesheet" href="/static/admin/css/bootstrap.min.css">
+    <script src="/static/admin/fontawesome.js"></script>
+    <link rel="stylesheet" href="/static/admin/common.css?{{ config.get('RELEASE_VERSION') }}">
+    <script type="text/javascript" src="/static/admin/jquery.js"></script>
+    <script src="/static/admin/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/admin/bowser.js?{{ config.get('RELEASE_VERSION') }}"></script>
+    <script type="text/javascript" src="/static/admin/common.js?{{ config.get('RELEASE_VERSION') }}"></script>
+    <script type="text/javascript" src="/static/admin/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript">
+        var current_user = {
+            id: {{ current_user.id }},
+            name: "{{ current_user.name }}"
+        };
+    </script>
+    <style type="text/css">
+        @font-face {
+          font-family: 'Roboto Condensed';
+          font-style: normal;
+          font-weight: 400;
+          src: url(/static/admin/ieVl2ZhZI2eCN5jzbjEETS9weq8-19a7CA.ttf) format('truetype');
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body style="background-color: {{ config.ADMIN_BGCOLOR }}">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        {% block logo %}
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('front.index') }}">{{ hostname() }}</a>
+        </div>
+        {% endblock %}
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            {% block menu_main %}
+            <ul class="nav navbar-nav">
+                {% for id, url_or_submenu, title in menu %}
+                    {% if url_or_submenu is string %}
+                        <li {% if id == menu_current %} class="active" {% endif %}>
+                            <a href="{{ url_or_submenu }}">{{ title }}</a>
+                        </li>
+                    {% else %}
+                        <li class="dropdown {% if id == menu_current %} active {% endif %}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ title }} <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                {% for id, url, title in url_or_submenu %}
+                                    <li><a href="{{ url }}">{{ title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% endblock %}
+
+            <div class="navbar-text pull-right dropdown">
+                Привет,
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {{ current_user.name }}!
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url_for('users.logout') }}">Выйти</a></li>
+                    <li><a href="{{ url_for('admin.user_edit', user_id=current_user.id) }}">Свойства меня</a></li>
+                    <li><a href="{{ url_for('admin.footages', user_id=current_user.id) }}">Мои съёмки</a></li>
+                    <li><a href="{{ url_for('admin.tours', user_id=current_user.id) }}">Мои туры</a></li>
+                    <li><a href="{{ url_for('admin.multitours', user_id=current_user.id) }}">Мои мультитуры</a></li>
+                </ul>
+            </div>
+
+            <div class="navbar-text pull-right">
+                <a href="{{ url_for('.news') }}" class="link-news {% if g.cnt_new_news %} new {% endif %}" title="Местные новости">
+                    <i class="fas fa-bell"></i>
+                    {% if g.cnt_new_news %}<sup>{{ g.cnt_new_news }}</sup>{% endif %}
+                </a>
+                <div class="news" id="news-pane">
+                    <h3>Новости</h3>
+
+                    <div class="news-feed"></div>
+                </div>
+            </div>
+
+            <div class="navbar-text pull-right" id="ajax-wait" title="Я танцую, потому что загружаются или сохраняются данные. Пожалуйста, не закрывайте и не перезагружайте страницу.">
+                <img src="/static/admin/wait.gif">
+            </div>
+        </div>
+    </div>
+</nav>
+
+{% for category, messages in flashes().items() %}
+<div class="container">
+    <div class="alert alert-{{ category }}">
+        <ul>
+            <li>{{ messages | join('</li><li>') | safe }}</li>
+        </ul>
+    </div>
+</div>
+{% endfor %}
+
+<div class="{{ template_container_class|default('container') }}" id="content-container">
+    {% block content %}{% endblock %}
+</div>
+
+<div class="modal" id="modal-langs-delete" tabindex="-1"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <h4 class="modal-title">Удалить все переводы кроме <span class="lang" style="text-transform: uppercase;"></span>?</h4>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Да, удалить</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Нет, не надо</button>
+    </div>
+</div></div></div>
+
+{% block tail %}{% endblock %}
+</body>
+</html>

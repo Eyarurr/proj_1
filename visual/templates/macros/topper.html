@@ -1,0 +1,16 @@
+{% macro topper(special=False, current_user=None) %}
+<div class="topper">
+    <div class="topper__inner">
+        <div class="topper__header b-page__header">
+            {% include 'header.'+ config.JURISDICTION + '.html' %}
+        </div>
+        <section class="topper__content reality">
+            <div class="b-page__inner reality__inner">
+                <h1 class="reality__head">{{ _("Creating virtual tours") }}</h1>
+                <div class="reality__split"></div>
+                <div class="reality__about">{{ _("Service and tools to produce and manage virtual tours and digital doubles of existing real estate.") }}</div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endmacro %}

@@ -1,0 +1,100 @@
+<style>
+    a {
+        color: #4a90e2;
+    }
+    .footer-text {
+        margin: 16px 0;
+    }
+
+    .footer-text a {
+        color: #4a90e2;
+        text-decoration: none;
+    }
+</style>
+<table align="center" cellpadding="0" cellspacing="0" width="576" style="border-collapse: collapse; font-family: Arial; color: #474a4e; font-size: 16px;">
+    <tr>
+        <td>
+            <img src="{{ url_for('static', filename='public/img/header.jpg', _external=True, _scheme='https') }}" alt="">
+        </td>
+    </tr>
+    <tr>
+        <td style="color: #5e5e5e; font-size: 32px; font-weight: bold;">
+            <div style="margin: 32px;">{{ _("Welcome to biganto.com!") }}</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div
+                style="margin: 0 124px 16px 32px; font-size: 24px; font-family: Lato, Arial, san-serif, serif;"
+            >
+                {{ _("We’re glad you are with us, please check some useful links below. They will help you to get started:") }}
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="margin: 0 32px">
+                <colgroup>
+                    <col span="1" style="width: 5%;">
+                    <col span="1" style="width: 95%;">
+                </colgroup>
+                <tr>
+                    <td>
+                        <img src="{{ url_for('static', filename='public/img/grad-hat.png', _external=True, _scheme='https') }}" width="32" alt="">
+                    </td>
+                    <td>
+                        <div style="margin: 16px; ">
+                            <a href='{{ url_for('tutorials.index', _external=True, _scheme='https') }}'>{{ _("Our Knowledge base") }}</a>{{ _(", where all important information is collected.") }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="{{ url_for('static', filename='public/img/house-building.png', _external=True, _scheme='https') }}" width="32" alt="">
+                    </td>
+                    <td>
+                        <div style="margin: 16px;">
+                            <a href='{{ url_for('tutorials.quick_start_guide', _external=True, _scheme='https') }}'>{{ _("Create sample tour") }}</a>{{ _(", start working right now and dig into details as you go!") }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="{{ url_for('static', filename='public/img/crane.png', _external=True, _scheme='https') }}" width="32" alt="">
+                    </td>
+                    <td>
+                        <div style="margin: 16px;">
+                            <a href='{{ url_for('my.index', _external=True, _scheme='https') }}'>{{ _("Create your own tours!") }}</a> {{ _("Trial plan is assigned to you, you can create several tours for free.") }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 128px; height: 1px; border-top: 1px solid #d8d8d8; display: block; margin: 16px 0 0 32px;"></td>
+    </tr>
+    <tr>
+        <td>
+            <img style="margin: 32px;" src="{{ url_for('static', filename='public/img/logo-email.svg', _external=True, _scheme='https') }}" alt="">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <hr>
+        </td>
+    </tr>
+    <tr style="font-size: small;">
+        <td>
+            <p class="footer-text">
+                {{ _("This email was sent to you as a registered member of biganto.com. To update your emails preferences") }} <a href='{{ url_for('my.index', path='settings', _external=True, _scheme='https') }}'>{{ _("click here") }}</a>.
+            </p>
+            <p class="footer-text">
+                {{ _("Biganto GmbH · Schloßschmidstr. 5 · 80639 Munich · Germany") }}<br />
+                {{ _("Registered: Munich Local Court HRB 206771 VAT ID No.: 291306762") }}<br />
+                <a href="{{ url_for('front.user_agreement', _external=True, _scheme='https') }}">{{ _("User agreement") }}</a> · <a
+                    href="{{ url_for('front.privacy_policy', _external=True, _scheme='https') }}">{{ _("Privacy policy") }}</a><br />
+            </p>
+        </td>
+    </tr>
+</table>

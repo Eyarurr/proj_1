@@ -1,0 +1,43 @@
+{% macro cooperateEvent() %}
+<section class="cooperate-event">
+    <div class="b-page__inner container-fluid">
+        <div class="cooperate-event__line">
+            <p class="cooperate-event__title">{{ _("Win a Biganto virtual 3D tour") }}</p>
+            <div class="cooperate-event__close">
+                <svg viewBox="0 0 32 32" class="icon__svg" width="32" height="32">
+                    <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use>
+                </svg>
+                {{ _("Close") }}
+            </div>
+        </div>
+        <div class="cooperate-event__more">
+            <div class="cooperate-event__head">
+                {{ _("Win a Biganto virtual 3D tour") }}
+            </div>
+            <div class="cooperate-event__desc">
+                <p class="cooperate-event__desc-p">{{ _("Friends, we decided to hold a contest so that you could have a nice case in your portfolio. The rules of the competition is very simple - you need to:") }}</p>
+                <div class="cooperate-event__wrapper">
+                    <div class="cooperate-event__step cooperate-event__step--first">
+                        <p class="cooperate-event__step-text cooperate-event__step-text--first">
+                            <a class="cooperate-event__step-link" href="mailto:info@biganto.com">{{ _("Send us") }}</a>
+                            {{ _("a 3D object model up to 150sq.m (+&nbsp;high-quality renders), according to which you would like to make a virtual 3D tour of the new generation.") }}
+                        </p>
+                    </div>
+                    <div class="cooperate-event__step cooperate-event__step--second">
+                        <p class="cooperate-event__step-text cooperate-event__step-text--second">
+                            {{ _("Like, repost") }} <a class="cooperate-event__step-link" href="https://vk.com/wall-82922667_345" target="_blank">{{ _("this post") }}</a>.
+                        </p>
+                    </div>
+                    <div class="cooperate-event__step cooperate-event__step--third">
+                        <p class="cooperate-event__step-text cooperate-event__step-text--third">
+                            {{ _("Subscribe to") }} <a class="cooperate-event__step-link" href="https://vk.com/bigantovisual" target="_blank">{{ _("our page") }}</a>.
+                        </p>
+                    </div>
+                </div>
+                <p class="cooperate-event__desc-p">{{ _("We will upload all the work renders to a specially created photo album, where anyone can vote for their favorite work. And then our team will choose one project from 5 finalists, and the winner will receive a Biganto virtual tour of its object.") }}</p>
+                <p class="cooperate-event__last cooperate-event__desc-p">{{ _("The final day of the contest is the 21st of December. Let's go!") }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endmacro %}

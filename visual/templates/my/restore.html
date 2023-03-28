@@ -1,0 +1,19 @@
+{% extends 'my/base.html' %}
+{% set page_title_my = _('Settings') %}
+{% set cc = 'settings' %}
+
+{% block content_my %}
+
+    <div class="settings-page settings-page__container">
+        <form method="post" action="{{ url_for('.settings_restore') }}" class="b-form b-form-password ">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <p>
+                {{ _("You have deleted your account on %(when)s. The account and all tours will be deleted permanently in %(left)d days. Would you like to restore your account?",
+                        when=current_user.deleted.strftime('%d.%m.%Y %H:%M'), left=current_user.purge_timedelta().days) }}
+            </p>
+            <div class="b-form-password__submit">
+                <button type="submit" class="button fill blue settings-page__submit">{{ _("Yes") }}</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'statistics' %}
+
+
+{% block head %}
+    <style type="text/css">
+        .chart {
+            position: relative;
+            margin: 0 0 30px 0;
+        }
+        .chart__canvas {
+            height: 500px;
+        }
+        .chart__download {
+            position: absolute;
+            right: 13px;
+            top: -2px;
+            font-size: 16px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    <script>
+        var BG = {};
+        window.BG = BG;
+    </script>
+{% endblock %}
+
+
+{% block content %}
+<h1>Статистика сервиса</h1>
+
+{% include('admin/statistics/_tabs.html') %}
+
+<form method="get" class="row table-filters" id="form-filters">
+    <div class="col-auto">
+        <div class="input-group input-group-sm">
+            <span class="input-group-text">Отобрать</span>
+            <input type="text" name="daterange" value="{{ daterange }}" class="form-control">
+        </div>
+    </div>
+    <div class="col">
+        <button type="submit" class="btn btn-primary btn-sm">Ok</button>
+    </div>
+</form>
+
+<div class="chart">
+    <div class="chart__download" id="download"></div>
+    <div class="chart__legend" id="legend"></div>
+    <div class="chart__canvas" id="chart"></div>
+</div>
+
+{% endblock %}
+
+
+{% block tail %}
+
+<script>
+    BG.CONST = {};
+    BG.CONST.LANG = 'ru';
+</script>
+{% include 'admin/statistics/js_libs.html' %}
+<script>
+    var statData = {{ referers|tojson|safe }};
+
+    $(function() {
+        AmCharts.makeChart('chart', {
+            "type": "pie",
+            "language": BG.CONST.LANG,
+            "theme": "light",
+            "innerRadius": "40%",
+            "fontFamily": "Verdana, Tahoma, Helvetica Neue, Lucida Grande, sans-serif",
+            "legend": {
+                "horizontalGap": 10,
+                "position": "top",
+                "align": "center",
+                "fontSize": 11,
+                "divId": "legend"
+            },
+            "responsive": {
+                "enabled": true
+            },
+            "valueField": "n",
+            "titleField": "host",
+
+            "dataProvider": statData,
+            "export": {
+                "enabled": true,
+                "divId": "download",
+                "menu": [{
+                    "class": "export-main",
+                    "menu": [
+                        {
+                            "label": BG.CONST.STAT.MESSAGES.DOWNLOAD_AS,
+                            "menu": ["PNG", "JPG", "PDF"]
+                        },
+                        {
+                            "label": BG.CONST.STAT.MESSAGES.PRINT,
+                            "format": "PRINT"
+                        }
+                    ]
+                }]
+            },
+        });
+
+        $('input[name="daterange"]').daterangepicker({
+            locale: {
+                format: 'DD.MM.YYYY'
+            }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            console.log($('input[name="daterange"]').val())
+            $('#form-filters').submit();
+        });
+
+    });
+</script>
+
+{% endblock %}

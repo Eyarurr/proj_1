@@ -1,0 +1,124 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'estates' %}
+{% set estate_id = request.view_args.get('estate_id') %}
+
+
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+
+<h1 class="text-wrap">
+    Теги объекта {{ estate.title }} <span class="text-muted"> {{ estate.id }}</span>
+
+<div class="float-lg-end" >
+    <a class="btn btn-sm btn-info mb-1 " href="{{ url_for('.estates_etag_add_multiple_tags', estate_id=estate_id) }}">
+        <i class="fa fa-plus-circle text-light"></i> Добавить несколько тегов
+    </a>
+    <a class="btn btn-sm btn-success mb-1" href="{{ url_for('.estates_etag_edit', estate_id=estate_id) }}">
+        <i class="fa fa-plus-circle"></i> Добавить тег
+    </a>
+</div>
+</h1>
+<form method="get">
+    <div class="row table-filters justify-content-between">
+        <div class="col-lg-auto">
+            <div class="row mb-1 ">
+                <div class="col-lg-auto ">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Сортировка</span>
+                        {{ filters.sort(class='form-select form-select-sm') }}
+                    </div>
+                </div>
+                <div class="col-lg-auto">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Искать по:</span>
+                        <div class="col-auto">
+                            {{ filters.select(class='form-select form-select-sm') }}
+                        </div>
+                            {{ filters.search(class='form-control') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-auto ">
+            <button type="submit" class="btn btn-sm btn-submit btn-primary">Показать</button>
+            <a href="{{ url_for('.estates_etags', estate_id=estate_id) }}"
+               class="btn btn-sm btn-submit btn-outline-secondary">Очистить</a>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-3">
+<thead>
+<tr>
+    <th class="break">#</th>
+    <th class="break">Имя</th>
+    <th class="break">Лейбел</th>
+    <th class="break">Префикс</th>
+    <th class="break">Суффикс</th>
+    <th class="break">Словарь значений</th>
+    <th class="break ">Значение</th>
+    <th class="break"><a href="#modal-delete" data-bs-toggle="modal"><i class="fa text-danger fa-trash-o fs-5" title="Удалить выбранные теги"></i></a>
+    </th>
+</tr>
+</thead>
+    <tbody>
+
+    {% for etag in etags.items %}
+        <form method="post" action="{{ url_for('.estates_etags_delete',estate_id=estate_id) }}">
+        <tr>
+            <td class="break col-lg-auto">{{ loop.index }}</td>
+            <td class="break col-lg-auto"><a
+                href="{{ url_for('.estates_etag_edit', estate_id=estate_id,etag_id = etag.id) }} "
+                class="text-underline-hover">{{ etag.tag.name }}</a></td>
+            <td class="break col-lg-auto">{{ etag.tag.label }}</td>
+            <td class="break col-lg-1">
+                {{ etag.tag.suffix or '' }}
+            </td>
+            <td class="break col-lg-1">
+                {{ etag.tag.prefix or '' }}
+            </td>
+            <td class="break text-wrap col-lg-3">
+                {{ etag.tag.display_dict or '' }}
+            </td>
+            <td class="break text-wrap col-lg-2 ">
+                {{ etag.value or '' }}
+            </td>
+            <td class="break col-1">
+                <div class="form-check ">
+                    <input class="form-check-input align-middle" type="checkbox" value="{{ etag.id }}" id="flexCheckDefault" name="for_delete">
+                    <div class="col-lg-1">
+                        <a href="{{ url_for('.estates_etag_edit', estate_id=estate_id,etag_id = etag.id) }}" title="Редактировать тег"><i class="fa fa-pencil-square-o text-info align-middle"></i></a>
+                        <i class="fa align-middle invisible"></i>
+                    </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+</div>
+{{ render_pagination(etags, '.estates_etags', estate_id=estate.id) }}
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal" id="modal-delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Удалить помеченные теги?</h4>
+                    </div>
+            <div class="modal-body">
+                <p>
+                    Из объекта {{ estate.title }} будут удалены помеченные теги
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+            </div>
+        </div></div></div>
+    </form>
+
+
+{% endblock %}

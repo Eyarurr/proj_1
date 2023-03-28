@@ -1,0 +1,15 @@
+{% macro page_nav(active_page) %}
+    <nav class="tabs-css__menu tabs-head">
+        <div class="{% if active_page == 'Designers' %} is-active{% endif %}">
+            <a class='tabs-css__link ' href="{{ url_for('front.cases_designers') }}">{{ _("Designers") }}</a>
+        </div>
+
+        <div class="{% if active_page == 'Visualizers' %} is-active{% endif %}">
+            <a class='tabs-css__link' href="{{ url_for('front.cases_visualizers') }}">{{ _("Visualizers") }}</a>
+        </div>
+
+        <div class="{% if active_page == 'Developers' %} is-active{% endif %}">
+            <a class='tabs-css__link' href="{{ url_for('front.cases_developers') }}">{{ _("Developers") }}</a>
+        </div>
+    </nav>
+{% endmacro %}

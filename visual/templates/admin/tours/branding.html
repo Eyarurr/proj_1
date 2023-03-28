@@ -1,0 +1,178 @@
+{% extends 'admin/base.html' %}
+
+{% set menu_current = 'tours' %}
+
+{% block head %}
+<style type="text/css">
+    .input-i18n[data-standard="1"] {
+        margin: 7px 0 0 0;
+    }
+    .tab {
+        display: none;
+        padding: 10px 0 0 0;
+    }
+    .tab.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+    <h2>Тур «{{ tour.title }}»</h2>
+
+    {% include('admin/tours/_tabs.html') %}
+
+    <form method="post" class="form-horizontal" id="form-edit" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="row mb-3">
+        <label class="text-lg-end col-lg-3">Надпись над планировкой</label>
+        <div class="col-lg-9">
+            {% with val = tour.meta.get('branding', {}).get('copyright_map') %}
+                {{ string_i18n_input(languages=tour.meta.get('languages', {}), language=tour.meta.get('default_lang', 'en'), name='copyright_map', value=val or '', standard=val == None) }}
+            {% endwith %}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="text-lg-end col-lg-3">Надпись в справке</label>
+        <div class="col-lg-9">
+            {% with val = tour.meta.get('branding', {}).get('copyright_help') %}
+                {{ string_i18n_input(languages=tour.meta.get('languages', {}), language=tour.meta.get('default_lang', 'en'), name='copyright_help', value=val or '', standard=val == None) }}
+            {% endwith %}
+         </div>
+    </div>
+    <div class="row mb-3">
+        <label class="text-lg-end col-lg-3">Логотип в справке</label>
+        <div class="col-lg-9">
+            {% with val = tour.meta.get('branding', {}).get('logo_help') %}
+                <label><input type="radio" name="logo_help_type" value="null" {% if val == None %} checked {% endif %}> Стандартный</label>
+                <label><input type="radio" name="logo_help_type" value="empty" {% if val == '' %} checked {% endif %}> Никакой</label>
+                <label><input type="radio" name="logo_help_type" value="url" {% if val %} checked {% endif %}> Кастомный</label>
+                <input type="file" name="logo_help" class="form-control">
+            {% endwith %}
+         </div>
+    </div>
+    <div class="row mb-3">
+        <label for="logo_help_link" class="text-lg-end col-lg-3">Ссылка на логотипе</label>
+        <div class="col-lg-9">
+            <input type="text" name="logo_help_link" id="logo_help_link" class="form-control" value="{{ tour.meta.get('branding', {}).get('logo_help_link', '') }}">
+        </div>
+    </div>
+    {% if tour.meta.get('branding', {}).get('logo_help') %}
+    <div class="row mb-3">
+        <label class="text-lg-end col-lg-3">Загруженный логотип</label>
+        <div class="col-lg-9">
+            <img src="{{ tour.files.url }}/{{ tour.meta.get('branding', {}).get('logo_help') }}" width="100" height="100" alt="">
+        </div>
+    </div>
+    {% endif %}
+
+    <h2>Нашлёпка</h2>
+    <div class="row mb-3">
+        <label class="text-lg-end col-lg-3">Текст</label>
+        <div class="col-lg-9">
+            {% with val = tour.meta.get('blotch', {}).get('text') %}
+                {{ string_i18n_input(languages=tour.meta.get('languages', {}), language=tour.meta.get('default_lang', 'en'), name='blotch_text', value=val or '') }}
+            {% endwith %}
+            <p class="text-muted">Используется всеми плеерами</p>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="text-lg-end col-lg-3">HTML</label>
+        <div class="col-lg-9">
+            {% with val = tour.meta.get('blotch', {}).get('html') %}
+                {{ string_i18n_area(languages=tour.meta.get('languages', {}), language=tour.meta.get('default_lang', 'en'), name='blotch_html', value=val or '') }}
+            {% endwith %}
+            <p class="text-muted">Если плеер умеет HTML, он покажет эту нашлёпку</p>
+        </div>
+    </div>
+        <h2>Водяной знак</h2>
+    {% if tour.meta.get('branding', {}).get('watermark', {}).get('url')  and tour.meta.get('branding', {}).get('watermark', {}).get('url').startswith('branding')%}
+    <div class="row mb-3">
+        <label class="text-lg-end col-lg-3">Загруженный водяной знак</label>
+        <div class="col-lg-9">
+            <img src="{{ tour.files.url }}/{{ tour.meta.get('branding', {}).get('watermark').get('url') }}" width="100" height="100">
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row mb-3">
+        <label class="col-lg-3 text-lg-end">Добавить</label>
+        <div class="col-lg-9">
+            <input type="file" name="watermark_url" class="form-control" value="file" id="urlfile">
+        </div>
+    </div>
+        <div class="row mb-3">
+        <label for="watermark_position" class="text-lg-end col-lg-3">Позиция</label>
+        <div class="col-lg-9">
+            <select type="text" id="watermark_position" name="watermark_position" class="form-control" >
+                <option value=""></option>
+                {% for position in positions %}
+                    <option value="{{ position }}"
+                        {% if position == tour.meta.get('branding', {}).get('watermark',{}).get('position','') %}
+                        selected
+                    {% endif %}>{{ position }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="watermark_opacity" class="text-lg-end col-lg-3">Непрозрачность</label>
+        <div class="col-lg-9">
+        <input type="text" name="watermark_opacity" id="watermark_opacity" class="form-control" value="{{ tour.meta.get('branding', {}).get('watermark',{}).get('opacity','') }}" placeholder="Значение в диапазоне [ 0, 1 ]">
+            <div class="form-check mt-3">
+                <input calss="form-check-input" type="checkbox" name="watermark_delete">
+                <label class="form-check-label">Удалить водяной знак</label>
+            </div>
+        </div>
+    </div>
+        <div class="row mb-3">
+        <div class="col-lg-10 offset-lg-3">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </div>
+    </form>
+
+    <script type="text/javascript">
+    (function() {
+        let url = '{{ tour.meta.get('branding', {}).get('watermark', {}).get('url') }}'
+        function locker() {
+            var $this = $(this);
+            $($this.data('lock')).attr('disabled', $this.is(':checked'));
+        }
+        $('[data-lock]').click(locker).each(locker);
+
+        $('[name=logo_help_type]').click(function() {
+           if(this.value == 'url') {
+               $('[name=logo_help]').show();
+           } else {
+               $('[name=logo_help]').hide();
+           }
+        });
+        if ($('[name=logo_help_type]:checked').val() == 'url') {
+               $('[name=logo_help]').show();
+           } else {
+               $('[name=logo_help]').hide();
+        }
+
+        $('[name=download_watermark]').click(function() {
+            if (this.value != 'file') {
+                $('#urlstring').show();
+                $('#urlfile').hide();
+            }
+            else {
+                $('#urlfile').show();
+                $('#urlstring').hide();
+            }
+
+        });
+        if (! url.includes('branding') && url !== 'None') {
+            $('#urlstring').attr('value', url)
+        } else {
+            $('#urlstring').attr('value', '')
+        }
+    })();
+    </script>
+
+{% endblock %}

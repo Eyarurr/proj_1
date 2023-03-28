@@ -1,0 +1,8 @@
+[run]
+omit = */.virtualenvs/*
+       *test/*
+       *manage/*
+
+
+[html]
+directory = tests/cov/coverage_html

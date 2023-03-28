@@ -1,0 +1,141 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'users' %}
+
+
+{% block head %}
+<style type="text/css">
+    .last-active-never { font-size: 75%; color: #aaa; }
+    .plan-0 { font-size: 75%; color: #aaa; }
+    .plan-100 { color: #54840d; font-weight: bold; }
+    .team-member { color: #ffa649; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>
+    Пользователи <span class="text-muted">({{ users.total }})</span>
+    <div class="float-lg-end">
+        <a class="btn btn-sm btn-success" href="{{ url_for('.user_edit') }}">
+            <i class="fa fa-plus-circle"></i> Создать пользователя
+        </a></div>
+</h1>
+
+<form method="get">
+    <div class="row table-filters justify-content-between">
+        <div class="col-lg-auto">
+            <div class="row">
+                <div class="col-lg-auto mb-1 mb-lg-0">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Искать по: </span>
+                        {{ filters.search(class='form-control form-control-sm', placeholder='Поиск по имени и e-mail') }}
+                    </div>
+                </div>
+
+                <div class="col-lg-auto mb-1 mb-lg-0 ">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Сортировать по: </span>
+                        {{ filters.sort(class='form-select form-select-sm') }}
+                    </div>
+                </div>
+                <div class="col-auto ">
+                    <label class="form-check-label">{{ filters.paid(class="form-check-input") }} только
+                        платные</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-auto">
+            <div class="btn-group btn-group-sm mb-1 mb-lg-0">
+                <button type="submit" class="btn btn-submit btn-primary">Показать</button>
+                {% if filters.is_dirty %}
+                    <a href="{{ url_for('.users', **filters.default_values) }}" class="btn btn-secondary">Очистить</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+{% if users.total == 0 %}
+<div class="alert alert-info">
+    Пользователей не найдено. <a href="{{ url_for('.users') }}">Всех посмотреть.</a>
+</div>
+{% else %}
+
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-4">
+<thead>
+<tr>
+    <th>Был на сайте</th>
+    <th class="break">Продукты</th>
+    <th class="break">Имя</th>
+    <th>E-mail</th>
+    <th class="n break" colspan="2"><i class="fas fa-cube" title="3D-туры"></i></th>
+    <th class="break">Действия</th>
+</tr>
+</thead>
+<tbody>
+
+{% for user, user_products, cnt_tours, cnt_multitours in users.items %}
+<tr>
+    <td>
+        {{ user.last_active|utcinlocal|humantime('<span class="last-active-never">никогда</span>'|safe) }}
+    </td>
+    <td class="n break">
+        {% for product_id, plan_id in user_products.items()|sort if plan_id != None %}
+            <span class="badge bg-primary badge-{{ product_id }}" title="{{ product_id }}: {{ products[product_id].plans[plan_id].title }}">{{ product_id[0]|upper }}</span>
+        {% endfor %}
+    </td>
+    <td class="tt break">
+        {{ user.name }}
+        <div class="float-end">
+            {% if user.created_by %}
+                <a href="{{ url_for('.user_edit', user_id=user.created_by) }}" title="Юзер создан {{ user.creator.name }}"><i class="fas fa-baby-carriage"></i></a>
+            {% endif %}
+
+            {% if user.team_member %}
+                <a href="{{ url_for('.team_profile', user_id=user.id) }}" title="Член команды"><i class="far fa-handshake"></i></a>
+            {% endif %}
+
+            {% if user.banned %}
+                <i class="fas fa-stop-circle text-danger" title="Юзер забанен"></i>
+            {% endif %}
+
+            {% if user.deleted %}
+                <i class="fa fa-dizzy" title="Юзер самоудалился"></i>
+            {% endif %}
+
+        </div>
+
+        {% if user.admin_comment %}
+            <p class="admin-comment">
+                <i class="far fa-sticky-note" title="Есть примечание"></i>
+                {{ user.admin_comment|nl2br }}
+            </p>
+        {% endif %}
+    </td>
+    <td class="tt">
+        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+        {% if not user.email_confirmed %}
+            <i class="fas fa-exclamation-triangle text-danger" title="Почта не подтверждена!"></i>
+        {% endif %}
+    </td>
+    <td class="n break">
+        <a href="{{ url_for('.tours', user_id=user.id) }}" class="btn btn-default btn-sm btn-info {% if cnt_tours|int == 0 %} text-light {% endif %}">Туры: {{ cnt_tours or 0 }}</a>
+    </td>
+    <td class="n break">
+        <a href="{{ url_for('.multitours', user_id=user.id) }}" class="btn text-lite btn-sm btn-info {% if cnt_multitours|int == 0 %} text-light {% endif %}">Мультитуры: {{ cnt_multitours or 0 }}</a>
+    </td>
+    <td class="break">
+        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('.user_edit', user_id=user.id) }}">Редактировать</a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
+{{ render_pagination(users, '.users', **filters.as_dict()) }}
+
+{% endif %}
+
+{% endblock %}

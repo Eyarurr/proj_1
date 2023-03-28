@@ -1,0 +1,86 @@
+{% macro player_features() %}
+    <section class="block player-features">
+        <div class="b-page__inner block__inner">
+            <div class="block__head">
+                <h2 class="block__title">{{ _("Player features") }}</h2>
+            </div>
+            <div class="block__content">
+                <ul class="player-features__list">
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 64 64" class="player-features__icon icon__svg" width="64" height="64"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#feature-anchor"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Generate link to current position") }}</p>
+                    </li>
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 47 56" class="player-features__icon icon__svg" width="47" height="56"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#feature-play"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Record and play path walkthrough") }}</p>
+                    </li>
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 56 64" class="player-features__icon icon__svg" width="56" height="64"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#feature-dollhouse"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("3D panorama") }}</p>
+                    </li>
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 64 52" class="player-features__icon icon__svg" width="64" height="52"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#feature-ruler"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Measurement tape") }}</p>
+                    </li>
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 64 52" class="player-features__icon icon__svg" width="64" height="52"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#feature-photo"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Generate and share screenshots") }}</p>
+                    </li>
+                    {#<li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 60 50" class="player-features__icon icon__svg" width="60" height="50"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#feature-sound"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Audio accompaniment") }}</p>
+                    </li>#}
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 55 64" class="player-features__icon icon__svg" width="55" height="64"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#feature-hand"></use></svg>
+                            {#<div class="player-features__new">{{ _("new") }}</div>#}
+                        </div>
+                        <p class="player-features__name">{{ _("Interactive objects to highlight key features and guide user") }}</p>
+                    </li>
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 55 64" class="player-features__icon icon__svg" width="55" height="64"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-path"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Freedom of Movement") }}</p>
+                    </li>
+{#                    <li class="player-features__item">#}
+{#                        <div class="player-features__image">#}
+{#                            <svg viewBox="0 0 55 64" class="player-features__icon icon__svg" width="55" height="64"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-uhq"></use></svg>#}
+{#                        </div>#}
+{#                        <p class="player-features__name">{{ _("High image quality") }}</p>#}
+{#                    </li>#}
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 55 64" class="player-features__icon icon__svg" width="55" height="64"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-joint"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Joint viewing") }}</p>
+                    </li>
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 55 64" class="player-features__icon icon__svg" width="55" height="64"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-branding"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Branding") }}</p>
+                    </li>
+                    <li class="player-features__item">
+                        <div class="player-features__image">
+                            <svg viewBox="0 0 55 64" class="player-features__icon icon__svg" width="55" height="64"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-play"></use></svg>
+                        </div>
+                        <p class="player-features__name">{{ _("Audio") }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+{% endmacro %}

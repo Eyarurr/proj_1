@@ -1,0 +1,71 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'users' %}
+
+
+{% block content %}
+
+<h1>Продукты юзера «{{ user.name }}»</h1>
+
+{% include('admin/users/_tabs.html') %}
+
+{% if user.products|length == 0 %}
+    <div class="alert alert-info">
+        У юзера нет ни одного продукта.
+    </div>
+{% else %}
+    <div class="table-responsive-lg">
+    <table class="table table-hover table-list mt-4">
+    <thead>
+    <tr>
+        <th>С каких пор</th>
+        <th class="break">Продукт</th>
+        <th class="break">План</th>
+        <th class="break">Оплачено</th>
+        <th class="break">Свойства</th>
+        <th class="break">Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for product_id, product in user.products.items() %}
+    <tr>
+        <td title="Спустя {{ (product.created - user.created).days }} суток после регистрации">
+            {{ product.created|humantime }}
+        </td>
+        <td class="break">
+            <span class="badge bg-primary badge-{{ product.product_id }}">{{ product.product_id }}</span>
+        </td>
+        <td class="break">{{ products[product_id].plans[product.plan_id].title }}</td>
+        <td class="break">
+            {% if product.last_payment_time %}
+                с {{ product.last_payment_time.strftime('%d.%m.%Y %H:%M') }}
+                {% if product.next_payment_time %}
+                    по {{ product.next_payment_time.strftime('%d.%m.%Y %H:%M') }}
+                {% endif %}
+            {% else %}
+                без оплаты
+                {% if product.next_payment_time %}
+                    до {{ product.next_payment_time.strftime('%d.%m.%Y %H:%M') }}
+                {% endif %}
+            {% endif %}
+        </td>
+        <td class="break t"><code>{{ product.meta }}</code></td>
+        <td class="break">
+            <a href="{{ url_for('.user_product_edit', user_id=user.id, product_id=product.product_id) }}" class="btn btn-sm btn-success">Править</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </div>
+{% endif %}
+
+<form method="get" action="{{ url_for('.user_product_edit', user_id=user.id) }}" class="row row-cols-lg-auto">
+    <div class="col-12">
+        {{ form_add_product.product_id(class='form-select') }}
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Добавить продукт</button>
+    </div>
+</form>
+
+{% endblock %}

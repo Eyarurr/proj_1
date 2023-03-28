@@ -1,0 +1,13 @@
+{
+    "name": "fake_offset_scale",
+    "version": "0.0.1",
+    "scripts": {},
+    "author": "Biganto",
+    "dependencies": {
+        "commander": "^3.0.1",
+        "image-size": "^0.8.1",
+        "three-obj-loader": "^1.1.3",
+        "three.js-node": "^0.72.1"
+    },
+    "description": ""
+}

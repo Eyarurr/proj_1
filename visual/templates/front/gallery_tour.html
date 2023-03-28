@@ -1,0 +1,89 @@
+{% extends 'base_common.html' %}
+{% set pixels_disabled = True %}
+{% set page_title = _('Tour gallery') + ': ' + tour.title %}
+{% set cc = 'preview' %}
+{% set is_portfolio = True %}
+
+{% set position = 1 %}
+{% set total = 1289 %}
+
+{% from '/macros/lang.html' import lang %}
+
+{% block head_share %}
+    {% if tour.screen %}
+    {% set meta_image = tour.screen.url|absurl %}
+    {% else %}
+    {% set meta_image = url_for('static', filename='public/img/share/logo1.png', _external=True) %}
+    {% endif %}
+
+    <meta property="og:title" content="{{ tour.title }} {{ _('on biganto.com') }}" />
+    <meta property="og:image" content="{{ meta_image }}" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ tour.title }} {{ _('on biganto.com') }}">
+    <meta name="twitter:image" content="{{ meta_image }}">
+{% endblock %}
+
+{% block common_head %}
+    <link rel="stylesheet" type="text/css" href="/static/gallery/css/gallery-common.css?{{ config.get('RELEASE_VERSION') }}">
+    {% include 'inc_styles.html' %}
+{% endblock %}
+
+{% block common_content %}
+
+    <div class="b-topnav">
+        <div class="b-topnav__column--one">
+            <a href="/" class="b-topnav__elem b-topnav__logo">
+                <svg viewBox="0 0 105 32" class="b-topnav__biganto icon__svg" width="105" height="32"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#biganto"></use></svg>
+            </a>
+        </div>
+        <div class="b-topnav__column--two"></div>
+        <div class="b-topnav__column b-topnav__column--three">
+            {% if prev_tour %}
+                <a href="{{ url_for('front.gallery_tour', tour_id=prev_tour.id, sort=sort) }}" class="b-topnav__elem b-topnav__arrow b-topnav__arrow--left">←</a>
+            {% endif %}
+            <div class="b-topnav__menu">
+                <span class="b-topnav__elem b-topnav__center">
+                    <span class="b-topnav__category">{{ tour.title }}</span><span class="b-topnav__counter">: <span class="b-topnav__counter-dash">{{ _('%(position)d / %(total)d', position=current, total=count) }}</span></span>
+                </span>
+            </div>
+            {% if next_tour %}
+                <a href="{{ url_for('front.gallery_tour', tour_id=next_tour.id, sort=sort) }}" class="b-topnav__elem b-topnav__arrow b-topnav__arrow--right">→</i></a>
+            `{% endif %}
+        </div>
+        <div class="b-topnav__column b-topnav__column--four"></div>
+        <a href="{{ url_for('front.gallery') }}" class="b-topnav__elem b-topnav__close">×</a>
+    </div>
+
+    {% for category, messages in flashes().items() %}
+        <div class="b-topnav">
+            <ul class="b-topnav__flashes">
+                <li class="b-topnav__flashes-item">{{ messages | join('</li><li class="b-topnav__flashes-item">') | safe }}</li>
+            </ul>
+        </div>
+    {% endfor %}
+
+    {% if tour.title %}
+    <div class="b-titler">
+        <h1 class="b-titler__value">
+            {{ tour.title }}
+        </h1>
+    </div>
+    {% endif %}
+
+    <div class="b-viewbox">
+        <iframe class="b-viewbox__iframe" id="player" allowfullscreen="allowfullscreen" src="{{ url_for('front.tour', tour_id=tour.id, **player_options|default({})) }}"></iframe>
+    </div>
+
+{% endblock %}
+
+{% block common_tail %}
+    <script src="/static/public/js/main.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+
+    <script>
+        BG.MULTITOUR = true;
+        {# offer.template_data.keep_position #}
+        BG.KEEP_POSITION = false;
+    </script>
+    <script src="/static/gallery/js/gallery-common.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+{% endblock %}

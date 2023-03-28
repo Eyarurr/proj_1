@@ -1,0 +1,160 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'footages' %}
+
+{% block content %}
+    <h2>Метаданные съёмки #{{ footage.id }}</h2>
+
+{% include('admin/footages/_tabs.html') %}
+
+    <div class="table-filters text-center">
+        <div class="btn-group btn-group-sm">
+            <a href="?mode=split" class="btn {% if mode == 'split' %} btn-primary {% else %} btn-outline-secondary {% endif %}">По свойствам</a>
+            <a href="?mode=single" class="btn {% if mode == 'single' %} btn-primary {% else %} btn-outline-secondary {% endif %}">Одной простынёй</a>
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="form-horizontal" id="form-json">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        {% if mode == 'split' %}
+
+            {% set field_rows = {
+                    'model': 1,
+                    'model_format': 1,
+                    'model_size': 1,
+                    'model_size_gz': 1,
+                    'resolutions': 1,
+                    'skyboxes': 20,
+                    'active_meshes': 12,
+                    'overlays': 20,
+                    'actions': 20,
+                    'sources': 16,
+                    'toolbar': 16,
+                    'walk': 16,
+                    '_loading': 30,
+               }
+            %}
+
+            {% for key, meta in jsoned.items()|sort %}
+            <div class="row mb-3" id="group-{{ key }}">
+                <div class="col-lg-2 text-end">
+                    <label class="control-label">{{ key }}:</label><br>
+                    <button type="button" class="btn btn-danger btn-sm action-prop-delete mb-1 mb-lg-0 " title="Удалить свойство"><i class="fas fa-ban"></i></button>
+                </div>
+                <div class="col-lg-10">
+                    {% set val = request.form.get('meta.' + key) or meta %}
+                    {% if field_rows[key] == 1 %}
+                        <input type="text" name="meta.{{ key }}" class="form-control code" value='{{ val }}'>
+                    {% else %}
+                        <textarea name="meta.{{ key }}" class="form-control code" rows="{{ field_rows.get(key, 6) }}">{{- val -}}</textarea>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="row mb-2" id="row-prop-new">
+                <div class="col-lg-5 offset-2">
+                    <a href="#modal-prop-new" class="btn btn-success" data-bs-toggle="modal"><i class="fas fa-plus-circle"></i> Добавить свойство</a>
+                </div>
+                <div class="col-lg text-end">
+                    <a href="https://docs.google.com/document/d/16E1M0RNxjb_kij5iaZ2buVdgP83O5XOXApvlOiC9DP4/edit#heading=h.sxoitftpq94i">Спецификация метаданных</a>
+                </div>
+            </div>
+
+    {% else %}
+        <div class="row mb-2">
+            <div class="col">
+                <textarea name="meta" class="form-control code" rows="30">{{ jsoned }}</textarea>
+            </div>
+        </div>
+    {% endif %}
+
+        <div class="row">
+            <div class="col-lg-10 offset-2">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a href="{{ url_for('.footages') }}" class="btn btn-outline-secondary">Отмена</a>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block tail %}
+
+<div id="template-prop-new" style="display: none">
+    <div class="form-group">
+        <label class="col-lg-2 control-label"></label>
+        <div class="col-lg-10">
+            <textarea name="" class="form-control code" rows="6"></textarea>
+        </div>
+    </div>
+</div>
+
+<form id="form-prop-new">
+<div class="modal" id="modal-prop-new"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Новое свойство</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <div class="text-danger" id="error-prop-new"></div>
+        <label>Название свойства (латиница, без пробелов):</label>
+        <input type="text" name="name" class="form-control">
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Ok</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+</form>
+
+<script type="text/javascript">
+// Включаем поддержку TAB во всех textarea
+$(document).on('keydown', 'textarea', function(e) {
+    var keyCode = e.keyCode || e.which;
+    var TAB_SIZE = 4;
+
+    if (keyCode === 9) {
+        e.preventDefault();
+        document.execCommand('insertText', false, ' '.repeat(TAB_SIZE));
+    }
+});
+// Сабмит всей формы по Ctrl+Enter в любом поле
+$(document).on('keydown', ':input', function(e) {
+    if(e.keyCode == 13 && e.ctrlKey) {
+        $('#form-json').submit();
+    }
+});
+
+// Добавление свойства
+var $formPropNew = $('#form-prop-new'), $modalPropNew = $('#modal-prop-new'), $errorPropNew = $('#error-prop-new');
+$modalPropNew.on('shown.bs.modal', function() {
+    $errorPropNew.text('');
+    $formPropNew.find('[name=name]').val('').focus();
+});
+$formPropNew.on('submit', function(e) {
+    e.preventDefault();
+    var name = $formPropNew.find('[name=name]').val().trim(), $html;
+    if(name == '') {
+        $errorPropNew.text('Введите название нового свойства меты.');
+        return;
+    } else {
+        $errorPropNew.text('');
+    }
+    $html = $('#template-prop-new').children().clone();
+    $html.attr('id', 'group-' + name).show();
+    $html.find('label').text(name);
+    $html.find('textarea').attr('name', 'meta.' + name);
+
+    $html.insertBefore($('#row-prop-new'));
+    $('#modal-prop-new').modal('hide');
+});
+
+// Удаление свойства
+$('#form-json').on('click', '.action-prop-delete', function(e) {
+    if(confirm('Серьёзно?!')) {
+        $(this).parents('.form-group').remove();
+    }
+});
+</script>
+{% endblock %}

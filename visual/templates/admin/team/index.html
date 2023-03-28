@@ -1,0 +1,302 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'team' %}
+
+
+{% block head %}
+    <style type="text/css">
+        .last-active-never {
+            font-size: 75%;
+            color: #aaa;
+        }
+
+        .future-event {
+            background-color: #808080;
+        }
+
+        tr.banned {
+            text-decoration: line-through;
+        }
+
+        ul.gallery-team li .label.banned {
+            position: absolute;
+            top: 76px;
+            left: 68px;
+            box-shadow: 5px 5px 10px #000;
+        }
+
+        .bd-days-left-0 {
+            color: red;
+        }
+
+        .bd-days-left-1 {
+            opacity: .8;
+        }
+
+        .bd-days-left-2 {
+            opacity: .6;
+        }
+
+        .bd-days-left-3 {
+            opacity: .4;
+        }
+
+        #show-real-photos {
+            width: 100px;
+            height: 30px;
+            background-color: rgba(0,0,0,0);
+            border: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1 >
+        {% if request.args.get('fired') %}
+            Бывшие сотрудники Biganto
+            <div class="float-end">
+                <a href="{{ url_for('.team', department_id=department_id) }}" class="btn btn-outline-secondary btn-sm">действующие</a>
+            </div>
+        {% else %}
+            Команда Biganto
+            <div class="float-end">
+                <a href="{{ url_for('.team', department_id=department_id, fired=1) }}" class="btn btn-outline-secondary btn-sm">уволенные</a>
+            </div>
+        {% endif %}
+
+        <small class="text-muted">({{ users.total }})</small>
+    </h1>
+
+    {% if photo_queue %}
+        <p class="text-center">
+            <a href="{{ url_for('.team_photo_queue') }}" class="btn btn-danger">Фотографий на рассмотрении: {{ photo_queue }}</a>
+        </p>
+    {% endif %}
+<form method="get">
+    <div class="row justify-content-between table-filters">
+        <div class="row col-lg-auto">
+            <div class="col-lg-auto mb-1 mb-lg-0">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text" id="basic-addon">Искать по:</span>
+                    {{ filters.search(class='form-control form-control-sm', placeholder='по имени и e-mail') }}
+                </div>
+            </div>
+
+            <div class="col-lg-auto mb-1 mb-lg-0">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Сортировать по:</span>
+                    {{ filters.sort(class='form-select', style='width: 190px', id='inputPassword6') }}
+                </div>
+            </div>
+            <div class="col-lg-auto mb-1 mb-lg-0">
+                {{ filters.display(form=filters) }}
+            </div>
+
+        </div>
+        <div class="col-lg-auto">
+            <div class="btn-group btn-group-sm mb-1 mb-lg-0">
+                <button type="submit" class="btn btn-submit btn-primary">Показать</button>
+                {% if filters.is_dirty %}
+                    <a href="{{ url_for('.team', **filters.default_values) }}" class="btn btn-secondary">Очистить</a>
+                {% endif %}
+            </div>
+            {% with cu = current_user %}
+                {% if cu.has_role('team') or (cu.team_member.department_id and cu.team_member.department.boss_id == current_user.id) %}
+                    <a href="{{ url_for('.team_edit') }}" class="btn btn-sm btn-success mb-1 mb-lg-0">
+                        <i class="fa fa-plus"></i> Создать сотрудника
+                    </a>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</form>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a  href="{{ url_for('.team', fired=request.args.get('fired')) }}"
+                {% if not department_id %} class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               >Все отделы</a>
+        </li>
+        {% for department in departments %}
+            <li class="nav-item">
+                <a href="{{ url_for('.team', department_id=department.id, fired=request.args.get('fired')) }}"
+                   class="nav-link {% if department.id == department_id %} active {% endif %}">
+                        {{ department.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if users.total == 0 %}
+        <div class="alert alert-info">
+            Сотрудники не найдены. <a href="{{ url_for('.team') }}">Посмотреть всех.</a>
+        </div>
+    {% else %}
+        {% if filters.display.data == 'table' %}
+            <div class="table-responsive-lg">
+                <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    {% if not department_id %}
+                        <th>Отдел</th>
+                    {% endif %}
+                    <th>Имя</th>
+                    <th>Должность</th>
+                    <th>Телеграм</th>
+                    <th>Стаж</th>
+                    <th>Место</th>
+                    <th>Время</th>
+                </tr>
+                </thead>
+                <tbody>
+            {% for user in users.items %}
+                <tr {% if user.banned %} class="banned" {% endif %}>
+                    {% if not department_id %}
+                        <td>{{ user.team_member.department.title }}</td>
+                    {% endif %}
+                    <td>
+                        <a href="{{ url_for('.team_profile', user_id=user.id) }}" class="text-underline-hover">{{ user.name }}</a>
+
+                        {% with till_bd = user.team_member.till_birthday() %}
+                            {% if till_bd != None and till_bd == 0 %}
+                                <i class="fa fa-birthday-cake bd-days-left-{{ till_bd }}"
+                                   title="День рождения сегодня!"></i>
+                            {% elif till_bd != None and till_bd >= 0 and till_bd <= 3 %}
+                                <i class="fa fa-birthday-cake bd-days-left-{{ till_bd }}"
+                                   title="{{ till_bd }} {{ till_bd|plural('день', 'дня', 'дней') }} до дня рождения!"></i>
+                            {% endif %}
+                        {% endwith %}
+
+                        {# Временные статусы (TeamMemberStatus) #}
+                        {% for status in user.team_status if status != None %}
+                            {% if not status.finish or status.finish > current_datetime().date()  %}
+                                <div name="status" class="badge" start="{{ status.start }}" finish="{{ status.finish }}">{{ status.type_name() }}</div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <a href="{{ url_for('.tours', user_id=user.id) }}" title="Туры пользователя" class="float-end">
+                            <i class="far fa-building"></i>
+                        </a>
+                    </td>
+                    <td>{{ user.team_member.position }}</td>
+                    <td>
+                        {% if user.team_member.telegram %}
+                            <a href="http://t.me/{{ user.team_member.telegram }}" target="_blank" title="{{ user.team_member.telegram }}">@{{ user.team_member.telegram }}</a>
+                        {% endif %}
+                    </td>
+                    {% if request.args.get('fired') %}
+                    <td class="text-right">
+                        {% if user.team_member.hired and user.team_member.fired %}
+                            {{ date_sub(user.team_member.fired, user.team_member.hired) }}
+                        {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-right text-nowrap">
+                        {% if user.team_member.hired %}
+                            {{ date_sub(date_now, user.team_member.hired) }}
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                    <td>
+                        {% if user.team_member.city %}
+                        <code title="{{ user.team_member.city.country.name }}">{{ user.team_member.city.country_id }}</code>
+                        {{ user.team_member.city.name_ru }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.team_member.timezone %}
+                        <span title=" UTC {{ user.team_member.timezone|get_utc_delta }}" class="timezone"
+                              timezone={{user.team_member.timezone}}> </span><span title=" UTC {{ user.team_member.timezone|get_utc_delta }}"></span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+                </tbody>
+            </table></div>
+        {% else %}
+            <ul class="gallery gallery-team" id="team-gallery">
+                {% for user in users.items %}
+                    <li>
+                        <a href="{{ url_for('.team_profile', user_id=user.id) }}">
+                            <p class="title">
+                                {{ user.name }}
+                                {% with till_bd = user.team_member.till_birthday() %}
+                                    {% if till_bd != None and till_bd == 0 %}
+                                        <i class="fa fa-birthday-cake bd-days-left-{{ till_bd }}"
+                                           title="День рождения сегодня!"></i>
+                                    {% elif till_bd != None and till_bd >= 0 and till_bd <= 3 %}
+                                        <i class="fa fa-birthday-cake bd-days-left-{{ till_bd }}"
+                                           title="{{ till_bd }} {{ till_bd|plural('день', 'дня', 'дней') }} до дня рождения!"></i>
+                                    {% endif %}
+                                {% endwith %}
+                                <br>
+                                <span class="position">{{ user.team_member.position or '' }}</span>
+                            </p>
+                            {% if user.team_member.avatar %}
+                                <img src="{{ user.team_member.avatar.url }}" width="{{ user.team_member.avatar.width }}"
+                                     height="{{ user.team_member.avatar.height }}">
+                            {% else %}
+                                <img src="/static/admin/person.png" width="200" height="200">
+                            {% endif %}
+                        </a>
+                        {% if user.banned %}<span class="label label-danger banned">Забанен :(</span>{% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {{ render_pagination(users, '.team', **filters.as_dict()) }}
+    {% endif %}
+
+    {% if mid_birthdate %}
+    <p class="text-center">
+        Усреднённый день рождения {%- if department_id %} отдела {% endif %}: <strong>{{ mid_birthdate.strftime('%d.%m') }}</strong>
+    </p>
+    {% endif %}
+{% endblock %}
+
+{% block tail %}
+    {% if filters.display.data == 'thumbnails' and department_id == 2 %}
+        <script type="text/javascript">
+            $('h1').append('<button id="show-real-photos" title="Показать настоящие фото"></button>');
+            $('#show-real-photos').click(function (e) {
+                $('#team-gallery').replaceWith('<img src="/static/admin/real-photos-2.jpg">');
+            });
+        </script>
+    {% endif %}
+    <script>
+        $(function () {
+            $('.timezone').each(function () {
+                {#function date_to_string(str, sep='-') {#}
+                {#    date_from_str = new Date(str)#}
+                {#    str_from_date = date_from_str.toLocaleDateString()#}
+                {#    str_from_date = str_from_date.replace('.', sep)#}
+                {#    return str_from_date }#}
+                let now = new Date(), c_time;
+                c_time = now.toLocaleTimeString('ru', {'timeZone': $(this).attr('timezone')});
+                $(this).text(c_time.slice(0, 5))
+            });
+
+            $('[name="status"]').each(function () {
+                let now = new Date();
+                $start = $(this).attr('start')
+                $finish = $(this).attr('finish')
+
+                $start_as_date = new Date($start)
+                $finish_as_date = new Date($finish)
+                if ($start_as_date < now) {
+                    $(this).attr('title', `c ${$start_as_date.toLocaleDateString()} по ${$finish_as_date.toLocaleDateString()}`)
+                    $(this).addClass('bg-info')
+                } else if ($start_as_date > now)
+                 {
+                     $(this).addClass('bg-secondary')
+                     $(this).attr('title', `В будущем c ${$start_as_date.toLocaleDateString()} по ${$finish_as_date.toLocaleDateString()}`)
+                }
+                if ($finish === 'None') {
+                    $(this).addClass('position-relative')
+                    $(this).append('<span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>')
+                    $(this).attr('title', `Событие с открытой датой: c ${$start_as_date.toLocaleDateString()} ...`)
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

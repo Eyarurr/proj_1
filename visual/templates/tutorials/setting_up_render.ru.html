@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% set page_title = _("Setting up 360 render") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/setting-up-render/preview_big.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <h2>Краткое руководство</h2>
+                <ol>
+                    <li>Установите разрешение рендера и количество кадров</li>
+                    <li>Выберите тип камеры</li>
+                    <li>Отключите эффекты постобработки</li>
+                    <li>Перейдите к разделу <a href='{{ url_for('tutorials.post_production') }}'>Постобработка</a></li>
+                </ol>
+
+                <div id="more" class="b-anchor"></div>
+                <h2>Полное руководство</h2>
+
+                <p><span class='warning'>Важно:</span> основные настройки рендера можно выставить автоматически с помощью скрипта Virtoaster Camera tool. Тем не менее, вы должны вручную отключить эффекты постобработки (см. конец раздела)</p>
+                <p>Перейдите в настройки рендера (Render setup, F10), укажите количество кадров по количеству точек в анимированной камере Virtoaster. </p>
+                <p>Установите разрешение 9216x1536 пикселей.</p>
+                <p><img src="/static/public/img/tutorials/setting-up-render/image_9.jpg" alt="" width="360"></p>
+                <p>Меняем тип камеры.</p>
+                <p><b>Для V-Ray:</b></p>
+                <p>Откройте вкладку V-Ray. Установите тип камеры “Cube 6x1” (Render Setup/вкладка V-Ray/Scroll Camera/Type: Cube 6x1).</p>
+                <p><img src="/static/public/img/tutorials/setting-up-render/image_10.jpg" alt="" width="360"></p>
+                <p><b>Для Corona:</b></p>
+                <p>Выберите Virtoaster Camera. В списке модификаторов добавьте модификатор “CoronaCameraMod”. Во вкладке CameraProjection отметьте флаг ProjectionType/Override. Выберите Cubemap в выпадающем списке.</p>
+                <p><img src="/static/public/img/tutorials/setting-up-render/image_11.jpg" alt="" width="360"></p>
+                <p><span class='warning'>Важно</span>: отключите эффект Sharpening в Corona render. Отключите все виды пост эффектов включая виньетирование, DoF, motion blur и т.д. Эти эффекты приведут к видимым швам на границах панорамы. Единственный эффект приемлемый для использования при рендере cubemap панорам - Corona Bloom and Glare (используйте данный эффект с осторожностью, т.к. при больших значениях он всё еще может повлиять на границы рендера). </p>
+                <p><img src="/static/public/img/tutorials/setting-up-render/image_12.jpg" alt=""></p>
+                <p><span class='warning'>Важно</span>: если вы используете Corona 4 или новее, мы рекомендуем отключить High Quality image filter на вкладке System. Фильтр High quality может вызывать появление видимых швов на сторонах кубической панорамы. Пожалуйста, выберите "None" или "Tent" в типе фильтра.</p>
+                <p>Выберите папку, в которой вы хотите сохранить рендеры и рендер каналы.</p>
+                <p><span class='warning'>Важно:</span> мы не рекомендуем использовать JPEG формат для рендера или постобработки. При загрузке панорам в 3d тур, рендеры будут автоматически конвертированы в JPEG для показа в браузере. Таким образом возникнет двойное сжатие jpeg и снижение качества рендера!</p>
+                <p>Когда ваши рендеры будут готовы, вы можете перейти к разделу <a href='{{ url_for('tutorials.post_production') }}'>Постобработка</a></p>
+            </div>
+
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#short" class="side-menu__link link-scroll-to">Краткое руководство</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#more" class="side-menu__link link-scroll-to">Полное руководство</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

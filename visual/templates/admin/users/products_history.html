@@ -1,0 +1,34 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'users' %}
+
+
+{% block content %}
+
+<h1>История продуктов юзера «{{ user.name }}»</h1>
+
+{% include('admin/users/_tabs.html') %}
+
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-4">
+    <thead>
+    <tr>
+        <th>Когда</th>
+        <th class="break">Продукт</th>
+        <th class="break">План</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for rec in products_history %}
+            <tr>
+                <td class="break">{{ rec.when.strftime('%d.%m.%Y %H:%S') }}</td>
+                <td class="break">{{ rec.product_id }}</td>
+                <td class="break">
+                    Перешёл на план {{ products[rec.product_id].plans[rec.plan_id].title }}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}

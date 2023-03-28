@@ -1,0 +1,226 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+
+{% block head %}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey={{ config.YANDEX_MAPS_API_KEY }}&lang=ru_RU" type="text/javascript"></script>
+    <style type="text/css">
+        #map {height: 400px; border: 1px solid black;}
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    {% if office.id %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>Свойства офиса</h1>
+            </div>
+            <div class="col-lg-6 text-lg-end">
+                <a class="btn btn-sm btn-success" href="{{ url_for('.br_operators', office_id=office.id) }}"><i class="fas fa-user"></i> Операторы</a>
+                <a class="btn btn-sm btn-success" href="{{ url_for('.br_orders', office_id=office.id) }}"><i class="fas fa-gift"></i> Заказы</a>
+            </div>
+        </div>
+    {% else %}
+        <h1>Создать офис</h1>
+    {% endif %}
+
+    <form method="POST" id="form-edit" enctype="multipart/form-data">
+    {{ form.csrf_token() }}
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Режим работы</label>
+        <div class="col-lg-4">
+            <div class="input-group">
+                {{ form.work_start(class='form-control', placeholder='HH:MM:SS+TZ:TZ') }}
+                <span class="input-group-text">—</span>
+                {{ form.work_end(class='form-control', placeholder='HH:MM:SS+TZ:TZ') }}
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-check">
+                {{ form.active(class='form-check-input') }}
+                <label class="form-check-label" for="{{ form.active.name }}">Вообще работает</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Менеджер (email)</label>
+        <div class="col-lg-10">
+            {{ form.manager_email(class='form-control') }}
+            <p class="text-muted">Пользователь должен быть <a href="{{ url_for('.team') }}">членом команды</a> с ролью <code>br.super</code></p>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Название</label>
+        <div class="col-lg-10">
+            {{ form.title(class='form-control') }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Описание</label>
+        <div class="col-lg-10">
+            {{ form.description(class='form-control', rows=3) }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Где находится</label>
+        <label class="col-lg-1 col-form-label">Город</label>
+        <div class="col-lg-2">
+            {{ form.city_id(class='form-select advanced2AutoComplete', autocomplete='off') }}
+        </div>
+        <label class="col-lg-1 col-form-label">Адрес</label>
+        <div class="col-lg-3">
+            {{ form.address(class='form-control') }}
+        </div>
+        <label class="col-lg-1 col-form-label">Координаты</label>
+        <div class="col-lg-2">
+            <div class="input-group">
+                {{ form.coords_lat(class='form-control', placeholder='Широта', readonly=True) }}
+                <span class="input-group-text">,</span>
+                {{ form.coords_lon(class='form-control', placeholder='Долгота', readonly=True) }}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-10 offset-2">
+            <div id="map"></div>
+            <p class="text-muted">Клик на карте поставит маркер, где находится офис. Маркер можно таскать мышью. Координаты офиса очень важны дял работы сервиса.</p>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Примечание</label>
+        <div class="col-lg-10">
+            {{ form.manager_comment(class='form-control', rows=3) }}
+            <p class="text-muted">Это видно только в админке и менеджерам.</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-between mb-3">
+        <div class="col-lg-auto offset-lg-2">
+            <button class="btn btn-primary">Сохранить</button>
+            {% if office.id %}
+                <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger">Удалить</a>
+            {% endif %}
+            <a href="{{ url_for('.br_offices') }}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </div>
+</form>
+
+
+{% if office.id %}
+    <form method="post" action="{{ url_for('.br_office_delete', office_id=office.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="modal" id="modal-delete"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Удалить офис</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Удалится офис и все (включая выполненные!) заказы этого офиса, вместе со своими данными.
+                    Вы не должны этого хотеть.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить от греха подальше</button>
+            </div>
+        </div></div></div>
+    </form>
+{% endif  %}
+
+<!-- Bootstrap 4 Autocomplete -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/static/bootstrap-autocomplete.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#city_id').autoComplete({
+            minLength: 3,
+            resolver: 'custom',
+            formatResult: function (item) {
+                return {
+                    value: item.id,
+                    text: item.country_id + ": " + item.name,
+                };
+            },
+            events: {
+                search: function (qry, callback) {
+                    // let's do a custom ajax call
+                    $.ajax(
+                        "{{ url_for('api3.misc_get_cities') }}" + '?client=admin&client_version=1.0&lang=ru',
+                        {
+                            data: {'prefix': qry}
+                        }
+                    ).done(function (res) {
+                        callback(res.result)
+                    });
+                },
+
+            }
+        });
+        $('[name="city_id_text"]').attr('value', '{{ office.city.name }}')
+        $('[name="city_id"]').attr('value', '{{ office.city_id or '' }}')
+    });
+
+    ymaps.ready(init);
+    function init(){
+        let elMap = document.getElementById('map'),
+            elLat = document.getElementById('coords_lat'),
+            elLon = document.getElementById('coords_lon'),
+            elAddress = document.getElementById('address'),
+            coords,
+            zoom,
+            pointer;
+
+        if(elLat.value) {
+            coords = [elLat.value, elLon.value];
+        }
+
+        function setCoords(coords) {
+            elLat.value = coords[0];
+            elLon.value = coords[1];
+            ymaps.geocode(coords).then(function(res) {
+                let obj = res.geoObjects.get(0);
+                // Канонический способ - elAddress.value = obj.getAddressLine(); вернёт полный адрес со страной и городом; properties.get('name')
+                // может отвалиться, так как автор не нашёл его в документации
+                elAddress.value = obj.properties.get('name')
+            });
+        }
+
+        function createPlacemark(where) {
+            pointer = new ymaps.Placemark(where, {}, {draggable: true});
+            map.geoObjects.add(pointer);
+            pointer.events.add('dragend', function(e) {
+                setCoords(e.get('target').geometry.getCoordinates());
+            });
+        }
+
+        let map = new ymaps.Map(elMap, {
+            center: coords ? coords : [55.786, 49.119],
+            zoom: coords ? 17 : 5,
+            controls: ['searchControl']
+        });
+
+        if(coords) {
+            createPlacemark(coords);
+        }
+
+        map.events.add('click', function(e) {
+            let where = e.get('coords');
+            if(pointer) {
+                pointer.geometry.setCoordinates(where);
+            } else {
+                createPlacemark(where);
+            }
+            setCoords(where);
+        });
+    }
+
+</script>
+
+
+{% endblock %}

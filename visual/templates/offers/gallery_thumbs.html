@@ -1,0 +1,44 @@
+{#
+    Входные переменные:
+    Offer offer
+    dict player_options: словарь с опциями плеера (оверрайдит дефолтные опции)
+#}
+<div class="b-thumbs" >
+    <div class="b-thumbs__adds"></div>
+    <div class="b-thumbs__arrow b-thumbs__arrow--prev">
+        <svg class="icon__svg" viewBox="0 0 20 38"><use xlink:href="/static/offers/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-left"></use></svg>
+    </div>
+    <div class="b-thumbs__arrow b-thumbs__arrow--next">
+        <svg class="icon__svg" viewBox="0 0 20 38"><use xlink:href="/static/offers/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-right"></use></svg>
+    </div>
+    <div class="b-thumbs__name">
+        <div class="b-thumbs__name-inner"></div>
+    </div>
+    <div class="b-thumbs__inner">
+        <ul class="b-thumbs__list clearfix" tabindex="-1">
+            {% set tourCount = offer.tours|length %}
+            {% for tour in offer.tours %}
+                {% if loop.index == 1 and tourCount > 1 %}
+                    <li class="b-thumbs__item b-thumbs__item--fake b-thumbs__item--fake-tours b-thumbs__item--hidden">
+                        <div class="b-thumbs__label">
+                            <span>{{ _("3D tours") }} ({{ tourCount }})</span>
+                            <div class="b-thumbs__icon">
+                                <svg viewBox="0 0 56 56" class="icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-one-right"></use></svg>
+                            </div>
+                        </div>
+                        <img src="{{ tour.tour.preview.url }}" class="b-thumbs__image">
+                    </li>
+                {% endif %}
+                <li class="b-thumbs__item b-thumbs__item--tour{% if loop.index == 1 %} active{% endif %}" data-url="{{ url_for('front.tour', tour_id=tour.tour_id, **player_options|default({})) }}" data-id="{{ tour.tour_id }}">
+                    <div class="b-thumbs__label">
+                        <span>{{ tour.title or tour.tour.title or '' }}</span>
+                        <div class="b-thumbs__icon">
+                            <svg viewBox="0 0 56 56" class="icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-one-right"></use></svg>
+                        </div>
+                    </div>
+                    <img src="{{ tour.tour.preview.url }}" class="b-thumbs__image">
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

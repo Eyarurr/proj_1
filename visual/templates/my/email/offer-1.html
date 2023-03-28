@@ -1,0 +1,226 @@
+{% set offer_url = url_for('front.offer', offer_id=offer.id, _external=True, _scheme='https') %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ offer.title }}</title>
+    <style type="text/css">
+      table {border-collapse: collapse;}
+      a:hover {
+        text-decoration: underline !important;
+      }
+      @media only screen and (min-device-width: 1001px) {
+      .content {width: 1000px !important;}
+      .content_inner {width: 690px !important;}
+      .col305 {width: 305px !important;}
+      }
+      @media only screen and (max-device-width: 690px) {
+        .col305 {
+          width: 100% !important;
+          max-width: none !important;
+        }
+      }
+      @media only screen and (max-device-width: 500px) {
+        .footer-copyright {
+          width: 100% !important;
+          text-align: center;
+        }
+        .footer-logo {
+          width: 100% !important;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body yahoo style="background: #ffffff; margin: 0; padding: 0; min-width: 100%!important;">
+    <table width="100%" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="690" align="center" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                  <td style="padding: 0; text-align: left; vertical-align: top;">
+            <![endif]-->
+          <table class="content" align="center" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 1000px; margin: 0 auto;">
+            <tr>
+              <td style="padding: 0; text-align: left; vertical-align: top;">
+                <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%; background: #000000;" width="100%" bgcolor="000000">
+                  <tr>
+                    <td style="font-size: 11px; line-height: normal; padding: 0; text-align: center; vertical-align: top;">
+                      <p style="color: #909090; font-family: Arial, Tahoma, sans-serif; font-size: 11px; line-height: normal; margin: 7px 0 7px 0; padding: 0;">{{ _('If a message displayed incorrectly, use <a href="%(url)s" target="_blank" style="color:#d61b23;text-decoration:underline;">link</a>', url=offer_url) }}</p>
+                    </td>
+                  </tr>
+                </table>
+
+                <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%; background: url(cid:wide) no-repeat center top; background-color:#1a1a1a; background-size:cover;" width="100%">
+                  <tr>
+                    <td style="font-size: 11px; line-height: normal; padding: 0; text-align: center; vertical-align: top;">
+                      <table class="content_inner" align="center" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 690px; margin: 0 auto;">
+                        <tr>
+                          <td style="width:25px;font-size:0;line-height:0;"><img src="cid:px" alt="" width="25" height="10" border="0" style="border: 0; margin: 0;"></td>
+                          <td style="padding: 0 0 28px 0; text-align: left; vertical-align: top;">
+                            <p style="color: #ffffff; font-family: Arial, Tahoma, sans-serif; font-size: 25px; line-height: normal; margin: 25px 0 20px 0; padding: 0; text-align: center; ">{{ offer.template_data.get('title', offer.title) }}</p>
+                            <p style="font-size: 0; line-height: 0; margin: 0 0 28px 0; padding: 0; text-align: center; ">
+                              <a href="{{ offer_url }}" target="_blank" style="text-decoration:none;">
+                                <!--[if (gte mso 9)|(IE)]>
+                                <span style="display:none;visibility:hidden;height:0;overflow:hidden;">
+                                <![endif]-->
+                                <img src="cid:offer_preview" alt="{{ offer.template_data.get('title', offer.title) }}" width="100%" border="0" style="border: 0; margin: 0; padding: 0;">
+                                <!--[if (gte mso 9)|(IE)]>
+                                </span>
+                                <![endif]-->
+                                <!--[if (gte mso 9)|(IE)]>
+                                <img src="cid:offer_preview" alt="{{ offer.template_data.get('title', offer.title) }}" width="640" border="0" style="border: 0; margin: 0; padding: 0;">
+                                <![endif]-->
+                              </a>
+                            </p>
+                            <table cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
+                            {% with address = offer.template_data.get('location', {}).get('address') %}
+                            {% if address %}
+                                <tr>
+                                  <td style="font-size: 0; line-height: 0; padding: 0; text-align: left; vertical-align: middle;"><img src="cid:addr" alt="" width="12" height="12" border="0" style="border: 0; font-size: 0; line-height: 0; margin: 0 0 0 0; padding: 0;"></td>
+                                  <td style="font-size: 14px; line-height: normal; padding: 0 0 0 6px; text-align: left; vertical-align: middle; color: #909191;">
+                                    <p style="color: #909191; font-family: Arial, Tahoma, sans-serif; font-size: 14px; line-height: normal; font-weight: bold; margin: 0; padding: 0; text-align: left; ">{{ address }}</p>
+                                  </td>
+                                </tr>
+                            {% endif %}
+                            {% endwith %}
+                          </table>
+                          </td>
+                          <td style="width:25px;font-size:0;line-height:0;"><img src="cid:px" alt="" width="25" height="10" border="0" style="border: 0; margin: 0;"></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%" width="100%">
+                  <tr>
+                    <td style="font-size: 0; height: 26px; line-height: 0; padding: 0; text-align: left; vertical-align: top;"><img src="cid:px" alt="" width="100%" height="26" border="0" style="border: 0; font-size: 0; line-height: 0; margin: 0; padding: 0;"></td>
+                  </tr>
+                </table>
+
+                <table class="content_inner" align="center" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 690px; margin: 0 auto;">
+                  <tr>
+                    <td style="width:25px;font-size:0;line-height:0;"><img src="cid:px" alt="" width="25" height="10" border="0" style="border: 0; margin: 0;"></td>
+                    <td style="padding: 0; text-align: center; vertical-align: top;">
+
+                        {% if offer.template_data.get('description') %}
+                        <div style="color: #000000; font-family: Arial, Tahoma, sans-serif; font-size: 18px; line-height: 24px; margin: 25px 0 0 0; padding: 0; text-align: left;">
+                            {{ offer.template_data.get('description') }}
+                        </div>
+                        {% endif %}
+
+                      <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%" width="100%">
+                        <tr>
+                          <td style="font-size: 0; height: 32px; line-height: 0; padding: 0; text-align: left; vertical-align: top;"><img src="cid:px" alt="" width="100%" height="32" border="0" style="border: 0; font-size: 0; line-height: 0; margin: 0; padding: 0;"></td>
+                        </tr>
+                      </table>
+
+                      {% with features = offer.template_data.get('features', []) %}
+                      {% if features %}
+                      <!--[if (gte mso 9)|(IE)]>
+                        <table width="305" align="left" cellpadding="0" cellspacing="0" border="0" style="width: 305px;">
+                          <tr>
+                            <td>
+                      <![endif]-->
+                      <table class="col305" align="{% if flag_param %}right{% else %}left{% endif %}" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 305px;">
+                        <tr>
+                          <td style="font-size: 13px; line-height: 18px; padding: 0; text-align: left; vertical-align: middle; color: #39373a;">
+                            {% for feature in features %}
+                            <table cellspacing="0" cellpadding="0" style="border-collapse: collapse;" width="100%">
+                              <tr>
+                                <td style="padding: 0; text-align: left; vertical-align: top; border-bottom: 1px solid #e5e5e5;">
+                                    <p style="color: #000000; font-family: Arial, Tahoma, sans-serif; font-size: 16px; line-height: normal; margin: 8px 0 8px 0; padding: 0; text-align: left;">{{ feature.key|capitalize }}</p>
+                                </td>
+                                <td style="padding: 0; text-align: right; vertical-align: top; border-bottom: 1px solid #e5e5e5;">
+                                  <p style="color: #000000; font-family: Arial, Tahoma, sans-serif; font-size: 16px; line-height: normal; margin: 8px 0 8px 0; padding: 0; text-align: right;">{{ feature.value }} {{ feature.measure|safe }}</p>
+                                </td>
+                              </tr>
+                            </table>
+                            {% endfor %}
+                          </td>
+                        </tr>
+                      </table><!--[if (gte mso 9)|(IE)]>
+                            </td>
+                          </tr>
+                      </table>
+                      <![endif]-->
+                      <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%" width="100%">
+                        <tr>
+                          <td style="font-size: 0; height: 32px; line-height: 0; padding: 0; text-align: left; vertical-align: top;"><img src="cid:px" alt="" width="100%" height="32" border="0" style="border: 0; margin: 0;"></td>
+                        </tr>
+                      </table>
+                      {% endif %}
+                      {% endwith %}
+
+                      <table cellspacing="0" cellpadding="0" style="border-collapse: collapse;" width="100%">
+                        <tr>
+                          <td style="font-size: 18px; line-height: normal; padding: 0; text-align: center; vertical-align: middle; color: #000000; background: #f7f1da;">
+                            <p style="color: #000000; font-family: Arial, Tahoma, sans-serif; font-size: 18px; line-height: normal; font-weight: normal; margin: 20px 0 20px 0; padding: 0; text-align: center; "><a href="{{ offer_url }}" target="_blank" style="text-decoration:none;color:#000000;">{{ _("Open the detailed information.") }}</a></p>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%" width="100%">
+                        <tr>
+                          <td style="font-size: 0; height: 32px; line-height: 0; padding: 0; text-align: left; vertical-align: top;"><img src="cid:px" alt="" width="100%" height="32" border="0" style="border: 0; margin: 0;"></td>
+                        </tr>
+                      </table>
+
+                    </td>
+                    <td style="width:25px;font-size:0;line-height:0;"><img src="cid:px" alt="" width="25" height="10" border="0" style="border: 0; margin: 0;"></td>
+                  </tr>
+                </table>
+
+                <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%; background: #d0d0d0;" width="100%" bgcolor="d0d0d0">
+                  <tr>
+                    <td style="font-size: 11px; line-height: normal; padding: 0; text-align: center; vertical-align: top;">
+                      <table class="content_inner" align="center" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 690px; margin: 0 auto;">
+                        <tr>
+                          <td style="width:25px;font-size:0;line-height:0;"><img src="cid:px" alt="" width="25" height="10" border="0" style="border: 0; margin: 0;"></td>
+                          <td style="padding: 0; text-align: center; vertical-align: top;">
+                            <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%" width="100%">
+                            <tr>
+                              <td style="font-size: 0; height: 12px; line-height: 0; padding: 0; text-align: left; vertical-align: top;"><img src="cid:px" alt="" width="100%" height="12" border="0" style="border: 0; margin: 0;"></td>
+                            </tr>
+                            </table>
+                            <table cellspacing="0" cellpadding="0" style="border-collapse: collapse;" align="left" class="footer-copyright">
+                              <tr>
+                                <td style="font-size: 14px; line-height: normal; padding: 0; text-align: center; vertical-align: middle; color: #8e8e8e;">
+                                  <p style="color: #8e8e8e; font-family: Arial, Tahoma, sans-serif; font-size: 14px; line-height: normal; font-weight: bold; margin: 12px 0 12px 0; padding: 0; text-align: center; ">Powered by {{ _('Biganto Visual') }}, 2016</p>
+                                </td>
+                              </tr>
+                            </table>
+                            <table cellspacing="0" cellpadding="0" style="border-collapse: collapse;" align="right" class="footer-logo">
+                              <tr>
+                                <td style="font-size: 0; line-height: 0; padding: 0; text-align: center; vertical-align: middle;"><p style="font-size: 0; line-height: 0; margin: 12px 0 12px 0; padding: 0; text-align: center; "><a href="{{ url_for('front.index', _external=True, _scheme='https') }}" target="_blank" style="text-decoration:none;"><img src="cid:biganto" alt="" width="188" height="23" border="0" style="border: 0; font-size: 0; line-height: 0; margin: 0; padding: 0;"></a></p></td>
+                              </tr>
+                            </table>
+                            <table cellspacing="0" cellpadding="0" style="border-collapse: collapse; width:100%" width="100%">
+                            <tr>
+                              <td style="font-size: 0; height: 12px; line-height: 0; padding: 0; text-align: left; vertical-align: top;"><img src="cid:px" alt="" width="100%" height="12" border="0" style="border: 0; margin: 0;"></td>
+                            </tr>
+                          </table>
+                          </td>
+                          <td style="width:25px;font-size:0;line-height:0;"><img src="cid:px" alt="" width="25" height="10" border="0" style="border: 0; margin: 0;"></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+          <!--[if (gte mso 9)|(IE)]>
+                  </td>
+              </tr>
+          </table>
+          <![endif]-->
+        </td>
+    </tr>
+    </table>
+  </body>
+</html>

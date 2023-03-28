@@ -1,0 +1,53 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'links' %}
+
+{% block head %}
+<style typr="text/css">
+    .fa{ cursor:pointer; }
+    .t input{ width:90%; border:1px solid #ddd; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h1>
+    Ссылки
+    <a href="{{ url_for('.links_edit') }}" class="btn btn-success float-lg-end"><i class="fa fa-plus-circle"></i> Создать ссылку</a>
+</h1>
+
+<table class="table table-bordered list">
+<tr>
+    <td>Короткая ссылка</td>
+    <td>Длинная ссылка</td>
+    <td>Кол-во переходов</td>
+    <td></td>
+</tr>
+{% for link in links.items %}
+<tr>
+    <td class="t">
+        <input type="text" value="{{ url_for('front.index', _external=True, _scheme='https') }}-/{{ baseN(link.id, 36) }}"> &nbsp;&nbsp;<i class="fa fa-clipboard" aria-hidden="true"></i>
+    </td>
+    <td class="t"><input type="text" value="{{ link.url }}"> &nbsp;&nbsp;<i class="fa fa-clipboard" aria-hidden="true"></i></td>
+    <td class="t">{{ link.cnt_clicked }}</td>
+    <td>
+        <a href="{{ url_for('.links_edit', link_id=link.id, page=links.page) }}" class="btn btn-outline-secondary btn-sm">Редактировать</a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+{{ render_pagination(links, '.links') }}
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript">
+    $(function() {
+        $('.fa-clipboard').on('click', function(){
+            var copyText = $(this).closest('td').children('input');
+            copyText.select();
+            document.execCommand("Copy");
+        });
+    });
+</script>
+{% endblock %}

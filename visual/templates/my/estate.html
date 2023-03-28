@@ -1,0 +1,22 @@
+{%- extends 'my/base.html' -%}
+{%- set page_title_my = folder.title -%}
+
+{% block content_my %}
+    {% include 'my/_messages_common.html' %}
+    <script>
+        {# Переименовать в Folders, Folder #}
+        var Estates = {{ folders|tojson }},
+            Estate = {{ folder|tojson }},
+            Tours = {{ tours|tojson }};
+
+
+        var PAGE = 'tours_list',
+            RELEASE_VERSION = "{{ config.get('RELEASE_VERSION') }}",
+            LANG = '{{ g.lang }}';
+    </script>
+    <div id="virtoaster"></div>
+{% endblock %}
+
+{% block tail %}
+    <script src="/static/my/dist/bundle.js?{{ config.get('RELEASE_VERSION') }}"></script>
+{% endblock %}

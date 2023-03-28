@@ -1,0 +1,58 @@
+{% extends 'admin/base-bs-3.html' %}
+{% set menu_current = 'mailing' %}
+
+
+{% block head %}
+<style type="text/css">
+    .applies-table {}
+    .applies-table td, .applies-table th { padding: 4px 8px; border-bottom: 1px solid #ddd;}
+    .applies-table thead th { text-align: center; }
+    .applies-table tbody th { text-align: right; }
+    .applies-table tbody td { text-align: center; }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<h1>{% if lst %} Свойства списка рассылки {% else %} Создать список рассылки {% endif %}</h1>
+
+<form method="POST" class="form-horizontal" id="form-main">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label for="{{ form.title.name }}" class="col-sm-2 control-label">{{ form.title.label }}</label>
+        <div class="col-sm-10">
+            {{ form.title(class='form-control', autofocus=True) }}
+        </div>
+    </div>
+    <div class="col-sm-offset-2">
+        <button class="btn btn-primary">Сохранить</button>
+        {% if lst %}
+            <a href="#modal-delete" data-toggle="modal" class="btn btn-danger">Удалить</a>
+        {% endif %}
+        <a href="{{ url_for('.mailing_lists') }}" class="btn btn-default">Отмена</a>
+    </div>
+</form>
+
+{% if lst %}
+<form method="post" action="{{ url_for('.delete_mailing_list', id=lst.id) }}">
+<div class="modal" id="modal-delete"><div class="modal-dialog modal-lg"><div class="modal-content">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Удалить список рассылки?</h4>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Да</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Ой, нет</button>
+    </div>
+</div></div></div>
+</form>
+{% endif %}
+
+{% endblock %}
+
+
+{% block tail %}
+
+
+{% endblock %}

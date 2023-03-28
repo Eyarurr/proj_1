@@ -1,0 +1,259 @@
+{% from '/macros/logo.html' import logo %}
+
+{% block head %}
+    <script src="/static/public/js/moment/moment.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+    {% if g.lang in config.LANGUAGES and not g.lang == 'en' and 'site' in config.LANGUAGES[g.lang]['applicable'] -%}
+        <script src="/static/public/js/moment/lang/{{ g.lang }}.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+    {%- endif %}
+{% endblock %}
+
+<header class="header nav__parent">
+    <div class="b-page__inner header__inner">
+        <div class="header__menu nav__switcher">
+            <svg viewBox="0 0 25 25" class="icon__svg" width="26" height="25">
+                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#menu"></use>
+            </svg>
+        </div>
+        <div class="header__logo">
+            <div class="logo header__home">
+                <a href="{{ url_for('front.index') }}">
+                    <svg viewBox="0 0 105 32" class="icon__svg" width="105" height="32" href="/">
+                        <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#biganto"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="header__nav">
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li class="nav__item{% if corpus_class == 'portfolio' %} is-active{% endif %}">
+                        <a class="nav__link" href="{{ url_for('front.gallery') }}">{{ _("Gallery") }}</a>
+                    </li>
+                    <li class="nav__item{% if corpus_class == 'about' or corpus_class == 'cases' %} is-active{% endif %}">
+                        <a class="nav__link" href="{{ url_for('front.about') }}">{{ _("About") }}</a>
+                    </li>
+                    <li class="nav__item{% if request.blueprint == 'virtoaster' %} is-active{% endif %}" id="nav_main-subnav-virtoaster">
+                        <a class="nav__link" href="{{ url_for('virtoaster.index') }}" style="opacity: 1">{{ _("Virtoaster") }}</a>
+                        <ul class="nav__subnav-virtoaster">
+                            <li class="nav__item{% if corpus_class == 'virtoaster' %} is-active{% endif %}">
+                                <a class="nav__link" href="{{ url_for('virtoaster.index') }}">{{ _("Virtoaster") }}</a>
+                            </li>
+                            <li class="nav__item{% if corpus_class == 'virtoaster_pricing' %} is-active{% endif %} nav_item-subnav-virtoaster">
+                                <a class="nav__link nav-v__link" href="{{ url_for('virtoaster.pricing') }}">{{ _("Pricing") }}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav__item{% if corpus_class == 'filincam-page' %} is-active{% endif %}">
+                        <a class="nav__link" href="{{ url_for('front.filincam') }}" style="opacity: 1">{{ _("FilinCam") }}</a>
+                    </li>
+                    <li class="nav__item{% if corpus_class == 'tutorials' %} is-active{% endif %}">
+                        <a class="nav__link" href="{{ url_for('tutorials.index') }}">{{ _("Tutorials") }}</a>
+                    </li>
+                    {#<li class="nav__item{% if corpus_class == 'agents' %} is-active{% endif %}">
+                        <a class="nav__link" href="{{ url_for('front.solutions_agents') }}">{{ _("Realtors") }}</a>
+                    </li>#}
+                    {#
+                    <li class="nav__item{% if corpus_class == 'visualizers' %} is-active{% endif %}">
+                        <a class="nav__link" href="{{ url_for('front.partners') }}">{{ _("Our partners") }}</a>
+                    </li>
+                    #}
+                    {#
+                    <li class="nav__item{% if corpus_class == 'support' %} is-active{% endif %}">
+                        <a class="nav__link" href="{{ url_for('support.index') }}">{{ _("Support") }}</a>
+                    </li>
+                    #}
+                </ul>
+            </nav>
+        </div>
+        <ul class="header__more">
+            {% if current_user.is_authenticated and 'virtoaster' in current_user.products %}
+                <li class="header__action header__order">
+                    <a href="{{ url_for('my.index') }}" class="header__button button mini border gray">{{ _("Create tour")
+                        }}</a>
+                </li>
+            {% else %}
+                <li class="header__action header__order">
+                    <a href="{{ url_for('virtoaster.pricing') }}" class="header__button button mini border gray">{{ _("Create tour")
+                        }}</a>
+                </li>
+            {% endif %}
+            <li class="header__action header__search"></li>
+            {% if current_user.is_authenticated %}
+            <li class="header__action header__notifications">
+                <a href="{{ url_for('my.index') }}" class="notifications__area" id="notifications__area">
+                    <svg viewBox="0 0 32 32" class="notifications__icon-bell icon__svg" width="32" height="32">
+                        <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-bell"></use>
+                    </svg>
+                    <span class="notifications__badge{% if not current_user.notifications_unseen() %} notifications__badge_hidden{% endif %}">
+                        {{ current_user.notifications_unseen() }}
+                    </span>
+                </a>
+                <div class="dropdown notifications__toggle">
+                    <div class="dropdown__header notifications__header">
+                        <span>{{ _("Notifications") }}</span>
+                        {#<a class="notifications__settings-icon" href="{{ url_for('my.index', path='settings') }}">
+                            <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#dd-settings"></use>
+                            </svg>
+                        </a>#}
+                    </div>
+                    <ul class="dropdown__list notifications__list"></ul>
+                </div>
+            </li>
+            {% endif %}
+            <li class="header__action header__user">
+                <div class="auth{% if current_user.is_authenticated %} is-authenticated{% endif %}{% if corpus_class in ['my', 'objects', 'statistics', 'settings'] %} is-fill{% endif %}">
+                    <div class="auth__inner">
+                        {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('my.index') }}" class="auth__area" title="{{ _("You have signed in as %(username)s", username=current_user.name) }}">
+                            <div class="auth__avatar auth__avatar_small"><span class="auth__initials auth__initials_small"></span></div>
+                        </a>
+                        <div class="dropdown auth__toggle">
+                            {% if not current_user.deleted %}
+                            <div class="dropdown__header">
+                                <div class="auth__avatar"><span class="auth__initials"></span></div>
+                                <span title="{{ current_user.name }}" class="auth__name">{{ current_user.name }}</span>
+                            </div>
+                            <ul class="dropdown__list">
+                                {% if current_user.is_authenticated and 'virtoaster' in current_user.products %}
+                                <li class="dropdown__item dropdown__objects{% if corpus_class == 'objects' %} is-active{% endif %}">
+                                    <a class="dropdown__link" href="{{ url_for('my.index') }}">
+                                        <svg viewBox="0 0 24 20" class="icon__svg" width="24" height="24">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#dd-tours"></use>
+                                        </svg>
+                                        <span class="dropdown__text">{{ _("Tours") }}</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if 'devcon' in current_user.products %}
+                                <li class="dropdown__item dropdown__objects{% if corpus_class == 'devcon' %} is-active{% endif %}">
+                                    <a class="dropdown__link" href="{{ url_for('my.index', path='devcon') }}">
+                                        <svg viewBox="0 0 24 20" class="icon__svg" width="24" height="24">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#dd-projects"></use>
+                                        </svg>
+                                        <span class="dropdown__text">{{ _("Projects") }}</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if 'filincam' in current_user.products %}
+                                <li class="dropdown__item dropdown__scenes {% if corpus_class == 'scenes' %} is-active{% endif %}">
+                                    <a href="/my/scenes" class="dropdown__link">
+                                        <svg viewBox="0 0 24 20" class="icon__svg" width="24" height="24">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#scenes"></use>
+                                        </svg>
+                                        <span class="dropdown__text">{{ _("Scenes") }}</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {# Статистика временно отключена #}
+                                {#
+                                <li class="dropdown__item dropdown__statistics{% if corpus_class == 'statistics' %} is-active{% endif %}">
+                                    <a class="dropdown__link" href="{{ url_for('my.index', path='statistics') }}">
+                                        <svg class="icon__svg" viewBox="0 0 22 22" width="24" height="24">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#dd-stats"></use>
+                                        </svg>
+                                        {{ _("Statistics") }}
+                                    </a>
+                                </li>
+                                #}
+                                <li class="dropdown__item dropdown__settings{% if corpus_class == 'settings' %} is-active{% endif %}">
+                                    <a class="dropdown__link" href="{{ url_for('my.index', path='settings') }}">
+                                        <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#dd-settings"></use>
+                                        </svg>
+                                        {{ _("Settings") }}
+                                    </a>
+                                </li>
+                                <li class="dropdown__item dropdown__support{% if corpus_class == 'support' %} is-active{% endif %}">
+                                    <a class="dropdown__link" href="{{ url_for('support.index') }}">
+                                        <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#support"></use>
+                                        </svg>
+                                        {{ _("Support") }}
+                                    </a>
+                                </li>
+                                <li class="dropdown__item dropdown__logout">
+                                    <a href="/users/logout/?next={{ request.url }}" class="dropdown__link">
+                                        <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#dd-logout"></use>
+                                        </svg>
+                                        {{ _("Logout") }}
+                                    </a>
+                                </li>
+                                {% if current_user.has_role('admin.access') or current_user.products.bladerunner != none %}
+                                <div class="dropdown__divider"></div>
+                                {% endif %}
+                                {% if "bladerunner" in current_user.products %}
+                                <li class="dropdown__item dropdown__admin">
+                                    <a href="/my/orders" class="dropdown__link">
+                                        <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                            <use
+                                                xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#captures">
+                                            </use>
+                                        </svg>
+                                        {{ _("Captures") }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if current_user.team_member != none and "br.operator" in current_user.team_member.roles %}
+                                <li class="dropdown__item dropdown__admin">
+                                    <a href="/my/br/operator/orders" class="dropdown__link">
+                                        <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                            <use
+                                                xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#captures">
+                                            </use>
+                                        </svg>
+                                        {{ _("Camera operator") }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if current_user.has_role('admin.access') %}                                
+                                <li class="dropdown__item dropdown__admin">
+                                    <a href="{{ url_for('admin.team') }}" class="dropdown__link">
+                                        <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#admin"></use>
+                                        </svg>
+                                        Админка
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                            {% else %}
+                            <p class="auth__deleted-message">
+                                {{ _("You have deleted your account. It will be removed permanently in %(purge_days)d days.", purge_days=current_user.purge_timedelta().days) }}
+                            </p>
+                            <ul class="dropdown__list">
+                                <li class="dropdown__item dropdown__objects">
+                                    <a class="dropdown__link" href="/my/settings/restore">
+                                        {{ _("Restore it?") }}
+                                    </a>
+                                </li>
+                            </ul>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <a href="{{ url_for('my.index') }}" class="auth__area link-modal" data-action="auth-login">
+                            <svg viewBox="0 0 24 24" class="auth__icon-user icon__svg" width="24" height="24">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#sign-in"></use>
+                            </svg>
+                            <span class="auth__sign-in">{{ _("Sign in") }}</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</header>
+
+
+{% if 0 and request.blueprint == 'virtoaster' %}
+<header class="header header-subheader nav__parent">
+    <div class="b-page__inner header__inner">
+        <div class="header__nav">
+            <nav class="nav">
+            </nav>
+        </div>
+    </div>
+</header>
+{% endif %}

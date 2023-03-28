@@ -1,0 +1,39 @@
+{# {% for category, messages in flashes().items() %}
+    <div class="alert alert-{{ category }}">
+        <ul>
+            <li>{{ messages | join('</li><li>') | safe }}</li>
+        </ul>
+    </div>
+{% endfor %} #}
+{% if flashes().items()|length %}
+    <script type="text/template" class="template-modal" id="tmpl__flashes" data-load="true">
+        <div class="b-overlay">
+            <div class="modal-custom modal-custom--flashes">
+                <div class="modal-custom__inner">
+                    <div class="flashes">
+                        {% for category, messages in flashes().items() %}
+                            <div class="flashes__content">
+                                {% if category == "success" %}
+                                <div class="flashes__icon">
+                                    <svg viewBox="0 0 38 38" class="icon__svg flashes__icon--success" width="80" height="80"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#checkmark"></use></svg>
+                                </div>
+                                {% endif%}
+                                {% if category == "error" or category == "warning" %}
+                                <div class="flashes__icon">
+                                    <svg viewBox="0 0 38 38" class="icon__svg flashes__icon--success" width="80" height="80"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#exclamation-mark"></use></svg>
+                                </div>
+                                {% endif%}
+                                <ul{% if flashes().items()|length == 1 %} class="flashes__list--no-style flashes__list--text-center"{% endif%}>
+                                    <li>{{ messages | join('</li><li>') | safe }}</li>
+                                </ul>
+                            </div>
+                        {% endfor %}
+                        <div class="flashes__footer">
+                            <button id="flashes-button" class="button fill blue flashes__button modal-custom__close">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+{% endif %}

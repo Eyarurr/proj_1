@@ -1,0 +1,87 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'estates' %}
+{% set estate_id = request.view_args.get('estate_id', 0)  %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+    {% if estate.id %}
+    <h1>Редактировать объект недвижимости ({{ estate.id }})</h1>
+
+    {% else %}
+        <h1>Создать объект</h1>
+    {% endif %}
+    <form id="form_asset" method="POST" id="form-edit" enctype="multipart/form-data">
+        {{ form.csrf_token() }}
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end "><a href=""></a>Название:</label>
+            <div class="col-lg-6">
+                {{ form.title(class='form-control') }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            {% set readonly=False if current_user.has_role('super') %}
+            <label class="col-lg-2 text-lg-end ">Юзер id:</label>
+            <div class="col-lg-6 ">
+                {{ form.user_id(class='form-control ',  placeholder=current_user.id) }}
+            </div>
+            <span class="text-muted offset-lg-2">По умолчанию добавится авторизованному юзеру</span>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end ">Remote_id:</label>
+            <div class="col-lg-6">
+                {{ form.remote_id(class='form-control') }}
+            </div>
+            <span class="text-muted offset-lg-2">ID объекта во внешней CRM</span>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end ">Synced</label>
+            <div class="col-lg-6">
+                {{ form.synced(class='form-control') }}
+            </div>
+            <span class="text-muted offset-lg-2">Время, последней синхронизации с внешней CRM</span>
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-auto offset-lg-2">
+                <button class="btn btn-primary">Сохранить</button>
+                <a href="{{ url_for('.estates') }}" class="btn btn-secondary">Отмена</a>
+                {% if estate.id %}
+                    <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger"><i
+                        class="fa fa-minus-square-o"></i> Удалить объект</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </form>
+
+    <form method="post" action="{{ url_for('.estate_delete', estate_id=estate_id) }}" >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-delete">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Удалить этот объект недвижимости?</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                        <p>Будет удален объект <span class="text-info">{{ estate.title }} </span> со всеми ассетами. Для ассетов с типом <span class="text-danger">"tour" и "tour_video" </span>удалится только ссылка
+                            на существующий тур/тур_видео. Для ассетов других типов произойдет удаление соответствующих фалов из
+                            файлового хранилища</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отменить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}

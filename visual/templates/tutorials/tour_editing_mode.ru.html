@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+{% set page_title = _("Tour editing mode") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/tour-editing-mode/tour-editing-mode.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+         style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <div id="beginning" class="b-anchor"></div>
+                <p>“Режим редактирования” - альтернативный режим web-плеера, также называемый WYSIWYG редактор (What You
+                    See Is What You Get). В этом режиме вы можете перемещаться по туру аналогично режиму просмотра, но
+                    при этом получаете доступ к набору дополнительных инструментов, таких как создание навигации по
+                    туру, интерактивных объектов, запись маршрутов и т.д.
+                </p>
+                <p>Чтобы войти в режим редактирования наведите курсор мыши на нужный тур в списке и нажмите на иконку
+                    “Редактировать тур”</p>
+                <p><img src="/static/public/img/tutorials/tour-editing-mode/image_1.jpg" alt=""></p>
+                <p>Также вы можете зайти в тур из режима редактирования компонентов тура, нажав кнопку
+                    “Редактировать”:</p>
+                <p><img src="/static/public/img/tutorials/tour-editing-mode/image_19.jpg" alt=""></p>
+                <p>Вместо обычной панели инструментов, в режиме редактирования вы увидите совершенно иной пользовательский
+                    интерфейс:
+                </p>
+                <p><img src="/static/public/img/tutorials/tour-editing-mode/image_6.jpg" alt=""></p>
+                <br>
+                <div class="block block-1">
+                    <div class="text-block">
+                        <p>
+                            С правой стороны экрана находится контекстное меню, с которым вы и будете взаимодействовать
+                            большую часть времени. По умолчанию в этом меню отображаются свойства текущей точки тура,
+                            где вы можете увидеть текущую позицию в туре и действия, привязанные к данной точке,
+                            например добавить подпись, добавить точку в навигатор или сделать стартовой.
+                        </p>
+                        <p>Содержание данного меню меняется в зависимости от того, какой элемент туры вы редактируете.
+                        </p>
+                        <p><span class="warning">Важно</span>: чтобы вернуться на вышестоящее меню (например выйти в
+                            меню точки тура) нажмите “Escape”.
+                        </p>
+                    </div>
+                    <div class="img-block two-images">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/image_8.jpg" alt="">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/image_7.jpg" alt="">
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="block block-2">
+                    <div class="img-block">
+                        <img style="float: left; margin-right: 32px;"
+                             src="/static/public/img/tutorials/tour-editing-mode/image_9.jpg" alt="">
+                    </div>
+                    <div class="text-block">
+                        <p>На левой стороне экрана вы увидите навигационное меню со списком точек и объектов в туре. Вы
+                            можете нажать на точку или объект, чтобы сразу же переместиться к ним. Выбранный сейчас
+                            объект или точка подсвечены цветом.
+                        </p>
+                        <p>Рядом с номером точки вы можете увидеть подпись и иконки особых свойств привязанных к данной
+                            точке. Например точка 5 на изображении является стартовой и также добавлена в навигатор.
+                        </p>
+                        <p>В нижней части левого меню находится список объектов в туре. Также называемые оверлеями
+                            (overlays) они представляют собой трехмерные объекты, размещенные в том же пространстве, что
+                            и 3д модель тура. Т.н. оверлей - это визуальная часть интерактивного объекта, ему может быть
+                            назначено определенное действие (action), которое будет выполняться когда пользователь
+                            взаимодействует с интерактивным объектом. Оверлей с назначенным действием помечен
+                            специальным символом<img class="icon--inline"
+                                                     src="/static/public/img/tutorials/tour-editing-mode/ic-action.svg"
+                                                     alt="">. Это достаточно обширная тема, поэтому она описана в
+                            отдельной статье <a href="/tutorials/creating_interactive_objects/">"Создание интерактивных
+                                объектов"</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+                <div class="toolbar-image">
+                    <div class="large-screen">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/image_16.jpg" alt="">
+                    </div>
+                    <div class="small-screen">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/toolbar-1.jpg" alt="">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/toolbar-2.jpg" alt="">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/toolbar-3.jpg" alt="">
+                    </div>
+                </div>
+                <br>
+                <br>
+                <p>В верхней части экрана находится панель, на которой вы можете выбрать тип оверлея для добавления в
+                    тур и другие доступные в режиме редактирования инструменты.
+                </p>
+
+                <div id="captions" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Редактировать подписи</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>
+                        “Подпись” - небольшой заголовок для каждой точки тура, в режиме просмотра она отражается в
+                        нижней части экрана. Выбрав определенную точку вы можете изменить подпись к ней в правой панели
+                        инструментов.
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_10.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>
+                        Чтобы редактировать все подписи одновременно, зайдите в режим редактирования компонентов и
+                        добавьте подписи к каждой панораме:
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_11.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>Подписи - опциональный функционал, но могут быть использованы чтобы улучшить информативность
+                        тура. Например, подпись может содержать следующее: “Столовая (8,87 м2)”
+                    </p>
+                </div>
+
+                <div id="starting_position" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Установить стартовую точку<img class="icon--inline"
+                                                       src="/static/public/img/tutorials/tour-editing-mode/ic-tour-cover.svg"
+                                                       alt=""></h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_12.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>Стартовая точка - точка, в которой пользователь начинает просматривать тур. Устанавливается
+                        автоматически после сборки тура. Чтобы изменить стартовую точку вручную, перейдите в нее и
+                        нажмите “Сделать точку стартовой”.
+                        “Сделать точку стартовой” также перезапишет обложку тура, которая отображается в списке туров.
+                        Чтобы вручную изменить обложку, выставите положение камеры как вы хотите в туре и нажмите
+                        “Создать обложку”
+                    </p>
+                </div>
+
+                <div id="navigation" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Навигатор<img class="icon--inline"
+                                      src="/static/public/img/tutorials/tour-editing-mode/ic-navigation.svg"
+                                      alt=""></h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>Меню навигации - панель для быстрого перехода между удаленными точками в туре. Наиболее близким
+                        сравнением будут ярлыки на рабочем столе, нажмите на добавленную в навигатор точку и вы
+                        перейдете в нее немедленно. Панель навигатора находится в левом нижнем углу в режиме просмотра
+                        тура.
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_13.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>Чтобы добавить точку в навигатор вы можете использовать кнопку в меню точки в правой панели
+                        инструментов:
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_14.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>
+                        Или вы можете воспользоваться отдельным инструментом “Навигатор”, где вы сможете добавлять,
+                        убирать или редактировать точки добавленные в навигационную панель.
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_15.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>Чтобы добавить текущую точку, с работающим инструментом “Навигатор” перейдите в нужную точку и
+                        нажмите “Добавить”. Нажмите и удерживайте иконку
+                        <img class="icon--inline"
+                             src="/static/public/img/tutorials/tour-editing-mode/ic-arrows-lr.svg"
+                             alt=""> для изменения порядка точек в навигаторе. Нажмите иконку
+                        <img class="icon--inline"
+                             src="/static/public/img/tutorials/tour-editing-mode/ic-delete.svg"
+                             alt=""> чтобы удалить точку из навигатора.
+
+                    </p>
+                </div>
+
+                <div id="route" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Записать маршрут<img class="icon--inline"
+                                             src="/static/public/img/tutorials/tour-editing-mode/ic-route.svg"
+                                             alt=""></h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>Вы можете записать маршрут в режиме редактирования и проиграть его позднее, в режиме просмотра.
+                        Камера будет перемещаться и поворачивать в пространстве, как будто ее контролирует пользователь.
+                        Когда записанный маршрут дойдет до финальной точки, воспроизведение начнется заново. Вы можете
+                        использовать данную функцию, чтобы проигрывать тур на экране без вашего участия или презентовать
+                        основные элементы проекта.
+                    </p>
+                    <p>
+                        Для начала записи, нажмите на
+                        <img class="icon--inline" src="/static/public/img/tutorials/tour-editing-mode/ic-route.svg"
+                             alt="">
+                        “Записать маршрут” в верхней части экрана и перейдите в стартовую
+                        точку записи. Нажмите
+                        <img class="icon--inline" src="/static/public/img/tutorials/tour-editing-mode/ic-rec.svg"
+                             alt="">
+                        “Начать запись”, запись начнется немедленно. Начните перемещаться по
+                        туру. Мы рекомендуем использовать клавиатуру для более плавной записи: кнопки WASD для
+                        перемещения и кнопки IJKL для поворотов камеры. Чтобы сделать плавный поворот на 180 градусов
+                        используйте соответствующие кнопки по краям экрана.
+                    </p>
+                    <p>
+                        Вы можете в любой момент остановить запись маршрута и посмотреть результат нажав
+                        <img class="icon--inline" src="/static/public/img/tutorials/tour-editing-mode/ic-play.svg"
+                             alt="">
+                        “Воспроизвести маршрут”. Чтобы сделать воспроизведение более плавным вы также можете удалить все
+                        задержки во время записи, нажав
+                        <img class="icon--inline" src="/static/public/img/tutorials/tour-editing-mode/ic-delpause.svg"
+                             alt="">
+                        “Очистить паузы”
+                    </p>
+                    <p>
+                        В следующий раз нажав
+                        <img class="icon--inline" src="/static/public/img/tutorials/tour-editing-mode/ic-rec.svg"
+                             alt="">
+                        “Продолжить запись” вы вернетесь в последнюю записанную
+                        точку. Чтобы завершить запись нажмите кнопку
+                        <img class="icon--inline" src="/static/public/img/tutorials/tour-editing-mode/ic-save.svg"
+                             alt="">
+                        “Сохранить маршрут”.
+                    </p>
+                </div>
+
+                <div id="options" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Настроить опции<img class="icon--inline"
+                                            src="/static/public/img/tutorials/tour-editing-mode/ic-options.svg"
+                                            alt=""></h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>Опции в туре содержат настройки цветов и миникарты. Вы можете нажать на иконку с цветом, для
+                        того, чтобы задать желаемый цвет в RGB пространстве или вставить код цвета напрямую (первые три
+                        цифры - цвет, четвертая - прозрачность).
+                    </p>
+                    <p>Настройки миникарты определяют ее состояние на старте. По умолчанию карта в состоянии “Свернута”
+                        - средний размер карты. Изменение состояния карты не изменяет разрешение изображения. Доступ к
+                        большему количеству опций можно получить на соответствующей вкладке, зайдя в тур из списка туров
+                        в аккаунте.
+                    </p>
+                </div>
+
+
+            </div>
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#beginning" class="side-menu__link link-scroll-to">В начало</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#captions" class="side-menu__link link-scroll-to">Редактировать подписи</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#starting_position" class="side-menu__link link-scroll-to">Установить стартовую точку</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#navigation" class="side-menu__link link-scroll-to">Навигатор</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#route" class="side-menu__link link-scroll-to">Записать маршрут</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#options" class="side-menu__link link-scroll-to">Настроить опции</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

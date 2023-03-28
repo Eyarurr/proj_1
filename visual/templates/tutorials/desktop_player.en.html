@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% set page_title = _("Desktop player") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/desktop-player/desktop_player.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--yellow">{{ _("support") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div class="content-page__wrapper">
+            <div class="content-page__main">
+
+                <p>
+                    “Biganto tour player” is a Windows application, allowing users to see 3d tours offline and using VR
+                    headsets,
+                    such as Oculus Rift and HTC Vive.
+                </p>
+
+                <p><a href="https://biganto.com/static/downloads/BigantoPlayer.v.5.0.0.exe">Download.</a></p>
+
+                <p>Download the installer using the link above and install the application.</p>
+
+                <p>Launch Biganto tour player. You will be placed in the Examples section, where you could check some of our demo tours.</p>
+
+                <p><span class='warning'>Important:</span> If a supported VR device connected to your PC and Steam VR is on, you will see the following icon&nbsp;<span class="cardboard"></span> to switch between desktop and VR headset. When VR mode is on, the PC screen will act as a secondary monitor, to the screen of the VR device. You can turn VR mode on and off anytime.
+                </p>
+                <p>To access your tours, you should have an active Biganto account. Press “My tours” and enter your user account data.</p>
+                <p><img style="max-width: 400px;" src="/static/public/img/tutorials/desktop-player/login.jpg" alt="" ></p>
+
+                <p>You do not require an account to view demo tours. To enter any tour folder, just click on it.  Click on the tour thumbnail to open it. If tour thumbnail has the following icon
+                <svg viewBox="0 0 64 64" class="icon--inline" width="34" height="34">
+                    <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-download"></use>
+                </svg>, that means its assets have to be downloaded first. It may take some time to download assets, depending on the tour size and your internet connection.
+                </p>
+                <p><img src="/static/public/img/tutorials/desktop-player/gallery.jpg" alt="" ></p>
+                <p>You can also open a tour using HTTP link or tour ID. Press <svg viewBox="0 0 64 64" class="icon--inline" width="34" height="34">
+                    <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-launch"></use>
+                </svg> button in the upper right corner of the screen and type HTTP link or tour ID:</p>
+
+                <p><img style="max-width: 400px;" src="/static/public/img/tutorials/desktop-player/launch.jpg" alt="" ></p>
+                <p>Finally, you can access player settings by pressing on the <svg viewBox="0 0 64 64" class="icon--inline" width="34" height="34">
+                    <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#ic-options"></use>
+                </svg> icon in the upper right corner. Here you can change user, language, manage your downloads and change some player options.
+                </p>
+                <ul>
+                    <li>Turning with stick/mouse - allows to use the VR controller stick or mouse button to make turns when using VR headset.</li>
+                    <li>Teleportation distance - sets distance, where fade in/fade out teleportation will be used instead of seamless movement through the tour. E.g. when travelling to the distant location in the tour. You can set distance to 0 to always use teleportation. </li>
+                </ul>
+                <p><img style="max-width: 400px;" src="/static/public/img/tutorials/desktop-player/settings.jpg" alt="" ></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

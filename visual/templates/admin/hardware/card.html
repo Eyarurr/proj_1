@@ -1,0 +1,109 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'team' %}
+
+
+{% block head %}
+    <style>
+        .add-bd {
+            border: 1px solid darkcyan;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <p>
+        ← <a href="{{ url_for('.hardware') }}">Вся техника</a>
+    </p>
+    <div class="row row-cols-lg-auto justify-content-start" >
+        <div class="col-lg-2">
+            <div class="card text-center">
+                <div class="card-body">
+                {% if gadget.preview %}
+                    <a href="{{ gadget.photo.url }}"><img class="" src="{{ gadget.preview.url }}" width="{{ gadget.preview.width }}" height="{{ gadget.preview.height }}"></a>
+                {% else %}
+                    <img src="{{ url_for('static', filename='/admin/noutbook.png') }}" width="100px" height="100px"
+                         alt="">
+                {% endif %}
+                <div class="card-body">
+                    {% if current_user.has_role('hardware.edit') %}
+                        <a href="{{ url_for('.hardware_edit', gadget_id = gadget.id) }}"
+                           class="btn btn-sm btn-outline-primary">Изменить гаджет
+                        </a>
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+      </div>
+    <div class="col-lg-5">
+              <!-- Карточка -->
+        <div class="card">
+            <h4 class="card-header">Наименование: {{ gadget.title }}</h4>
+            <div class="card-body">
+                    <ul class="list-group">
+                        <li class=" list-group-item"><strong>Где
+                            находится:</strong> {{ gadget.get_location() }}</li>
+                        <li class=" list-group-item"><strong>У кого:</strong> {{ gadget.get_user() }}</li>
+                        <li class=" list-group-item"><strong>Серийный номер:</strong> {{ gadget.sn }}</li>
+                        <li class=" list-group-item  "><strong>Тип устройства:</strong> {{ gadget.get_type() }}
+                        </li>
+                        <li class=" list-group-item "><strong>Дата покупки:</strong>{% if gadget.buy_date %}
+                            {{ gadget.buy_date.strftime('%d.%m.%Y') }}{% endif %}</li>
+                        <li class=" list-group-item "><strong>Где
+                            находится:</strong> {{ gadget.get_location() }}</li>
+                        <li class=" list-group-item "><strong>Стоимость:</strong>{% if gadget.price %}
+                            {{ gadget.price }}{% endif %}</li>
+                        <li class=" list-group-item "><strong>Описание:</strong> {{ gadget.description }}</li>
+                    </ul>
+                </div>
+        <div class="card-footer">
+                        <small class="text-muted">Раньше находился: <em></em></small>
+                    </div>
+        </div>
+        <!-- Карточка end -->
+    </div>
+  </div>
+
+    <div class="col-sm-8">
+        <div class="panel panel-default">
+            <!-- Содержание панели по умолчанию -->
+            <div class="panel-heading my-2"><h4>История перемещений</h4></div>
+            <table class="table table-bordered table-list">
+                <thead>
+                <tr>
+                    <th>Дата события</th>
+                    <th>Сотрудник</th>
+                    <th>Локация</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for foo in history %}
+                    <tr>
+                        <td>{{ foo.key_date.strftime('%d.%m.%Y') }}</td>
+                        <td num="{{ loop.revindex0 }}">
+                            {% if foo.user.name %}
+                                {{ foo.user.name }}
+                            {% else %}
+                                На складе
+                            {% endif %}
+                        </td>
+                        <td>{{ foo.get_location() }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+{% block tail %}
+    <script>
+        $(function () {
+            $num = $('[num=1]')
+            console.log($num)
+            $('.text-muted em').text($num.text())
+        })
+    </script>
+{% endblock %}

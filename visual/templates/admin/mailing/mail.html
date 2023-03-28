@@ -1,0 +1,106 @@
+{% extends 'admin/base-bs-3.html' %}
+{% set menu_current = 'mailing' %}
+
+
+{% block head %}
+
+<!-- include summernote css/js-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+<style type="text/css">
+    .applies-table {}
+    .applies-table td, .applies-table th { padding: 4px 8px; border-bottom: 1px solid #ddd;}
+    .applies-table thead th { text-align: center; }
+    .applies-table tbody th { text-align: right; }
+    .applies-table tbody td { text-align: center; }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<h1>{% if mail %} Свойства письма {% else %} Создать письмо {% endif %}</h1>
+
+<form method="POST" class="form-horizontal" id="form-main">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label for="{{ form.subject.name }}" class="col-sm-2 control-label">{{ form.subject.label }}</label>
+        <div class="col-sm-10">
+            {{ form.subject(class='form-control') }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.content_html.name }}" class="col-sm-2 control-label">{{ form.content_html.label }}</label>
+        <div class="col-sm-10">
+            <input type="hidden" name="content_html" id="txt_content_html"/>
+            <div id="summernote">{{ (form.content_html.data or '')|safe }}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.content_text.name }}" class="col-sm-2 control-label">{{ form.content_text.label }}</label>
+        <div class="col-sm-10">
+            {{ form.content_text(class='form-control', rows=10) }}
+            <p class="help-block">Просто скопируйте сюда текст письма из верхнего редактора. Этот текст будет показан тем редким получателям, чьи почтовые клиенты не поддерживают HTML.</p>
+        </div>
+    </div>
+    <div class="col-sm-offset-2">
+        {% if not mail or not mail.read_only %}
+            <button class="btn btn-primary">Сохранить</button>
+        {% endif %}
+        {% if mail %}
+            <a href="#modal-delete" data-toggle="modal" class="btn btn-danger">Удалить</a>
+        {% endif %}
+        <a href="{{ url_for('.mails', list_id=lst.id) }}" class="btn btn-default">
+        {% if mail and mail.read_only %}
+            Закрыть
+        {% else %}
+            Отмена
+        {% endif %}
+        </a>
+    </div>
+</form>
+
+{% if mail %}
+<form method="post" action="{{ url_for('.delete_mail', list_id=lst.id, id=mail.id) }}">
+<div class="modal" id="modal-delete"><div class="modal-dialog modal-lg"><div class="modal-content">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Удалить письмо?</h4>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Да</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Ой, нет</button>
+    </div>
+</div></div></div>
+</form>
+{% endif %}
+
+{% endblock %}
+
+
+{% block tail %}
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#summernote').summernote({
+    height: 500,                 // set editor height
+    minHeight: null,             // set minimum height of editor
+    maxHeight: null,             // set maximum height of editor
+    focus: true,
+    toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['fontname', ['fontname']],
+        ['color', ['color']],
+        ['para', ['ol', 'ul', 'paragraph']],
+        ['insert', ['link', 'table']],
+        ['misc', ['fullscreen', 'codeview', 'help']]
+    ]
+  });
+  $("#form-main").submit(function(e) {
+    $("#txt_content_html").val($("#summernote").summernote("code"));
+  })
+})
+</script>
+
+{% endblock %}

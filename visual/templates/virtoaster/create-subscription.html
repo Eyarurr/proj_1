@@ -1,0 +1,378 @@
+{% extends 'my/base.html' %}
+{% set page_title_my = _('Create subscription «%(title)s»', title=plan.title) %}
+{% set cc = 'settings' %}
+{% from 'macros/tax_types.html' import tax_types %}
+
+{% block head %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script type="text/javascript">
+        let stripe = Stripe('{{ config.STRIPE_PK }}');
+        let elements = stripe.elements();
+    </script>
+    <style type="text/css">
+        #subscription-form { width: 100%; }
+        #subscription-submit.disabled { background-color: #000; }
+        #card-errors, #tax-errors { margin: 10px 0; color: red; }
+        .MyCardElement {
+            height: 40px;
+            padding: 10px 12px;
+            width: 100%;
+            color: #32325d;
+            background-color: white;
+            border: 1px solid transparent;
+            border-radius: 4px;
+
+            box-shadow: 0 1px 3px 0 #e6ebf1;
+            -webkit-transition: box-shadow 150ms ease;
+            transition: box-shadow 150ms ease;
+        }
+
+        .MyCardElement--focus {
+            box-shadow: 0 1px 3px 0 #cfd7df;
+        }
+
+        .MyCardElement--invalid {
+            border-color: #fa755a;
+        }
+
+        .MyCardElement--webkit-autofill {
+            background-color: #fefde5 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_my %}
+    <div class="settings-page settings-page__container">
+
+    <form id="subscription-form" class="subscription-form">
+        <section class="settings-page__block">
+            <h2 class="h2 settings-page__head">{{ _("Billing address") }}</h2>
+            <div class="settings-page__section">
+                <label class="form-modal__label">{{ _("Country") }}</label>
+                <div class="big-select b-form-password__item">
+                    <select name="country" class="big-select__input">
+                        <option></option>
+                        {% for c_id, c_name in countries.items() %}
+                            <option value="{{ c_id }}" {% if c_id == my_city.country_id %} selected {% endif %}>{{ c_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <svg viewBox="0 0 9 8" class="big-select__icon" width="9" height="8"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down" /></svg>
+                </div>
+            </div>
+            <div class="b-form-password__new">
+                <div class="settings-page__section">
+                    <label class="form-modal__label">{{ _("State, province, region") }}</label>
+                    <div class="b-form-password__item">
+                        <input type="text" name="state" class="big-input">
+                    </div>
+                </div>
+                <div class="settings-page__section">
+                    <label class="form-modal__label">{{ _("City") }}</label>
+                    <div class="b-form-password__item">
+                        <input type="text" name="city" class="big-input" value="{{ my_city.name or '' }}">
+                    </div>
+                </div>
+                <div class="settings-page__section">
+                    <label class="form-modal__label">{{ _("Address") }}</label>
+                    <div class="b-form-password__item">
+                        <input type="text" name="line1" class="big-input">
+                    </div>
+                </div>
+                <div class="settings-page__section">
+                    <div class="b-form-password__item">
+                        <input type="text" name="line2" class="big-input">
+                    </div>
+                </div>
+                <div class="settings-page__section">
+                    <label class="form-modal__label">{{ _("Postal Code") }}</label>
+                    <div class="b-form-password__item">
+                        <input type="text" name="postal_code" class="big-input">
+                    </div>
+                </div>
+                <div class="settings-page__section">
+                    <label class="form-modal__label">{{ _("Promotion code") }}</label>
+                    <div class="b-form-password__item">
+                        <input type="text" name="promo" class="big-input">
+                    </div>
+                </div>
+                {% if not customer %}
+                    <div class="settings-page__section">
+                        <label class="form-modal__label">
+                            {{ _("Customer Name / Company name") }}
+                            <span class="subscription-form__tooltip tooltip-place" data-tooltip-content="#company_name">
+                                <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                            </span>
+                            <div class="tooltip_templates">
+                                <span id="company_name" class="tooltip_content tooltip_content--smaller-font">
+                                    {{ _("Customer or Company name to show in the invoice") }}
+                                </span>
+                            </div>
+                        </label>
+                        <div class="b-form-password__item">
+                            <input type="text" name="customer_name" class="big-input" value="{{ current_user.name }}">
+                        </div>
+                    </div>
+                    <div class="settings-page__section subscription-form__tax">
+                        <div class="subscription-form__tax-type">
+                            <label class="form-modal__label">
+                                {{ _("TAX Number") }}
+                                <span class="subscription-form__tooltip tooltip-place" data-tooltip-content="#tax_number">
+                                    <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                                </span>
+                                <div class="tooltip_templates">
+                                    <span id="tax_number" class="tooltip_content tooltip_content--smaller-font">
+                                        {{ _("Select Tax ID type and enter valid Tax ID to be considered a business customer. Be aware that it is responsibility of a business customer to pay VAT or similar taxes when applicable.") }}
+                                    </span>
+                                </div>
+                            </label>
+                            <div class="big-select b-form-password__item">
+                                <select name="tax_id_type" class="big-select__input">
+                                    <option></option>
+                                    {% for tax_type, tax_type_name in tax_types %}
+                                        <option value="{{ tax_type }}">{{ tax_type_name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <svg viewBox="0 0 9 8" class="big-select__icon" width="9" height="8"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down" /></svg>
+                            </div>
+                        </div>
+                        <div class="subscription-form__tax-id">
+                            <div class="b-form-password__item">
+                                <input type="text" name="tax_id" class="big-input">
+                            </div>
+                        </div>
+                        <div id="tax-errors" role="alert"></div>
+                    </div>
+                {% else %}
+                    <input type="hidden" name="customer_name" class="big-input" value="{{ current_user.name }}">
+                {% endif %}
+            </div>
+        </section>
+        <section class="settings-page__block">
+            <h2 class="h2 settings-page__head">{{ _("Card info") }}</h2>
+            <div class="settings-page__section">
+                <div id="card-element" class="MyCardElement"></div>
+                <div id="card-errors" role="alert"></div>
+            </div>
+        </section>
+        <button type="submit" id="subscription-submit" class="button fill blue settings-page__submit" data-text-wait="{{ _("Please wait...") }}">{{ _("Subscribe") }}</button>
+        <a href="{{ url_for('virtoaster.pricing') }}" class="button fill blue settings-page__submit">{{ _("Cancel") }}</a>
+    </form>
+
+    <form id="success-form" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    </form>
+
+    </div>
+{% endblock %}
+
+{% block tail_my %}
+<script>
+window.onload = function() {
+    let form = document.getElementById('subscription-form');
+    let button = document.getElementById('subscription-submit');
+    let buttonText = button.textContent;
+    let buttonWaitText = button.dataset.textWait;
+    let style = {
+        base: {
+            color: '#32325d',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+                color: '#aab7c4',
+            },
+        },
+        invalid: {
+            color: '#fa755a',
+            iconColor: '#fa755a',
+        },
+    };
+
+    let cardElement = elements.create('card', { style: style, hidePostalCode: true });
+    let displayError = document.getElementById('card-errors');
+    let taxErrors = document.getElementById('tax-errors');
+    cardElement.mount('#card-element');
+    cardElement.on('change', clearCardError);
+
+    function handleError(event) {
+        if (!event.error) return showCardError(event);
+
+        if (event.error.type === 'tax_id') return showTaxError(event);
+    }
+
+    function showTaxError(event) {
+        if (event && event.error) {
+            taxErrors.textContent = event.error.message;
+        } else {
+            taxErrors.textContent = '';
+        }
+    }
+
+    function showCardError(event) {
+        if (event && event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    }
+
+    function clearErrors() {
+        if (taxErrors) {
+            taxErrors.textContent = '';
+        }
+        clearCardError();
+    }
+
+    function clearCardError() {
+        displayError.textContent = '';
+    }
+/*
+    cardElement.addEventListener('change', function(event) {
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+*/
+    let disableButton = () => { button.disabled = true; button.textContent = buttonWaitText; };
+
+    let enableButton = () => { button.disabled = false; button.textContent = buttonText };
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        clearErrors();
+
+        let selectCountry = document.querySelector("#subscription-form [name=country]");
+        let country = selectCountry.options[selectCountry.selectedIndex].value;
+        let selectTaxType = document.querySelector("#subscription-form [name=tax_id_type]");
+        let taxType = selectTaxType ? selectTaxType.options[selectTaxType.selectedIndex].value : null;
+        let taxId = selectTaxType ? document.querySelector("#subscription-form [name=tax_id]").value : null;
+
+        if(!country || country === '00') {
+            showCardError({error: {message: "{{_('Please select your country.')}}" }});
+            return;
+        }
+
+        {% if plan_id in config.get('LEGAL_ENTITIES_PLANS') %}
+            if(selectTaxType) {
+                if (!(taxType && taxId)) {
+                    showTaxError({error: {message: "{{_('Please enter your Tax ID.')}}"}});
+                    return;
+                }
+            }
+        {% endif %}
+
+        let billing_details = {
+                email: '{{ current_user.email }}',
+                name: document.querySelector('#subscription-form [name=customer_name]').value,
+                address: {
+                    'country': country,
+                    'state': document.querySelector('#subscription-form [name=state]').value,
+                    'city': document.querySelector('#subscription-form [name=city]').value,
+                    'line1': document.querySelector('#subscription-form [name=line1]').value,
+                    'line2': document.querySelector('#subscription-form [name=line2]').value,
+                    'postal_code':  document.querySelector('#subscription-form [name=postal_code]').value,
+                }
+            };
+
+        disableButton();
+
+        stripe.createPaymentMethod({
+            type: 'card',
+            card: cardElement,
+            billing_details: billing_details,
+        }).then((result) => {
+            if (result.error) {
+                handleError(result);
+                enableButton();
+            } else {
+                createSubscription(result.paymentMethod, billing_details)
+            }
+        });
+    });
+
+    function createSubscription(paymentMethod, billing_details) {
+        let selectTaxIdType = document.querySelector("#subscription-form [name=tax_id_type]");
+        let customerName, taxIdType, taxId, promo;
+        promo = document.querySelector('#subscription-form [name=promo]').value
+        if (selectTaxIdType) {
+            customerName = document.querySelector("#subscription-form [name=customer_name]").value
+            taxIdType = selectTaxIdType.options[selectTaxIdType.selectedIndex].value;
+            taxId = document.querySelector("#subscription-form [name=tax_id]").value;
+        }
+
+        fetch(form.action, {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                payment_method_id: paymentMethod.id,
+                billing_details: billing_details,
+                customer_name: customerName,
+                tax_id_type: taxIdType,
+                tax_id: taxId,
+                promo: promo
+            }),
+        })
+        .then((result) => {
+            return result.json();
+        })
+        .then((result) => {
+            if (result.error) {
+                throw result;
+            }
+            return result;
+        })
+        .then((result) => {
+            return {
+                subscription: result,
+                paymentMethod: paymentMethod
+            }
+        })
+        .then(handleCustomerActionRequired)
+        .then(onSubscriptionComplete)
+        .catch(handleError)
+        .finally(enableButton);
+    }
+
+    function handleCustomerActionRequired({subscription, paymentMethod}) {
+        if(subscription && subscription.status === 'active') {
+            return {subscription, paymentMethod}
+        }
+
+        let paymentIntent = subscription.latest_invoice.payment_intent;
+
+        if(paymentIntent.status === 'requires_action') {
+            return stripe
+                .confirmCardPayment(
+                    paymentIntent.client_secret,
+                    {
+                        payment_method: paymentMethod.id,
+                    }
+                ).then((result) => {
+                    // result: {error: {}, paymentIntent: {}}
+                    if(result.error) {
+                        throw result;
+                    }
+                    if (result.paymentIntent.status === 'succeeded') {
+                        onSubscriptionComplete({subscription: {status: 'active'}}); // это костыль!
+                        return {subscription, paymentMethod}
+                    }
+                }).catch((error) => {
+                    handleError(error);
+                });
+        } else {
+            return {subscription, paymentMethod};
+        }
+    }
+
+    function onSubscriptionComplete(payload) {
+        if (payload && payload.subscription && payload.subscription.status === 'active') {
+            clearErrors();
+            location.href="/virtoaster/pricing/?msg=subscribed"
+        }
+    }
+}
+
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{#
+    Этот шаблон тупо редиректит на страницу изменения данных карты для регулярных платежей. Весь этот код можно перетащить в my/settings.html,
+    если запрос к my.settings_payment будет не рендерить этот шаблон, а отдавать JSON {'session_id': session_id }
+#}
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script type="text/javascript">
+        var stripe = Stripe('{{ config.STRIPE_PK }}');
+
+        stripe.redirectToCheckout({
+          sessionId: '{{ session.id }}'
+        }).then(function (result) {
+          // If `redirectToCheckout` fails due to a browser or network
+          // error, display the localized error message to your customer
+          // using `result.error.message`.
+        });
+
+    </script>
+</head>
+<body></body>
+</html>

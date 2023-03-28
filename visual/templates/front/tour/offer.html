@@ -1,0 +1,47 @@
+{% extends 'base_common.html' %}
+{% set pixels_disabled = True %}
+{% if offer.title %}
+    {%- set page_title = offer.title + ' - ' + _('Biganto Virtual Tour') -%}
+{% else %}
+    {%- set page_title = _('Biganto Virtual Tour') -%}
+{% endif %}
+
+
+{% block common_head %}
+   <link rel="stylesheet" type="text/css" href="/static/public/player/css/SplitScreenManager.css?{{ config.get('RELEASE_VERSION') }}">
+{% endblock %}
+{% block common_content %}
+<script>
+    var TOUR_IN_EDIT_MODE = false;
+    var multitourData = {
+        isMultitour: true,
+        isShowMultitourSlider: false,
+        iFrameId: 'multitour_iFrame',
+        changeCurrentTour: null,
+        offerId: "{{ offer.id }}",
+
+        // На самом деле, когда мультитуры станут самостоятельным типом тура, список туров мультиутра
+        // будет лежать в Tour.meta.tours = [{tour_id, title, preview}, ...]. Поэтому есть смысл сразу
+        // здесь использовать настоящие имена, чтобы безболезненно здесь потом написать: tour.meta|tojson.
+        tours: [
+            {%  for offer_tour in offer.tours %}
+                {
+                    tourId: "{{ offer_tour.tour.id }}",
+                    title: "{{ offer_tour.title or offer_tour.tour.title }}",
+                    {% if offer_tour.tour.preview %}
+                        previewUrl: "{{ offer_tour.tour.preview.url }}"
+                    {% endif %}
+                },
+            {% endfor %}
+
+        ],
+        // Опции отображения тура. Будут лежать в Tour.meta.options = { ... }
+        options: {{ offer.template_data|tojson }}
+    }
+</script>
+<script src="/static/public/player/js/SplitScreenManager.js?{{ config.get('RELEASE_VERSION') }}"></script>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,85 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'gallery' %}
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h1>
+    Теги
+    <span class="badge bg-secondary align-middle rounded-pill fs-6 text-light">{{ tags.total }}</span>
+</h1>
+
+{% include 'admin/gallery/_tabs.html' %}
+<table class="table table-list table-bordered table-hover">
+<thead>
+<tr>
+    <th title="Количество туров в галерее с этим тегом">CNT</th>
+    <th>Тег</th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for tag, count in tags.items %}
+    <tr data-tag="{{ tag }}">
+        <td class="n">
+            {{ count }}
+        </td>
+        <td class="t">
+            <a href="{{ url_for('.gallery', mode=1, tag=tag) }}">{{ tag }}</a>
+            {% if tag in common_tags %}<i class="fas fa-fire text-success" title="Используется в фильтрах галереи"></i>{% endif %}
+            <div class="float-end">
+            <a href="{{ url_for('front.gallery', tag=tag) }}" class="badge text-bg-info text-light text-underline-hover">В галерее</a>
+            </div>
+        </td>
+        <td class="text-end">
+            <a href="#modal-rename" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal">Переименовать</a>
+        </td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+{{ render_pagination(tags, '.gallery') }}
+
+
+<form method="post" id="form-rename" action="{{ url_for('.gallery_tag_rename') }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="oldname">
+<div class="modal" id="modal-rename"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Переименовать тег</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3">
+            Переименовать тег <strong class="modal-rename-oldname"></strong>
+        </div>
+        <input type="text" class="form-control mb-3" name="newname">
+        <p class="text-muted">Внимание! Если такой тег уже существует, туры с этим тегом объединятся!</p>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Ok</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+    </div>
+</div></div></div>
+</form>
+
+
+<script type="text/javascript">
+(function() {
+    let $modal = $('#modal-rename'), $form = $('#form-rename');
+    $modal.on('shown.bs.modal', function(e) {
+        let $tr = $(e.relatedTarget).parents('tr'), oldname = $tr.data('tag') + '';
+
+        $modal.find('.modal-rename-oldname').text(oldname);
+        $form.find('[name=oldname]').val(oldname);
+        $form.find('[name=newname]').val(oldname).focus();
+    });
+})();
+</script>
+
+{% endblock %}

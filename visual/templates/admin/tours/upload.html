@@ -1,0 +1,144 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'tours' %}
+
+
+{% block head %}
+<style type="text/css">
+    #file-info { font-weight: bold; }
+    #progress { display: none; }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<h1>Загрузить тур из ZIP-архива</h1>
+
+<form method="post" action="{{ url_for('.tour_upload', user_id=user_id) }}" enctype="multipart/form-data" class="form-horizontal" id="form-upload" data-upload-url="{{ url_for('front.flow_upload', token=flow_token) }}">
+    {{ form.csrf_token() }}
+    <input type="hidden" name="flow_token" value="{{ flow_token }}">
+{# начало макета #}
+
+    <div class="row mb-3">
+        <label class="text-end col-sm-2">Тип</label>
+        <div class="col-sm-2">
+            {{ form.type(class='form-select') }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="text-end col-sm-2">Папка</label>
+        <div class="col-sm-2">
+            {{ form.folder_id(class='form-select') }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="text-end col-sm-2">Статус</label>
+        <div class="col-sm-2">
+            {{ form.status(class='form-select') }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="text-end col-sm-2">Название тура</label>
+        <div class="col-sm-10">
+            {{ form.title(class='form-control') }}
+            <p class="text-muted">Если загружается несколько туров, то к этому названию будет добавлено имя архива: tour-12345.zip => "Что я тут ввёл tour-12345"</p>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="form-label text-end col-sm-2">ZIP-архив(ы)</label>
+        <div class="col-sm-10">
+            <span id="file-info"></span>
+            <button type="button" class="btn btn-outline-success btn-sm" id="btn-browse">Выбрать файл</button>
+            <input type="hidden" name="filename">
+        </div>
+
+    </div>
+
+    <div class="row mb-3">
+        <label class="text-end col-lg-2 form-check-label">Просчитать граф достижимости</label>
+        <div class="col">
+            {{ form.passway_calc(class="form-check-input") }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="text-end form-check-label col-sm-2 text-right">Вычислить вес модели</label>
+        <div class="col-sm-10">
+            {{ form.model_size(class="") }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-auto offset-lg-2">
+            <div class="progress mb-3 " id="progress">
+                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 0"></div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btn-start">Поехали</button>
+            <a href="{{ url_for('.tours', user_id=user_id) }}" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </div>
+</form>
+
+    <h2>Структура ZIP-файла</h2>
+
+    <p>
+        После загрузки ZIP-файла будет создана одна съёмка и один тур, использующий эту съёмку. В ZIP-файле должна быть директория
+        <code>footage</code>, содержащая ассеты съёмки и файл <code>_meta.json</code> с метаданными съёмки, и директория <code>tour</code>
+        с ассетами тура и файлом <code>_meta.json</code>, откуда возьмутся метаданные тура.
+    </p>
+    <p>
+        Посмотреть пример правильного архива можно, нажав на кнопку «Скачать в ZIP» в свойствах любого тура.
+    </p>
+
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript" src="/static/admin/flow.min.js"></script>
+<script type="text/javascript">
+(function() {
+    var $form = $('#form-upload'), $browse = $form.find('#btn-browse'), $fileInfo = $('#file-info'), $progress = $('#progress'),
+        isUploaded = false;
+    var flow = new Flow({
+        target: $form.data('upload-url'),
+        query: {csrf_token: $form.find('[name=csrf_token]').val()},
+        withCredentials: true,
+        testChunks: false,
+        allowDuplicateUploads: false,
+    });
+    flow.assignBrowse($browse[0], false, false, {accept: 'application/zip'});
+    flow.on('fileAdded', function(file, event){
+        $fileInfo.text(file.name + ' ' + Math.round(file.size / 1024 / 1024) + ' MB');
+    });
+    flow.on('progress', function() {
+        var prc = Math.round(flow.progress() * 100) + '%';
+        $progress.find('.progress-bar').css({'width': prc}).text(prc);
+    });
+    flow.on('error', function(message, file, chunk){
+        alert('При загрузке файла ' + file + ' произошла ошибка: ' + message);
+    });
+
+    $form.on('submit', function(e) {
+        if(flow.files.length == 0) {
+            return false;
+        }
+
+        if(isUploaded) {
+            return true;
+        } else {
+            $progress.show();
+            $browse.attr('disabled', true);
+            $form.find('#btn-start').attr('disabled', true);
+            flow.upload();
+            return false;
+        }
+    });
+    flow.on('fileSuccess', function(file, message, chunk) {
+        let data = JSON.parse(message);
+        $form.find('[name=filename]').val(data.filename);
+    });
+    flow.on('complete', function(){
+        isUploaded = true;
+        $form.submit();
+    });
+})();
+</script>
+{% endblock %}

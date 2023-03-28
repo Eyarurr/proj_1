@@ -1,0 +1,87 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'sys' %}
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Проверить почту</h1>
+
+<blockquote class="blockquote border-3 border-info border-start ps-4">
+    Эта страница предназначена, чтобы проверить, как с сервера ходит почта. Сообщение будет отправлено
+    функцией <code>visual.mail.send_email()</code>
+</blockquote>
+
+<form method="post" class="form-horizontal">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div class="row mb-3">
+        <label class="col-lg-2 text-lg-end">To: </label>
+        <div class="col-lg">
+            <input type="text" name="from" value="{{ request.form.get('from', config.get('MAIL_DEFAULT_SENDER')) }}" class="form-control">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-lg-2 text-lg-end">To: </label>
+        <div class="col-lg">
+            <input type="text" name="to" value="{{ request.form.get('to', current_user.email) }}" class="form-control">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-lg-2 text-lg-end">Subject: </label>
+        <div class="col-lg">
+            <input type="text" name="subject" value="{{ request.form.get('subject', 'Mail test from ' + request.host) }}" class="form-control">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg offset-lg-2">
+            <textarea name="body" class="form-control" rows="4">{{ request.form.get('body', 'Test message') }}</textarea>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg offset-lg-2">
+            <button type="submit" class="btn btn-success">Отправить</button>
+        </div>
+    </div>
+</form>
+
+    <h2>Конфиг</h2>
+    <div class="table-responsive-lg">
+        <table class="table table-bordered table-hover">
+    <tr>
+        <td>MAIL_ENABLED</td><td><code>{{ config.get('MAIL_ENABLED') }}</code></td>
+    </tr><tr>
+        <td>MAIL_SERVER</td><td><code>{{ config.get('MAIL_SERVER') }}</code></td>
+    </tr><tr>
+        <td>MAIL_PORT</td><td><code>{{ config.get('MAIL_PORT') }}</code></td>
+    </tr><tr>
+        <td>MAIL_TLS</td><td><code>{{ config.get('MAIL_TLS') }}</code></td>
+    </tr><tr>
+        <td>MAIL_USER</td>
+        <td>
+            {% if config.get('MAIL_USER') %}
+                <code>{{ config.get('MAIL_USER')[:3] }}</code>...
+            {% else %}
+                <code>{{ config.get('MAIL_USER') }}</code>
+            {% endif %}
+        </td>
+    </tr><tr>
+        <td>MAIL_PASSWORD</td>
+        <td>
+            {% if config.get('MAIL_PASSWORD') %}
+                <code>{{ config.get('MAIL_PASSWORD')[:1] }}</code>...
+            {% else %}
+                <code>{{ config.get('MAIL_PASSWORD') }}</code>
+            {% endif %}
+        </td>
+    </tr><tr>
+        <td>MAIL_SINK</td><td><code>{{ config.get('MAIL_SINK') }}</code></td>
+    </tr><tr>
+        <td>MAIL_ECHO</td><td><code>{{ config.get('MAIL_ECHO') }}</code></td>
+    </tr>
+    </table>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% if tours %}
+<div class="tabs-pagination">
+    {{ render_pagination(tours, '.gallery', **filters.as_dict()) }}
+</div>
+{% endif %}
+<ul class="nav nav-tabs" role="tablist">
+    {% set modes = [('-', 'Новые'), ('1', 'Галерея'), ('100', 'Главная'), ('0', 'Запрещённые'), ] %}
+    {% for k, v in modes %}
+        {% if request.endpoint == 'admin.gallery' and k == filters.mode.data %}
+        {% set active = "active" %}
+        {% endif %}
+        <li class="nav-item">
+            <a href="{{ url_for('.gallery', mode=k) }}" class="nav-link {{ active }}">{{ v }}</a>
+        </li>
+    {% endfor %}
+    {% if request.endpoint == 'admin.gallery_tags' %}
+        {% set active = "active" %}
+    {% endif %}
+    <li class="nav-item">
+        <a href="{{ url_for('.gallery_tags') }}" class="nav-link {{ active }}">Теги</a>
+    </li>
+</ul>

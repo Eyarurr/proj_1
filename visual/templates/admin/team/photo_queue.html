@@ -1,0 +1,74 @@
+{% extends 'admin/base-bs-3.html' %}
+{% set menu_current = 'team' %}
+
+
+{% block content %}
+<h1>
+    Команда Biganto: фотографии на модерации
+</h1>
+
+
+{% if not queue %}
+    <div class="alert alert-info">
+        Нет фотографий для модерации. Займитесь делом!
+    </div>
+{% else %}
+    <ul id="photo-list">
+    {% for photo in queue %}
+        <li data-id="{{ photo.id }}">
+            <p>
+                <a href="{{ url_for('.team_profile', user_id=photo.user_id) }}">{{ photo.user.name }}</a>
+            </p>
+            <p>
+                {% if photo.photo %}
+                    <img src="{{ photo.photo.url }}" width="{{ photo.photo.width / 4 }}" height="{{ photo.photo.height / 4 }}">
+                {% else %}
+                    <b>Внезапно, фотки нет.</b>
+                {% endif %}
+            </p>
+            <p>
+                <button type="button" class="btn btn-success action-accept">Принять</button>
+                <button type="button" class="btn btn-danger action-decline">Отказать</button>
+            </p>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}
+
+
+{% block tail %}
+<script type="text/javascript">
+(function() {
+    var $list = $('#photo-list');
+
+    $list.on('click', '.action-accept, .action-decline', function(e) {
+        var $this = $(this), $li = $this.parents('li'), id = $li.data('id'), action;
+
+        if($(this).hasClass('action-accept')) action = 'accept';
+        else if($(this).hasClass('action-decline')) action = 'decline';
+        else return;
+
+        $.ajax(
+            '{{ url_for('.team_photo_queue_moderate') }}',
+            {
+                method: 'POST',
+                data: {
+                    csrf_token: '{{ csrf_token() }}',
+                    photo_id: id,
+                    action: action
+                }
+            }
+        ).done(function(data) {
+            if(data.error) {
+                alert(data.error);
+                return;
+            }
+            $li.remove();
+        });
+    });
+
+})();
+</script>
+{% endblock %}

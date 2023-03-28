@@ -1,0 +1,132 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'support' %}
+{% set corpus_class = 'support' %}
+{% set cur_status = request.args.get('status', 'new') %}
+
+{% macro issue_subject(issue) %}
+    {{ Issue.SUBJECTS.get(issue.subject, issue.subject) }}
+{% endmacro %}
+
+{% block head %}
+<style type="text/css">
+    .order { margin: 20px 0; background: #eee; padding: 10px; border-radius: 5px; border: 1px solid #ccc;}
+    .order-meta { margin-bottom: 10px; font-size: .9em; }
+    .ta-label { background: black; color: white; font-size: .9em; font-weight: bold; padding: 2px 6px; text-align: center; margin-bottom: 7px;}
+    .id_column { width: 1%; white-space: nowrap; }
+    .date_column { width: 1%; white-space: nowrap; }
+    .button_column { width: 1%; white-space: nowrap; }
+    td nowrap { white-space: nowrap; }
+    .line-badge { margin: 0; }
+    .line-text { margin: 6px 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Тикеты</h1>
+
+<ul class="nav nav-tabs" role="tablist">
+    {% for name, caption in statuses.items() %}
+        {% set active = "active" if name == cur_status %}
+        <li class="nav-item">
+            <a href="{{ url_for('.issues', status=name) }}" class="nav-link {{ active }}">
+                {{ caption }}
+                {% if count_issues[name] %}({{ count_issues[name] }}){% endif %}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% set colors_badges = { 'tour': 'danger', 'payment': 'warning', 'feedback': 'primary', 'other': 'secondary' } %}
+
+{% if issues.total == 0 %}
+    <div class="alert alert-info" style="margin: 20px 0">
+        Нет таких тикетов.
+    </div>
+{% else %}
+
+    <table class="table table-bordered list" style="margin-top: 32px;">
+        <tr>
+            <th class="id_column">#</th>
+            <th class="date_column">Дата</th>
+            <th>Запрос</th>
+            <th>Контакты</th>
+            <th class="button_column"></th>
+        </tr>
+        {% for issue in issues.items %}
+        <tr class="issue" data-id="{{ issue.id }}">
+            <td class="id_column">
+                <a href="{{ url_for('admin.issue_edit', issue_id=issue.id) }}" class="text-underline-hover">{{ issue.number }}</a>
+            </td>
+            <td class="date_column">
+                {{ issue.created|utcinlocal|humantime }}
+            </td>
+            <td class="desc_column">
+                <p class="line-badge">
+                    <label class="badge bg-{{ colors_badges.get(issue.subject, 'secondary') }}">{{ issue_subject(issue) }}</label>
+                </p>
+                <p class="line-text ">{{ issue.text }}</p>
+                {% if issue.tour_link %}
+                    <p>Ссылка на тур: <a href="{{ issue.tour_link }}" target="_blank">{{ issue.tour_link }}</a></p>
+                {% endif %}
+            </td>
+            <td>
+                {% if issue.contact_email %}
+                    <nowrap><i class="fas fa-envelope"></i> <a href="mailto:{{ issue.contact_email }}" class="text-underline-hover">{{ issue.contact_email }}</a></nowrap><br>
+                {% endif %}
+                {% if issue.user_id %}
+                    <nowrap><i class="fas fa-user"></i> <a href="{{ url_for('.user_edit', user_id=issue.user_id) }}" class="text-underline-hover">{{ issue.user.name }}</a></nowrap>
+                {% endif %}
+            </td>
+            <td class="button_column">
+                <a href="{{ url_for('admin.issue_edit', issue_id=issue.id) }}" class="btn btn-sm btn-success{% if issue.status != 'process' %} button-status{% endif %}" data-status="process">
+                    Ответить
+                </a>
+                {% if issue.status in ['new', 'complete'] %}
+                <a href="{{ url_for('admin.issue_edit', issue_id=issue.id) }}" class="btn btn-sm btn-danger button-status" data-status="spam">
+                    Спам
+                </a>
+                {% endif %}
+                {% if issue.status in ['process'] %}
+                <a href="{{ url_for('admin.issue_edit', issue_id=issue.id) }}" class="btn btn-sm btn-outline-secondary button-status" data-status="complete">
+                    Закрыть
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {{ render_pagination(issues, '.issues', status=request.args.get('status')) }}
+
+{% endif %}
+
+<script>
+    $(function() {
+        var CSRF_TOKEN = '{{ csrf_token() }}';
+        $('.button-status').on('click', function(event) {
+            var url = $(this).prop('href'),
+                targetStatus = $(this).data('status');
+            event.preventDefault();
+            $.ajax({
+                method: 'POST',
+                url: url,
+                headers: {
+                    'X-CSRFToken': CSRF_TOKEN
+                },
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({status: targetStatus})
+            }).done(function(answer) {
+                if (answer.redirect) {
+                    window.location.href = answer.redirect;
+                } else if (answer.reload) {
+                    window.location.reload();
+                } else if (answer.errors) {
+                    console.error('Errors:', answer.errors);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

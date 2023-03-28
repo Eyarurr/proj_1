@@ -1,0 +1,97 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'estates' %}
+{% set estate_id = request.view_args.get('estate_id') %}
+{% set etag_id = request.view_args.get('etag_id', 0) %}
+
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+    <h1>{% if not etag_id %} Добавить новый тег объекту {{ estate.title }} <span class="text-muted">({{ estate_id }})</span>
+        {% else %}
+    Изменить тег {{ etag_id }}
+    {% endif %}
+</h1>
+    <form method="POST" action="{{ url_for('.estates_etag_edit', estate_id=estate_id, etag_id=etag_id) }}" id="form"
+          enctype="multipart/form-data">
+        {{ form.csrf_token() }}
+        <div class="row mb-3">
+            <div class="col-lg-2 text-end">Тег</div>
+            <div class="col-lg-4">{{ form.tag_id(class="form-select") }}</div>
+            <div class="col-lg-2 text-end">Значение</div>
+            <div class="col-lg-4">{{ form.value(class="form-control") }}</div>
+        </div>
+        <hr>
+        <div class="row mb-3 ">
+            <div class="col-lg-2 text-end">Лейбел</div>
+            <div class="col-lg-4">{{ form_tag.label(class="form-control", readonly="readonly") }}</div>
+            <div class="col-lg-2 text-end">crm_key</div>
+            <div class="col-lg-4">{{ form_tag.crm_key(class="form-control", readonly="readonly") }}</div>
+        </div>
+        <div class="row mb-3 ">
+            <div class="col-lg-2 text-end">Суффикс</div>
+            <div class="col-lg-4">{{ form_tag.suffix(class="form-control desabled", readonly="readonly") }}</div>
+            <div class="col-lg-2 text-end">Префикс</div>
+            <div class="col-lg-4">{{ form_tag.prefix(class="form-control", readonly="readonly") }}</div>
+        </div>
+        <div class="row mb-3">
+
+            <div class="col-lg-2 text-end">Словарь значений</div>
+            <div class="col-lg-10">{{ form_tag.display_dict(class="form-control", readonly="readonly") }}</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="offset-lg-2 col-lg-auto">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-life-ring"></i> Сохранить</button>
+                <a href="{{ url_for('.estates_etags', estate_id=estate_id) }}" class="btn btn-secondary">Отменить</a>
+                {% if etag_id %}
+
+                <a href="#modal-delete" class="btn btn-danger" data-bs-toggle="modal" title="Удалить"> Удалить</a></td>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+    <form method="post" action="{{ url_for('.estates_etag_delete', estate_id=estate_id, etag_id=etag_id) }}"  >
+        {{ form.csrf_token() }}
+
+        <div class="modal" id="modal-delete">
+        <div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Удалить тег</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Удалить тег из текущего объекта недвижимости. Сам тег уделен не будет
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+            </div>
+        </div></div></div>
+    </form>
+    <script type="text/javascript">
+        (function () {
+            let $form = $('#form'), $tag_id = $form.find('#tag_id')
+            ;
+            $tag_id.on('change', function () {
+                $.ajax({
+                    url: `/admin/estates/tag/${$tag_id.val()}`,
+                    method: 'get',
+                    dataType: 'html',
+                    success: function (data) {
+                        const obj = JSON.parse(data);
+                        $form.find('#label').val(obj.result.label)
+                        $form.find('#name').val(obj.result.name)
+                        $form.find('#suffix').val(obj.result.suffix)
+                        $form.find('#prefix').val(obj.result.prefix)
+                        $form.find('#display_dict').val(JSON.stringify(obj.result.display_dict))
+                    }
+                })
+            })
+
+        })();
+    </script>
+{% endblock %}

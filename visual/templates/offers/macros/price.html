@@ -1,0 +1,10 @@
+{% macro price(offer) %}
+    <section class="b-price b-external__section">
+        <div class="b-external__inner clearfix">
+            <div class="b-external__content clearfix">
+                <div class="b-price__top">{{ _("Cost of an offer") }}</div>
+                <div class="b-price__bottom">{{ offer.template_data.price.value|money }} {{ offer.template_data.price.currency }}<span class="b-price__period"> {{ offer.template_data.price.period }}</span></div>
+            </div>
+        </div>
+    </section>
+{% endmacro %}

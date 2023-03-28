@@ -1,0 +1,5889 @@
+# Korean translations for PROJECT.
+# Copyright (C) 2022 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-02-27 21:03+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ko\n"
+"Language-Team: ko <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#, python-format
+msgid "Virtoaster support request #%(number)s"
+msgstr ""
+
+msgid "No client ID in request."
+msgstr ""
+
+msgid "No client version in request."
+msgstr ""
+
+#, python-format
+msgid "Action \"%(action_id)s\" not found."
+msgstr ""
+
+msgid "Unknown action type."
+msgstr ""
+
+msgid "You can not change action type."
+msgstr ""
+
+#, python-format
+msgid "Bad data type for property %(property)s"
+msgstr ""
+
+#, python-format
+msgid "Unknown input property %(property)s"
+msgstr ""
+
+msgid "URL must be specified for action \"sound\"."
+msgstr ""
+
+msgid "There are no audio tracks in tour."
+msgstr ""
+
+#, python-format
+msgid "Track %(clip_id)s not found."
+msgstr ""
+
+#, python-format
+msgid "You can not buy tour features while on Trial plan. Please <a href=\"%(url)s\">upgrade your account</a>."
+msgstr ""
+
+#, python-format
+msgid "Your billing details are invalid. Please update your credit card information on the <a href=\"%(url)s\">Settings page</a>."
+msgstr ""
+
+#, python-format
+msgid "Billing error: %(error)s."
+msgstr ""
+
+#, python-format
+msgid "Tour %(tour_id)s not found."
+msgstr ""
+
+#, python-format
+msgid "Tour %(tour_id)s does not belong to you."
+msgstr ""
+
+#, python-format
+msgid "Unknown feature %(feature)s."
+msgstr ""
+
+#, python-format
+msgid "You can not buy feature \"%(feature)s\" on your plan. Please <a href=\"%(url)s\">upgrade your account</a>."
+msgstr ""
+
+msgid "Nothing to purchase."
+msgstr ""
+
+msgid "Promo code can not be redeemed!"
+msgstr ""
+
+#, python-format
+msgid "Failed charging your credit card. Please update your credit card information on the <a href=\"%(url)s\">Settings page</a>."
+msgstr ""
+
+#, python-format
+msgid "You have no access to %(product)s product."
+msgstr ""
+
+msgid "There are no free operators in the past or today."
+msgstr ""
+
+msgid "Sorry, we do not provide service in selected city."
+msgstr ""
+
+msgid "No operators available in selected city."
+msgstr ""
+
+msgid "There is no route to selected location."
+msgstr ""
+
+msgid "There was a problem calculating operator's route. Please try again later."
+msgstr ""
+
+msgid "You can not place order in the past or today."
+msgstr ""
+
+msgid "All operators are busy, please choose another time."
+msgstr ""
+
+msgid "Estate not found."
+msgstr ""
+
+msgid "Order not found."
+msgstr ""
+
+msgid "You can not set this order status."
+msgstr ""
+
+msgid "Assets are available only for completed orders."
+msgstr ""
+
+msgid "You are not operator."
+msgstr ""
+
+#, python-format
+msgid "Status transition \"%(was)s\" -> \"%(to)s\" is not permitted"
+msgstr ""
+
+msgid "Can't find you as operator."
+msgstr ""
+
+msgid "Asset not found."
+msgstr ""
+
+#, python-format
+msgid "Invalid %(property)s value"
+msgstr ""
+
+msgid "There is no \"branding\" feature purchased for this tour."
+msgstr ""
+
+#, python-format
+msgid "Source directory %(token)s not found for %(key)s."
+msgstr ""
+
+#, python-format
+msgid "Malformed %(key)s value. "
+msgstr ""
+
+#, python-format
+msgid "Unknown sort type \"%(sort)s\""
+msgstr ""
+
+msgid "You can not edit this user."
+msgstr ""
+
+msgid "Wrong tour password."
+msgstr ""
+
+msgid "Wrong type of tour."
+msgstr ""
+
+msgid "Wrong status of tour."
+msgstr ""
+
+msgid "Tour not found."
+msgstr ""
+
+msgid "You can not edit this tour."
+msgstr ""
+
+msgid "Footage not found."
+msgstr ""
+
+msgid "Wrong type of footage."
+msgstr ""
+
+msgid "Wrong status of footage."
+msgstr ""
+
+msgid "You can not edit this footage."
+msgstr ""
+
+#, python-format
+msgid "Uploaded model size %(uploaded)d MB exceeds maximum allowed size for high-poly models %(limit)d MB. Please consider optimizing it manually."
+msgstr ""
+
+#, python-format
+msgid "Uploaded model size %(uploaded)d MB exceeds maximum allowed size for low-poly models %(limit)d MB. Please consider using \"Optimize 3d model\" option to process it."
+msgstr ""
+
+msgid "Project not found."
+msgstr ""
+
+msgid "Project or area not found."
+msgstr ""
+
+msgid "Task not found."
+msgstr ""
+
+msgid "The area title is not valid."
+msgstr ""
+
+msgid "You can not create areas in this project."
+msgstr ""
+
+msgid "Parent area not found."
+msgstr ""
+
+msgid "Area sorting order is not valid."
+msgstr ""
+
+msgid "Wrong parent area."
+msgstr ""
+
+msgid "Attaching area to its child area is not allowed."
+msgstr ""
+
+msgid "You can not add drawings in this project."
+msgstr ""
+
+msgid "Invalid drawing title."
+msgstr ""
+
+msgid "Drawing file is not uploaded."
+msgstr ""
+
+msgid "You can not change drawings in this project."
+msgstr ""
+
+msgid "Drawing not found in this area."
+msgstr ""
+
+msgid "Target area not found."
+msgstr ""
+
+msgid "Please enter drawing title."
+msgstr ""
+
+msgid "You can not delete drawings in this project."
+msgstr ""
+
+msgid "Please choose roles of new member."
+msgstr ""
+
+#, python-format
+msgid "Unknown role \"%(role)s\""
+msgstr ""
+
+msgid "You can not invite new owner of the project."
+msgstr ""
+
+msgid "You can not invite other users in this project."
+msgstr ""
+
+#, python-format
+msgid "You have been invited to project \"%(project_title)s\"."
+msgstr ""
+
+msgid "You can not view project members."
+msgstr ""
+
+msgid "Member not found."
+msgstr ""
+
+msgid "You can not assign new owner of the project."
+msgstr ""
+
+msgid "You can not modify users in this project."
+msgstr ""
+
+msgid "You can not kick users from this project."
+msgstr ""
+
+msgid "You can not edit this project properties."
+msgstr ""
+
+msgid "Please enter project title."
+msgstr ""
+
+msgid "You can not post comments for tasks in this project."
+msgstr ""
+
+msgid "Comment not found."
+msgstr ""
+
+msgid "You can not delete comments for tasks in this project."
+msgstr ""
+
+msgid "You can not add files for this task."
+msgstr ""
+
+msgid "You can not add files for tasks in this project."
+msgstr ""
+
+msgid "You can not create tasks in this project."
+msgstr ""
+
+msgid "You must select task status."
+msgstr ""
+
+#, python-format
+msgid "You can not create new task with \"%(status)s\" status."
+msgstr ""
+
+msgid "You should at least enter task title."
+msgstr ""
+
+msgid "Access Denied"
+msgstr ""
+
+msgid "Limit is too high."
+msgstr ""
+
+msgid "You can not delete tasks in this project."
+msgstr ""
+
+msgid "Area not found."
+msgstr ""
+
+msgid "You can not add tours in this project."
+msgstr ""
+
+msgid "Tour already exists in this area."
+msgstr ""
+
+msgid "You can not move tours in this project."
+msgstr ""
+
+msgid "Tour not found in this area."
+msgstr ""
+
+msgid "This asset has already been copied."
+msgstr ""
+
+#, python-format
+msgid "%(skipped)d assets have already been copied."
+msgstr ""
+
+#, python-format
+msgid "Tag \"%(name)s\" does not exist."
+msgstr ""
+
+#, python-format
+msgid "Floor %(floor_id)s cannot be deleted"
+msgstr ""
+
+#, python-format
+msgid "Floor %(floor_id)s not found."
+msgstr ""
+
+msgid "Deleting first floor is not allowed, tour should always have at least a single floor"
+msgstr ""
+
+msgid "Wrong tour status."
+msgstr ""
+
+#, python-format
+msgid "Bad height for floor %(floor)s."
+msgstr ""
+
+msgid "User not found."
+msgstr ""
+
+msgid "You can not view folders of this user."
+msgstr ""
+
+msgid "You can not edit folders of this user."
+msgstr ""
+
+msgid "Please specify folder title."
+msgstr ""
+
+msgid "Folder not found."
+msgstr ""
+
+msgid "You can not delete folders of this user."
+msgstr ""
+
+#, python-format
+msgid "Unknown field %(field)s"
+msgstr ""
+
+msgid "Bad status value"
+msgstr ""
+
+msgid "Bad type value"
+msgstr ""
+
+msgid "Error saving coordinates. Please contact technical support."
+msgstr ""
+
+msgid "No model in tour."
+msgstr ""
+
+msgid "Model file is missing."
+msgstr ""
+
+msgid "API: bad input: {}"
+msgstr ""
+
+msgid "You can not create footage for other users."
+msgstr ""
+
+msgid "Assets loading error: {}"
+msgstr ""
+
+msgid "Tour not found"
+msgstr ""
+
+msgid "You can't edit this room."
+msgstr ""
+
+msgid "You can't delete this room."
+msgstr ""
+
+msgid "You have no access to Virtoaster."
+msgstr ""
+
+#, python-format
+msgid "File %(filename)s not found."
+msgstr ""
+
+#, python-format
+msgid "Unsupported image extension %(extension)s in file %(filename)s. File skipped."
+msgstr ""
+
+msgid "Select the plan that meets your requirements."
+msgstr ""
+
+#, python-format
+msgid "Unsupported resolution in file %(filename)s. %(w)s x %(h)s instead of %(wres)s x %(hres)s. File skipped."
+msgstr ""
+
+msgid "No upload_token in request body."
+msgstr ""
+
+#, python-format
+msgid "Can't find source directory %(token)s"
+msgstr ""
+
+#, python-format
+msgid "Unable to recognize filename %(filename)s, could not figure out image ID. File skipped."
+msgstr ""
+
+#, python-format
+msgid "Point %(skybox_id)s not found"
+msgstr ""
+
+msgid "Model file %(filename) not found."
+msgstr ""
+
+msgid "Unsupported 3d model extension. Model should have .OBJ file format."
+msgstr ""
+
+msgid "Unable to proceed: incorrect tour status or metadata, please contact support service."
+msgstr ""
+
+msgid "Unable to proceed: can not add task in queue"
+msgstr ""
+
+#, python-format
+msgid "ActiveMesh %(active_meshes)s not found."
+msgstr ""
+
+#, python-format
+msgid "Unknown client application %(client)s"
+msgstr ""
+
+msgid "Minimal version in \"after\" parameter must be in X.Y.Z format containing integers only."
+msgstr ""
+
+#, python-format
+msgid "Unknown application \"%(app_id)s\"."
+msgstr ""
+
+msgid "Wrong product"
+msgstr ""
+
+msgid "We are out of keys for this product at the moment, please try again later"
+msgstr ""
+
+msgid "There are no servers supporting your requirements."
+msgstr ""
+
+msgid "Slot creation not verified."
+msgstr ""
+
+msgid "Navigator item not found."
+msgstr ""
+
+msgid "You have not enough rights to send notifications to this user."
+msgstr ""
+
+msgid "You must specify channel in notification request."
+msgstr ""
+
+#, python-format
+msgid "Unrecognized channel \"%(channel)s\"."
+msgstr ""
+
+msgid "You must specify notification tone."
+msgstr ""
+
+#, python-format
+msgid "Unrecognized notification tone \"%(tone)s\"."
+msgstr ""
+
+msgid "No email body in notification request."
+msgstr ""
+
+#, python-format
+msgid "Overlay %(overlay_id)s not found."
+msgstr ""
+
+msgid "Bad protocol type for data transmitting."
+msgstr ""
+
+msgid "Enter scene title."
+msgstr ""
+
+msgid "Please, enter full camera model name."
+msgstr ""
+
+msgid "Please, enter camera serial."
+msgstr ""
+
+msgid "Can not detect scene files. Perhaps you choose wrong files."
+msgstr ""
+
+msgid "Please, enter camera model, camera serial and choose scene files."
+msgstr ""
+
+#, python-format
+msgid "Error occurred while data loading: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Error occurred while data loading parameters renewal: %(error)s"
+msgstr ""
+
+msgid "Wrong input data value."
+msgstr ""
+
+msgid "Wrong token value."
+msgstr ""
+
+msgid "Wrong progress value."
+msgstr ""
+
+#, python-format
+msgid "Error occurred while checking data integrity: %(error)s"
+msgstr ""
+
+#, python-format
+msgid "Invalid effect \"%(effect)s\""
+msgstr ""
+
+msgid "\"_\" shadow ID is reserved for default panoramas."
+msgstr ""
+
+#, python-format
+msgid "Skybox %(skybox_id)s not found."
+msgstr ""
+
+#, python-format
+msgid "Shadow %(shadow_id)s not found."
+msgstr ""
+
+#, python-format
+msgid "There is no shadow %(shadow_id)s in skybox %(skybox_id)s."
+msgstr ""
+
+msgid "Bad request: nothing selected."
+msgstr ""
+
+msgid "The email address is not valid."
+msgstr ""
+
+#, python-format
+msgid "You selection in tour \"%(title)s\""
+msgstr ""
+
+#, python-format
+msgid "Template \"%(template)s\" not found."
+msgstr ""
+
+msgid "Shadows has been changed. Please reload the page."
+msgstr ""
+
+msgid "Unable to process the model. Check if model is exported with Biganto tools and reupload. Please contact technical support if problem persists."
+msgstr ""
+
+msgid "Malformed input."
+msgstr ""
+
+#, python-format
+msgid "Required field \"%(key)s\" is missing."
+msgstr ""
+
+msgid "Tag not found."
+msgstr ""
+
+msgid "Video not found."
+msgstr ""
+
+msgid "Tour does not contain saved route."
+msgstr ""
+
+msgid "Malformed input data (width/height/fps error)."
+msgstr ""
+
+msgid "FPS should be between 1 and 60."
+msgstr ""
+
+#, python-format
+msgid "Video %(dim)s should be between 608 and 1920 px."
+msgstr ""
+
+msgid "Video width + height should be less than 3000."
+msgstr ""
+
+msgid "Video recording service is temporarily unavailable. Please try again later."
+msgstr ""
+
+msgid "Target folder not found."
+msgstr ""
+
+#, python-format
+msgid "You can not move tour %(tour)s to folder %(folder)s because folder %(folder)s does not belong to you."
+msgstr ""
+
+#, python-format
+msgid "You can not specify %(key1)s and %(key2)s simultaneously in one request."
+msgstr ""
+
+msgid "You can not view this directory."
+msgstr ""
+
+#, python-format
+msgid "Directory %(dir)s does not exist."
+msgstr ""
+
+msgid "Can't save file."
+msgstr ""
+
+msgid "Bad source directory."
+msgstr ""
+
+msgid "Bad destination directory."
+msgstr ""
+
+msgid "Bad target directory."
+msgstr ""
+
+#, python-format
+msgid "File %(file)s not found."
+msgstr ""
+
+#, python-format
+msgid "%(file)s is a directory."
+msgstr ""
+
+msgid "The \"scale\" value for a raster qr can only accept integers."
+msgstr ""
+
+msgid "Internal error while creating cache directory."
+msgstr ""
+
+#, python-format
+msgid "Internal error creating QR code: %(msg)s."
+msgstr ""
+
+msgid "Internal error saving QR code."
+msgstr ""
+
+msgid "File not found."
+msgstr ""
+
+#, python-format
+msgid "Billing error: Octobat HTTP request API error: %(error)s."
+msgstr ""
+
+msgid "You can not view other user's data."
+msgstr ""
+
+#, python-format
+msgid "Email %(email)s already registered for another user."
+msgstr ""
+
+#, python-format
+msgid "Unknown timezone \"%(timezone)s\""
+msgstr ""
+
+msgid "Password should contain at least six symbols."
+msgstr ""
+
+msgid "Your account is already marked for deletion."
+msgstr ""
+
+msgid "Password is not correct!"
+msgstr ""
+
+msgid "Wrong login."
+msgstr ""
+
+msgid "Wrong password."
+msgstr ""
+
+msgid "Please check your inbox for an email with your account activation link."
+msgstr ""
+
+msgid "The password is correct, but your personal account is not active."
+msgstr ""
+
+msgid "The password is correct, but your personal account is deleted."
+msgstr ""
+
+msgid "No API version in request."
+msgstr ""
+
+msgid "Please authorize."
+msgstr ""
+
+msgid "Please check tour types filter."
+msgstr ""
+
+msgid "Please check order filter."
+msgstr ""
+
+#, python-format
+msgid "Folder %(estate_id)s not found."
+msgstr ""
+
+msgid "Please specify either tour IDs or folder ID."
+msgstr ""
+
+msgid "Please specify folder ID."
+msgstr ""
+
+msgid "Please specify tour IDs."
+msgstr ""
+
+msgid "Tours not found."
+msgstr ""
+
+msgid "Subscription cancelled"
+msgstr ""
+
+msgid "By default"
+msgstr ""
+
+msgid "By date"
+msgstr ""
+
+msgid "Tour does not exist, deleted or hidden."
+msgstr ""
+
+msgid "The owner of this tour has deleted his account."
+msgstr ""
+
+msgid "Your link is broken or expired. Please enter tour password."
+msgstr ""
+
+#, python-format
+msgid "This tour is in testing mode and will perish in %(perish)d days. Please <a href=\"#\" class=\"b-topline__publish\" id=\"publish-tour\">publish</a> it to make it available forever."
+msgstr ""
+
+msgid "Tours with \"Testing\" status have limited hosting time. <a href=\"#\" class=\"b-topline__publish\" id=\"publish-tour\">Publish</a> the tour to to make it available forever."
+msgstr ""
+
+msgid "This tour is hidden and only you can see it."
+msgstr ""
+
+msgid "Room not found."
+msgstr ""
+
+msgid "today at "
+msgstr ""
+
+msgid "yesterday at "
+msgstr ""
+
+#, python-format
+msgid "Asset copied from Bladerunner to estate \"%(estate)s\""
+msgstr ""
+
+#, python-format
+msgid "%(amount)d asset(s) copied from Bladerunner to estate \"%(estate)s\""
+msgstr ""
+
+msgid "Error reading model, file is empty or not found. Please, upload model, exported with Biganto tools. If problem persists, please contact technical support."
+msgstr ""
+
+msgid "Error parsing model. Please, upload model, exported with Biganto tools. If problem persists, please contact technical support."
+msgstr ""
+
+msgid "System error - unable to open model file. File is being used by another process or you are not allowed to access it. Please try again later or contact technical support."
+msgstr ""
+
+msgid "Invalid polygons: polygon in the model has more than 200 vertices. Please, upload valid 3d model."
+msgstr ""
+
+msgid "Object count in your model exceeds allowed. 3d model should not contain more than 6000 objects."
+msgstr ""
+
+msgid "Model size exceeds maximum allowed"
+msgstr ""
+
+msgid "Error extracting coordinates from scene geometry. Check, if number of images corresponds to number of auxiliary geometry objects in 3d scene. Check if helpers geometry was created using Biganto tools."
+msgstr ""
+
+msgid "Unable to find camera helpers. Please, upload model with camera, created with Virtoaster Cam tools or upload coordinates with .txt file."
+msgstr ""
+
+msgid "Invalid camera helper name: non integer index. Please rename camera helpers and reupload the model."
+msgstr ""
+
+msgid "Invalid camera helper name: index exceeds helper count. Please rename camera helpers and reupload the model."
+msgstr ""
+
+msgid "Invalid helpers: non triangle geometry. Please, upload model with camera, created with Virtoaster Cam tools or upload coordinates with .txt file."
+msgstr ""
+
+msgid "Invalid helpers: non isosceles triangle geometry. Please, upload model with camera, created with Virtoaster Cam tools or upload coordinates with .txt file."
+msgstr ""
+
+msgid "Error parsing coordinates from JSON. Please contact technical support."
+msgstr ""
+
+msgid "No geometry to extract coordinates from. Remove \"Recognize coordinates from .obj\" flag and upload .txt coordinates file."
+msgstr ""
+
+msgid "System error while processing model. Please contact technical support."
+msgstr ""
+
+msgid "Geometry bounding box size exceeds allowed. Please check model scale and if there are any stray objects outside interior. Upload valid model "
+msgstr ""
+
+msgid "Polygon count exceeds maximum allowed. Optimize model manually or follow our guideline for model exporting"
+msgstr ""
+
+msgid "Cameras are too far away from model. Check model scale and if coordinates are correct."
+msgstr ""
+
+msgid "Unable to find images for some of the recognized points. Please, check if camera helpers number and indices correspond to number and indices of the images."
+msgstr ""
+
+msgid "System error while reading panoramas. Please contact technical support."
+msgstr ""
+
+msgid "System error while saving model. Please contact technical support."
+msgstr ""
+
+msgid "System error while processing textures. Please contact technical support."
+msgstr ""
+
+#, python-format
+msgid "Unknown error when processing model (code %(code)d). Please contact technical support."
+msgstr ""
+
+#, python-format
+msgid "Missing coordinates for panorama #%(skybox_id)s"
+msgstr ""
+
+#, python-format
+msgid "Unable to process image \"%(file)s\": %(err)s. Please, check if image is compliant with technical requirements."
+msgstr ""
+
+#, python-format
+msgid "No panorama for point %(skybox_id)s, recognized from 3d model."
+msgstr ""
+
+#, python-format
+msgid "No object to recognize coordinates from, for point %(skybox_id)s (object named \"cam_%(skybox_id)s\")"
+msgstr ""
+
+msgid "Unexpected error when creating a tour, we are working on it"
+msgstr ""
+
+msgid "Bad task status."
+msgstr ""
+
+msgid "Tour is not attached to area."
+msgstr ""
+
+msgid "Bad task assignee."
+msgstr ""
+
+msgid "Assigned user is not a member of this project."
+msgstr ""
+
+msgid "You can not assign tasks to that user."
+msgstr ""
+
+msgid "Bad task title."
+msgstr ""
+
+msgid "Bad task description."
+msgstr ""
+
+msgid "Bad task priority."
+msgstr ""
+
+msgid "Bad task deadline."
+msgstr ""
+
+msgid "You should upload file."
+msgstr ""
+
+msgid "Bad file title."
+msgstr ""
+
+msgid "Please enter your comment text."
+msgstr ""
+
+msgid "Target skybox must be specified for action \"goto\"."
+msgstr ""
+
+msgid "Popup action should contain either `html`, either `iframe`, either `html_get`, either `title`+`body`+buttons`,  either `image@flow` attributes"
+msgstr ""
+
+#, python-format
+msgid "File size should not exceed %(max_size)d MB"
+msgstr ""
+
+#, python-format
+msgid "Unknown image type in %(key)s."
+msgstr ""
+
+msgid "Video URLs must be specified for action \"video\"."
+msgstr ""
+
+msgid "You must specify at least one URL for video action."
+msgstr ""
+
+msgid "URL must be specified for action \"href\"."
+msgstr ""
+
+msgid "Tour ID must be specified for action \"tour\"."
+msgstr ""
+
+msgid "Tour ID must be specified for action \"offer\"."
+msgstr ""
+
+#, python-format
+msgid "Bad data type for  property %(property)s"
+msgstr ""
+
+#, python-format
+msgid "Not enough %(object)s properties %(prop)s."
+msgstr ""
+
+#, python-format
+msgid "Bad overlay type %(type)s"
+msgstr ""
+
+msgid "You can not set overlay type without sending new widget data."
+msgstr ""
+
+msgid "Please specify overlay type."
+msgstr ""
+
+#, python-format
+msgid "%(filename)s: should be an MP3 file."
+msgstr ""
+
+#, python-format
+msgid "%(filename)s is too large. Limit: %(limit)d MB."
+msgstr ""
+
+#, python-format
+msgid "%(filename)s: not a valid MP3 file."
+msgstr ""
+
+msgid "No skybox specified when creating navigator element."
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "Dark"
+msgstr ""
+
+msgid "Portrait 1"
+msgstr ""
+
+msgid "Portrait 2"
+msgstr ""
+
+msgid "Landscape 1"
+msgstr ""
+
+msgid "Landscape 2"
+msgstr ""
+
+#, python-format
+msgid "System error (BAD_ASSET_NAME %(name)s)"
+msgstr ""
+
+#, python-format
+msgid "Unable to upload an image %(name)s"
+msgstr ""
+
+#, python-format
+msgid "Panorama should be at least %(std)s px, you've got %(wrong)s."
+msgstr ""
+
+msgid "Bad route ID."
+msgstr ""
+
+msgid "Tag name should not be empty"
+msgstr ""
+
+#, python-format
+msgid "Tag \"%(name)s\" already exists."
+msgstr ""
+
+msgid "Rejection"
+msgstr ""
+
+msgid "0 — 10 sec."
+msgstr ""
+
+msgid "10 — 60 sec."
+msgstr ""
+
+msgid "1 — 5 min."
+msgstr ""
+
+msgid "5 — 10 min."
+msgstr ""
+
+msgid "10 — 30 min."
+msgstr ""
+
+msgid "30 — 60 min."
+msgstr ""
+
+msgid "Over an hour"
+msgstr ""
+
+msgid "Others"
+msgstr ""
+
+msgid "Enter folder name"
+msgstr ""
+
+msgid "Payment gateway error. Please try again later."
+msgstr ""
+
+msgid "Payment details have been updated."
+msgstr ""
+
+msgid "You do not have active subscriptions."
+msgstr ""
+
+msgid "There was a problem with billing service, please try again later."
+msgstr ""
+
+msgid "Promo code successfully redeemed!"
+msgstr ""
+
+msgid "Invalid subject."
+msgstr ""
+
+msgid "Invalid tour link."
+msgstr ""
+
+msgid "Describe your issue."
+msgstr ""
+
+msgid "Invalid contact email."
+msgstr ""
+
+msgid "No tours or objects are selected to display statistics. Select one or more items in the left menu."
+msgstr ""
+
+msgid "There is no data for the selected period."
+msgstr ""
+
+msgid "The selected elements do not intersect."
+msgstr ""
+
+msgid "Invalid query parameters."
+msgstr ""
+
+msgid "Download as..."
+msgstr ""
+
+msgid "Print"
+msgstr ""
+
+msgid "Sessions"
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "City and country"
+msgstr ""
+
+msgid "View type"
+msgstr ""
+
+msgid "Embedded"
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+msgid "Not defined"
+msgstr ""
+
+msgid "Median"
+msgstr ""
+
+msgid "Maximum"
+msgstr ""
+
+msgid "Not selected"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "Last 2 days"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "Quarter"
+msgstr ""
+
+msgid "Last 3 Years"
+msgstr ""
+
+msgid "This Year"
+msgstr ""
+
+msgid "Last Year"
+msgstr ""
+
+msgid "Custom Range"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Tour link"
+msgstr "링크 복사"
+
+msgid "Description"
+msgstr ""
+
+msgid "Contact email"
+msgstr ""
+
+msgid "User profile"
+msgstr ""
+
+msgid "Biganto"
+msgstr ""
+
+msgid "biganto.com"
+msgstr ""
+
+msgid "We create a virtual space long before it is built."
+msgstr ""
+
+msgid "Sign in"
+msgstr ""
+
+msgid "Sign up"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "Please confirm your email address by following the link you will receive shortly to {{email}}"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Welcome to biganto.com!"
+msgstr ""
+
+msgid "We’re glad you are with us, please check some useful links below. They will help you to get started:"
+msgstr ""
+
+msgid "Our \"Tutorials\" page"
+msgstr ""
+
+msgid ", where all important information is collected."
+msgstr ""
+
+msgid "Create sample tour"
+msgstr ""
+
+msgid ", start working right now and dig into details as you go!"
+msgstr ""
+
+msgid "Create your own tours!"
+msgstr ""
+
+msgid "Trial plan is assigned to you, you can create several tours for free."
+msgstr ""
+
+msgid "We've also sended you an email with confirmation of your registration and useful links to:"
+msgstr ""
+
+msgid "Error"
+msgstr "에러"
+
+msgid "Create new tour"
+msgstr ""
+
+msgid "Select folder"
+msgstr ""
+
+msgid "Create new folder"
+msgstr ""
+
+msgid "Folder title"
+msgstr ""
+
+msgid "Each tour should belong to a folder, create new or select existing folder to start tour creation."
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Site is undergoing a technical maintenance at the moment. We apologize for the inconvenience. Please try again later."
+msgstr ""
+
+msgid "Object not found"
+msgstr ""
+
+msgid "Passwords mismatch."
+msgstr ""
+
+msgid "Thank you! We well get in touch with you shortly."
+msgstr ""
+
+msgid "Thank you for using our services!"
+msgstr ""
+
+msgid "Our specialist will contact you during working hours to specify the details of the project"
+msgstr ""
+
+msgid "Checking in progress…"
+msgstr ""
+
+msgid "Usually it takes a couple of days. When your project will be checked we’ll get in touch with you via email"
+msgstr ""
+
+msgid "Buy {plan} plan"
+msgstr ""
+
+msgid "Downgrade to {plan} plan"
+msgstr ""
+
+msgid "Upgrade to {plan} plan"
+msgstr ""
+
+msgid "Billing"
+msgstr ""
+
+msgid "Common"
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "No notifications yet"
+msgstr ""
+
+#, python-format
+msgid "We use cookies on this website. Some of these are mandatory and required for website to function properly, while others allow us to enhance your experience, personalise content and provide insights into how the site is being used. You can change settings in our <a href=\"%(url)s\" class=\"link link--cookie\">Cookie settings page</a>."
+msgstr ""
+
+msgid "Accept default"
+msgstr ""
+
+msgid "Customize Cookie settings"
+msgstr ""
+
+msgid "Virtoaster"
+msgstr ""
+
+msgid "Gallery"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "Pricing"
+msgstr ""
+
+msgid "Tutorials"
+msgstr ""
+
+msgid "Contacts"
+msgstr ""
+
+msgid "Jobs"
+msgstr ""
+
+msgid "Filincam"
+msgstr ""
+
+msgid "Help"
+msgstr "도움말"
+
+msgid "Support"
+msgstr ""
+
+msgid "Apps"
+msgstr ""
+
+msgid "iOS"
+msgstr ""
+
+msgid "Android"
+msgstr ""
+
+msgid "Desktop"
+msgstr ""
+
+msgid "More"
+msgstr ""
+
+msgid "License Agreement for Player"
+msgstr ""
+
+msgid "License Agreement for Tour"
+msgstr ""
+
+msgid "Privacy Policy"
+msgstr ""
+
+msgid "User Agreement"
+msgstr ""
+
+msgid "Legal Notice"
+msgstr ""
+
+msgid "Activity of the company"
+msgstr ""
+
+msgid "Cookie settings"
+msgstr ""
+
+#, python-format
+msgid "Biganto is an IT company founded in 2014. We specialize in software and hardware development and innovative technologies in real estate marketing. Our portfolio has dozens of successful cases, including massive projects we did for development companies, which you can find in our <a href='%(url)s'>“Gallery”</a>."
+msgstr ""
+
+msgid "Biganto VR and 3d virtual tours allow viewers to freely and seamlessly move through the interior or exterior of a space, thus creating immersive experience. Product is unique with its combination of high image quality, ease of production and wide range of platforms it is available on, from internet browser to applications for mobile and VR devices."
+msgstr ""
+
+msgid "Our products"
+msgstr ""
+
+msgid "Virtoaster is a service, allowing 3d artists, interior designers and architecture visualizers to create VR and 3d virtual tours on their own, within short time frame. Using already available assets, Virtoaster is a simple and powerful tool to turn 3d models into interactive presentations of your projects."
+msgstr ""
+
+msgid "Use virtoaster"
+msgstr ""
+
+msgid "FilinCam is a professional 3d camera to digitize existing premises and create their doubles in virtual space. FilinCam with the help of accompanying proprietary software creates high definition laser scan of a space and automatically build its 3d model."
+msgstr ""
+
+msgid "coming soon"
+msgstr ""
+
+msgid "Advantages of Biganto tours:"
+msgstr ""
+
+msgid "Freedom of movement"
+msgstr ""
+
+msgid "In traditional virtual tours, there is only one viewpoint per room with «jumping» to another room. Our tours allow you to move smoothly through the virtual space, to navigate quickly and understand the space planning, without breaking the immersion."
+msgstr ""
+
+msgid "Easy to make"
+msgstr ""
+
+#, python-format
+msgid "Intuitive web interface and our tools saves you time and effort, it takes less than half an hour to extract the model and prepare 3d scene for rendering with them. No need to learn new software or other special training to create VR ready interactive tours, everything important is already collected on our <a href=\"%(url)s\" class=\"underline\">\"Tutorials\"</a> page."
+msgstr ""
+
+msgid "Multiplatformity"
+msgstr ""
+
+msgid "Biganto tours work on computers, tablets and smartphones. Easy access to the tour for all website visitors and wide audience coverage are provided by a demonstration via the Internet browser or offline with our applications."
+msgstr ""
+
+msgid "Wide functionality"
+msgstr ""
+
+msgid "Clickable objects show detailed information about furniture items and decoration"
+msgstr ""
+
+msgid "Three-dimensional view from above"
+msgstr ""
+
+msgid "Measuring tape for measuring distances"
+msgstr ""
+
+msgid "Anchor links to a specific location in the tour"
+msgstr ""
+
+msgid "Recording and subsequent playback of the route"
+msgstr ""
+
+msgid "VR support"
+msgstr ""
+
+msgid "Any virtual Biganto tour works in VR mode. For this purpose, use Oculus Rift / Oculus Go / HTC Vive virtual reality headsets or cardboards for mobile devices."
+msgstr ""
+
+msgid "Joint viewing"
+msgstr "공동관람"
+
+msgid "Explore the tour together with your friends, family or clients. Follow the leader, lead your guests, select your own path and use chat to communicate. Private room will be created in new window."
+msgstr ""
+
+msgid "Biganto applications"
+msgstr ""
+
+msgid "Application not found for your operating system."
+msgstr ""
+
+msgid " Three dimensional tour allows free movement and instantly provides good understanding of the space, which is harder to achieve via traditional still images or floorplans "
+msgstr ""
+
+msgid " Interactivity and ability to show real estate from different angles allows to demonstrate the project with all its nuances and easily finalize the details with a customer "
+msgstr ""
+
+msgid " Show 3d tours on your device personally or share it with the customer via the link. Browser and internet connection is all that required "
+msgstr ""
+
+msgid " Display furniture and materials information using interactive objects and other tour features "
+msgstr ""
+
+msgid " Creating a 3d tour is easy and requires minimal extra knowledge and resources beyond traditional visualisation "
+msgstr ""
+
+msgid "Designers"
+msgstr ""
+
+msgid " Walking through interactive presentation of a real estate is an exciting experience that grows customer attachment to the project and drives sales "
+msgstr ""
+
+msgid " Tours are available on almost any devices via browser and internet connection, with no need to install additional software, hardware or applications "
+msgstr ""
+
+msgid " Tours can be displayed on the web site, shown in the sales office or shared with a customer in chat via link. It’s a perfect solution to demonstrate real estate online "
+msgstr ""
+
+msgid " Link to the tour gives customer an unlimited access to desired real estate even after his visit to the sales office or without the visit at all "
+msgstr ""
+
+msgid " Unlimited tour options, from individual apartments to walkthroughs through the whole residential complex, from whiteboxes to demonstrating multiple finishing and furniture options in a single tour "
+msgstr ""
+
+msgid "Developers"
+msgstr ""
+
+msgid "Visualizers"
+msgstr ""
+
+msgid " Create interactive projects on your own with Virtoaster - a service for creating 3d tours "
+msgstr ""
+
+msgid " You retain full control over the result of your work, you decide how your project will look like "
+msgstr ""
+
+msgid " Expand the range of services for existing customers and attract new ones with the help of 3d tours "
+msgstr ""
+
+msgid " The creation of a 3d tour requires minimal resources and knowledge beyond the production of static renders, all assets are created from a regular ready-made 3d scenes for architectural visualisation "
+msgstr ""
+
+msgid " Easy to learn, all the nuances are described in detail on our \"Tutorials\" page "
+msgstr ""
+
+msgid "Head office"
+msgstr ""
+
+msgid "Bolshaya Tatarskaya Street, 13с1, Moscow, Russia"
+msgstr ""
+
+msgid "Phone:"
+msgstr ""
+
+msgid "E-mail: <a href=\"mailto:ru.info@biganto.ru\">ru.info@biganto.ru</a>"
+msgstr ""
+
+msgid "Schloßschmidstraße 5, D-80639 München, Deutschland"
+msgstr ""
+
+msgid "E-mail: <a href=\"mailto:info@biganto.com\">info@biganto.com</a>"
+msgstr ""
+
+msgid "Good day!"
+msgstr ""
+
+msgid "Kind regards,"
+msgstr ""
+
+msgid "Biganto team"
+msgstr ""
+
+msgid "click here"
+msgstr ""
+
+msgid "This email was sent to you as a registered member of biganto.com. To update your emails preferences"
+msgstr ""
+
+msgid "Biganto GmbH · Schloßschmidstr. 5 · 80639 Munich · Germany"
+msgstr ""
+
+msgid "Registered: Munich Local Court HRB 206771 VAT ID No.: 291306762"
+msgstr ""
+
+msgid "User agreement"
+msgstr ""
+
+msgid "Privacy policy"
+msgstr ""
+
+msgid "We are working on your request! Please, be patient, we will contact you soon."
+msgstr ""
+
+msgid "Digital doubles of real estate, three-dimensional laser scanning with hi-def photoshoot."
+msgstr ""
+
+msgid "FilinCam is a professional 3d camera to digitize existing premises and create their doubles in virtual space. FilinCam with the help of accompanying proprietary software creates high definition laser scan of a space and automatically builds its 3d model."
+msgstr ""
+
+msgid "Tours, created with FilinCam use existing Biganto infrastructure and all our main features will be available there. At the moment the camera is in the final stages of testing."
+msgstr ""
+
+msgid "We are filming commercial premises in Moscow and St. Petersburg. If you are interested in these services, please contact us, we will be happy to help!"
+msgstr ""
+
+msgid "Contact us"
+msgstr ""
+
+msgid "E-mail: "
+msgstr ""
+
+msgid "Tour gallery"
+msgstr ""
+
+msgid "To all tours"
+msgstr ""
+
+msgid "All tours"
+msgstr ""
+
+msgid "All styles"
+msgstr ""
+
+msgid "All companies"
+msgstr ""
+
+msgid "All features"
+msgstr ""
+
+msgid "Launch by ID"
+msgstr ""
+
+#, python-format
+msgid "No tours found. <a href='%(url)s'>Show all tours.</a>"
+msgstr ""
+
+msgid "Load more"
+msgstr ""
+
+msgid "Launch tour"
+msgstr ""
+
+msgid "Enter tour ID or tour link"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "on biganto.com"
+msgstr ""
+
+#, python-format
+msgid "%(position)d / %(total)d"
+msgstr ""
+
+msgid "View Full Gallery"
+msgstr ""
+
+msgid "About biganto"
+msgstr ""
+
+msgid "Biganto is an IT company founded in 2014. We specialize in software and hardware development and innovative technologies in real estate marketing. Biganto VR and 3d virtual tours allow viewers to freely and seamlessly move through the interior or exterior of a space, thus creating an immersive experience. Our tours are unique with the combination of high image quality, ease of production and wide range of features and platforms they are available on, from internet browsers to applications for mobile and VR devices."
+msgstr ""
+
+msgid "Job opportunity"
+msgstr ""
+
+msgid "All jobs"
+msgstr ""
+
+msgid "There's no opened vacancies at the moment. Check out later."
+msgstr ""
+
+msgid "Legal notice"
+msgstr ""
+
+msgid "News"
+msgstr ""
+
+msgid "No news there."
+msgstr ""
+
+msgid "Our partners"
+msgstr ""
+
+msgid "Whether you are a freelancer 3d artist or a development company, we would be glad to help showcasing your projects! Enjoy 3d tours and join the ranks of our partners:"
+msgstr ""
+
+msgid "Biganto Virtual Tour"
+msgstr ""
+
+msgid "Add to selected object"
+msgstr ""
+
+msgid "Clone"
+msgstr ""
+
+msgid "Delete from tour"
+msgstr ""
+
+msgid "Remove from selected object"
+msgstr ""
+
+msgid "Tour note"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Floors"
+msgstr "층"
+
+msgid "All floors"
+msgstr "모든 층"
+
+msgid "Floor"
+msgstr "층"
+
+msgid "Enter email"
+msgstr ""
+
+msgid "Please, enter the email we should send shopping list to:"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "Shopping list was sent to your email!"
+msgstr ""
+
+msgid "Link on the tour"
+msgstr "투어 링크"
+
+msgid "Magic link on the tour"
+msgstr "매직 링크"
+
+msgid "Magic link on this place in the tour"
+msgstr "이 위치의 매직 링크"
+
+msgid "DevCon link on the tour"
+msgstr ""
+
+msgid "DevCon link on this place in the tour"
+msgstr ""
+
+msgid "Link on this place in the tour"
+msgstr "현재 위치 링크"
+
+msgid "QR codes"
+msgstr ""
+
+msgid "QR code for tour"
+msgstr ""
+
+msgid "QR code for this place"
+msgstr ""
+
+msgid "Error has occurred while downloading the virtual tour."
+msgstr "가상 둘러보기를 다운로드하는 동안 오류가 발생했습니다"
+
+msgid "Unfortunately the server is temporarily not available. Please, try again later."
+msgstr "서버를 일시적으로 사용할 수 없습니다. 나중에 다시 시도 해주십시오"
+
+msgid "Requested resource can not be accessed. Url is not correct, target web page is not working or not allowed to share its content."
+msgstr "요청한 리소스에 액세스할 수 없습니다. URL이 올바르지 않거나 대상 웹 페이지가 작동하지 않거나 콘텐츠를 공유할 수 없습니다."
+
+msgid "Target website denied access due to its CORS policy (Cross-Origin Resource Sharing). In order to use this URL in a tour, please contact the target website administration."
+msgstr "대상 웹 사이트는 CORS 정책(Cross-Origin Resource Sharing)으로 인해 액세스가 거부되었습니다. 투어에서 이 URL을 사용하려면 대상 웹사이트 관리자에게 문의하십시오"
+
+msgid "Please check your network connection and try again."
+msgstr "네트워크 연결을 확인하고 다시 시도하십시오"
+
+msgid "You have attempted to access a page for which you are not authorized. Please <a href='/my/login/'>login</a>."
+msgstr "권한이 없는 페이지에 액세스를 시도했습니다. <a href='/my/login/'>로그인</a>하세요."
+
+msgid "You don't have permission to access on this server."
+msgstr "이 서버에 대한 액세스 권한이 없습니다"
+
+msgid "Server cannot process the request."
+msgstr "서버가 요청을 처리할 수 없습니다"
+
+msgid "An unexpected error occurred. Changes could not be saved."
+msgstr "예기치 않은 오류가 발생했습니다. 변경 사항을 저장할 수 없습니다"
+
+msgid "Error playing route."
+msgstr "경로를 재생하는 중에 오류가 발생했습니다"
+
+msgid "Action failed."
+msgstr "작업이 실패했습니다."
+
+msgid "Changes saved."
+msgstr "변경 내용이 저장되었습니다"
+
+msgid "Save picture on disk."
+msgstr "디스크에 이미지를 저장합니다"
+
+msgid "Failed to download an image. Try again later."
+msgstr "이미지를 다운로드하지 못했습니다. 나중에 다시 시도하세요"
+
+msgid "Screenshot saved."
+msgstr "스크린샷이 저장되었습니다"
+
+msgid "Unfortunately, your video card doesn't support WebGL. Please, follow the link to learn details."
+msgstr "귀하의 비디오 카드는 WebGL을 지원하지 않습니다. 자세한 내용은 링크를 참조하십시오"
+
+msgid "Unfortunately, your web browser doesn't support WebGL. Please, follow the link to learn details."
+msgstr "귀하의 웹 브라우저는 WebGL을 지원하지 않습니다. 자세한 내용은 링크를 참조하십시오"
+
+msgid "More details"
+msgstr "자세한 내용"
+
+msgid "Drag mouse for rotating model, move with a right button or with an Alt button."
+msgstr "모델을 회전하려면 마우스를 드래그하고 오른쪽 버튼 또는 Alt 버튼으로 이동이 가능합니다"
+
+msgid "Drag mouse for rotating model, move with an Alt button."
+msgstr "모델을 회전하려면 마우스를 드래그하고 Alt 버튼으로 이동이 가능합니다"
+
+msgid "Error loading 3D panorama. Try again later."
+msgstr "3D 파노라마를 로드하는 동안 오류가 발생했습니다. 나중에 다시 시도하세요"
+
+msgid "mm"
+msgstr "mm"
+
+msgid "Action not allowed in joint mode"
+msgstr "함께보기 모드에서 허용되지 않는 작업입니다"
+
+msgid "Action not allowed in following mode"
+msgstr "팔로잉 모드에서 허용되지 않는 작업입니다"
+
+msgid "Tour beginning was set"
+msgstr "투어 시작이 준비되었습니다"
+
+msgid "You can look around, while tour is loading"
+msgstr "로딩 중 둘러보기 할 수 있습니다"
+
+msgid "Tour is loaded, now you can move around"
+msgstr "투어가 로딩되어 둘러보기 가능합니다"
+
+msgid "Loading 3D panorama"
+msgstr "3D 파노라마 로딩 중"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Go to point"
+msgstr "포인트로 가기"
+
+msgid "Cancel"
+msgstr "취소"
+
+msgid "Copy"
+msgstr "복사"
+
+msgid "Feature is not available in this tour"
+msgstr "현재 투어에는 이 기능을 사용할 수 없습니다"
+
+msgid "Reset Zoom"
+msgstr "확대 재설정"
+
+msgid "+ Scroll to Zoom in/out"
+msgstr "스크롤을 이용하여 확대/축소"
+
+msgid "Scroll to Zoom in/out"
+msgstr "스크롤을 이용하여 확대/축소"
+
+msgid "Only for room leader"
+msgstr "방 리더 전용"
+
+msgid "Unavailable in joint view"
+msgstr "공동 관람 할 수 없습니다"
+
+msgid "Swap tours"
+msgstr "투어 바꾸기"
+
+msgid "Set"
+msgstr ""
+
+msgid "Open in current window"
+msgstr ""
+
+msgid "Open in parent window"
+msgstr ""
+
+msgid "Open in new one window"
+msgstr ""
+
+msgid "Standart"
+msgstr ""
+
+msgid "HTML-code"
+msgstr ""
+
+msgid "Url"
+msgstr ""
+
+msgid "Enter target URL here. Keep in mind that not all websites allow external access. Usually this is regulated by target website's CORS policy (Cross-Origin Resource Sharing)"
+msgstr ""
+
+msgid "Buttons"
+msgstr ""
+
+msgid "Sizes"
+msgstr ""
+
+msgid "Background color"
+msgstr ""
+
+msgid "Upload image"
+msgstr ""
+
+msgid "Choose file"
+msgstr ""
+
+msgid "File uploading"
+msgstr ""
+
+msgid "Uploaded"
+msgstr ""
+
+msgid "File upload was interrupted, action not saved."
+msgstr ""
+
+msgid "ADD"
+msgstr ""
+
+msgid "Hover hint"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Color"
+msgstr ""
+
+msgid "Green"
+msgstr ""
+
+msgid "Red"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
+
+msgid "Color on hover"
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Hide cursor on hover"
+msgstr ""
+
+msgid "Regular"
+msgstr ""
+
+msgid "Interactive"
+msgstr ""
+
+msgid "Or"
+msgstr ""
+
+msgid "Width"
+msgstr ""
+
+msgid "Border"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Use hover image"
+msgstr ""
+
+msgid "Perspective"
+msgstr ""
+
+msgid "Show in 3d panorama mode"
+msgstr ""
+
+msgid "Face to camera"
+msgstr ""
+
+msgid "Line color"
+msgstr ""
+
+msgid "Show arrows"
+msgstr ""
+
+msgid "Arrow color"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
+msgid "Add new button"
+msgstr ""
+
+msgid "Create new"
+msgstr ""
+
+msgid "Add existing"
+msgstr ""
+
+msgid "Adds existing action to overlay. Changes to this action will affect all related overlays"
+msgstr ""
+
+msgid "Clone existing"
+msgstr ""
+
+msgid "Creates a copy of existing action and adds it to this overlay. Existing action and its copy can be edited independently"
+msgstr ""
+
+msgid "Select action"
+msgstr ""
+
+msgid "All actions"
+msgstr ""
+
+msgid "Select existing button"
+msgstr ""
+
+msgid "Select button"
+msgstr ""
+
+msgid "All buttons"
+msgstr ""
+
+msgid "Coordinates"
+msgstr ""
+
+msgid "Caption"
+msgstr ""
+
+msgid "Start tour here"
+msgstr ""
+
+msgid "Tour starts here"
+msgstr ""
+
+msgid "Create tour cover"
+msgstr ""
+
+msgid "Navigator"
+msgstr "공간 선택"
+
+msgid "Icon"
+msgstr ""
+
+msgid "Small"
+msgstr ""
+
+msgid "Expanded"
+msgstr ""
+
+msgid "Collapsed"
+msgstr ""
+
+msgid "Big"
+msgstr ""
+
+msgid "Button name"
+msgstr ""
+
+msgid "Class"
+msgstr ""
+
+msgid "New button"
+msgstr ""
+
+msgid "Button"
+msgstr ""
+
+msgid "Discard"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Add to navigator"
+msgstr ""
+
+msgid "Objects"
+msgstr ""
+
+msgid "Meshes"
+msgstr ""
+
+msgid "Pause route"
+msgstr ""
+
+msgid "Play route"
+msgstr ""
+
+msgid "Clear pauses"
+msgstr ""
+
+msgid "Save route"
+msgstr ""
+
+msgid "Delete route"
+msgstr ""
+
+msgid "Discard changes"
+msgstr ""
+
+msgid "Record route"
+msgstr ""
+
+msgid "Saving"
+msgstr ""
+
+msgid "Start recording"
+msgstr ""
+
+msgid "Pause recording"
+msgstr ""
+
+msgid "Resume recording"
+msgstr ""
+
+msgid "TURN"
+msgstr ""
+
+msgid "Cursor color"
+msgstr ""
+
+msgid "Font color"
+msgstr ""
+
+msgid "Markers color"
+msgstr ""
+
+msgid "Interactive object color"
+msgstr ""
+
+msgid "3D panorama background color"
+msgstr ""
+
+msgid "Map display status at start"
+msgstr ""
+
+msgid "Navigator display status at start"
+msgstr ""
+
+msgid "Border radius"
+msgstr ""
+
+msgid "Square"
+msgstr ""
+
+msgid "Padding"
+msgstr ""
+
+msgid "Outline width"
+msgstr ""
+
+msgid "Outline color"
+msgstr ""
+
+msgid "Lock Z axis"
+msgstr ""
+
+msgid "insert"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "Image"
+msgstr ""
+
+msgid "Line"
+msgstr ""
+
+msgid "Polygon"
+msgstr ""
+
+msgid "Ellipse"
+msgstr ""
+
+msgid "Rectangle"
+msgstr ""
+
+msgid "Navigation"
+msgstr ""
+
+msgid "Tour options"
+msgstr ""
+
+msgid "Preview"
+msgstr ""
+
+msgid "Move"
+msgstr ""
+
+msgid "Rotate"
+msgstr ""
+
+msgid "Scale"
+msgstr ""
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Do you want to save unsaved changes?"
+msgstr ""
+
+msgid "Save changes"
+msgstr ""
+
+msgid "Points"
+msgstr ""
+
+msgid "Point"
+msgstr ""
+
+msgid "Save point"
+msgstr ""
+
+msgid "+ Add new"
+msgstr ""
+
+msgid "+ Select existing"
+msgstr ""
+
+msgid "Delete object"
+msgstr ""
+
+msgid "Discard object changes"
+msgstr ""
+
+msgid "Save object changes"
+msgstr ""
+
+msgid "New action"
+msgstr ""
+
+msgid "Go to another tour"
+msgstr ""
+
+msgid "Open popup"
+msgstr ""
+
+msgid "Open link"
+msgstr ""
+
+msgid "Play video"
+msgstr ""
+
+msgid "Play audio"
+msgstr ""
+
+msgid "Switch shades"
+msgstr ""
+
+msgid "Action name"
+msgstr ""
+
+msgid "Action type"
+msgstr ""
+
+msgid "Image library"
+msgstr ""
+
+msgid "Recently used"
+msgstr ""
+
+msgid "Add image"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "Drop files here"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "You are about to delete an action not only from this object but from the whole tour, action will be removed from all objects."
+msgstr ""
+
+msgid "Delete action"
+msgstr ""
+
+msgid "Delete action from object"
+msgstr ""
+
+msgid "Delete action from tour"
+msgstr ""
+
+msgid "Beginning of the tour"
+msgstr ""
+
+msgid "Tour"
+msgstr ""
+
+msgid "Save camera position"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Popup type"
+msgstr ""
+
+msgid "Keep position"
+msgstr ""
+
+msgid "Shades"
+msgstr ""
+
+msgid "Switch mode"
+msgstr ""
+
+msgid "Select all"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "Untitled"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Random"
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Or paste link"
+msgstr ""
+
+msgid "Header"
+msgstr ""
+
+msgid "Content"
+msgstr ""
+
+msgid "Body"
+msgstr ""
+
+msgid "cm"
+msgstr ""
+
+msgid "No options"
+msgstr ""
+
+msgid "Select tour"
+msgstr ""
+
+msgid "Select another tour"
+msgstr ""
+
+msgid "My tours"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "Tour url"
+msgstr ""
+
+msgid "loading"
+msgstr ""
+
+msgid "in a queue"
+msgstr ""
+
+msgid "processing"
+msgstr ""
+
+msgid "testing"
+msgstr ""
+
+msgid "published"
+msgstr ""
+
+msgid "banned"
+msgstr ""
+
+msgid "hidden"
+msgstr ""
+
+msgid "Loading"
+msgstr ""
+
+msgid "Anonymous"
+msgstr "익명의"
+
+msgid "Filters"
+msgstr ""
+
+msgid "Reset all"
+msgstr ""
+
+msgid "Showing {count, number} {count, plural, =1 {result} other {results}}"
+msgstr ""
+
+msgid "No results"
+msgstr ""
+
+msgid "None selected"
+msgstr ""
+
+msgid "You have entered VR mode of a 3D tour, please use compatible virtual reality headset. To walk around the space, look at the point you want to go for a moment. Press «OK» and insert your smartphone into the headset when ready."
+msgstr ""
+
+msgid "Continue"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Your browser does not support webm video format"
+msgstr ""
+
+msgid "Clear all rulers"
+msgstr "모든 자 지우기"
+
+msgid "Delete all rulers?"
+msgstr "모든 자를 삭제하시겠습니까?"
+
+msgid "Copied to clipboard"
+msgstr "클립보드에 복사됨"
+
+msgid "Regular link"
+msgstr "일반 링크"
+
+msgid "Magic link"
+msgstr "매직링크"
+
+msgid "DevCon"
+msgstr ""
+
+msgid "User will require password to enter."
+msgstr "사용자는 암호를 입력해야 합니다"
+
+msgid "Instead of entering a password, users can access the tour using a special link with a password embedded in the link. However, if you change the password the link will change as well and the old one will no longer be valid. While this feature is active, all users accessing the tour using a regular link should provide the password before accessing the tour."
+msgstr "사용자는 비밀번호를 입력하는 대신 링크에 비밀번호가 포함된 특수 링크를 사용하여 투어를 둘러보기 할 수 있습니다. 그러나 비밀번호를 변경하면 링크도 변경되고 이전 비밀번호는 더 이상 유효하지 않습니다. 이 기능이 활성화되어 있는 동안 일반 링크로 접속하려는 모든 사용자는 투어를 둘러보기 전에 비밀번호를 입력해야 합니다"
+
+msgid "User must be a registered member of this project to enter"
+msgstr ""
+
+msgid "No split"
+msgstr "분할하지 않음"
+
+msgid "Vertical split"
+msgstr "수직 분할"
+
+msgid "Horizontal split"
+msgstr "수평 분할"
+
+msgid "Unable to load some overlays, overlay image is likely missing"
+msgstr "일부 오버레이를 로드할 수 없습니다. 오버레이 이미지가 누락되었을 수 있습니다"
+
+msgid "Pick mesh"
+msgstr ""
+
+msgid "Full screen"
+msgstr "전체화면"
+
+msgid "Quit a full screen format"
+msgstr "전체화면 종료"
+
+msgid "3D panorama"
+msgstr "3D 파노라마"
+
+msgid "Back to tour"
+msgstr "투어로 돌아가기"
+
+msgid "Look around: use a mouse or I, J, K, L buttons"
+msgstr "마우스 드래그 또는 키보드 I,J,K,L 버튼을 사용하여 공간 둘러보기"
+
+msgid "Walk by using W, A, S, D or arrow buttons"
+msgstr ""
+
+msgid "Walk by using W, A, S, D, arrow buttons or "
+msgstr "W, A, S, D, 화살표 키로 이동 또는"
+
+msgid "scroll"
+msgstr "마우스 휠"
+
+msgid "Center view"
+msgstr "가운데 맞춤"
+
+msgid "(Only for active subscriptions)"
+msgstr ""
+
+msgid "Measurement tape"
+msgstr "길이 측정"
+
+msgid "Make a screenshot"
+msgstr "스크린샷"
+
+msgid "Play prerecorded route"
+msgstr "투어 재생"
+
+msgid "Sound on/off"
+msgstr "소리 켜기/끄기"
+
+msgid "Select graphics quality"
+msgstr ""
+
+msgid "Toggle navigation bar"
+msgstr "네비게이션 보기"
+
+msgid "Enter 3D panorama"
+msgstr "3D 파노라마 보기"
+
+msgid "Toggle multitour menu"
+msgstr "멀티투어 메뉴"
+
+msgid "Toggle minimap"
+msgstr "미니맵"
+
+msgid "Fullscreen"
+msgstr "전체화면"
+
+msgid "Tour navigation"
+msgstr "탐색 기능"
+
+msgid "Features"
+msgstr "추가 기능"
+
+msgid "or"
+msgstr "또는"
+
+msgid "VR mode"
+msgstr "VR 모드"
+
+msgid "View by gyroscope"
+msgstr "자이로스코프로 보기"
+
+msgid "Explore the tour together with your family, friends or clients. Follow the leader, lead your guests, select your own path and use chat to communicate. Private room will be created in a new window."
+msgstr "가족, 친구 또는 고객과 함께 투어를 둘러보세요. 인솔자를 따라가고, 손님을 안내하고, 자신만의 길을 선택하고, 채팅를 이용해서 소통할 수 있습니다. 전용방이 새 탭에 만들어집니다."
+
+msgid "Room name"
+msgstr "방 이름"
+
+msgid "Enter your room name"
+msgstr "사용자 방 명칭을 입력하세요"
+
+msgid "Password protected room"
+msgstr "비밀번호 설정"
+
+msgid "No password"
+msgstr "비밀번호 없음"
+
+msgid "Use tour password"
+msgstr ""
+
+msgid "Set custom password"
+msgstr ""
+
+msgid "Username"
+msgstr "사용자 이름"
+
+msgid "Enter your username"
+msgstr "사용자 이름을 입력하세요"
+
+msgid "Create new room"
+msgstr "새로운 방 만들기"
+
+msgid "Multitour"
+msgstr "멀티투어"
+
+msgid "Quality"
+msgstr ""
+
+msgid "Plan"
+msgstr "미니맵"
+
+msgid "Tape measure"
+msgstr "길이 측정"
+
+msgid "Stop prerecorded route"
+msgstr "미리 녹화된 경로 중지"
+
+msgid "Sound on"
+msgstr "소리 켜기"
+
+msgid "Sound off"
+msgstr "소리 끄기"
+
+msgid "Add point"
+msgstr ""
+
+msgid "Move point"
+msgstr ""
+
+msgid "Remove point"
+msgstr ""
+
+msgid "Show/hide perimeter"
+msgstr ""
+
+msgid "Metric/Imperial system"
+msgstr ""
+
+msgid "Set start position"
+msgstr ""
+
+msgid "Create overlay"
+msgstr ""
+
+msgid "Set options"
+msgstr ""
+
+msgid "Undo previous action"
+msgstr ""
+
+msgid "Changes could not be saved. Check your network."
+msgstr ""
+
+msgid "Make a screenshot (Shift+F)"
+msgstr "스크린샷 (Shift+F)"
+
+msgid "Virtual reality"
+msgstr "가상 현실"
+
+msgid "3D mode"
+msgstr "3D 모드"
+
+msgid "Gyro mode"
+msgstr "자이로(회전) 모드"
+
+msgid "The picture was saved successfully."
+msgstr "이미지가 저장되었습니다"
+
+msgid "Enable device orientation in Settings > Safari > Motion & Orientation Access and reload the page."
+msgstr "설정>사파리>모션&위치/방향 접근/접속에서 방향 설정하고 새로고침 하십시오"
+
+msgid "Enable motion sensors in Settings and reload the page."
+msgstr "설정에서 모션 센서를 활성화하고 페이지를 새로고침하세요"
+
+msgid "Total"
+msgstr ""
+
+#, python-format
+msgid "You have selected the following items in tour \"%(title)s\" (%(url)s):"
+msgstr ""
+
+msgid "RUR"
+msgstr ""
+
+msgid "joint viewing"
+msgstr ""
+
+msgid "Joint viewing of the"
+msgstr "공동관람"
+
+msgid "Enter the password"
+msgstr "비밀번호를 입력하세요"
+
+msgid "Password incorrect"
+msgstr "비밀번호 오류"
+
+msgid "Enter you name here"
+msgstr "이름을 입력하세요"
+
+msgid "Username already taken"
+msgstr "이미 사용중인 이름입니다"
+
+msgid "Join room"
+msgstr "방에 참여하기"
+
+msgid "Room link"
+msgstr "현재 방 링크"
+
+msgid "copied to clipboard!"
+msgstr "클립보드에 복사됨"
+
+msgid "Telegram"
+msgstr ""
+
+msgid "Whatsapp"
+msgstr ""
+
+msgid "Viber"
+msgstr ""
+
+msgid "Participants"
+msgstr "참여자"
+
+msgid "Chat notifications"
+msgstr "채팅 알림"
+
+msgid "External voice chat"
+msgstr "음성 전송"
+
+msgid "Leave"
+msgstr "나가기"
+
+msgid "Move to user’s position"
+msgstr "사용자 위치로 이동"
+
+msgid "Mute microphone"
+msgstr "마이크 음소거"
+
+msgid "Make leader"
+msgstr "인솔자 설정"
+
+msgid "(you)"
+msgstr "(님)"
+
+msgid "Following"
+msgstr "따라가고 있어요"
+
+msgid "Full"
+msgstr "인원수 초과"
+
+msgid "Position"
+msgstr "위치"
+
+msgid "Off"
+msgstr "끔"
+
+msgid "is the new room leader"
+msgstr "~은/는 이 방의 새로운 인솔자 입니다"
+
+msgid "joined"
+msgstr "참여했다"
+
+msgid "User left the room"
+msgstr "사용자가 이 방을 나갔습니다"
+
+msgid "has left the room"
+msgstr "~이/가 방을 나갔습니다"
+
+msgid "changed his name to"
+msgstr "~의 이름을 ( )으/로 변경했습니다"
+
+msgid "Room leader changed the name of the room to"
+msgstr "인솔자가 이 방의 이름을 ( )으/로 변경했습니다"
+
+msgid "Invite participants"
+msgstr "다른 참여자 초대"
+
+msgid "Write a message here..."
+msgstr "메시지를 입력하세요"
+
+msgid "Please appoint a new leader before leaving the room"
+msgstr "방을 나가기 전에 새로운 인솔자를 선택하세요"
+
+msgid "You are the room leader, other users are following your camera"
+msgstr "당신은 이 방의 인솔자 입니다. 다른 사용자이 당신을 따라옵니다"
+
+msgid "You are following the room leader&#8217;s camera"
+msgstr "당신은 인솔자의 카메라를 따라가는 중입니다"
+
+msgid "Ok, got it!"
+msgstr "알겠어요!"
+
+msgid "Password protected"
+msgstr "비밀번호 설정됨"
+
+msgid "You are following the room leader&#8217;s position, but can turn camera freely"
+msgstr "당신은 인솔자를 따라가는 중이지만, 카메라는 자유롭게 회전 가능합니다"
+
+msgid "You can walk through the tour freely now. Change following mode to join the Room Leader again"
+msgstr "이제 자유롭게 투어를 진행할 수 있습니다. 인솔자에게 다시 참여하려면 모드를 변경하세요"
+
+msgid "Password protected tour"
+msgstr "비밀번호가 설정되어 있습니다"
+
+msgid "Password"
+msgstr "비밀번호"
+
+msgid "Open tour"
+msgstr "투어 열기"
+
+msgid "Unfortunately, your video card or web browser doesn't support WebGL. Therefore, some functions were disabled."
+msgstr ""
+
+msgid "Newsletter status"
+msgstr ""
+
+msgid "You have successfully unsubscribed from a newsletter."
+msgstr ""
+
+msgid "FilinCam"
+msgstr ""
+
+msgid "Realtors"
+msgstr ""
+
+msgid "Create tour"
+msgstr ""
+
+msgid "Notifications"
+msgstr ""
+
+#, python-format
+msgid " You have signed in as %(username)s"
+msgstr ""
+
+msgid "Tours"
+msgstr ""
+
+msgid "Projects"
+msgstr ""
+
+msgid "Scenes"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
+msgid "Captures"
+msgstr ""
+
+msgid "Camera operator"
+msgstr ""
+
+#, python-format
+msgid ""
+"You have deleted your account. It will be removed permanently in %(purge_days)d\n"
+"                                days."
+msgstr ""
+
+msgid "Restore it?"
+msgstr ""
+
+#, python-format
+msgid "You have signed in as %(username)s"
+msgstr ""
+
+#, python-format
+msgid "You have deleted your account. It will be removed permanently in %(purge_days)d days."
+msgstr ""
+
+msgid "Access forbidden"
+msgstr ""
+
+msgid "Access forbidden. You are not invited to this project"
+msgstr ""
+
+msgid "Contact project administrator to become a member then try again later."
+msgstr ""
+
+msgid "Go to index"
+msgstr ""
+
+msgid "Sharing is restricted"
+msgstr ""
+
+msgid "Oops"
+msgstr ""
+
+msgid "It seems that sharing is restricted for this tour"
+msgstr ""
+
+msgid "Tour owner could log in to access it"
+msgstr ""
+
+msgid "Log in"
+msgstr ""
+
+msgid "Update_alembic"
+msgstr ""
+
+msgid "Page not found"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "Upload photo"
+msgstr ""
+
+msgid "scheduled"
+msgstr ""
+
+msgid "canceled"
+msgstr ""
+
+msgid "enroute"
+msgstr ""
+
+msgid "shooting"
+msgstr ""
+
+msgid "shot success"
+msgstr ""
+
+msgid "review"
+msgstr ""
+
+msgid "reschedule"
+msgstr ""
+
+msgid "failed"
+msgstr ""
+
+msgid "ready"
+msgstr ""
+
+msgid "smoking"
+msgstr ""
+
+msgid "Go to current date"
+msgstr ""
+
+msgid "No captures yet."
+msgstr ""
+
+msgid "Property"
+msgstr ""
+
+msgid "apartments"
+msgstr ""
+
+msgid "room"
+msgstr ""
+
+msgid "house"
+msgstr ""
+
+msgid "commercial"
+msgstr ""
+
+msgid "parking"
+msgstr ""
+
+msgid "other"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Rooms"
+msgstr ""
+
+msgid "Apr. Square"
+msgstr ""
+
+msgid "City / town"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Date and time"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Time slot*"
+msgstr ""
+
+msgid "No available timeslots for this address on this day. Try selecting another day."
+msgstr ""
+
+msgid "Select date and provide approx. square to request available timeslots"
+msgstr ""
+
+msgid "Living"
+msgstr ""
+
+msgid "New"
+msgstr ""
+
+msgid "Add more contacts"
+msgstr ""
+
+msgid "I have notified owner that site must be prepared for capturing:"
+msgstr ""
+
+msgid "• Remove rubbish, hide excess items, clear surfaces"
+msgstr ""
+
+msgid "• Hide any items containing private information (photos, documents), so that they won't get in the shot"
+msgstr ""
+
+msgid "• Remove all religious symbols if present"
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
+msgid "Contact"
+msgstr ""
+
+msgid "Agent"
+msgstr ""
+
+msgid "Manager"
+msgstr ""
+
+msgid "Order new capture"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Select address"
+msgstr ""
+
+msgid "Addition details"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgctxt "bladerunner"
+msgid "Location"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Properties"
+msgstr ""
+
+msgid "New order"
+msgstr ""
+
+msgid "Capture scheduled"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid " for {timeLeft} sec."
+msgstr ""
+
+msgid "Order editing"
+msgstr ""
+
+msgid "Edit order"
+msgstr ""
+
+msgid "Ap. number"
+msgstr ""
+
+msgid "Entrance"
+msgstr ""
+
+msgid "Intercome code"
+msgstr ""
+
+msgid "Add tours"
+msgstr ""
+
+msgid "Photos"
+msgstr ""
+
+msgid "Add photos"
+msgstr ""
+
+msgid "Videos"
+msgstr ""
+
+msgid "Add videos"
+msgstr ""
+
+msgid "Bank valuation"
+msgstr ""
+
+msgid "Add images"
+msgstr ""
+
+msgid "Tour ID or link"
+msgstr ""
+
+msgid "Add tour"
+msgstr ""
+
+msgid "Invalid data"
+msgstr ""
+
+msgid "Delete tour"
+msgstr ""
+
+msgid "Delete photo"
+msgstr ""
+
+msgid "Delete image"
+msgstr ""
+
+msgid "Delete video"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "Cell phone"
+msgstr ""
+
+msgid "Work phone"
+msgstr ""
+
+msgid "Home phone"
+msgstr ""
+
+msgid "Instagram"
+msgstr ""
+
+msgid "Facebook"
+msgstr ""
+
+msgid "VK"
+msgstr ""
+
+msgid "LinkedIn"
+msgstr ""
+
+msgid "Invalid name"
+msgstr ""
+
+msgid "by"
+msgstr ""
+
+msgid "Tasks"
+msgstr ""
+
+msgid "Add task"
+msgstr ""
+
+msgid "Add file"
+msgstr ""
+
+msgid "Following files exceed maximum size limit of $sizeLimit$MB"
+msgstr ""
+
+msgid "The number of attached files exceeds maximum limit of $numberLimit$ files per upload"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Due"
+msgstr ""
+
+msgid "Show more"
+msgstr ""
+
+msgid "Show less"
+msgstr ""
+
+msgid "New first"
+msgstr ""
+
+msgid "Old first"
+msgstr ""
+
+msgid "Recent activity first"
+msgstr ""
+
+msgid "Most important first"
+msgstr ""
+
+msgid "Less important first"
+msgstr ""
+
+msgid "Earliest due date"
+msgstr ""
+
+msgid "Latest due date"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Archive"
+msgstr ""
+
+msgid "Debug"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "In progress"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "To do"
+msgstr ""
+
+msgid "Delete task"
+msgstr ""
+
+msgid "Archived and cancelled tasks"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "No tasks yet"
+msgstr ""
+
+msgid "No tasks matching the filters"
+msgstr ""
+
+msgid "Create first task"
+msgstr ""
+
+msgid "System"
+msgstr ""
+
+msgid "Chat"
+msgstr ""
+
+msgid "Activity"
+msgstr ""
+
+msgid "Admin"
+msgstr ""
+
+msgid "Drawing management"
+msgstr ""
+
+msgid "Viewer"
+msgstr ""
+
+msgid "Create tasks"
+msgstr ""
+
+msgid "Execute tasks"
+msgstr ""
+
+msgid "contractor"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Nobody"
+msgstr ""
+
+msgid "Choose area"
+msgstr ""
+
+msgid "Save as draft"
+msgstr ""
+
+msgid "Select area to link"
+msgstr ""
+
+msgid "Linked to area"
+msgstr ""
+
+msgid "Select tour to link"
+msgstr ""
+
+msgid "There are no tours in this area"
+msgstr ""
+
+msgid "Share"
+msgstr ""
+
+msgid "Important"
+msgstr ""
+
+msgid "Very important"
+msgstr ""
+
+msgid "Ultra important"
+msgstr ""
+
+msgid "Area"
+msgstr ""
+
+msgid "View area"
+msgstr ""
+
+msgid "Change area"
+msgstr ""
+
+msgid "View tour"
+msgstr ""
+
+msgid "Change tour"
+msgstr ""
+
+msgid "Link to tour in this area"
+msgstr ""
+
+msgid "Linked to tour"
+msgstr ""
+
+msgid "View marker"
+msgstr ""
+
+msgid "Move marker"
+msgstr ""
+
+msgid "Create marker and link to it"
+msgstr ""
+
+msgid "Linked to marker"
+msgstr ""
+
+msgid "Link to"
+msgstr ""
+
+msgid "Unlink"
+msgstr ""
+
+msgid "changed title to:"
+msgstr ""
+
+msgid "removed title"
+msgstr ""
+
+msgid "changed description to:"
+msgstr ""
+
+msgid "removed description"
+msgstr ""
+
+msgid "added files"
+msgstr ""
+
+msgid "added photos"
+msgstr ""
+
+msgid "set priority"
+msgstr ""
+
+msgid "removed priority"
+msgstr ""
+
+msgid "set status"
+msgstr ""
+
+msgid "created task"
+msgstr ""
+
+msgid "changed contractor to:"
+msgstr ""
+
+msgid "removed contractor"
+msgstr ""
+
+msgid "changed due date to:"
+msgstr ""
+
+msgid "removed due date"
+msgstr ""
+
+msgid "changed linked area to:"
+msgstr ""
+
+msgid "deleted file"
+msgstr ""
+
+msgid "An error occurred while creating the task"
+msgstr ""
+
+msgid "An error occurred while uploading the file"
+msgstr ""
+
+msgid "Change to"
+msgstr ""
+
+msgid "Sorry, your browser doesn't support embedded videos"
+msgstr ""
+
+msgid "Place task"
+msgstr ""
+
+msgid "Win a Biganto virtual 3D tour"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Friends, we decided to hold a contest so that you could have a nice case in your portfolio. The rules of the competition is very simple - you need to:"
+msgstr ""
+
+msgid "Send us"
+msgstr ""
+
+msgid "a 3D object model up to 150sq.m (+&nbsp;high-quality renders), according to which you would like to make a virtual 3D tour of the new generation."
+msgstr ""
+
+msgid "Like, repost"
+msgstr ""
+
+msgid "this post"
+msgstr ""
+
+msgid "Subscribe to"
+msgstr ""
+
+msgid "our page"
+msgstr ""
+
+msgid "We will upload all the work renders to a specially created photo album, where anyone can vote for their favorite work. And then our team will choose one project from 5 finalists, and the winner will receive a Biganto virtual tour of its object."
+msgstr ""
+
+msgid "The final day of the contest is the 21st of December. Let's go!"
+msgstr ""
+
+msgid "Project"
+msgstr ""
+
+msgctxt "devcon|projects"
+msgid "Areas"
+msgstr ""
+
+msgid "Project name"
+msgstr ""
+
+msgctxt "devcon|projects"
+msgid "Location"
+msgstr ""
+
+msgid "Add contact"
+msgstr ""
+
+msgid "Upload drawings"
+msgstr ""
+
+msgid "Add drawing"
+msgstr ""
+
+msgid "Upload drawing"
+msgstr ""
+
+msgctxt "devcon|projects"
+msgid "Add image"
+msgstr ""
+
+msgctxt "devcon|projects"
+msgid "Change image"
+msgstr ""
+
+msgctxt "devcon|projects"
+msgid "Created"
+msgstr ""
+
+msgid "Members"
+msgstr ""
+
+msgid "Drawings"
+msgstr ""
+
+msgid "Pending"
+msgstr ""
+
+msgid "Invite"
+msgstr ""
+
+msgid "Include subareas"
+msgstr ""
+
+msgid "Show new only"
+msgstr ""
+
+msgid "New activity only"
+msgstr ""
+
+msgid "Invite member"
+msgstr ""
+
+msgid "Add member"
+msgstr ""
+
+msgid "Leave project"
+msgstr ""
+
+msgid "Change role"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Roles"
+msgstr ""
+
+msgid "E-mail"
+msgstr ""
+
+msgid "Published"
+msgstr ""
+
+msgid "Add tour to area:"
+msgstr ""
+
+msgid "+ Add area"
+msgstr ""
+
+msgid "New tours"
+msgstr ""
+
+msgid "Rename area"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Delete area"
+msgstr ""
+
+msgid "All attached tours will be removed from the project."
+msgstr ""
+
+msgid "By name"
+msgstr ""
+
+msgid "By date added"
+msgstr ""
+
+msgid "Custom sort"
+msgstr ""
+
+msgid "No tours yet"
+msgstr ""
+
+msgid "No drawings yet"
+msgstr ""
+
+msgid "Change parent"
+msgstr ""
+
+msgid "Change parent of area"
+msgstr ""
+
+msgid "Change area for"
+msgstr ""
+
+msgid "The user with this email is not registered. To invite a participant to the project, he must have a Biganto account"
+msgstr ""
+
+msgid "Change language"
+msgstr ""
+
+msgid "Your e-mail"
+msgstr ""
+
+msgid "forgot?"
+msgstr ""
+
+msgid "Show the password"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Don't have an account?"
+msgstr ""
+
+msgid "Sign up with:"
+msgstr ""
+
+msgid "Browser"
+msgstr ""
+
+msgid "Tours are easily accessible from any browser at any platform. Both on desktops and mobile devices."
+msgstr ""
+
+msgid "View demo"
+msgstr ""
+
+msgid "Windows application with TV mode and VR support via Oculus Rift or  HTC Vive and offline mode."
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "iOS and Android application with VR support via cardboard and offline mode."
+msgstr ""
+
+msgid "Download on the App Store"
+msgstr ""
+
+msgid "Download on the Google Play"
+msgstr ""
+
+msgid "Oculus"
+msgstr ""
+
+msgid "Applications for Standalone all-in-one VR headsets."
+msgstr ""
+
+msgid "Oculus Quest"
+msgstr ""
+
+msgid "Oculus Go"
+msgstr ""
+
+msgid "See all news"
+msgstr ""
+
+msgid "Featured tours"
+msgstr ""
+
+msgid "See all tours"
+msgstr ""
+
+msgid "Player features"
+msgstr ""
+
+msgid "Generate link to current position"
+msgstr ""
+
+msgid "Record and play path walkthrough"
+msgstr ""
+
+msgid "Generate and share screenshots"
+msgstr ""
+
+msgid "Interactive objects to highlight key features and guide user"
+msgstr ""
+
+msgid "Freedom of Movement"
+msgstr ""
+
+msgid "Branding"
+msgstr ""
+
+msgid "Audio"
+msgstr ""
+
+msgid "Products"
+msgstr ""
+
+msgid "Biganto tours"
+msgstr ""
+
+msgid "Turn your real estate project into an interactive presentation with Biganto Virtual tours. Provide a design project, floor plans and we will create a perfect tool for real estate presentations, marketing and sales improvement. Our tours include a wide range of customizable features and only require an internet connection to access."
+msgstr ""
+
+msgid "Virtoaster is a subscription based service, a platform allowing 3d artists, interior designers and architecture visualizers to create virtual tours on their own and within a short time frame. Virtoaster is a simple and powerful tool to turn existing 3d scenes into interactive presentations of your projects."
+msgstr ""
+
+msgid "FilinCam is a professional 3d camera to digitize existing premises and create their doubles in virtual space. FilinCam with the help of accompanying proprietary software creates a high definition laser scan of a space and automatically builds a 3d tour."
+msgstr ""
+
+msgid "Biganto would like to keep you informed about the status of the services we provide, including your 3d tour status."
+msgstr ""
+
+msgid "I agree to receive notifications by e-mail"
+msgstr ""
+
+#, python-format
+msgid "I agree that I have read and accepted the <a class=\"link\" href='%(agreement)s' target='_blank'>User Agreement</a> and <a class='link' href='%(policy)s' target='_blank'>Privacy Policy.</a>"
+msgstr ""
+
+msgid "Create account"
+msgstr ""
+
+msgid "Unused time on Virtoaster will be stored on your user balance and will be accounted for when calculating cost of the following subscriptions. Your plan will be updated shortly."
+msgstr ""
+
+#, python-format
+msgid "Please update your <a  href='%(url_user_settings)s'>Payment Details</a> if you want to change payment method."
+msgstr ""
+
+msgid "Plus and Business plans are available to legal entities only, you will be asked to fill in your Tax number if it was not specified before"
+msgstr ""
+
+msgid "Proceed"
+msgstr ""
+
+msgid "Are you sure you want to cancel your subscription?"
+msgstr ""
+
+msgid "<span class='warning'>Important: </span> subscription will be cancelled in the end of prepaid period. Your tours will be stored for 6 months after subscription exipiry."
+msgstr ""
+
+msgid "United Arab Emirates TRN"
+msgstr ""
+
+msgid "Australian Business Number (AU ABN)"
+msgstr ""
+
+msgid "Brazilian CNPJ number"
+msgstr ""
+
+msgid "Brazilian CPF number"
+msgstr ""
+
+msgid "Canadian BN"
+msgstr ""
+
+msgid "Canadian QST number"
+msgstr ""
+
+msgid "Switzerland VAT number"
+msgstr ""
+
+msgid "Chilean TIN"
+msgstr ""
+
+msgid "Spanish CIF number"
+msgstr ""
+
+msgid "European VAT number"
+msgstr ""
+
+msgid "Hong Kong BR number"
+msgstr ""
+
+msgid "Indonesian NPWP number"
+msgstr ""
+
+msgid "Indian GST number"
+msgstr ""
+
+msgid "Japanese Corporate Number (Hōjin Bangō)"
+msgstr ""
+
+msgid "Korean BRN"
+msgstr ""
+
+msgid "Liechtensteinian UID number"
+msgstr ""
+
+msgid "Mexican RFC number"
+msgstr ""
+
+msgid "Malaysian FRP number"
+msgstr ""
+
+msgid "Malaysian ITN"
+msgstr ""
+
+msgid "Malaysian SST number"
+msgstr ""
+
+msgid "Norwegian VAT number"
+msgstr ""
+
+msgid "New Zealand GST number"
+msgstr ""
+
+msgid "Russian INN"
+msgstr ""
+
+msgid "Saudi Arabia VAT"
+msgstr ""
+
+msgid "Singaporean GST"
+msgstr ""
+
+msgid "Singaporean UEN"
+msgstr ""
+
+msgid "Thai VAT"
+msgstr ""
+
+msgid "Taiwanese VAT"
+msgstr ""
+
+msgid "United States EIN"
+msgstr ""
+
+msgid "South African VAT number"
+msgstr ""
+
+msgid "Creating virtual tours"
+msgstr ""
+
+msgid "Service and tools to produce and manage virtual tours and digital doubles of existing real estate."
+msgstr ""
+
+msgid "Who needs it"
+msgstr ""
+
+msgid "Bring next level immersion to your projects and make sure everything meets customers’ requirements."
+msgstr ""
+
+msgid "Distinguish your work among others, create VR ready 3d tours from existing assets and without special knowledge, attract new customers and impress existing ones"
+msgstr ""
+
+msgid "Increase online and offline sales with interactive presentation of your projects"
+msgstr ""
+
+msgid "This email was sent to you as a registered member of biganto.com. To unsubscribe"
+msgstr ""
+
+#, python-format
+msgid "Your tour <a href=\"%(url_edit)s\">«%(title)s»</a>  branding expires in %(days)s days and branding preferences will be reset to default. You can renew your branding for €%(price)s per year."
+msgstr ""
+
+#, python-format
+msgid "Unable to create a tour «%(title)s» due to following errors:"
+msgstr ""
+
+msgid "Please, resolve the issues yourself or contact technical support to proceed with this tour."
+msgstr ""
+
+msgid "It seems that you run out of tour uploads in this period. Wait until the next period or upgrade you plan."
+msgstr ""
+
+msgid ""
+"This email was sent to you as a registered member of biganto.com. To update your emails\n"
+"                        preferences"
+msgstr ""
+
+#, python-format
+msgid "Your tour <a href=\"%(tour_url_edit)s\">«%(title)s»</a> is complete and available in your account with «Testing» status."
+msgstr ""
+
+msgid "Enter your account, check the tour and edit it if necessary. Do not forget to change tour status to «Published»."
+msgstr ""
+
+msgid "Keep in mind, that tours with «Testing» status have limited lifespan."
+msgstr ""
+
+#, python-format
+msgid "Your account will be deleted soon. You have %(days)s days to restore it."
+msgstr ""
+
+#, python-format
+msgid "You can restore account by following this <a href=\"%(link)s\">link</a>"
+msgstr ""
+
+msgid "We were unable to charge your account to extend current subscription, active subscription was cancelled. Be aware that you will not be able to share your tours with other users without active subscription."
+msgstr ""
+
+msgid ""
+"This email was sent to you as a registered member of biganto.com. To update your emails\n"
+"                      preferences"
+msgstr ""
+
+msgid "Your subscription was cancelled. It will remain active until the end of prepaid period, but will not be prolonged. Be aware that you will not be able to share your tours with other users without active subscription."
+msgstr ""
+
+#, python-format
+msgid "Your tour «%(title)s» has been deleted."
+msgstr ""
+
+#, python-format
+msgid "Your tour <a href=\"%(url_edit)s\">«%(title)s»</a> has loading/testing status for a long time. It will expire in %(days)s day(s) and will be deleted."
+msgstr ""
+
+msgid "Set tour status to «Published» to save your progress. Note, that when publishing, initial assets will be deleted and you will lose the ability to edit them."
+msgstr ""
+
+msgid "Your account have been deleted!"
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Select file"
+msgstr ""
+
+msgid "No file selected"
+msgstr ""
+
+msgid "Files selected"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Uploading"
+msgstr ""
+
+msgid "To my tours"
+msgstr ""
+
+msgid "To my folders"
+msgstr ""
+
+msgid "Tour folder"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Retry now"
+msgstr ""
+
+msgid "There was an error when uploading the files. Please, try again."
+msgstr ""
+
+msgid "Unable to connect to server. Please, check your network connection."
+msgstr ""
+
+msgid "Service temporarily unavailable, try reloading the page or try again later."
+msgstr ""
+
+msgid "Unable to read the file."
+msgstr ""
+
+msgid "Error format"
+msgstr ""
+
+msgid "Invalid coordinates format for point #{id}"
+msgstr ""
+
+msgid "Missing"
+msgstr ""
+
+msgid "Reconnection in {seconds}..."
+msgstr ""
+
+msgid "Wrong file format"
+msgstr ""
+
+msgid "processing..."
+msgstr ""
+
+msgid "All changes have been saved."
+msgstr ""
+
+msgid "Drop files here to upload."
+msgstr ""
+
+msgid "Number of points"
+msgstr ""
+
+msgid "queued"
+msgstr ""
+
+msgid "We are copying your tour in the background. Please, refresh the page to see when it's done!"
+msgstr ""
+
+msgid "Disassemble"
+msgstr ""
+
+msgid "My tours (root)"
+msgstr ""
+
+msgid "Files succesfully uploaded"
+msgstr ""
+
+msgid "Traffic"
+msgstr ""
+
+msgid "Yearly"
+msgstr ""
+
+msgid "Monthly"
+msgstr ""
+
+msgid "Daily"
+msgstr ""
+
+msgid "Hourly"
+msgstr ""
+
+msgid "Session time (last two weeks)"
+msgstr ""
+
+msgid "Min"
+msgstr ""
+
+msgid "Mid"
+msgstr ""
+
+msgid "Max"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "Cities"
+msgstr ""
+
+msgid "Countries"
+msgstr ""
+
+#, python-format
+msgid "If a message displayed incorrectly, use <a href=\"%(url)s\" target=\"_blank\" style=\"color:#d61b23;text-decoration:underline;\">link</a>"
+msgstr ""
+
+msgid "Open the detailed information."
+msgstr ""
+
+msgid "Biganto Visual"
+msgstr ""
+
+msgid "My settings"
+msgstr ""
+
+msgid "My scenes"
+msgstr ""
+
+msgid "My projects"
+msgstr ""
+
+msgid "Tour builder"
+msgstr ""
+
+msgid "Tour properties"
+msgstr ""
+
+msgid "New project"
+msgstr ""
+
+msgid "Rename project"
+msgstr ""
+
+msgid "Add folder"
+msgstr ""
+
+msgid "on"
+msgstr ""
+
+msgid "off"
+msgstr ""
+
+msgid "Change cover"
+msgstr ""
+
+msgid "Rename folder"
+msgstr ""
+
+msgid "Tour name"
+msgstr ""
+
+msgid "Blur faces"
+msgstr ""
+
+msgid "Blur license plates"
+msgstr ""
+
+msgid "Panoramas resolution"
+msgstr ""
+
+msgid "Jpeg compression"
+msgstr ""
+
+msgid "unlimited"
+msgstr ""
+
+msgid "Start processing"
+msgstr ""
+
+msgid "Process options"
+msgstr ""
+
+msgid "Export model"
+msgstr ""
+
+msgid "Delete folder"
+msgstr ""
+
+msgid "Are you sure you want to delete this folder? Any tours, contained within this folder will be lost."
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Paid till"
+msgstr ""
+
+msgid "Views Today/All"
+msgstr ""
+
+msgid "{count, number} {count, plural, one {error} other {errors}}"
+msgstr ""
+
+msgid "Open in new window"
+msgstr ""
+
+msgid "Copy link"
+msgstr ""
+
+msgid "Only for active subscriptions"
+msgstr "활성 상태에서만 가능"
+
+msgid "Get embed code"
+msgstr ""
+
+msgid "Edit tour"
+msgstr ""
+
+msgid "Copy to folder"
+msgstr ""
+
+msgid "Please, publish the tour before making a copy"
+msgstr ""
+
+msgid "Maximum amount of tours in the account"
+msgstr ""
+
+msgid "Move to different folder"
+msgstr ""
+
+msgid "Available in Testing and Published status"
+msgstr ""
+
+msgid "Embed code"
+msgstr ""
+
+msgid "WYSIWYG"
+msgstr ""
+
+msgid "By status"
+msgstr ""
+
+msgid "By views"
+msgstr ""
+
+msgid "Link copied"
+msgstr ""
+
+msgid "Unable to copy the link"
+msgstr ""
+
+msgid "Copy to"
+msgstr ""
+
+msgid "New title"
+msgstr ""
+
+msgid "Move to"
+msgstr ""
+
+msgid "Are you sure you want to delete this tour?"
+msgstr ""
+
+msgid "You can use this HTML code to embed the tour to your web site or a blog."
+msgstr ""
+
+msgid "Height"
+msgstr ""
+
+msgid "Allow magic link that contents password:"
+msgstr ""
+
+msgid "Copy embed code"
+msgstr ""
+
+msgid "Link (user will require password)"
+msgstr ""
+
+msgid "Magic link (password included)"
+msgstr ""
+
+msgid "Your tour is toasting!"
+msgstr ""
+
+msgid "When your tour will be ready we’ll send you a notification to: {email}."
+msgstr ""
+
+msgid "There are no tours ahead of yours in the queue. "
+msgstr ""
+
+msgid "There are {queueLength, number} {queueLength, plural, one {tour} other {tours}} ahead of yours in the queue. "
+msgstr ""
+
+msgid "Your tour is expected to be ready around "
+msgstr ""
+
+msgid "{expectedTime, time, short}."
+msgstr ""
+
+msgid "Back to my tours"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "Panoramas"
+msgstr ""
+
+msgid "Select renderer"
+msgstr ""
+
+msgid "Upload rendered panoramas, with numbered file names (1.png, 2.png, etc.). <a href='{url}' target='_blank'>More details</a>"
+msgstr ""
+
+msgid "Upload binocular panoramas"
+msgstr ""
+
+msgid "Resolution"
+msgstr ""
+
+msgctxt "my|route"
+msgid "User's"
+msgstr ""
+
+msgid "The floor does not have a minimap"
+msgstr ""
+
+msgid "Saved"
+msgstr ""
+
+msgid "Route"
+msgstr ""
+
+msgid "Creating video is available for tours without password only"
+msgstr ""
+
+msgid "Creating video is not available for outside tours"
+msgstr ""
+
+msgid "To create video for user route please record the route in the tour editor"
+msgstr ""
+
+msgid "The route has no looking direction, on the step: "
+msgstr ""
+
+msgid "The route is empty"
+msgstr ""
+
+msgid "Media"
+msgstr ""
+
+msgid "Video"
+msgstr ""
+
+msgid "Your video is generating. You’ll get a "
+msgstr ""
+
+msgid " notification when it’s done"
+msgstr ""
+
+msgid "No videos here yet"
+msgstr ""
+
+msgid "New video"
+msgstr ""
+
+msgid "Rename video"
+msgstr ""
+
+msgid "Higher resolution may result in longer tour loading times."
+msgstr ""
+
+msgid "3D model"
+msgstr ""
+
+msgid "Upload 3d model .OBJ file. For more information how to prepare your model in our <a href={url} target='_blank'>knowledge base</a>."
+msgstr ""
+
+msgid "Optimize 3d model"
+msgstr ""
+
+msgid "Create 3d panorama view"
+msgstr ""
+
+msgid "You will not be able to create 3d panorama separately, it will be unavailable until complete tour reassembly."
+msgstr ""
+
+msgid "Virtoaster tours use low poly 3d models. You can create low poly model on your own or you can upload high poly model and Virtoaster will optimize it automatically. The maximum size of the model is {size}."
+msgstr ""
+
+msgid "First time creating a tour? Please, check out <a href='/tutorials/quick_start_guide/' target='_blank'>Quick start guide</a> in our knowledge base."
+msgstr ""
+
+msgid "Edit coordinates"
+msgstr ""
+
+msgid "Recognize coordinates from .OBJ"
+msgstr ""
+
+msgid "To manually upload point coordinates, please export the coordinates from 3d max with our <a href='{camera_url}'>Camera script</a>, then paste them below or upload a .txt file. (<a href='{url}' target='_blank'>More details</a>). To recognize coordinates from the model, please set the flag “Recognize coordinates from .OBJ” flag above."
+msgstr ""
+
+msgid " By default Virtoaster will recognize coordinates from camera objects inside .OBJ file. There is no need to manually upload coordinates. If you still want to upload coordinates manually, please remove “Recognize coordinates from .OBJ” flag above."
+msgstr ""
+
+msgid "File size should not exceed {maxSize} Mb"
+msgstr ""
+
+msgid "Result"
+msgstr ""
+
+msgid "Central"
+msgstr ""
+
+msgid "Binocular L+R"
+msgstr ""
+
+msgid "Add panoramas"
+msgstr ""
+
+msgid "Add binocular panoramas"
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
+msgid "will be calculated here"
+msgstr ""
+
+msgid "{count, number} {count, plural, zero {points} one {point} few {points} many {points} other {points}}"
+msgstr ""
+
+msgid "{total, number, currency} total"
+msgstr ""
+
+msgid "Show tour in gallery"
+msgstr ""
+
+msgid "{count, number} {count, plural, one {warning} other {warnings}}"
+msgstr ""
+
+msgid "No panoramas uploaded"
+msgstr ""
+
+msgid "No central panorama uploaded for point {id}"
+msgstr ""
+
+msgid "No binocular panorama uploaded for point {id}"
+msgstr ""
+
+msgid "Image sequence should not have any breaks. Points missing: {ids}"
+msgstr ""
+
+msgid "Enabling 3d panorama mode for more than 70 points is not recommended, toasting may be unsuccessful. Please, reduce number of points or disable 3d panorama mode"
+msgstr ""
+
+msgid "and {restCount} more"
+msgstr ""
+
+msgid "Image sequence numbering should start with “1”. Delete point “0” or rename the image files"
+msgstr ""
+
+msgid "Tour can not have that many points. Invalid image numbers, please rename image files, for example “image01.png”"
+msgstr ""
+
+msgid "No model uploaded"
+msgstr ""
+
+msgid "Uploaded model size exceeds maximum allowed"
+msgstr ""
+
+msgid "Coordinates file extension must be .txt"
+msgstr ""
+
+msgid "Filename mismatch for panorama coordinates id:"
+msgstr ""
+
+msgid "You've reached maximum amount of tours for your pricing plan. Please upgrade your tariff of delete unnecessary tours"
+msgstr ""
+
+msgid "Delete central panorama"
+msgstr ""
+
+msgid "Delete binocular panorama"
+msgstr ""
+
+msgid "Delete point"
+msgstr ""
+
+msgid "Binocular panoramas are JPG or PNG images with {sizes} resolution. <a href='{url}' target='_blank'>More info</a>"
+msgstr ""
+
+msgid "Upload panoramas"
+msgstr ""
+
+msgid "Panoramas are JPG or PNG images with {sizes} resolution. <a href='{url}' target='_blank'>More info</a>"
+msgstr ""
+
+msgid "Upload panorama #{id}"
+msgstr ""
+
+msgid "{countFootages, number} of {storage, number} tours used."
+msgstr ""
+
+msgid "{tours, number} tours left."
+msgstr ""
+
+msgid "Delete some tours."
+msgstr ""
+
+msgid "{processingsMonth, number} {processingsMonth, plural, one {toast} other {toasts}} per month used."
+msgstr ""
+
+msgid "{toasts, number} {toasts, plural, one {toast} other {toasts}} left."
+msgstr ""
+
+msgid "{spotsCount, number} {spotsCount, plural, one {point} other {points}} of {maxSkyboxes, number} available used."
+msgstr ""
+
+msgid "Delete some points."
+msgstr ""
+
+msgid "Upgrade plan"
+msgstr ""
+
+msgid "Usually it takes some time to process the tour. When your tour will be ready we’ll send you a notification to: {email}."
+msgstr ""
+
+msgid "Tour title"
+msgstr ""
+
+msgid "Edit assets"
+msgstr ""
+
+msgid "JPG or PNG, minimum resolution at least 1116x744px"
+msgstr ""
+
+msgid "Created: {created, date, fullNumbers}"
+msgstr ""
+
+msgid "Modified: {updated, date, fullNumbers}"
+msgstr ""
+
+msgid "Your tour will be returned for assets uploading and will not be available until reassembly. Make required changes to your assets and press “Create tour” to send tour to to the queue. Keep in mind, that processing the tour will take some time and will be subtracted from your uploads per month limit."
+msgstr ""
+
+msgid "Your tour has status “Published”, meaning initial model and panoramas has been deleted already. If returned to asset uploading, tour will be lost permanently and will have to be reassembled using new reuploaded assets. Reassembled tour will keep its ID and html address. Keep in mind, that processing the tour will take some time and will be subtracted from your uploads per month limit."
+msgstr ""
+
+msgid "Do not show this message again"
+msgstr ""
+
+msgid "Publish tour"
+msgstr ""
+
+msgid "Hide tour"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Traffic: today / total"
+msgstr ""
+
+msgid "Assets"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Replace model"
+msgstr ""
+
+msgid "Model"
+msgstr ""
+
+msgid "MTL"
+msgstr ""
+
+msgid "Texture"
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "Changing the model manually is a feature for advanced users, please use it with caution and always keep the initial model as a backup. This feature can be used for troubleshooting the tour, without reassembling it from scratch (e.g. you can upload the initial model, remove or add some meshes and upload it back to the tour)."
+msgstr ""
+
+msgid "New model should be in .obj format, scaled in meters, have the same coordinates and generally should be similar to the initial model. If you want to keep the 3d panorama mode, new model should also have the same texture coordinates (changing the textures is not yet available)."
+msgstr ""
+
+msgid "New model should be in .obj format, scaled in meters, have the same coordinates and generally should be similar to the initial model."
+msgstr ""
+
+msgid "Z - coordinate"
+msgstr ""
+
+msgid "Add floor"
+msgstr ""
+
+msgid "Adjust minimap position"
+msgstr ""
+
+msgid "Delete floor"
+msgstr ""
+
+msgid "Please enter Z-coordinate for each floor. You can see required value in your 3d package, in .txt file with coordinates or by pressing “Edit” for panoramas from the list below. Points in between (e.g. ladders) will be distributed automatically"
+msgstr ""
+
+msgid "Tour will be published and assets, such as initial high-poly model and panoramas will be deleted from server. You will need to upload assets again to make significant changes to the tour in the future."
+msgstr ""
+
+msgid "Large image"
+msgstr ""
+
+msgid "Small image"
+msgstr ""
+
+msgid "Unable to load the image"
+msgstr ""
+
+msgid "Small image will be created automatically from the big picture."
+msgstr ""
+
+msgid "resize to"
+msgstr ""
+
+msgid "px"
+msgstr ""
+
+msgid "Upload floor plan"
+msgstr ""
+
+msgid "Please, upload floor plan image"
+msgstr ""
+
+msgid "Binocular"
+msgstr ""
+
+msgid "Images"
+msgstr ""
+
+msgid "Reupload"
+msgstr ""
+
+msgid "Reupload all"
+msgstr ""
+
+msgid "Replace all"
+msgstr ""
+
+msgid "Reupload all L+R"
+msgstr ""
+
+msgid "Some panoramas are missing. Please upload all images."
+msgstr ""
+
+msgid "Replace multiple"
+msgstr ""
+
+msgid "Delete all L+R panoramas"
+msgstr ""
+
+msgid "Delete all"
+msgstr ""
+
+msgid "L+R"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Hidden"
+msgstr ""
+
+msgid "Add Panoramas"
+msgstr ""
+
+msgid "Invalid data in line #{id}"
+msgstr ""
+
+msgid "You've uploaded a significant number of images, it will take some time to process them. Please open the tour later to see the result."
+msgstr ""
+
+msgid "Add binocular"
+msgstr ""
+
+msgid "Please, upload panoramas for every point. Binocular panoramas resolution is {size}."
+msgstr ""
+
+msgid "Please, upload missing image"
+msgstr ""
+
+msgid "Remove binocular"
+msgstr ""
+
+msgid "Binocular renders will be deleted from server permanently."
+msgstr ""
+
+msgid "Edit point #{skyboxId}"
+msgstr ""
+
+msgid "Reupload central panoramas"
+msgstr ""
+
+msgid "Reupload binocular panoramas"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Unhide"
+msgstr ""
+
+msgid "View in tour"
+msgstr ""
+
+msgid "Last point cannot be deleted"
+msgstr ""
+
+msgid "Point {skyboxId} has been deleted."
+msgstr ""
+
+msgid "Player options"
+msgstr ""
+
+msgid "Multitours"
+msgstr ""
+
+msgid "Upload Plan"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Default minimap view"
+msgstr ""
+
+msgid "Default navigation state"
+msgstr ""
+
+msgid "Mouse wheel Scroll action"
+msgstr ""
+
+msgid "zoom"
+msgstr ""
+
+msgid "move"
+msgstr ""
+
+msgid "disabled"
+msgstr ""
+
+msgid "Camera pitch limits"
+msgstr ""
+
+msgid "Camera FOV"
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "max"
+msgstr ""
+
+msgid "default"
+msgstr ""
+
+msgid "Visible buttons & objects"
+msgstr ""
+
+msgid "Interactive objects (overlays)"
+msgstr ""
+
+msgid "3D panorama mode"
+msgstr ""
+
+msgid "Default language:"
+msgstr ""
+
+msgid "Fullscreen mode"
+msgstr ""
+
+msgid "Screenshot"
+msgstr ""
+
+msgid "Navigation panel"
+msgstr ""
+
+msgid "Routes"
+msgstr ""
+
+msgid "VR mode (mobile only)"
+msgstr ""
+
+msgid "Gyro mode (mobile only)"
+msgstr ""
+
+msgid "Shades switch"
+msgstr ""
+
+msgid "Pop-up message"
+msgstr ""
+
+msgid "These options limit the camera pitch. If set to 0 user will be able to look all the way down or up. If set to different value, e.g. by default limits are set to 30, then camera pitch will be reduced by 30 degrees each from the top and from the bottom."
+msgstr ""
+
+msgid "CAMERA"
+msgstr ""
+
+msgid "Top pitch reduced by"
+msgstr ""
+
+msgid "Bottom pitch reduced by"
+msgstr ""
+
+msgid "Available pitch angle"
+msgstr ""
+
+msgid "QR code"
+msgstr "QR 코드"
+
+msgid "Optional. Leave blank to show no pop-up."
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Password set. Edit to change."
+msgstr ""
+
+msgid "Allow magic link:"
+msgstr ""
+
+msgid "Generate"
+msgstr ""
+
+msgid "You’ll see generated password only once. Remeber it."
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
+msgid "Change"
+msgstr ""
+
+msgid "Old password"
+msgstr ""
+
+msgid "New password"
+msgstr ""
+
+msgid "Confirm new password"
+msgstr ""
+
+msgid "Old password is not correct."
+msgstr ""
+
+msgid "Now create a new password"
+msgstr ""
+
+msgid "The passwords do not match"
+msgstr ""
+
+msgid "Timezone"
+msgstr ""
+
+msgid "Current timezone"
+msgstr ""
+
+msgid "Enable notifications"
+msgstr ""
+
+msgid "By email"
+msgstr ""
+
+msgid "Payment plan"
+msgstr ""
+
+msgid "My invoices (up to March, 2023)"
+msgstr ""
+
+msgid "Change plan"
+msgstr ""
+
+msgid "Tours capacity"
+msgstr ""
+
+msgid "learn more"
+msgstr ""
+
+msgid "Tours per month"
+msgstr ""
+
+msgid "Points per tour (max)"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+msgid "Number of tours you can simultaneously have in your account."
+msgstr ""
+
+msgid "Number of tours you can optimize with our algorithm, both when uploading tour for the first time or when making changes."
+msgstr ""
+
+msgid "Every tour has a number of points you can move around. This is the maximum number of points you can have in a single tour."
+msgstr ""
+
+msgid "Update payment details"
+msgstr ""
+
+msgid "left"
+msgstr ""
+
+msgid "€price/mo"
+msgstr ""
+
+msgid "€price/year"
+msgstr ""
+
+msgid "Delete account"
+msgstr ""
+
+#, python-format
+msgid "You will have %(agony)d days to restore your account. After that, your account and all your tours will be deleted permanently and your paid subscription will be canceled."
+msgstr ""
+
+msgid "Enter password"
+msgstr ""
+
+msgid "Settings saved successfully"
+msgstr ""
+
+msgid "Enter Promotion Code"
+msgstr ""
+
+msgid "Promocode"
+msgstr ""
+
+msgid "Discount will be applied to the next purchase/subscription"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "You have deleted your account on <when>. The account and all tours will be deleted permanently in <left> days. Would you like to restore your account?"
+msgstr ""
+
+msgid "file too large. Size should be less then <limit> MB"
+msgstr ""
+
+msgid "Deselect all"
+msgstr ""
+
+msgid "Drop audio files here"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Yes, delete"
+msgstr ""
+
+msgid "Do you want to delete video <video_name>?"
+msgstr ""
+
+msgid "Terms"
+msgstr ""
+
+msgid "Preferences"
+msgstr ""
+
+msgid "Tour branding allows you to disable all mentions of Biganto and replace them with your own images and texts. Branding is attached to this tour only and lasts for one year. Branding is only available on <strong>Business and Custom plans</strong>."
+msgstr ""
+
+msgid "More info here"
+msgstr ""
+
+msgid "Buy"
+msgstr ""
+
+msgid "Branding expires on"
+msgstr ""
+
+msgid "Branding expires in <x> days"
+msgstr ""
+
+msgid "Text above minimap"
+msgstr ""
+
+msgid "Upload custom logo"
+msgstr ""
+
+msgid "No logo"
+msgstr ""
+
+msgid "Custom logo"
+msgstr ""
+
+msgid "Help pop-up bottom text"
+msgstr ""
+
+msgid "Logo image"
+msgstr ""
+
+msgid "Help pop-up logo destination URL"
+msgstr ""
+
+msgid "Generate link feature"
+msgstr ""
+
+msgid "Buy branding"
+msgstr ""
+
+msgid "Your tour status is \"Testing\" at the moment, tours in this status are stored for a limited time. Before purchasing a branding, we recommend publishing the tour."
+msgstr ""
+
+msgid "Years"
+msgstr ""
+
+msgid "Enjoy!"
+msgstr ""
+
+msgid "Thank you!"
+msgstr ""
+
+msgid "Promo code"
+msgstr ""
+
+msgid "Generate link"
+msgstr ""
+
+msgid "Shade title"
+msgstr ""
+
+msgid "Reupload panoramas"
+msgstr ""
+
+msgid "Delete all panoramas"
+msgstr ""
+
+msgid "Delete shade"
+msgstr ""
+
+msgid "Transition"
+msgstr ""
+
+msgid "ms"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "No transition"
+msgstr ""
+
+msgid "Fade"
+msgstr ""
+
+msgid "Change image"
+msgstr ""
+
+msgid "Add shade"
+msgstr ""
+
+msgid "Upload panorama"
+msgstr ""
+
+msgid "Upload shade binocular panorama"
+msgstr ""
+
+msgid "Delete panorama"
+msgstr ""
+
+msgid "You can reupload shade panorama later."
+msgstr ""
+
+msgid "sec"
+msgstr ""
+
+msgid "s"
+msgstr ""
+
+msgid "m"
+msgstr ""
+
+msgid "h"
+msgstr ""
+
+msgid "d"
+msgstr ""
+
+msgid "No data"
+msgstr ""
+
+msgid "Number of sessions"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "Last 7 days"
+msgstr ""
+
+msgid "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again."
+msgstr ""
+
+msgid "Camera model"
+msgstr ""
+
+msgid "Serial number"
+msgstr ""
+
+msgid "Sweeps"
+msgstr ""
+
+msgid "No scenes yet"
+msgstr ""
+
+msgid "Upload scenes from your FilinCam camera"
+msgstr ""
+
+msgid "Process"
+msgstr ""
+
+msgid "Autoprocess"
+msgstr ""
+
+msgid "Upload scenes"
+msgstr ""
+
+msgid "Cancel uploading"
+msgstr ""
+
+msgid "Upload scene"
+msgstr ""
+
+msgid "Uploading scene"
+msgstr ""
+
+msgid "Do you want to cancel uploading?"
+msgstr ""
+
+msgid "Wrong folder name"
+msgstr ""
+
+msgid "Yes, cancel"
+msgstr ""
+
+msgid "No, resume"
+msgstr ""
+
+msgid "Scene name"
+msgstr ""
+
+msgid "Important! To upload scene you need to select the folder named \"scene_247_10000704\", not the files it’s containing. You can upload one folder at a time. Good luck."
+msgstr ""
+
+msgid "Please wait patiently while your scenes will be uploaded to cloud servers. Make yourself a coffee. A good one."
+msgstr ""
+
+msgid "uploaded"
+msgstr ""
+
+msgid "Ready"
+msgstr ""
+
+msgid "Default options"
+msgstr ""
+
+msgid "#(days)d #(hours)h #(minutes)m left"
+msgstr ""
+
+msgid "Upload paused"
+msgstr ""
+
+msgid "Upload failed"
+msgstr ""
+
+msgid "Scene uploaded"
+msgstr ""
+
+msgid "Queued"
+msgstr ""
+
+msgid "Processing"
+msgstr ""
+
+msgid "Process paused"
+msgstr ""
+
+msgid "Process failed"
+msgstr ""
+
+msgid "Transferring tour"
+msgstr ""
+
+msgid "Transfer paused"
+msgstr ""
+
+msgid "Transfer failed"
+msgstr ""
+
+msgid "Tour ready"
+msgstr ""
+
+msgid "Areas"
+msgstr ""
+
+msgctxt "devcon|projects"
+msgid "Tours"
+msgstr ""
+
+msgid "Delete project"
+msgstr ""
+
+msgid "Add project"
+msgstr ""
+
+msgid "Everything will perish forever."
+msgstr ""
+
+msgid "Personal account"
+msgstr ""
+
+#, python-format
+msgid "You have deleted your account on %(when)s. The account and all tours will be deleted permanently in %(left)d days. Would you like to restore your account?"
+msgstr ""
+
+msgid "3D tours"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "m²"
+msgstr ""
+
+msgid "ha"
+msgstr ""
+
+msgid "Select a sample"
+msgstr ""
+
+msgid "Multimedia"
+msgstr ""
+
+msgid "Page header"
+msgstr ""
+
+msgid "The name is on the header."
+msgstr ""
+
+msgid "The link is on the logotype."
+msgstr ""
+
+msgid "Incorrect link format. Please, check the input format."
+msgstr ""
+
+msgid "Logo"
+msgstr ""
+
+msgid "Update logo."
+msgstr ""
+
+msgid "Matches the address of the whole object."
+msgstr ""
+
+msgid "Delete a mark"
+msgstr ""
+
+msgid "per month"
+msgstr ""
+
+msgid "per year"
+msgstr ""
+
+msgid "per day"
+msgstr ""
+
+msgid "Object description"
+msgstr ""
+
+msgid "Piece"
+msgstr ""
+
+msgid "Phone number"
+msgstr ""
+
+msgid "Web site"
+msgstr ""
+
+msgid "Save and continue"
+msgstr ""
+
+msgid "Contact person"
+msgstr ""
+
+msgid "Cost of an offer"
+msgstr ""
+
+msgid "Agents"
+msgstr ""
+
+msgid "Solution for realtors"
+msgstr ""
+
+msgid "Digital twins"
+msgstr ""
+
+msgid "help agents increase conversions and sales"
+msgstr ""
+
+msgid "Use modern technologies for presenting objects to your customers"
+msgstr ""
+
+msgid "Digitization of real estate from Biganto allows you to replace the traditional photos and videos with an interactive virtual tour of the property. Biganto tours significantly improve customer engagement and information value of media materials for the clients."
+msgstr ""
+
+msgid "Most agents using Biganto tours report higher conversion rates and more deals overall"
+msgstr ""
+
+msgid "quicker decision time"
+msgstr ""
+
+msgid "time to get acquainted with the property for rent or sale"
+msgstr ""
+
+msgid "Significant"
+msgstr ""
+
+msgid "agent time savings by reducing the number of non-target property demonstrations"
+msgstr ""
+
+msgid "Improve"
+msgstr ""
+
+msgid "real estate offers with the Biganto platform:"
+msgstr ""
+
+msgid "Photo tour for apartment with no finishing"
+msgstr ""
+
+msgid "Photo tour for furnished apartment"
+msgstr ""
+
+msgid "Modern real estate buyers are more demanding on the quality of content. Biganto digital twins are a new technological standard for the presentation of objects and the organization of property displays. More and more agents are using Biganto virtual tours in their work."
+msgstr ""
+
+msgid "Powerful Features"
+msgstr ""
+
+msgid "The virtual demonstration process is not only as close as possible to a real visit to the object, but also provides additional opportunities:"
+msgstr ""
+
+msgid "Accessibility from any device"
+msgstr ""
+
+msgid "Run tours in the browser, apps, desktop, mobile and VR."
+msgstr ""
+
+msgid "Three-dimensional model of the object"
+msgstr ""
+
+msgid "View an interactive layout of the object in full 3D with the ability to rotate."
+msgstr ""
+
+msgid "Measurement of dimensions and distances within the tour"
+msgstr ""
+
+msgid "Measure virtual space the same way you measure real space."
+msgstr ""
+
+msgid "Shared Viewing with Host Mode"
+msgstr ""
+
+msgid "View tours together with the client remotely, on different parts of the world and on different platforms"
+msgstr ""
+
+msgctxt "agents"
+msgid "Multitours"
+msgstr ""
+
+msgid "Explore the same object in different designs and finishes."
+msgstr ""
+
+msgid "Integrated floor plan"
+msgstr ""
+
+msgid "Add a floor plan for object navigation, compare the actual state with the planned one"
+msgstr ""
+
+msgid "Branded photos and videos"
+msgstr ""
+
+msgid "Share media content automatically generated from tours with your logo embedded in it."
+msgstr ""
+
+msgid "Floor plan"
+msgstr ""
+
+msgid "Digital twin generated floor plan"
+msgstr ""
+
+msgid "Shall we start?"
+msgstr ""
+
+msgid "To create an accurate and detailed digital twin of an existing property, use Biganto's real estate digitization service."
+msgstr ""
+
+msgid "Contact us agents"
+msgstr ""
+
+msgid "Solutions"
+msgstr ""
+
+msgid "Welcome to Virtoaster support! Please, complete the form and we will address your request as soon as possible."
+msgstr ""
+
+msgid "Issue with created tour"
+msgstr ""
+
+msgid "Issue with payment/tariff, etc."
+msgstr ""
+
+msgid "Request feature/provide feedback"
+msgstr ""
+
+msgid "Link to the tour"
+msgstr ""
+
+msgid "Please, provide a link to the tour you having trouble with."
+msgstr ""
+
+#, python-format
+msgid "Have you tried to solve the issue using <a href='%(url)s' target='_blank'>“Troubleshooting”</a> guide?"
+msgstr ""
+
+msgid "Message:"
+msgstr ""
+
+msgid "Tour Branding"
+msgstr ""
+
+msgid "extra"
+msgstr ""
+
+msgid "Creating interactive objects"
+msgstr ""
+
+msgid "Creating an interactive object"
+msgstr ""
+
+msgid "Interactive object example"
+msgstr ""
+
+msgid "Interactive object transformation, actions"
+msgstr ""
+
+msgid "Other suggestions"
+msgstr ""
+
+msgid "Summary"
+msgstr ""
+
+msgid "Desktop player"
+msgstr ""
+
+msgid "support"
+msgstr ""
+
+msgid "Editing tour assets"
+msgstr ""
+
+msgid "must-read"
+msgstr ""
+
+msgid "How it works?"
+msgstr ""
+
+msgid "Requirements"
+msgstr ""
+
+msgid "Quick start guide"
+msgstr ""
+
+msgid "Apply our tools"
+msgstr ""
+
+msgid "Setting up camera"
+msgstr ""
+
+msgid "Preparing geometry for Virtoaster, Export tool"
+msgstr ""
+
+msgid "Render and upload assets"
+msgstr ""
+
+msgid "Setting up 360 render"
+msgstr ""
+
+msgid "Post production"
+msgstr ""
+
+msgid "Assets uploading"
+msgstr ""
+
+msgid "Edit and share 3d tour"
+msgstr ""
+
+msgid "Releasing your tour"
+msgstr ""
+
+msgid "Manual model replacement"
+msgstr ""
+
+msgid "Rendering floor plan"
+msgstr ""
+
+msgid "Tour editing mode"
+msgstr ""
+
+msgid "Interactive meshes"
+msgstr ""
+
+msgid "Troubleshooting"
+msgstr ""
+
+msgid "Installing Oculus Quest/Go apps"
+msgstr ""
+
+msgid "Uploading assets"
+msgstr ""
+
+msgid "Password recovery"
+msgstr ""
+
+#, python-format
+msgid "The letter to recover your password has been sent to %(email)s."
+msgstr ""
+
+msgid "Please follow the link inside to confirm password reset."
+msgstr ""
+
+msgid "Back to the main page"
+msgstr ""
+
+msgid "The password has been successfully recovered"
+msgstr ""
+
+msgid "Good day"
+msgstr ""
+
+msgid "Thank you for creating Biganto account! To protect your privacy, we ask you to confirm your registration by clicking the following link:"
+msgstr ""
+
+msgid "If you have received this e-mail by mistake, you can simply ignore the message. Without confirmation of your registration your data will be deleted from our systems within 24 hours."
+msgstr ""
+
+msgid "If you have any questions, please contact us via info@biganto.com."
+msgstr ""
+
+msgid "If you have any questions, please contact us via"
+msgstr ""
+
+#, python-format
+msgid "You or someone else have requested a password recovery on the web site <a href=\"%(url)s\">biganto.com</a>."
+msgstr ""
+
+msgid "Follow the link to restore the password."
+msgstr ""
+
+msgid "If you have not requested a link for password recovery, you can just ignore this message."
+msgstr ""
+
+msgid "Our Knowledge base"
+msgstr ""
+
+msgid "Once again"
+msgstr ""
+
+#, python-format
+msgid "Create subscription «%(title)s»"
+msgstr ""
+
+msgid "Billing address"
+msgstr ""
+
+msgid "State, province, region"
+msgstr ""
+
+msgid "Postal Code"
+msgstr ""
+
+msgid "Promotion code"
+msgstr ""
+
+msgid "Customer Name / Company name"
+msgstr ""
+
+msgid "Customer or Company name to show in the invoice"
+msgstr ""
+
+msgid "TAX Number"
+msgstr ""
+
+msgid "Select Tax ID type and enter valid Tax ID to be considered a business customer. Be aware that it is responsibility of a business customer to pay VAT or similar taxes when applicable."
+msgstr ""
+
+msgid "Card info"
+msgstr ""
+
+msgid "Please wait..."
+msgstr ""
+
+msgid "Subscribe"
+msgstr ""
+
+msgid "Please select your country."
+msgstr ""
+
+msgid "Please enter your Tax ID."
+msgstr ""
+
+msgid "Convert your 3D model into 3d virtual tour with VR support with freedom of movement"
+msgstr ""
+
+msgid "*You’ll need a PC to create a tour"
+msgstr ""
+
+msgid ""
+"See all\n"
+"                    tours"
+msgstr ""
+
+msgid "What is Virtoaster?"
+msgstr ""
+
+msgid "3D scene"
+msgstr ""
+
+msgid "Your project in 3d Max, scene you want to transform into visual tour"
+msgstr ""
+
+msgid "Prepare assets"
+msgstr ""
+
+msgid "Prepare renders and export model with the help of our tools and guides."
+msgstr ""
+
+msgid "Create and share the tour"
+msgstr ""
+
+msgid "Upload assets and assemble tour through the web interface. Share it with a link!"
+msgstr ""
+
+#, python-format
+msgid "For more information <a href=\"%(url)s\">visit the \"Tutorials\" page</a> and see <a href=\"%(urlVideo)s\">video demonstration</a>"
+msgstr ""
+
+msgid "See all plans →"
+msgstr ""
+
+msgid "Start your <span class=\"pricing-accent\">free trial<span>"
+msgstr ""
+
+msgid "month"
+msgstr ""
+
+msgid "Points per tour"
+msgstr ""
+
+msgid "Next generation 3d and VR tours is a sure way to make a lasting impression on your customers"
+msgstr ""
+
+msgid "Highlight your works"
+msgstr ""
+
+msgid "Reach new customers and expand available services to existing ones"
+msgstr ""
+
+msgid "Create VR ready 3d tours without special knowledge, using only existing assets"
+msgstr ""
+
+msgid "Visualize your ideas"
+msgstr ""
+
+msgid "No 3d model? Order a 3d scene, created by your specs from one of our partners - visualisation studios, with experience in virtual tour creation"
+msgstr ""
+
+msgid "OUR PARTNERS"
+msgstr ""
+
+msgid "Digitize existing space"
+msgstr ""
+
+msgid "Have existing premises? Create digital doubles for real estate with FilinCam - high definition 3d camera with laser scanning."
+msgstr ""
+
+msgid "Select the plan that meets your requirements:"
+msgstr ""
+
+msgid "Plans beyond Basic are only available for legal entities and require Tax ID to be purchased."
+msgstr ""
+
+msgid "Tours capacity:"
+msgstr ""
+
+msgid "Tours per month:"
+msgstr ""
+
+msgid "Hosting"
+msgstr ""
+
+msgid "Extra features"
+msgstr ""
+
+msgid "Legal entities price"
+msgstr ""
+
+msgid "Prices do not include VAT"
+msgstr ""
+
+msgid "Consumers price"
+msgstr ""
+
+#, python-format
+msgid "Price include German VAT of 19%%, final price may be different if another VAT rate is applicable for your case"
+msgstr ""
+
+msgid "Current plan"
+msgstr ""
+
+#, python-format
+msgid "%(count)s left"
+msgstr ""
+
+msgid "Tours can be shared with other users for new accounts. Tours cannot be shared after one month after account creation"
+msgstr ""
+
+msgid "Tours can be shared while the subscription is active. Tours can not be shared or created without subscription"
+msgstr ""
+
+msgid "Tour branding"
+msgstr ""
+
+msgid "Higher resolution support"
+msgstr ""
+
+msgid "FREE"
+msgstr ""
+
+#, python-format
+msgid "€%(price)s/mo"
+msgstr ""
+
+msgid "Prices do not include VAT."
+msgstr ""
+
+#, python-format
+msgid "Price include German VAT of %%19, final price may be different if another VAT rate is applicable for your case."
+msgstr ""
+
+#, python-format
+msgid "Expires on %(date)s"
+msgstr ""
+
+msgid "Tour limit exceeded"
+msgstr ""
+
+msgid "Toast limit exceeded"
+msgstr ""
+
+msgid "Cancel my plan"
+msgstr ""
+
+msgid "Downgrade plan"
+msgstr ""
+
+msgid "You have deleted your account and can't buy subscriptions."
+msgstr ""
+
+msgid "Buy now"
+msgstr ""
+
+msgid "Upgrade plan "
+msgstr ""
+
+msgid "Try for free"
+msgstr ""
+
+msgid "Start trial"
+msgstr ""
+
+msgid "Custom"
+msgstr ""
+
+msgid "Tailored solution that scale required number of tours as needed"
+msgstr ""
+
+msgid "Contact us for a quote using"
+msgstr ""
+
+msgid "Downgrade to {plan}"
+msgstr ""
+
+msgid "Update VAT ID"
+msgstr ""
+
+msgid "Please, enter your e-mail."
+msgstr ""
+
+msgid "Enter password."
+msgstr ""
+
+msgid "Confirm password"
+msgstr ""
+
+msgid "Incorrect e-mail or password."
+msgstr ""
+
+msgid "Please, introduce yourself."
+msgstr ""
+
+msgid "error"
+msgstr ""
+
+msgid "Please enter the email address."
+msgstr ""
+
+msgid "The password should contain at least six characters."
+msgstr ""
+
+msgid "User with this email address already exists."
+msgstr ""
+
+msgid "Confirm email on biganto.com"
+msgstr ""
+
+msgid "The link for sign up confirmation is incorrect or it has been expired."
+msgstr ""
+
+msgid "The user with this email address is not registered."
+msgstr ""
+
+msgid "The link for password recovery is incorrect or it has been expired."
+msgstr ""
+
+msgid "Your password has been changed."
+msgstr ""
+
+#, python-format
+msgid "Malformed %(key)s value."
+msgstr ""
+
+#, python-format
+msgid "Source file %(token)s/%(filename)s not found for %(key)s."
+msgstr ""
+
+#, python-format
+msgid "Server %(server)s not found."
+msgstr ""
+
+#, python-format
+msgid "Upload slot %(slot)s not found."
+msgstr ""
+
+msgid "Your subscription will be activated shortly."
+msgstr ""
+
+msgid "Your Tax number was saved successfully. Now press “Upgrade plan” to upgrade your tariff."
+msgstr ""
+
+msgid "VAT ID already exists."
+msgstr ""
+
+msgid "Incorrect Tax number format. Please check if tax number type is correct and there are no typos in Tax number"
+msgstr ""
+
+msgid "You already have subscription to Virtoaster. If you purchased it recently, wait until it is activated, otherwise contact support."
+msgstr ""
+
+msgid "Your card was declined. Please check number, expiration date, CVV or try another one."
+msgstr ""
+
+msgid "Deleted account"
+msgstr ""
+
+msgid "Your account has been deleted, you can not purchase subscriptions."
+msgstr ""
+
+msgid "Incorrect or invalid tarif, please refresh the page."
+msgstr ""
+
+msgid "You have more than 1 subscription. Please contact technical support."
+msgstr ""
+
+msgid "Your subscription will be canceled shortly."
+msgstr ""
+
+msgid "Your plan will be updated within couple of minutes."
+msgstr ""
+
+#~ msgid "Video %(dim)s should be between 240 and 1280 px."
+#~ msgstr ""
+
+#~ msgid "Video width + height should be less than 2160."
+#~ msgstr ""
+
+#~ msgid "All objects."
+#~ msgstr ""
+
+#~ msgid "Geo"
+#~ msgstr ""
+
+#~ msgid "Session Duration"
+#~ msgstr ""
+
+#~ msgid "Sources"
+#~ msgstr ""
+
+#~ msgid "Your time zone is "
+#~ msgstr ""
+
+#~ msgid "Detailed by"
+#~ msgstr ""
+
+#~ msgid "hours"
+#~ msgstr ""
+
+#~ msgid "days"
+#~ msgstr ""
+
+#~ msgid "months"
+#~ msgstr ""
+
+#~ msgid "years"
+#~ msgstr ""
+
+#~ msgid "Detailed"
+#~ msgstr ""
+
+#~ msgid "by hours"
+#~ msgstr ""
+
+#~ msgid "by days"
+#~ msgstr ""
+
+#~ msgid "by months"
+#~ msgstr ""
+
+#~ msgid "by years"
+#~ msgstr ""
+
+#~ msgid "Period"
+#~ msgstr ""
+
+#~ msgid "Notification about your tours expiration/deletion"
+#~ msgstr ""
+
+#~ msgid "Your account will be deleted in %(days)d days"
+#~ msgstr ""
+
+#~ msgid "Your account has been permanently deleted"
+#~ msgstr ""
+
+#~ msgid "The passwords do not match"
+#~ msgstr ""
+
+#~ msgid "The time zone has been updated."
+#~ msgstr ""
+
+#~ msgid "The password has been updated."
+#~ msgstr ""
+
+#~ msgid "Your account will be deleted soon. You have %(agony)d days to restore it."
+#~ msgstr ""
+
+#~ msgid "Your account has been restored. Please renew your subscription if you had any."
+#~ msgstr ""
+
+#~ msgid "rescheduling"
+#~ msgstr ""
+
+#~ msgid "shot success"
+#~ msgstr ""
+
+#~ msgid "shoot success"
+#~ msgstr ""
+
+#~ msgid "Looks like the tour you are trying to add does not exist any more."
+#~ msgstr ""
+
+#~ msgid "There are no free operators in the past."
+#~ msgstr ""
+
+#~ msgid "You can not place order in the past."
+#~ msgstr ""
+
+#~ msgid "Select ap. number"
+#~ msgstr ""
+
+#~ msgid "Select entrance"
+#~ msgstr ""
+
+#~ msgid "Select floor"
+#~ msgstr ""
+
+#~ msgid "Select intercome code"
+#~ msgstr ""
+
+#~ msgid "Invalid contact email"
+#~ msgstr ""
+
+#~ msgid "Estate should not be empty"
+#~ msgstr ""
+
+#~ msgid "Assets loading error"
+#~ msgstr ""
+
+#~ msgid "Assets loading error {}"
+#~ msgstr ""
+

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% set page_title = _("Shades") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/shades/shade_tile.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+                <p>So called “Shades” as of today is a very simple feature we intend to further improve and develop. It allows you to upload extra sets of images into the tour and switch between your original images and their “shades”. Using this feature you can add some extra flavor to your project, for example:</p>
+                <ul>
+                    <li>Show the same tour with day and night illumination</li>
+                    <li>Show different finishing options, e.g. different floor tiles, paint schemes, etc.</li>
+                    <li>Show different view from windows on different floors</li>
+                </ul>
+                <p>Tour and camera direction will remain unaffected when switching between different image sets, so load times are minimal. This means, however, that all sets of images should use the same 3d model.</p>
+                <p>You can load as many sets of images as you want, for all points or only for some of them. All shades should have the same image index as their corresponding panoramas, e.g. Shade for point 4 should be named “shade_greenfloor004.png” and so on. They follow the same rules as regular images (resolution, image format, etc.).</p>
+                <p>To add a set of shades into the tour simply enter Shades tab and press “Add shade”. You can also change the animation to be used when changing images inside the tour.</p>
+                <p><img src="/static/public/img/tutorials/shades/shade_add.jpg" alt="" ></p>
+                <p><span class='warning'>Important:</span> if you have shades only for some points in the tour, you will only see the switch in the points where you have shades uploaded. E.g. in the screenshot below you will be able to switch between shades only for points 6-11.</p>
+                <p><img src="/static/public/img/tutorials/shades/shades_list.jpg" alt="" ></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,692 @@
+{%- extends 'my/base.html' -%}
+{%- set page_title_my = _('My tours') -%}
+{%- set has_settings = true -%}
+{%- set cc = (path if path == 'settings' else None) or 'objects' -%}
+
+{% if path == 'settings' or path == 'settings/' -%}
+    {%- set cc = 'settings' -%}
+    {%- set page_title_my = _('My settings') -%}
+{% endif -%}
+
+{% if path == 'scenes' or path == 'scenes/' -%}
+    {%- set cc = 'scenes' -%}
+    {%- set page_title_my = _('My scenes') -%}
+{% endif -%}
+
+{% if path == 'devcon' -%}
+    {%- set cc = 'devcon' -%}
+    {%- set page_title_my = _('My projects') -%}
+{% endif -%}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="/static/my/dist/css/main.css">
+{% endblock %}
+
+{% block content_my %}
+    {% include 'my/_messages_common.html' %}
+    <script>
+        var RELEASE_VERSION = "{{ config.get('RELEASE_VERSION') }}",
+            PLANS = {{ products.virtoaster.plans_public_dict()|tojson }},
+            PLANS_TO_SHOW_MAX_RESOLUTION = {{ config.get('PLANS_TO_SHOW_MAX_RESOLUTION')|tojson }},
+            PAID_FEATURES = {
+                branding: {
+                    price: {{ config['PAID_FEATURES']['branding']['price'] }},
+                    notAvailableAtPlans: {{ config['PAID_FEATURES']['branding']['not_available_at_plans']|tojson }},
+                },
+            },
+            MODEL_SIZE_LIMIT = {{ config.get('BUILDER_MODEL_SIZE_LIMIT') }},
+            AUDIO_FILE_SIZE_LIMIT = {{ config.get('AUDIO_FILE_SIZE_LIMIT') }},
+            TOUR_BUILD_TIME = {{ config.get('TOUR_BUILD_TIME') }},
+            LANG = '{{ g.lang }}',
+            TIMEZONES= {{ timezones.items()|tojson }},
+            JURISDICTION = '{{ config.JURISDICTION }}',
+            MESSAGES_PAGE = {
+                {# page titles #}
+                tourBuilder: "{{ _("Tour builder") }}",
+                tourProperties: "{{ _("Tour properties") }}",
+                tours: "{{ _("My tours") }}",
+                scenes: "{{ _("My scenes") }}",
+
+                {# projects modals #}
+                createProjectTitle: "{{ _("New project") }}",
+                createProjectSubmit: "{{ _("Create") }}",
+                inputLabel: "{{ _("Name") }}",
+                renameProjectTitle: "{{ _("Rename project") }}",
+                renameProjectSubmit: "{{ _("Rename") }}",
+
+                addFolder: "{{ _("Add folder") }}",
+                addObjectLabel: "{{ _("Create new folder") }}",
+
+                {# switch #}
+                switchChecked: "{{ _("on") }}",
+                switchUnchecked: "{{ _("off") }}",
+
+                {# dropdown #}
+                folderMenuLabelChangeCover: "{{ _("Change cover") }}",
+                folderMenuLabelRename: "{{ _("Rename") }}",
+                folderMenuLabelRenameFolder: "{{ _("Rename folder") }}",
+                folderMenuLabelStatistics: "{{ _("Statistics") }}",
+                folderMenuLabelDelete: "{{ _("Delete") }}",
+                {# options #}
+                categoryCreateTour: "{{ _("Create tour") }}",
+                tourName: "{{ _("Tour name") }}",
+                blurFaces: "{{ _("Blur faces") }}",
+                blurLicensePlates: "{{ _("Blur license plates") }}",
+                panoramasResolution: "{{ _("Panoramas resolution") }}",
+                jpegCompression: "{{ _("Jpeg compression") }}",
+                unlimited: "{{ _("unlimited") }}",
+                startProcessing: "{{ _("Start processing") }}",
+                processOptions: "{{ _("Process options") }}",
+                exportModel: "{{ _("Export model") }}",
+                {# delete folder modal #} modalDeleteHeader: "{{ _("Delete folder") }}",
+                modalDeleteText: "{{ _("Are you sure you want to delete this folder? Any tours, contained within this folder will be lost.") }}",
+                {# create / rename folder modal #}
+                renameFolderHeader: "{{ _("Rename folder") }}",
+                renameFolderFieldTitle: "{{ _("Title") }}",
+
+                newTourLabel: "{{ _("Create tour") }}",
+                toursTableTHName: "{{ _("Name") }}",
+                toursTableTHStatus: "{{ _("Status") }}",
+                toursTableTHPaidTill: "{{ _("Paid till") }}",
+                toursTableTHTraffic: "{{ _("Views Today/All") }}",
+                tourErrors: "{{ _("{count, number} {count, plural, one {error} other {errors}}") }}",
+                createTourLabel: "{{ _("Create tour") }}",
+                untitledTour: "{{ _("Untitled") }}",
+                untitledScene: "{{ _("Untitled") }}",
+                {# context menu #}
+                tourMenuLabelNewWindow: "{{ _("Open in new window") }}",
+                tourMenuLabelViewTour: "{{ _("View tour") }}",
+                tourMenuLabelCopyLink: "{{ _("Copy link") }}",
+                tourMenuLabelOnlyForSubscriptions: "{{ _("Only for active subscriptions") }}",
+                tourMenuLabelGetCode: "{{ _("Get embed code") }}",
+                tourMenuLabelEdit: "{{ _("Edit tour") }}",
+                tourMenuLabelStatistics: "{{ _("Statistics") }}",
+                tourMenuLabelChangeCover: "{{ _("Change cover") }}",
+                tourMenuLabelDuplicate: "{{ _("Copy to folder") }}",
+                tourMenuLabelDuplicatePublish: "{{ _("Please, publish the tour before making a copy") }}",
+                tourMenuLabelDuplicateMax: "{{ _("Maximum amount of tours in the account") }}",
+                tourMenuLabelMove: "{{ _("Move to different folder") }}",
+                tourMenuLabelDelete: "{{ _("Delete") }}",
+                tourMenuLabelNotAvailable: "{{ _("Available in Testing and Published status") }}",
+                duplicateTour: "{{ _("Duplicate") }}",
+                tourMenuMoveTour: "{{ _("Move") }}",
+                tourMenuDeleteTour: "{{ _("Delete") }}",
+                tourMenuGetCode: "{{ _("Embed code") }}",
+                tourMenuEditCode: "{{ _("WYSIWYG") }}",
+
+                statistics: "{{ _("Statistics") }}",
+
+                {# sort labels #}
+                byDate: "{{ _("By date") }}",
+                byName: "{{ _("By name") }}",
+                byStatus: "{{ _("By status") }}",
+                byViews: "{{ _("By views") }}",
+                {# copy link #}
+                copySuccess: "{{ _("Link copied") }}",
+                copyError: "{{ _("Unable to copy the link") }}",
+                {# copy modal #}
+                modalCopyTourHeader: "{{ _("Copy to") }}",
+                tourNewName: "{{ _("New title") }}",
+                tourTargetFolder: "{{ _("Select folder") }}",
+                {# move modal #}
+                modalMoveTourHeader: "{{ _("Move to") }}",
+                {# delete modal #}
+                modalDeleteTourTitle: "{{ _("Delete tour") }}",
+                modalDeleteMessage: "{{ _("Are you sure you want to delete this tour?") }}",
+                {# get code modal #}
+                titleGetCodeModal: "{{ _("Embed code") }}",
+                introGetCodeModal: "{{ _("You can use this HTML code to embed the tour to your web site or a blog.") }}",
+                codeWidthLabel: "{{ _("Width") }}",
+                codeHeightLabel: "{{ _("Height") }}",
+                allowLabelGetCodeModal: '{{ _("Allow magic link that contents password:") }}',
+                buttonGetCodeModal: "{{ _("Copy embed code") }}",
+                titleGetLinkModal: "{{ _("Copy link") }}",
+                linkModalSimpleLabel: "{{ _("Link (user will require password)") }}",
+                linkModalMagicLabel: "{{ _("Magic link (password included)") }}",
+                linkModalCopyButtonLabel: "{{ _("Copy") }}",
+                sortTypeDate: "{{ _("Date") }}",
+
+                {# processing tour #}
+                processingH1: "{{ _("Your tour is toasting!") }}",
+                processingText: "{{ _("When your tour will be ready we’ll send you a notification to: {email}.") }}",
+                queueEmptyText: "{{ _("There are no tours ahead of yours in the queue. ") }}",
+                queueText: "{{ _("There are {queueLength, number} {queueLength, plural, one {tour} other {tours}} ahead of yours in the queue. ") }}",
+                expectationText: "{{ _("Your tour is expected to be ready around ") }}",
+                expectationTime: "{{ _("{expectedTime, time, short}.") }}",
+                discoverText: "{{ _("Back to my tours") }}",
+                {# loading tour #}
+                pageCreateTourTitle: "{{ _("Create tour") }}",
+                titlePlaceholder: "{{ _("Title") }}",
+                folder: "{{ _("Folder") }}",
+                {# panoramas block #}
+                panoramasBlockTitle: "{{ _("Panoramas") }}",
+                renderOptionLabel: "{{ _("Select renderer") }}",
+                uploadPanoramasText: "{{ _("Upload rendered panoramas, with numbered file names (1.png, 2.png, etc.). <a href='{url}' target='_blank'>More details</a>") }}",
+                uploadBinocularPanoramas: "{{ _("Upload binocular panoramas") }}",
+                resolution: "{{ _("Resolution") }}",
+                defaultResolution: "{{ _("Default") }}",
+                usersRoute: "{{ pgettext("my|route", "User's") }}",
+                autoRoute: "{{ _("Auto") }}",
+                floorMissingMinimap: "{{ _("The floor does not have a minimap") }}",
+                savedRoute: "{{ _("Saved") }}",
+                videoRoute: "{{ _("Route") }}",
+                videoSize: "{{ _("Size") }}",
+                tourHasPasswordError: "{{ _("Creating video is available for tours without password only") }}",
+                tourFootageWrongTypeError: "{{ _("Creating video is not available for outside tours") }}",
+                tourMissingUsersWalkError: "{{ _("To create video for user route please record the route in the tour editor") }}",
+                walkMissingDirectionsError: "{{ _("The route has no looking direction, on the step: ") }}",
+                manualWalkEmptyError: "{{ _("The route is empty") }}",
+                mediaTabTitle: "{{ _("Media") }}",
+                tourVideosTitle: "{{ _("Video") }}",
+                notificationAboutGenerationPartOne: "{{ _("Your video is generating. You’ll get a ") }}",
+                notificationAboutGenerationPartTwo: "{{ _(" notification when it’s done") }}",
+                tourNoVideosYet: "{{ _("No videos here yet") }}",
+                generateVideoModalTitle: "{{ _("New video") }}",
+                renameVideoModalTitle: "{{ _("Rename video") }}",
+                resolutionText: "{{ _("Higher resolution may result in longer tour loading times.") }}",
+                {# model block #}
+                modelBlockTitle: "{{ _("3D model") }}",
+                uploadOBJText: "{{ _("Upload 3d model .OBJ file. For more information how to prepare your model in our <a href={url} target='_blank'>knowledge base</a>.") }}",
+                lowPolyLabel: "{{ _("Optimize 3d model") }}",
+                dollhouseLabel: "{{ _("Create 3d panorama view") }}",
+                dollhouseDescription: "{{ _("You will not be able to create 3d panorama separately, it will be unavailable until complete tour reassembly.") }}",
+                modelDescription: "{{ _("Virtoaster tours use low poly 3d models. You can create low poly model on your own or you can upload high poly model and Virtoaster will optimize it automatically. The maximum size of the model is {size}.") }}",
+                hintQuickStartGuide: "{{ _("First time creating a tour? Please, check out <a href='/tutorials/quick_start_guide/' target='_blank'>Quick start guide</a> in our knowledge base.") }}",
+                {# coordinates block #}
+                editCoordinates: "{{ _("Edit coordinates") }}",
+                coordBlockTitle: "{{ _("Coordinates") }}",
+                coordsFromObjText: "{{ _("Recognize coordinates from .OBJ") }}",
+                coordsFromObjTextLong: "{{ _("To manually upload point coordinates, please export the coordinates from 3d max with our <a href='{camera_url}'>Camera script</a>, then paste them below or upload a .txt file. (<a href='{url}' target='_blank'>More details</a>). To recognize coordinates from the model, please set the flag “Recognize coordinates from .OBJ” flag above.") }}",
+                coordsFromObjTextLongSelected: "{{ _(" By default Virtoaster will recognize coordinates from camera objects inside .OBJ file. There is no need to manually upload coordinates. If you still want to upload coordinates manually, please remove “Recognize coordinates from .OBJ” flag above.") }}",
+                errorMaxFileSize: "{{ _("File size should not exceed {maxSize} Mb") }}",
+                {# skyboxes list #}
+                result: "{{ _("Result") }}",
+                central: "{{ _("Central") }}",
+                binocularLR: "{{ _("Binocular L+R") }}",
+                coordinates: "{{ _("Coordinates") }}",
+                addPanoramas: "{{ _("Add panoramas") }}",
+                addBinocularPanoramas: "{{ _("Add binocular panoramas") }}",
+                {# price #}
+                priceTitle: "{{ _("Price") }}",
+                priceEmpty: "{{ _("will be calculated here") }}",
+                priceCount: "{{ _("{count, number} {count, plural, zero {points} one {point} few {points} many {points} other {points}}") }}",
+                priceForOnePoint: "{cost, number, currency}",
+                priceTotal: "{{ _("{total, number, currency} total") }}",
+                {# submit #}
+                showInGallery: "{{ _("Show tour in gallery") }}",
+                deleteTourButton: "{{ _("Delete tour") }}",
+                createTourButton: "{{ _("Create tour") }}",
+                {# errors #}
+                errorsCount: "{{ _("{count, number} {count, plural, one {error} other {errors}}") }}",
+                warningsCount: "{{ _("{count, number} {count, plural, one {warning} other {warnings}}") }}",
+                errorNoPanoramas: "{{ _("No panoramas uploaded") }}",
+                errorNoCentralParorama: "{{ _("No central panorama uploaded for point {id}") }}",
+                errorNoBinocularParorama: "{{ _("No binocular panorama uploaded for point {id}") }}",
+                errorNoSkyboxPosition: "{{ _("Invalid coordinates format for point #{id}") }}",
+                errorInterruptedSkyboxesSequence: "{{ _("Image sequence should not have any breaks. Points missing: {ids}") }}",
+                warningBeforeToastingBigTour: "{{ _("Enabling 3d panorama mode for more than 70 points is not recommended, toasting may be unsuccessful. Please, reduce number of points or disable 3d panorama mode") }}",
+                andMore: "{{ _("and {restCount} more") }}",
+                errorSkyboxesSequenceShouldStartWithOne: "{{ _("Image sequence numbering should start with “1”. Delete point “0” or rename the image files") }}",
+                errorSkyboxesLimitExceeded: "{{ _("Tour can not have that many points. Invalid image numbers, please rename image files, for example “image01.png”") }}",
+                errorNoSkyboxQuaternion: "{{ _("Invalid coordinates format for point #{id}") }}",
+                errorNoModel: "{{ _("No model uploaded") }}",
+                errorModelExceedsSize: "{{ _("Uploaded model size exceeds maximum allowed") }}",
+                errorWrongCoordinatesFileExtension: "{{ _("Coordinates file extension must be .txt") }}",
+                errorFilenameMismatch: "{{ _("Filename mismatch for panorama coordinates id:") }}",
+                errorToursLimitReached: "{{ _("You've reached maximum amount of tours for your pricing plan. Please upgrade your tariff of delete unnecessary tours") }}",
+                {# tooltips #}
+                tooltipDeleteCentralPano: "{{ _("Delete central panorama") }}",
+                tooltipDeleteBinocularPano: "{{ _("Delete binocular panorama") }}",
+                tooltipDeleteSkybox: "{{ _("Delete point") }}",
+                checkmark: "{{ _("Ok") }}",
+                {# modals #}
+                modalAddBinocularPanoramasTitle: "{{ _("Upload binocular panoramas") }}",
+                modalBinocularPanoramasText: "{{ _("Binocular panoramas are JPG or PNG images with {sizes} resolution. <a href='{url}' target='_blank'>More info</a>") }}",
+                modalAddCentralPanoramasTitle: "{{ _("Upload panoramas") }}",
+                modalCentralPanoramasText: "{{ _("Panoramas are JPG or PNG images with {sizes} resolution. <a href='{url}' target='_blank'>More info</a>") }}",
+                modalUploadPanoramaTitle: "{{ _("Upload panorama #{id}") }}",
+                {# modal delete tour #}
+                modalDeleteTourTitle: "{{ _("Delete tour") }}",
+                modalDeleteTourAcceptText: "{{ _("Are you sure you want to delete this tour?") }}",
+                {# tariffs #}
+                toursUsed: "{{ _("{countFootages, number} of {storage, number} tours used.") }}",
+                toursLeft: "{{ _("{tours, number} tours left.") }}",
+                deleteSomeTours: "{{ _("Delete some tours.") }}",
+                toastsUsed: "{{ _("{processingsMonth, number} {processingsMonth, plural, one {toast} other {toasts}} per month used.") }}",
+                toastsLeft: "{{ _("{toasts, number} {toasts, plural, one {toast} other {toasts}} left.") }}",
+                spotsUsed: "{{ _("{spotsCount, number} {spotsCount, plural, one {point} other {points}} of {maxSkyboxes, number} available used.") }}",
+                deleteSomeSpots: "{{ _("Delete some points.") }}",
+                upgradePlan: "{{ _("Upgrade plan") }}",
+                myTours: "{{ _("My tours") }}",
+                {# processing tour #}
+                processingH1: "{{ _("Your tour is toasting!") }}",
+                processingText: "{{ _("Usually it takes some time to process the tour. When your tour will be ready we’ll send you a notification to: {email}.") }}",
+                discoverText: "{{ _("Back to my tours") }}",
+                {# builded tour #}
+                titleTourPlaceholder: "{{ _("Tour title") }}",
+                untitledTour: "{{ _("Untitled") }}",
+                editAssets: "{{ _("Edit assets") }}",
+                {# info #}
+                screenRequirements: "{{ _("JPG or PNG, minimum resolution at least 1116x744px") }}",
+                screenUpload: "{{ _("Upload") }}",
+                dateCreatedTour: "{{ _("Created: {created, date, fullNumbers}") }}",
+                dateModifiedTour: "{{ _("Modified: {updated, date, fullNumbers}") }}",
+                status: "{{ _("Status") }}",
+                tourCreator: "{{ _("Edit assets") }}",
+                tourCreatorText: "{{ _("Your tour will be returned for assets uploading and will not be available until reassembly. Make required changes to your assets and press “Create tour” to send tour to to the queue. Keep in mind, that processing the tour will take some time and will be subtracted from your uploads per month limit.") }}",
+                backFromPublishToLoading: "{{ _("Your tour has status “Published”, meaning initial model and panoramas has been deleted already. If returned to asset uploading, tour will be lost permanently and will have to be reassembled using new reuploaded assets. Reassembled tour will keep its ID and html address. Keep in mind, that processing the tour will take some time and will be subtracted from your uploads per month limit.") }}",
+                dontShowCheckbox: "{{ _("Do not show this message again") }}",
+                publishTour: "{{ _("Publish tour") }}",
+                hideTour: "{{ _("Hide tour") }}",
+                viewTour: "{{ _("View") }}",
+                editTour: "{{ _("Edit") }}",
+                paidTill: "{{ _("Paid till") }}",
+                tourTraffic: "{{ _("Traffic: today / total") }}",
+                showInGallery: "{{ _("Show tour in gallery") }}",
+
+                {# model #}
+                modelAssetsHeader: "{{ _("Assets") }}",
+                modelTableThFile: "{{ _("File") }}",
+                modelTableThName: "{{ _("Name") }}",
+                modelTableThCreated: "{{ _("Created") }}",
+                modelTableThSize: "{{ _("Size") }}",
+                replaceModel: "{{ _("Replace model") }}",
+                modelTitle: "{{ _("Model") }}",
+                model: "{{ _("Model") }}",
+                mtl: "{{ _("MTL") }}",
+                texture: "{{ _("Texture") }}",
+                warningModalTitle: "{{ _("Warning") }}",
+                warningModalTextFirstPart: '{{ _("Changing the model manually is a feature for advanced users, please use it with caution and always keep the initial model as a backup. This feature can be used for troubleshooting the tour, without reassembling it from scratch (e.g. you can upload the initial model, remove or add some meshes and upload it back to the tour).") }}',
+                warningModalTextSecondPart: "{{ _("New model should be in .obj format, scaled in meters, have the same coordinates and generally should be similar to the initial model. If you want to keep the 3d panorama mode, new model should also have the same texture coordinates (changing the textures is not yet available).") }}",
+                replaceModelTitle: "{{ _("Warning") }}",
+                downloadModelText: "{{ _("New model should be in .obj format, scaled in meters, have the same coordinates and generally should be similar to the initial model.") }}",
+
+                {# floors list #}
+                floorsListHeader: "{{ _("Floors") }}",
+                floorsListPlan: "{{ _("Plan") }}",
+                floorsListTitle: "{{ _("Title") }}",
+                floorsListHeight: "{{ _("Z - coordinate") }}",
+                addFloorLabel: "{{ _("Add floor") }}",
+                floorsTitle: "{{ _("Floors") }}",
+                tooltipMinimap: "{{ _("Adjust minimap position") }}",
+                tooltipDeleteFloor: "{{ _("Delete floor") }}",
+                tooltipDeleteFloorDisabled: "{{ _("Deleting first floor is not allowed, tour should always have at least a single floor") }}",
+                floorTooltip: "{{ _("Please enter Z-coordinate for each floor. You can see required value in your 3d package, in .txt file with coordinates or by pressing “Edit” for panoramas from the list below. Points in between (e.g. ladders) will be distributed automatically") }}",
+                {# publish tour modal #}
+                publishTourModalText: "{{ _("Tour will be published and assets, such as initial high-poly model and panoramas will be deleted from server. You will need to upload assets again to make significant changes to the tour in the future.") }}",
+                {# add floor modal #}
+                addFloorTitle: "{{ _("Add floor") }}",
+                addFloorNameLabel: "{{ _("Title") }}",
+                addFloorHeightLabel: "{{ _("Z - coordinate") }}",
+                floorUploaderBigImage: "{{ _("Large image") }}",
+                floorUploaderSmallImage: "{{ _("Small image") }}",
+                imageErrorText: "{{ _("Unable to load the image") }}",
+                imageUploaderHint: "{{ _("Small image will be created automatically from the big picture.") }}",
+                downsizeText: "{{ _("resize to") }}",
+                pixels: "{{ _("px") }}",
+                updateFloorTitle: "{{ _("Upload floor plan") }}",
+                floorPlanEmptyError: "{{ _("Please, upload floor plan image") }}",
+                {# panoramas list #}
+                floorTitle: "{{ _("Floor") }}",
+                panoramasTitle: "{{ _("Panoramas") }}",
+                panoramasBinocularLabel: "{{ _("Binocular") }}",
+                panoramasTHCenter: "{{ _("Images") }}",
+                reuploadWord: "{{ _("Reupload") }}",
+                reuploadAll: "{{ _("Reupload all") }}",
+                replaceAll: "{{ _("Replace all") }}",
+                reuploadAllLR: "{{ _("Reupload all L+R") }}",
+                uploadAllImages: "{{ _("Some panoramas are missing. Please upload all images.") }}",
+                replaceMultiple: "{{ _("Replace multiple") }}",
+                deleteAllLR: "{{ _("Delete all L+R panoramas") }}",
+                deleteAll: "{{ _("Delete all") }}",
+                panoramasTHLR: "{{ _("L+R") }}",
+                panoramasTHName: "{{ _("Caption") }}",
+                minimapRoutePreviewLabel: "{{ _("Preview") }}",
+                resetRoute: "{{ _("Reset") }}",
+                addPanoramasLink: "{{ _("Add panoramas") }}",
+                statusHidden: "{{ _("Hidden") }}",
+                {# common fields modal #}
+                renderTypeField: "{{ _("Select renderer") }}",
+                centralField: "{{ _("Central") }}",
+                binocularField: "{{ _("Binocular") }}",
+                coordinatesField: "{{ _("Coordinates") }}",
+                panoramasField: "{{ _("Panoramas") }}",
+                {# modal add panoramas #}
+                modalAddPanoramasTitle: "{{ _("Add Panoramas") }}",
+                formatErrorSkyboxText: "{{ _("Invalid data in line #{id}") }}",
+                formatErrorLineText: "{{ _("Invalid data in line #{id}") }}",
+                waitBgJobsMessage: "{{ _("You've uploaded a significant number of images, it will take some time to process them. Please open the tour later to see the result.") }}",
+                {# modal add binocular #}
+                addLRTitle: "{{ _("Add binocular") }}",
+                addLRText: "{{ _("Please, upload panoramas for every point. Binocular panoramas resolution is {size}.") }}",
+                addOneLRText: "{{ _("Please, upload missing image") }}",
+                {# modal remove binocular #}
+                modalUnBinocularHeader: "{{ _("Remove binocular") }}",
+                unBinocularAcceptQuestion: "{{ _("Binocular renders will be deleted from server permanently.") }}",
+                {# modal edit skybox #}
+                modalEditSkyboxHeader: "{{ _("Edit point #{skyboxId}") }}",
+                modalEditSkyboxTitle: "{{ _("Caption") }}",
+                {# modal delete tour #}
+                modalDeleteTourTitle: "{{ _("Delete tour") }}",
+                modalDeleteTourAcceptText: "{{ _("Are you sure you want to delete this tour?") }}",
+                {# modal align minimap #}
+                minimapParamsSubmitLabel: "{{ _("Save") }}",
+                minimapParamsTitle: "{{ _("Adjust minimap position") }}",
+                {# modal reupload #}
+                reuploadPanoramasCentralTitle: "{{ _("Reupload central panoramas") }}",
+                reuploadPanoramasCentralText: "{{ _("Panoramas are JPG or PNG images with {sizes} resolution. <a href='{url}' target='_blank'>More info</a>") }}",
+                reuploadPanoramasLRTitle: "{{ _("Reupload binocular panoramas") }}",
+                reuploadPanoramasLRText: "{{ _("Binocular panoramas are JPG or PNG images with {sizes} resolution. <a href='{url}' target='_blank'>More info</a>") }}",
+                {# tooltips #}
+                panoramasLockEnableLabel: "{{ _("Hide") }}",
+                panoramasLockDisableLabel: "{{ _("Unhide") }}",
+                panoramasViewLabel: "{{ _("View in tour") }}",
+                panoramasEditLabel: "{{ _("Edit") }}",
+                editMinimap: "{{ _("Edit") }}",
+                panoramasDeleteLabel: "{{ _("Delete point") }}",
+                panoramasDeleteLastLabel: "{{ _("Last point cannot be deleted") }}",
+                {# bottom #}
+                deleteTour: "{{ _("Delete tour") }}",
+                deletedTourNotification: "{{ _("Point {skyboxId} has been deleted.") }}",
+                undoButton: "{{ _("Undo") }}",
+                playerOptions: "{{ _("Player options") }}",
+                multioturs: "{{ _("Multitours") }}",
+                branding: "{{ _("Branding") }}",
+                audio: "{{ _("Audio") }}",
+                uploadPlan: "{{ _("Upload Plan") }}",
+                options: "{{ _("Options") }}",
+                preview: "{{ _("Preview") }}",
+                po_dmv: "{{ _("Default minimap view") }}",
+                po_defaultNavState: "{{ _("Default navigation state") }}",
+                po_mouseWheelScrollAction: "{{ _("Mouse wheel Scroll action") }}",
+                po_zoom: "{{ _("zoom") }}",
+                po_move: "{{ _("move") }}",
+                po_disabled: "{{ _("disabled") }}",
+                po_cameraPitchLimits: "{{ _("Camera pitch limits") }}",
+                po_cameraFOV: "{{ _("Camera FOV") }}",
+                po_min: "{{ _("min") }}",
+                po_max: "{{ _("max") }}",
+                po_default: "{{ _("default") }}",
+                po_3dpbc: "{{ _("3D panorama background color") }}",
+                po_cc: "{{ _("Cursor color") }}",
+                po_sbo: "{{ _("Visible buttons & objects") }}",
+                po_ioo: "{{ _("Interactive objects (overlays)") }}",
+                po_3dpm: "{{ _("3D panorama mode") }}",
+                po_defaultLang: "{{ _("Default language:") }}",
+                po_fm: "{{ _("Fullscreen mode") }}",
+                po_s: "{{ _("Screenshot") }}",
+                po_np: "{{ _("Navigation panel") }}",
+                po_tm: "{{ _("Tape measure") }}",
+                po_r: "{{ _("Routes") }}",
+                po_vrmmo: "{{ _("VR mode (mobile only)") }}",
+                po_gmmo: "{{ _("Gyro mode (mobile only)") }}",
+                po_joint: "{{ _("Joint viewing") }}",
+                po_shadow_switch: "{{ _("Shades switch") }}",
+                po_pum: "{{ _("Pop-up message") }}",
+                po_pitchDescription: "{{ _("These options limit the camera pitch. If set to 0 user will be able to look all the way down or up. If set to different value, e.g. by default limits are set to 30, then camera pitch will be reduced by 30 degrees each from the top and from the bottom.") }}",
+                po_camera: "{{ _("CAMERA") }}",
+                po_topPitch: "{{ _("Top pitch reduced by") }}",
+                po_bottomPitch: "{{ _("Bottom pitch reduced by") }}",
+                po_availablePitch: "{{ _("Available pitch angle") }}",
+                po_qrcode: "{{ _("QR code") }}",
+                po_olbtsnpu: "{{ _("Optional. Leave blank to show no pop-up.") }}",
+                po_big: "{{ _("Big") }}",
+                po_small: "{{ _("Small") }}",
+                po_icon: "{{ _("Hidden") }}",
+                po_expanded: "{{ _("Expanded") }}",
+                po_collapsed: "{{ _("Collapsed") }}",
+                po_setPassword: "{{ _("Set password")}}",
+                po_passwordPlaceholder: "{{ _("Password set. Edit to change.")}}",
+                po_password: "{{ _("Password")}}",
+                po_allowMagicLink: '{{ _("Allow magic link:")}}',
+                po_magicLinkTooltip: "{{ _("Instead of entering a password, users can access the tour using a special link with a password embedded in the link. However, if you change the password the link will change as well and the old one will no longer be valid. While this feature is active, all users accessing the tour using a regular link should provide the password before accessing the tour.")}}",
+                po_generate: "{{ _("Generate")}}",
+                po_generateTooltip: "{{ _("You’ll see generated password only once. Remeber it.")}}",
+                po_copy: "{{ _("Copy")}}",
+
+                {# Settings / Password #}
+                settingsTitle: "{{ _("Settings")}}",
+                changePassword: "{{ _("Change password")}}",
+                submitText: "{{ _("Change")}}",
+                oldPassword: "{{ _("Old password")}}",
+                newPassword: "{{ _("New password")}}",
+                confirmNewPassword: "{{ _("Confirm new password")}}",
+                oldPasswordError: "{{ _("Old password is not correct.") }}",
+                newPasswordError: "{{ _("Now create a new password") }}",
+                passwordConfirmationError: "{{ _("The passwords do not match") }}",
+
+                {# Settings / Change timezone #}
+                changeTimeZone: "{{ _("Timezone") }}",
+                currentTimeZone: "{{ _("Current timezone") }}",
+
+                {# Settings / Notifications #}
+                notifications: "{{ _("Enable notifications") }}",
+                byEmail: "{{ _("By email") }}",
+
+                {# Settings / Tariffs #}
+                paymentPlan: "{{ _("Payment plan") }}",
+                myInvoices: "{{ _("My invoices (up to March, 2023)") }}",
+                changePlan: "{{ _("Change plan") }}",
+                toursCapacity: "{{ _("Tours capacity") }}",
+                learnMore: "{{ _("learn more") }}",
+                toursPerMonth: "{{ _("Tours per month") }}",
+                pointsPerTour: "{{ _("Points per tour (max)") }}",
+                free: "{{ _("Free") }}",
+                tariffText1: "{{ _("Number of tours you can simultaneously have in your account.") }}",
+                tariffText2: "{{ _("Number of tours you can optimize with our algorithm, both when uploading tour for the first time or when making changes.") }}",
+                tariffText3: "{{ _("Every tour has a number of points you can move around. This is the maximum number of points you can have in a single tour.") }}",
+                price: "{{ _("Price") }}",
+                updatePaymentDetails: "{{ _("Update payment details") }}",
+                left: "{{ _("left") }}",
+                priceTemplate: "{{ _("€price/mo") }}",
+                priceTemplateYear: "{{ _("€price/year") }}",
+
+                {# Settings / Delete my account #}
+                deleteMyAccount: "{{ _("Delete account") }}",
+                delitionText1: "{{ _("You will have %(agony)d days to restore your account. After that, your account and all your tours will be deleted permanently and your paid subscription will be canceled.", agony=config.DELETED_USER_AGONY_DUR) }}",
+                enterYourPassword: "{{ _("Enter password") }}",
+
+                {# Setting / Saving #}
+                save: "{{ _("Save") }}",
+                saveSuccess: "{{ _("Settings saved successfully") }}",
+
+                {# Settings / Promo code #}
+                promoCodeTitle: "{{ _("Enter Promotion Code") }}",
+                promoCodeLabel: "{{ _("Promocode") }}",
+                promoCodeSubTitle: "{{ _("Discount will be applied to the next purchase/subscription") }}",
+                apply: "{{ _("Apply") }}",
+
+                {# Account restore #}
+                yes: "{{ _("Yes") }}",
+                accountRestoreText: "{{ _("You have deleted your account on <when>. The account and all tours will be deleted permanently in <left> days. Would you like to restore your account?") }}",
+
+                {# Audio #}
+                fileSizeLimitErrorText: "{{ _("file too large. Size should be less then <limit> MB") }}",
+                upload: "{{ _("Upload")}}",
+                selectAll: "{{ _("Select all")}}",
+                deselectAll: "{{ _("Deselect all")}}",
+                dropAudioFilesHere: "{{ _("Drop audio files here")}}",
+
+                {# Media #}
+                no: "{{ _("No") }}",
+                yesDelete: "{{ _("Yes, delete") }}",
+                doYouWantToDeleteVideo: "{{ _("Do you want to delete video <video_name>?") }}",
+
+                {# Branding #}
+                terms: "{{ _("Terms") }}",
+                preferences: "{{ _("Preferences") }}",
+                preview: "{{ _("Preview") }}",
+                termsText: "{{ _("Tour branding allows you to disable all mentions of Biganto and replace them with your own images and texts. Branding is attached to this tour only and lasts for one year. Branding is only available on <strong>Business and Custom plans</strong>.") }}",
+                termsMoreInfo: "{{ _("More info here") }}",
+                termsBuy: "{{ _("Buy") }}",
+                brandingExpiresOn: "{{ _("Branding expires on") }}",
+                brandingExpiresIn: "{{ _("Branding expires in <x> days") }}",
+                textAboveMinimap: "{{ _("Text above minimap") }}",
+                brandingUploadLogo: "{{ _("Upload custom logo") }}",
+                brandingLogoDefault: "{{ _("Default") }}",
+                brandingLogoNoLogo: "{{ _("No logo") }}",
+                brandingLogoCustomLogo: "{{ _("Custom logo") }}",
+                helpPopupBottomText: "{{ _("Help pop-up bottom text") }}",
+                logoImage: "{{ _("Logo image") }}",
+                helpPopupLogoURL: "{{ _("Help pop-up logo destination URL") }}",
+                generateLinkFeature: "{{ _("Generate link feature") }}",
+                buyBranding: "{{ _("Buy branding")}}",
+                testingWarning: '{{ _("Your tour status is \"Testing\" at the moment, tours in this status are stored for a limited time. Before purchasing a branding, we recommend publishing the tour.")}}',
+                years: "{{ _("Years")}}",
+                total: "{{ _("Total")}}",
+                close: "{{ _("Close")}}",
+                enjoy: "{{ _("Enjoy!")}}",
+                thankYou: "{{ _("Thank you!")}}",
+                promoCode: "{{ _("Promo code") }}",
+
+                {# Help Popup Preview #}
+                mouseControlDesc: '{{ _("Look around: use a mouse or I, J, K, L buttons")}}',
+                keyControlDesc: '{{ _("Walk by using W, A, S, D or arrow buttons")}}',
+                centerView: '{{ _("Center view")}}',
+                generateLink: '{{ _("Generate link")}}',
+                measurementTape: '{{ _("Measurement tape")}}',
+                screenshot: '{{ _("Make a screenshot")}}',
+                walkthrough: '{{ _("Play prerecorded route")}}',
+                sound: '{{ _("Sound on/off")}}',
+                quality: '{{ _("Select graphics quality")}}',
+                navigator: '{{ _("Toggle navigation bar")}}',
+                dollhouse: '{{ _("Enter 3D panorama")}}',
+                multitour: '{{ _("Toggle multitour menu")}}',
+                minimap: '{{ _("Toggle minimap")}}',
+                fullscreen: '{{ _("Fullscreen")}}',
+                tourNavigation: '{{ _("Tour navigation")}}',
+                functions: '{{ _("Features")}}',
+                or: '{{ _("or")}}',
+
+
+                {# Shades #}
+                shades: '{{ _("Shades")}}',
+                untitledShade: "{{ _("Untitled")}}",
+                titleShadePlaceholder: "{{ _("Shade title")}}",
+                shadeReuploadPanoramas: "{{ _("Reupload panoramas")}}",
+                shadeDeleteAllPanoramas: "{{ _("Delete all panoramas")}}",
+                deleteShade: "{{ _("Delete shade")}}",
+                defaultShadeTitle: '{{ _("Default")}}',
+                transition: "{{ _("Transition")}}",
+                ms: "{{ _("ms")}}",
+                shadeEnabled: "{{ _("Enabled")}}",
+                type: "{{ _("Type")}}",
+                noTransition: "{{ _("No transition")}}",
+                fade: "{{ _("Fade")}}",
+                delete: "{{ _("Delete")}}",
+                changeImage: "{{ _("Change image")}}",
+
+
+                    {# Add shades modal #}
+                    addShade: '{{ _("Add shade")}}',
+                    name: '{{ _("Name")}}',
+                    add: '{{ _("Add")}}',
+
+                    {# Upload skybox shade #}
+                    uploadShadePanorama: '{{ _("Upload panorama")}}',
+                    uploadShadeBinocularPanorama: '{{ _("Upload shade binocular panorama")}}',
+
+                    {# Delete skybox shade #}
+                    deletePanorama: '{{ _("Delete panorama")}}',
+                    deleteShadeText: '{{ _("You can reupload shade panorama later.")}}',
+
+                    {# Delete shade #}
+                    deleteShade: '{{ _("Delete shade")}}',
+
+                    {# Delete all panoramas modal #}
+                    deleteShade: '{{ _("Delete shade")}}',
+
+                {# Statistics #}
+                sec: "{{ _("sec")}}",
+                seconds: "{{ _("s")}}",
+                minutes: "{{ _("m")}}",
+                hours: "{{ _("h")}}",
+                days: "{{ _("d")}}",
+                noData: "{{ _("No data") }}",
+                numberOfSessions: "{{ _("Number of sessions") }}",
+                today: "{{ _("Today") }}",
+                yesterday: "{{ _("Yesterday") }}",
+                lastmonth: "{{ _("Last month") }}",
+                last7days: "{{ _("Last 7 days") }}",
+                graphMenuImage: "{{ _("Image") }}",
+                graphMenuPrint: "{{ _("Print") }}",
+                pageNotFound: "{{ _("The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.") }}",
+
+                {# ScenesList #}
+                scenesTableTHName: "{{ _("Name") }}",
+                scenesTableTHCameraModel: "{{ _("Camera model") }}",
+                scenesTableTHSerialNumber: "{{ _("Serial number") }}",
+                scenesTableTHUsername: "{{ _("Username") }}",
+                scenesTableTHCreated: "{{ _("Created") }}",
+                scenesTableTHSweeps: "{{ _("Sweeps") }}",
+                scenesTableTHStatus: "{{ _("Status") }}",
+                scenesTableEmptyTitle: "{{ _("No scenes yet") }}",
+                scenesTableEmptySubtitle: "{{ _("Upload scenes from your FilinCam camera") }}",
+                scenesTableProcessButton: "{{ _("Process") }}",
+                autoprocess: "{{ _("Autoprocess") }}",
+                autoprocessOptions: "{{ _("Options") }}",
+                uploadScenesButton: "{{ _("Upload scenes") }}",
+                cancelUploadScenesButton: "{{ _("Cancel uploading") }}",
+                uploadSceneTitle: "{{ _("Upload scene") }}",
+                uploadingSceneTitle: "{{ _("Uploading scene") }}",
+                confirmUploadingCancelText: "{{ _("Do you want to cancel uploading?") }}",
+                confirmUploadingCancelTitle: "{{ _("Are you sure?") }}",
+                wrongFoldersName: "{{ _("Wrong folder name") }}",
+                remainingTime: "{{ _("left") }}",
+                resumeButton: "{{ _("Yes, cancel") }}",
+                cancelButton: "{{ _("No, resume") }}",
+                sceneNameLabel: "{{ _("Scene name") }}",
+                cameraModelLabel: "{{ _("Camera model") }}",
+                warningNote: '{{ _('Important! To upload scene you need to select the folder named "scene_247_10000704", not the files it’s containing. You can upload one folder at a time. Good luck.') }}',
+                loadingNote: "{{ _("Please wait patiently while your scenes will be uploaded to cloud servers. Make yourself a coffee. A good one.") }}",
+                scenesBadgeUploaded: "{{ _("uploaded") }}",
+                scenesBadgeReady: "{{ _("Ready") }}",
+                scenesBadgeError: "{{ _("Error") }}",
+                scenesDefaultOptions: "{{ _("Default options") }}",
+                timeLeft: "{{ _("#(days)d #(hours)h #(minutes)m left") }}",
+
+                upload_started: "{{ _("Uploading") }}",
+                upload_progress: "{{ _("Uploading") }}",
+                upload_paused: "{{ _("Upload paused") }}",
+                upload_failed: "{{ _("Upload failed") }}",
+                upload_success: "{{ _("Scene uploaded") }}",
+
+                processing_started: "{{ _("Queued") }}",
+                processing_progress: "{{ _("Processing") }}",
+                processing_paused: "{{ _("Process paused") }}",
+                processing_failed: "{{ _("Process failed") }}",
+                processing_success: "{{ _("Transferring tour") }}",
+
+                transfer_started: "{{ _("Transferring tour") }}",
+                transfer_progress: "{{ _("Transferring tour") }}",
+                transfer_paused: "{{ _("Transfer paused") }}",
+                transfer_failed: "{{ _("Transfer failed") }}",
+                transfer_success: "{{ _("Tour ready") }}",
+                //devcon projects
+                myProjects: "{{ _("My projects") }}",
+                projectName: "{{ _("Name") }}",
+                projectCreated: "{{ pgettext("devcon|projects","Created") }}",
+                projectAreas: "{{ _("Areas") }}",
+                projectTours: "{{ pgettext("devcon|projects","Tours") }}",
+                projectMembers: "{{ _("Members") }}",
+                renameProject: "{{ _('Rename project') }}",
+                deleteProject: "{{ _('Delete project') }}",
+                addProject: "{{ _('Add project') }}",
+
+                {# ProjectsList #}
+                projectsModalDeleteTitle: "{{ _("Are you sure?") }}",
+                projectsModalDelete: "{{ _("Delete") }}",
+                projectsModalDeleteSubtitle: "{{ _("Everything will perish forever.") }}",
+                accessForbiddenDevcon: "{{ _("Access forbidden. You are not invited to this project") }}",
+                accessForbidden: "{{ _("Access forbidden") }}",
+                contactAdmin: "{{ _("Contact project administrator to become a member then try again later.") }}",
+                goToIndex: "{{ _("Go to index") }}",
+            };
+
+    </script>
+    <div id="virtoaster"></div>
+{% endblock %}
+
+{% block tail %}
+    <script src="/static/my/dist/bundle.js?{{ config.get('RELEASE_VERSION') }}"></script>
+{% endblock %}

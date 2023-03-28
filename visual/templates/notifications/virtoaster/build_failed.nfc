@@ -1,0 +1,68 @@
+# Отправляется, когда виртостер не смог собрать тур (visual/jobs/wrappers.py:83)
+#
+[CONTEXT]
+tour=Tour
+
+[COMMON]
+channel=virtoaster
+tone=error
+link={{ url_for('my.index', path='toast/{}/edit'.format(tour.id)) }}
+
+[EN]
+message=Failed to create a tour <b>{{ tour.title or 'Untitled' }}</b>
+email_subject=Failed to create a tour "{{ tour.title or 'Untitled' }}"
+email_html=<p>Good day!</p>
+    <p>
+        Unable to create a tour
+        <a href="{{ url_for('my.index', path='toast/{}/edit'.format(tour.id), _external=True, _scheme='https') }}">«{{ tour.title or 'Untitled' }}»</a>
+        due to following errors:
+    </p>
+
+    <ul>
+    {% for err in tour.footage.meta.get('_loading', {}).get('build_errors', {}) %}
+        <li>{{ err }}</li>
+    {% endfor %}
+    </ul>
+
+    <p>
+        Please, resolve the issues yourself or contact technical support to proceed with this tour.
+    </p>
+email_text=Good Day!
+
+    Unable to create a tour «{{ tour.title or 'Untitled' }}» due to following errors:
+
+    {% for err in tour.footage.meta.get('_loading', {}).get('build_errors', {}) %}
+        * {{ err }}
+    {% endfor %}
+
+    {{ url_for('my.index', path='toast/{}/edit'.format(tour.id), _external=True, _scheme='https') }}
+
+    Please, resolve the issues yourself or contact technical support to proceed with this tour.
+
+[RU]
+message=Не удалось собрать тур <b>{{ tour.title or 'Untitled' }}</b>
+email_subject=Не удалось собрать тур "{{ tour.title or 'Untitled' }}"
+email_html=<p>Добрый день!</p>
+    <p>
+        Не удалось собрать тур <a href="{{ url_for('my.index', path='toast/{}/edit'.format(tour.id), _external=True, _scheme='https') }}">«{{ tour.title or 'Untitled' }}»</a>,
+        произошли следующие ошибки:
+    </p>
+    <ul>
+    {% for err in tour.footage.meta.get('_loading', {}).get('build_errors', {}) %}
+        <li>{{ err }}</li>
+    {% endfor %}
+    </ul>
+    <p>
+        Устраните ошибки самостоятельно или обратитесь в техническую поддержку чтобы продолжить сборку тура.
+    </p>
+email_text=Good Day!
+
+    Не удалось собрать тур «{{ tour.title or 'Untitled' }}», произошли следующие ошибки:
+
+    {% for err in tour.footage.meta.get('_loading', {}).get('build_errors', {}) %}
+        * {{ err }}
+    {% endfor %}
+
+    {{ url_for('my.index', path='toast/{}/edit'.format(tour.id), _external=True, _scheme='https') }}
+
+    Устраните ошибки самостоятельно или обратитесь в техническую поддержку чтобы продолжить сборку тура.

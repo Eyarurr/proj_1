@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% set page_title = _("Installing Oculus Quest/Go apps") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/installing-oculus/oculus_background.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--yellow">{{ _("support") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        <div class="oculus-tabs">
+            <div class="oculus-tabs__inner">
+                <ul class="oculus-tabs__list">
+                    <li id="toggler-quest" class="oculus-tabs__item is-active">
+                        <a href="#quest" class="oculus-tabs__link">{{ _("Oculus Quest") }}</a>
+                    </li>
+                    <li id="toggler-go" class="oculus-tabs__item">
+                        <a href="#go" class="oculus-tabs__link">{{ _("Oculus Go") }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="content-page__wrapper">
+            <div id='oculusGoTabContent'>
+                <div class='content-page__main oculus-go'>
+                    <p>Oculus Go - автономная VR гарнитура и требует определенных действий для установки приложения Biganto. Чтобы установить Biganto Tour Player, вам понадобится ключ пользователя, который можно сгенерировать на этой странице и Oculus Go, сопряженный с мобильным устройством.
+                    </p>
+                    <p>
+                        <span class='warning'>Важно:</span> Oculus Go больше не поддерживается Oculus. Данная версия приложения окончательная и не будет изменяться в дальнейшем. Приложение для Go перестанет быть доступно в какой то момент в будущем.
+                    </p>
+                    <div id="pairing" class="b-anchor"></div>
+                    <h2>Сопряжение Oculus Go с мобильным устройством</h2>
+                    <p>Если ваши устройства уже сопряжены, вы можете перейти к генерации ключей и установке приложения, в противном случае, следуйте данным инструкциям:
+                    </p>
+                    <ol>
+                        <li>Установите приложение Oculus на мобильное устройство и создайте аккаунт для получения доступа в Oculus store
+                        </li>
+                        <li>Откройте приложение и выберите “Settings” в нижней части экрана</li>
+                        <li>Выберите “Pair New Headset”
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/2.jpg" alt=""></p>
+                        </li>
+                        <li>Выберите Oculus Go из списка и следуйте инструкциям приложения
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/3.jpg" alt=""></p>
+                        </li>
+                    </ol>
+                    <div id="installation" class="b-anchor"></div>
+                    <h2>Установка приложения</h2>
+                    <p>Когда устройство будет готово, вы можете перейти к установке приложения:</p>
+                    <ol>
+                        <li>
+                            <p>
+                                Чтобы установить приложение, вам понадобится ключ пользователя. Мы рекомендуем генерировать ключ сразу в браузере мобильного устройства, чтобы упростить копирование в мобильное приложение Oculus. Нажмите “Сгенерировать ключ” ниже:
+                            </p>
+                            <div>
+                                <form class="generate-form" id="generate-key-form" action="">
+                                    <div class="generate-form__container">
+                                        <button id="generate-oculus-go-key" type="submit"
+                                            class="generate-form__button button button--small fill blue">Сгенерировать ключ</button>
+                                        <div class="generate-form__key__container">
+                                            <div class="generate-form__key"></div>
+                                            <div class="generate-form__success-message"><span
+                                                    class="generate-form__emoji">✔️</span>
+                                                ️Ссылка скопирована</div>
+                                        </div>
+                                    </div>
+                                    <div class="generate-form__section"></div>
+                                </form>
+                            </div>
+                            <div class="content-page__generate-input-wrapper">
+                                <input class="big-input big-input--small content-page__generate-input">
+                            </div>
+                        </li>
+                        <li>Откройте приложение Oculus и перейдите в “Settings”</li>
+                        <li>Пролистайте страницу ниже и выберите “Redeem Code”
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/4.jpg" alt=""></p>
+                        </li>
+                        <li>Вставьте сгенерированный ключ пользователя в поле и нажмите “Submit”
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/5.jpg" alt=""></p>
+                        </li>
+                        <li>Вы увидите следующий экран при успешной активации по коду:
+                            <p><img class="content-page__oculus-img"
+                                    src="/static/public/img/tutorials/installing-oculus/6.jpg" alt=""></p>
+                        </li>
+                        <li>Нажмите на Biganto Tour Player и выберите “Install on Oculus Go” в нижней части экрана. Загрузка начнется в ближайшее время.
+                        </li>
+                    </ol>
+                    <div id="accessing" class="b-anchor"></div>
+                    <h2>Доступ к приложению из меню VR гарнитуры</h2>
+                    <p>Чтобы открыть приложение в меню Oculus Go, выполните следующее:</p>
+                    <ol>
+                        <li>Включите Oculus Go, нажмите кнопку “Oculus” на контроллере.</li>
+                        <li>Выберите с помощью контроллера пункт “Navigate” в меню, выберите “Library” чтобы открыть список доступных приложений
+                            <p><img src="/static/public/img/tutorials/installing-oculus/7.jpg" alt=""></p>
+                        </li>
+                        <li>Выберите “Biganto Tour Player” из списка. Войдите в аккаунт Biganto чтобы получить доступ к вашим турам.
+                        </li>
+                    </ol>
+
+                </div>
+
+                <aside class="content-page__side content-page__side--hide">
+                    <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                        <ul class="side-menu__list">
+                            <li class="side-menu__item">
+                                <a href="#pairing"
+                                    class="side-menu__link link-scroll-to">Сопряжение Oculus Go с мобильным устройством</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#installation"
+                                    class="side-menu__link link-scroll-to">Установка приложения</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#accessing"
+                                    class="side-menu__link link-scroll-to">Доступ к приложению из меню VR гарнитуры</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+            </div>
+            <div id="oculusQuestTabContent">
+                <div class='content-page__main oculus-tabs__quest-content'>
+                    <p>
+                        Oculus Quest - автономная VR гарнитура и требует определенных действий для установки приложения Biganto.
+                        Чтобы установить Biganto Tour Player на ваш Oculus Quest достаточно открыть 
+                        <a href="https://www.oculus.com/experiences/quest/6563777177027712/?utm_medium=share&utm_source=oculus">страницу приложения</a> 
+                        в OculusStore. Откройте страницу через Oculus Quest или связанного мобильного устройства и нажмите "Get" для установки приложения.
+                    </p>
+                    <div id="alternative" class="b-anchor"></div>
+                    <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                        <h3>Альтернативная установка через SideQuest</h3>
+                    </div>
+                    <div class="troubleshooting__explanation">
+                        <p>
+                            Для установки Biganto Tour Player вам потребуется:
+                        </p>
+                        <ol>
+                            <li>Установить альтернативный загрузчик приложений SideQuest на PC
+                            </li>
+                            <li>Кабель для передачи данных с PC на Oculus Quest (обратите внимание, что кабель поставляемый в комплекте с Quest не подходит для этих целей)
+                            </li>
+                            <li>Смартфон с установленным приложением Oculus
+                            </li>
+                        </ol>
+                        <p>
+                            <img class="content-page__oculus-img"
+                                src="/static/public/img/tutorials/installing-oculus/install-quest.png" alt="">
+                        </p>
+                        <p>
+                            SideQuest это альтернативное средство загрузки приложений и требует наличия PC. SideQuest устанавливается на PC и дает возможность устанавливать приложения по USB кабелю на Oculus Quest. К сожалению установка приложений без кабеля, непосредственно на VR гарнитуру невозможна по причине конфликтов с пользовательским соглашением Quest и по соображениям безопасности.
+                        </p>
+                        <p>
+                            После установки SideQuest и выполнения всех необходимых инструкций вы можете <a href='https://sidequestvr.com/app/661/biganto-tour-player' target='_blank'>скачать приложение Biganto</a> из маркета приложений SideQuest.
+                        </p>
+                        <p>
+                            <span class='warning'>Важно:</span> SideQuest не является официальным продуктом Oculus, его установка требует определенных знаний PC. Если вы не уверены в том, что вы делаете, мы не рекомендуем выполнять установку.
+                        </p>
+                        <p>
+                            Для установки SideQuest перейдите по одной из ссылок ниже и выполните инструкции:
+                        </p>
+                        <ul>
+                            <li>
+                                <a
+                                    target="_blank"
+                                    href="https://sidequestvr.com/setup-howto">Установка SideQuest, инструкция с маркета SideQuest</a>
+                            </li>
+                            <li>
+                                <a
+                                    target="_blank"
+                                    href="https://github.com/the-expanse/SideQuest/wiki/SideQuest-Setup-&-How-To-install">Установка SideQuest, GitHub wiki</a>
+                            </li>
+                            <li>
+                                <a
+                                    target="_blank"
+                                    href="https://www.youtube.com/watch?v=SDljN6UqO34&t=65s">Видео инструкция по установке SideQuest от YouTube канала “Cas and Chary VR”</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,13 @@
+{% extends 'mail/base.html' %}
+{% block content %}
+            <p>
+                {{ _('Good day!') }}
+            </p>
+
+            {% for days, tours in notifications['notify'].items() %}
+                {% for tour in tours %}
+                    <p>{{ _('Your tour <a href="%(url_edit)s">«%(title)s»</a>  branding expires in %(days)s days and branding preferences will be reset to default. You can renew your branding for €%(price)s per year.', url_edit=url_for('my.index', path='toast/{}/edit'.format(tour[0]), _external=True, _scheme='https'), title=tour[1], days=days, price=price) }}
+                    </p>
+                {% endfor %}
+            {% endfor %}
+{% endblock %}

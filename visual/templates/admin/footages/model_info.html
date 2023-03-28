@@ -1,0 +1,61 @@
+<style type="text/css">
+    .model-info { width: 100%; }
+    .model-info td, .model-info th { padding: 2px 10px; border-bottom: 1px solid #eee; }
+    .model-info td.n, .model-info th.n { text-align: right; }
+</style>
+<table class="model-info">
+    <tr>
+        <td>Файл</td>
+        <td>{{ mi.filestat.st_size  }} байт</td>
+        <td colspan="2">{{ mtime.strftime('%d.%m.%Y %H:%M:%S') }}</td>
+    </tr><tr>
+        <td>Вершин</td><td colspan="3">{{ mi.cnt_vertexes }}</td>
+    </tr><tr>
+        <td>Полигонов</td><td colspan="3">{{ mi.cnt_faces }}</td>
+    </tr><tr>
+        <td>Объектов</td><td colspan="3">{{ mi.objects|length }}</td>
+    </tr><tr>
+        <td title="{{ mi.bb[0] }} - {{ mi.bb[1] }}">Bounding Box</td>
+        <td>
+            {{ mi.bb[2][0]|round(2) }} × {{ mi.bb[2][1]|round(2) }} × {{ mi.bb[2][2]|round(2) }}
+        </td>
+        <td>
+            S<sub>xy</sub> = {{ mi.area|round(2) }} м<sup>2</sup>
+        </td>
+        <td>
+            V = {{ mi.volume|round(2) }} м<sup>2</sup>
+        </td>
+    </tr><tr>
+        <td title="{{ mi.bb_fake[0] }} - {{ mi.bb_fake[1] }}">BB с фейками</td>
+        <td>
+            {{ mi.bb_fake[2][0]|round(2) }} × {{ mi.bb_fake[2][1]|round(2) }} × {{ mi.bb_fake[2][2]|round(2) }}
+        </td>
+        <td>
+            S<sub>xy</sub> = {{ mi.area_fake|round(2) }} м<sup>2</sup>
+        </td>
+        <td>
+            V = {{ mi.volume_fake|round(2) }} м<sup>2</sup>
+        </td>
+    </tr><tr>
+        <td>Плотность полигонов</td>
+        <td colspan="3">{{ (mi.cnt_faces / mi.volume)|round(1) }} плг/м<sup>3</sup></td>
+    </tr>
+</table>
+
+<h3>Объекты</h3>
+<table class="model-info">
+<tr>
+    <th>Объект</th>
+    <th class="n">Вершин</th>
+    <th colspan="3">Bounding Box</th>
+    <th class="n" title="Объём">V, м<sup>2</sup></th>
+</tr>
+    {% for obj_name, obj in mi.objects.items() %}
+        <tr>
+            <td><code>{{ obj_name }}</code></td>
+            <td class="n">{{ obj.cnt_vertexes }}</td>
+            <td class="n">{{ obj.bb[2][0]|round(2) }}</td><td class="n">{{ obj.bb[2][1]|round(2) }}</td><td class="n">{{ obj.bb[2][2]|round(2) }}</td>
+            <td class="n">{{ (obj.bb[2][0] * obj.bb[2][1] * obj.bb[2][2])|round(2) }}</td>
+        </tr>
+    {% endfor %}
+</table>

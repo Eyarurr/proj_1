@@ -1,0 +1,104 @@
+{% extends 'front/tour/index.html' %}
+
+{% from '/front/tour/messages_password.html' import messages_password %}
+{% if tour.password_hash%}
+{% set hasPassword = "true" %}
+{% else %}
+{% set hasPassword = "false" %}
+{% endif %}
+
+{% if current_user.is_authenticated and current_user.id == tour.user_id%}
+{% set isOwner = "true" %}
+{% else %}
+{% set isOwner = "false" %}
+{% endif %}
+
+{% if room.title %}
+    {%- set room_title = room.title + ': ' + _('joint viewing') -%}
+{% else %}
+    {%- set room_title = _('joint viewing')|capitalize -%}
+{% endif %}
+
+{% block title %}{{ room_title }}{% endblock %}
+{% block head %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        type="text/css"
+        href="/static/public/player/css/joint.css?{{ config.get('RELEASE_VERSION') }}"
+    />
+
+    <script>
+        var ROOM_ID = '{{ room_id }}';
+        var ROOM = {{ room|tojson }};
+        var TEST_SCREEN = '{{ tour.meta_full().screen }}';
+        var PLAYER_MODULE = 'JOINT';
+        var MESSAGES_JOINT = {
+            documentTitle: '{{ _("joint viewing") }}',
+            enterRoomPopupTitle: '{{ _("Joint viewing of the") }}',
+            passwordRequired: '{{ _("Enter the password") }}',
+            passwordError: '{{ _("Password incorrect") }}',
+            username: '{{ _("Username") }}',
+            usernamePlaceholder: '{{ _("Enter you name here") }}',
+            usernameError: '{{ _("Username already taken") }}',
+            joinRoom: '{{ _("Join room") }}',
+            inviteRoomLink: '{{ _("Room link") }}',
+            copiedToClipboard: '{{ _("copied to clipboard!") }}',
+            telegram: '{{ _("Telegram") }}',
+            whatsapp: '{{ _("Whatsapp") }}',
+            viber: '{{ _("Viber") }}',
+            membersCount: '{{ _("Participants") }}',
+            optionsRoomNameLabel: '{{ _("Room name") }}',
+            optionsRoomLinkLabel: '{{ _("Room link") }}',
+            optionsChatNotificationsLabel: '{{ _("Chat notifications") }}',
+            externalVoiceChat: '{{ _("External voice chat") }}',
+            leaveRoom: '{{ _("Leave") }}',
+            moveToPosition: '{{ _("Move to user’s position") }}',
+            muteMicrophone: '{{ _("Mute microphone") }}',
+            makeLeader: '{{ _("Make leader") }}',
+            isYou: '{{ _("(you)") }}',
+            followMember: '{{ _("Following") }}',
+            followMemberFull: '{{ _("Full") }}',
+            followMemberPosition: '{{ _("Position") }}',
+            followMemberOff: '{{ _("Off") }}',
+            leadPassChat: '{{ _("is the new room leader") }}',
+            memberEnterChat: '{{ _("joined") }}',
+            userLeftChat: '{{ _("User left the room") }}',
+            memberQuitChat: '{{ _("has left the room") }}',
+            memberChangeName:  '{{ _("changed his name to") }}',
+            leaderChangedRoomname:  '{{ _("Room leader changed the name of the room to") }}',
+            inviteParticipants: '{{ _("Invite participants") }}',
+            writeChatMessagePlaceholder: '{{ _("Write a message here...") }}',
+            chooseLeaderBeforeLeaving: '{{ _("Please appoint a new leader before leaving the room") }}',
+            modeWarningLeader: '{{ _("You are the room leader, other users are following your camera") }}',
+            modeWarningFollower: '{{ _("You are following the room leader&#8217;s camera") }}',
+            modeWarningButton: '{{ _("Ok, got it!") }}',
+            passwordHint: '{{ _("Password protected") }}',
+            tieModeLegs: '{{ _("You are following the room leader&#8217;s position, but can turn camera freely") }}',
+            tieModeNone: '{{ _("You can walk through the tour freely now. Change following mode to join the Room Leader again") }}',
+        };
+
+        var HAS_TOUR_PASSWORD = {{ hasPassword }};
+        var IS_OWNER = {{ isOwner }}
+
+        var EXTERNAL_VOICE_CHAT_LINK = "{{ config.get('EXTERNAL_VOICE_CHAT_LINK') }}";
+        var WS_ROOT = "{{ config.get('WS_ROOT') }}";
+    </script>
+
+{{ messages_password() }}
+
+{% endblock %}
+
+{% block content %}
+
+    {{ super() }}
+{% endblock %}
+
+{% block body_scripts %}
+    {{ super() }}
+{% endblock %}
+
+{% block init_script %}
+    <script src="/static/public/player/js/joint.js?{{ config.get('RELEASE_VERSION') }}" ></script>
+{% endblock %}

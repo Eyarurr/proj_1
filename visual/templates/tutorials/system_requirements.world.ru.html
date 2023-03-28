@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% set page_title = _("Requirements") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/system-requirements/system_requirements.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+        style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div class="content-page__wrapper">
+            <div class='content-page__main content-page__main--max-width'>
+
+                <div id="system_requirements" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Системные требования:</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>Минимальные технические характеристики оборудования (компьютера) для работы Виртуального тура:
+                    </p>
+                    <ul>
+                        <li>Видеокарта и драйвер с поддержкой DirectX 10</li>
+                        <li>Не менее 4 ГБ ОЗУ</li>
+                        <li>Процессор не слабее Intel Core i5 или AMD A10</li>
+                        <li>Браузер и минимальная версия: Google Chrome 80, Firefox 78, Safari 14, Opera 66, Microsoft Edge 79</li>
+                        <li>Для мобильных устройств: Android 6 или новее, iOS 14 или новее совместимое устройство,
+                            минимум 3ГБ ОЗУ (рекомендовано 4)
+                            Важно: некоторые iOS совместимые устройства имеют меньше 3ГБ ОЗУ и могут испытывать
+                            проблемы с производительностью
+                        </li>
+                        <li>Для проверки корректной работы устройство браузер должны пройти тест на поддержку WebGL на странице: <a href="https://get.webgl.org/" target="_blank">https://get.webgl.org/</a></li>
+                    </ul>
+                </div>
+
+                <div id="general_requirements" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Общие требования:</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <ul>
+                        <li>компоненты должны быть выгружены с использованием наших инструментов для 3d Max (<a
+                                href='/static/scripts3d/Biganto-UTL_VirtoasterCamTools_0.73.ms'>Camera tool</a> и <a
+                                href='/static/scripts3d/Biganto-UTL_VirtoasterExportTools_0.53.ms'>Export tool</a>).
+                            Инструменты протестированы на 3d Max 2018-2020, работоспособность на более ранних версиях ПО
+                            не гарантируется.
+                        </li>
+                        <li>на данный момент мы не поддерживаем альтернативные 3d пакеты (например UE или Maya). Тем не
+                            менее если вы знаете, что вы делаете, вы можете подготовить компоненты тура и в них, что мы
+                            и встречаем на практике у некоторых наших заказчиков.
+                        </li>
+                        <li>
+                            если вы хотите использовать альтернативный 3д пакет (не 3d Max ), пожалуйста обратитесь в <a href="{{ url_for('support.index') }}">техническую поддержку</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="image_requirements" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Требования к панорамам:</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>Формат файла - .jpg или .png (рекомендовано)</p>
+                    <p>Формат изображения - кубическая панорама 6х1</p>
+                    <p>Разрешение изображения - 9216х1536</p>
+                    <p>Имя файла каждой панорамы должно заканчиваться на последовательный номер - т.н. номер точки,
+                        который должен совпадать с номером ее координат, например "panorama01.png"</p>
+                    <p>Поддерживаемые рендеры - VRay, Corona*</p>
+                    <p>*- <i class='workflow__text--italic'>VRay и Corona по умолчанию имеют возможность рендера
+                            кубических панорам, в альтернативных рендерах результат может отличаться от ожидаемого.</i>
+                    </p>
+                </div>
+
+                <div id="model_requirements" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Требования к модели:</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>Формат файла - .obj</p>
+                    <p>Максимальный размер высокополигональной модели, МБ - 2048</p>
+                    <p>Максимальный размер низкополигональной модели (сборка без оптимизации), МБ - 50</p>
+                    <p>Максимальное количество объектов в модели - 6000</p>
+                    <p>Максимальное количество вершин в полигоне модели - 200</p>
+                    <p>Максимальный размер bounding box сцены (длина ребра bounding box в любом из трех измерений), м -
+                        1000</p>
+                    <p>Максимальное количество полигонов в модели (для комфортного воспроизведения) - 300000</p>
+                    <p>Максимальное количество полигонов в модели (технически) - 2000000</p>
+                    <p>Максимальное расстояние от камеры до модели, м - 6</p>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

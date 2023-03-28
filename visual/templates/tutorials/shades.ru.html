@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% set page_title = _("Shades") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/shades/shade_tile.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+                <p>Так называемые “Тени” на данный момент - очень простая функция, которую мы планируем развивать и улучшать в дальнейшем. Тени позволяют вам загрузить дополнительные наборы изображений в тур и свободно переключаться между ними. Используя данный функционал, вы можете добавить изюминку в ваш проект, например:</p>
+                <ul>
+                    <li>Показать один и тот же тур с дневным и ночным освещением</li>
+                    <li>Показать разные варианты отделки, такие как разная плитка на полу, варианты покраски и т.д.</li>
+                    <li>Показать разный вид из окон в типовых квартирах на разных этажах</li>
+                </ul>
+                <p>При переходе между разными наборами изображений тур и направление камеры не меняются, поэтому время загрузки минимально. Однако это значит что все наборы панорам должны использовать одну и ту же 3d модель.</p>
+                <p>Вы можете загрузить сколько угодно наборов изображений, для всех точек тура или только для некоторых. Все тени должны использовать тот же номер, что и соответствующие панорамы, например тень для точки 4 должна называться “shade_greenfloor004.png”. Для теней действуют те же требования, что и для обычных панорам (разрешение, формат и т.д.).</p>
+                <p>Чтобы добавить тени в тур просто зайдите на вкладку Тени и нажмите “Добавить тень”. Вы также можете изменить анимацию, которая будет использована при смене изображений внутри тура.</p>
+                <p><img src="/static/public/img/tutorials/shades/shade_add.jpg" alt="" ></p>
+                <p><span class='warning'>Важно:</span> если вы добавили тени только для некоторых точек тура, вы увидите переключатель между наборами только в  этих точках. Например, на изображении ниже переключатель будет виден только для точек 6-11.</p>
+                <p><img src="/static/public/img/tutorials/shades/shades_list.jpg" alt="" ></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

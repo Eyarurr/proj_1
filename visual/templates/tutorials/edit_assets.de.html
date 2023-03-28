@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% set page_title = _("Editing tour assets") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/edit-assets/edit-assets.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+    <div class="content-page">
+        <div class="page-title page-title--textpage" {% if background_head %}
+             style="background-image: url({{ background_head }});" {% endif %}>
+            <div class="b-page__inner">
+                <div class="page-title__inner">
+                    <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                    <div class="page-title__tags tags">
+                        <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="b-page__inner b-page__mrg">
+            <div class="content-page__wrapper">
+                <div class="content-page__main">
+                    <p>In this guide you will learn how to change assets of your tour when making changes or fixing issues. Even though it is a pretty straightforward process, there are some details you might want to know before starting.
+                    </p>
+
+                    <div id="replace_model" class="b-anchor"></div>
+                    <h3 >Replace model</h3>
+
+                    <p>Model is an essential part of the tour and changing it is the most radical thing you can do. You only need to change the model if there are significant changes in the geometry of your tour.
+                    </p>
+
+                    <p><span class='warning'>Important</span>: replacing the model will require tour reassembly. Processing the tour will take some time and will be subtracted from your toasts per month limit.
+                    </p>
+
+                    <p>To replace the model, enter the tour you want to edit and press “Edit assets”.
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit1.jpg" alt="">
+                    </p>
+
+                    <p>You will see the interface you used when creating the tour. Simply upload the new, correct model and press “Create tour” to continue.
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit2.jpg" alt="">
+                    </p>
+
+                    <p><span class='warning'>Important</span>: if your tour has “Published” status, its initial model and panoramas have been deleted already. If returned to asset uploading, initial assets will be lost permanently and the tour will have to be reassembled using new or old backup assets (panoramas and model). Reassembled tour will keep its ID and html address. Tours with “Testing” status still have their initial model and panoramas inside our system, so you do not need to upload images again.
+                    </p>
+
+                    <div id="replace_panorama" class="b-anchor"></div>
+                    <h3 >Replace panorama</h3>
+
+                    <p>You can change panoramas freely at any time. Keep in mind that 3d panorama mode will not be updated, however. It is only being updated when changing the model as well.
+                    </p>
+
+                    <p>To replace individual image, hover over the panorama in the list and press “Edit”:
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit3.jpg" alt="">
+                    </p>
+
+                    <p>Here you can do several things, including new image uploading.
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit4.jpg" alt="">
+                    </p>
+
+                    <p>Select file path or drag and drop new image and select correct render engine. Press “Save”. When replacing the individual image you directly upload into the point you’ve selected, the image index in the file name is not relevant.
+                    </p>
+
+                    <div id='replace_all_panoramas' class="b-anchor"></div>
+                    <h3 >Replace all panoramas</h3>
+
+                    <p>To replace all images at once, press the button next to “Central” title and select “Reupload all” above the panorama list.
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit5.jpg" alt="">
+                    </p>
+
+                    <p>As usual, do not forget to select the correct renderer and upload new images. Keep in mind that you should have the same image indices as you had before to match new images to correct points.
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit6.jpg" alt="">
+                    </p>
+
+                    <div id='replace_binocular_panoramas' class="b-anchor"></div>
+                    <h3 >Replace binocular panoramas</h3>
+
+                    <p>To replace only binocular panoramas just follow the same process:
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit7.jpg" alt="">
+                    </p>
+
+                    <div id='change_point_coordinates' class="b-anchor"></div>
+                    <h3>Change point coordinates</h3>
+
+                    <p>Sometimes rendering a new image is not enough and there are cases when you also would want to change the position of the point in a tour. To do so, you will require to change point coordinates.
+                    </p>
+
+                    <p><span class='warning'>Important</span>: while you can change images without changing coordinates, the opposite will not be correct. If you want to change point location, you have to upload a new image as well. Older image will not be aligned properly with the 3d model anymore.
+                    </p>
+
+                    <p>To get the coordinates of a specific point, use “Camera creation tool” (drag and drop into 3d max viewport) and extract a .txt file with the coordinates. You can learn more about this process in the <a href='{{ url_for('tutorials.setting_up_camera') }}#optional'>camera creation guide.</a>
+                    </p>
+
+                    <p>Simply copy the line with the coordinates from .txt and either paste it in the text box in the panorama list or while uploading a new image:
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit8.jpg" alt="">
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit9.jpg" alt="">
+                    </p>
+
+                    <p>You can also edit all points at once by pressing the button next to “Central” title and selecting “Replace all” above the panorama list.
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit10.jpg" alt="">
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit11.jpg" alt="">
+                    </p>
+
+                    <div id='add_additional_points' class="b-anchor"></div>
+                    <h3 >Add additional points</h3>
+
+                    <p>To add a new point you will require a new render for that point and its coordinates. To add points press “Add panoramas” above image list:
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit12.jpg" alt="">
+                    </p>
+
+                    <p>Select render engine, path to new image and paste coordinates into the text box. Save changes.
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit13.jpg" alt="">
+                    </p>
+
+                    <div id='change_renderer' class="b-anchor"></div>
+                    <h3 >Change renderer</h3>
+
+                    <p>Selecting the correct render engine impacts the alignment of images to the model. If the render engine is not correct, most likely you will not be able to walk properly inside the tour. Because our system processes uploaded images depending on the render engine, to change the renderer you must upload all images again.
+                    </p>
+
+                    <p>To do so, press the button next to “Central” title and select “Reupload all” above the panorama list.
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit14.jpg" alt="">
+                    </p>
+
+                    <p>Upload images and set the correct renderer (VRay is used by default).
+                    </p>
+
+                    <p><img src="/static/public/img/tutorials/edit-assets/Screenshot_edit15.jpg" alt="">
+                    </p>
+
+                    <p><span class='warning'>Important</span>:  if you created the tour using incorrect render, the textures in 3d panorama mode will be broken. Changing the render engine will not be sufficient to fix them, the whole tour needs to be created again (see <a href="#replace_model" class="side-menu__link link-scroll-to">Replacing model</a>).
+                    </p>
+
+                </div>
+
+                <aside class="content-page__side content-page__side--hide">
+                    <nav class="side-menu sticky" data-top-spacing="96" data-bottom-spacing="403" data-res="lg">
+                        <ul class="side-menu__list">
+                            <li class="side-menu__item">
+                                <a href="#replace_model" class="side-menu__link link-scroll-to">Replace model</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#replace_panorama" class="side-menu__link link-scroll-to">Replace panorama</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#replace_all_panoramas" class="side-menu__link link-scroll-to">Replace all panoramas</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#replace_binocular_panoramas" class="side-menu__link link-scroll-to">Replace binocular panoramas</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#change_point_coordinates" class="side-menu__link link-scroll-to">Change point coordinates</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#add_additional_points" class="side-menu__link link-scroll-to">Add additional points</a>
+                            </li>
+                            <li class="side-menu__item">
+                                <a href="#change_renderer" class="side-menu__link link-scroll-to">Change renderer</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

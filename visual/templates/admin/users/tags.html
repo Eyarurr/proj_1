@@ -1,0 +1,64 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'users' %}
+
+{% block head %}
+<style type="text/css">
+    .display-dict td { font-size: 0.9em; color: #444; }
+    .display-dict td.k { font-weight: bold; padding-right: 4px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h1>
+    Теги юзера «{{ user.name }}»
+    <a class="btn btn-sm btn-success float-lg-end" href="{{ url_for('.user_tag_edit', user_id=user.id) }}">
+        <i class="fa fa-plus-circle"></i> Создать тег
+    </a>
+</h1>
+
+
+
+{% include('admin/users/_tabs.html') %}
+
+<table class="table table-hover table-list mt-4">
+    <thead>
+    <tr>
+        <th>name</th>
+        <th class="t break">Подпись</th>
+        <th class="break">Префикс</th>
+        <th>Суффикс</th>
+        <th class="break">Ключ CRM</th>
+        <th class="break">Преобразования</th>
+        <th class="break"></th>
+    </tr>
+    </thead>
+    <tbody>
+{% for tag in tags %}
+    <tr>
+        <td><code>{{ tag.name }}</code></td>
+        <td class="break">{{ tag.label or '' }}</td>
+        <td class="break">{% if tag.prefix %}<pre>"{{ tag.prefix }}"</pre>{% endif %}</td>
+        <td>{% if tag.suffix %}<pre>"{{ tag.suffix }}"</pre>{% endif %}</td>
+        <td class="break"><code>{{ tag.crm_key or '' }}</code></td>
+        <td class="break">
+            {% if tag.display_dict %}
+            <table class="display-dict">
+                {% for k, v in tag.display_dict.items() %}
+                <tr>
+                    <td class="k">{{ k }}</td>
+                    <td>{{ v }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </td>
+        <td class="break">
+            <a href="{{ url_for('.user_tag_edit', user_id=user.id, tag_id=tag.id) }}" class="btn btn-sm btn-outline-success">Ред</a>
+        </td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

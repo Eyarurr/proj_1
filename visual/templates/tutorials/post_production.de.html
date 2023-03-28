@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% set page_title = _("Post production") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/post-production/preview_big.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <div id="more" class="b-anchor"></div>
+                <p>Once your render is complete, it is time for a post production. Since everyone is using their own pipeline when it comes to post, this article will only contain some general recommendations and tips. It is not necessary to follow them precisely, but there are some caveats you should not take lightly as well.</p>
+                <p>First, to look natural every frame from a single tour should have roughly the same visual adjustments. It is just a matter of common sense – if there is a bright sun in a kitchen, there should be no moonlight in the adjacent room, unless you want to create an utterly surreal experience. 3d tour is not a still image, if there are differences between neighboring frames, they will be very noticeable. The same applies for binocular panoramas and their regular counterparts, they should have exactly the same visual adjustments.</p>
+                <p>Thus, it is logical to approach post as editing a sequence of images. While you can do a decent job, making post in photoshop, we recommend to use tools like Fusion, Nuke or Natron, they will make life a lot easier when doing post for dozen of images simultaneously.</p>
+                <p>Second, from a purely technical point of view, there are some limitations for image editing when we speak about Cube Maps. Any edits on the seams of a panorama will result in strange artifacts inside the tour (that’s why vignetting should never be used). Any edit applied to the borders of squares or effect, that transfers from one square to another will create visible seams in 3d tour. Any edit applied to the whole image can be used freely. </p>
+                <p><img src="/static/public/img/tutorials/post-production/image_1.jpg" alt=""></p>
+                <p>Here are some examples:</p>
+                <ol>
+                    <li>Edits you may use freely: curve settings, exposure, color correction, image overlays, etc.</li>
+                    <li>Edits, you should never use: blur, vignetting, depth of field</li>
+                    <li>Edits, you may use with conditions: glow, flare, sharp.</li>
+                </ol>
+                <p>Considering the last point — you may only use these effects if they do not impact borders of the squares!</p>
+                <p>There are two ways you can add glow and flare effects:</p>
+                <ul>
+                    <li>First, use can freely add them as long as they are within square borders. E.g. there is a spot light or an attic window within square borders.</li>
+                    <li>Second, you can cautiously use Corona render native bloom and glare setting (but not in VRay). Unless you will raise the value of these effects to extreme levels, their impact should not be visible on images with decent resolution.</li>
+                </ul>
+                <p>To add “sharp” it is necessary to break down cubemap to six separate images and apply sharp individually.</p>
+                <p>In Photoshop you can download <a href='/static/scripts3d/sharp_action.atn' target='_blank' rel='noopener'>this</a> action, to simplify the process. To install action open “Actions panel” with Window->Actions menu or Alt+F9 hotkey and drag’n’drop downloaded action to the panel.</p>
+                <p><img src="/static/public/img/tutorials/post-production/image_2.jpg" alt=""></p>
+                <p>Use “Slice” action first, then use “SmartSharpCube” action to apply sharp.</p>
+                <p>Alternatively, you can create some node systems in Fusion or Nuke to do the same.</p>
+                <p><img src="/static/public/img/tutorials/post-production/image_3.jpg" alt=""></p>
+
+                <p>Other than that postproduction is not too different from any everyday workflow. You may proceed with <a href='{{ url_for('tutorials.uploading_assets')  }}'>uploading assets</a> now.</p>
+                <p><span class='warning'>Important:</span> once your 3d tour is complete, you can easily change any panoramas from asset editor without reassembling the tour.</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

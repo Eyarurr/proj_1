@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+{% set page_title = _("Pricing") %}
+{% set corpus_class = 'virtoaster_pricing' %}
+
+{% if current_user.is_authenticated %}
+    {# Подписка текущего юзера, инстанс UserProduct #}
+    {% if current_user.products['virtoaster'] == null %}
+        {% set current_plan = None %}
+        {% set current_user_product = None %}
+    {% else %}
+        {# Тарифный план текущего юзера, инстанс ProductPlan #}
+        {% set current_user_product = current_user.products['virtoaster'] %}
+        {% set current_plan = products.virtoaster.plans[current_user_product.plan_id] %}
+    {% endif %}
+{% else %}
+    {% set current_user_product = None %}
+    {% set current_plan = None %}
+{% endif %}
+
+
+{% from 'macros/spinner.html' import spinner %}
+{% from 'macros/tariff_modals.html' import tariff_modals %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+    <div class="page-title">
+        <div class="b-page__inner page-title__inner">
+            <h1 class="page-title__head background-image-title-pricing h1">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <section class="tariffs-list tariffs-list--5">
+            <p class="tariffs-list__intro">
+                {{ _("Select the plan that meets your requirements:") }}
+                <span class="tariffs-list__sub-intro">
+                    {{ _("Plans beyond Basic are only available for legal entities and require Tax ID to be purchased.") }}
+                </span>
+            </p>
+            <div class="tariffs-list__table">
+                <div class="tariffs-list__column tariffs-list__head">
+                    <div class="tariffs-list__td tariffs-list__name">{{ _("Plan") }}</div>
+                    <div class="tariffs-list__td tariffs-list__tours">
+                        <span class="tariffs-list__label">{{ _("Tours capacity:") }}</span>
+                        <span class="tariffs-list__info tooltip-place" data-tooltip-content="#tooltip_tours">
+                            <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                        </span>
+                        <div class="tooltip_templates">
+                            <span id="tooltip_tours" class="tooltip_content">
+                                {{ _("Number of tours you can simultaneously have in your account.") }}
+                                <div class="tooltip_more">
+                                    <a href="{{ url_for('tutorials.index') }}" target="_blank">{{ _("learn more") }}</a>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="tariffs-list__td tariffs-list__toasts">
+                        <span class="tariffs-list__label">{{ _("Tours per month:") }}</span>
+                        <span class="tariffs-list__info tooltip-place" data-tooltip-content="#tooltip_toasts">
+                            <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                        </span>
+                        <div class="tooltip_templates">
+                            <span id="tooltip_toasts" class="tooltip_content">
+                                {{ _("Number of tours you can optimize with our algorithm, both when uploading tour for the first time or when making changes.") }}
+                                <div class="tooltip_more">
+                                    <a href="{{ url_for('tutorials.index') }}" target="_blank">{{ _("learn more") }}</a>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="tariffs-list__td tariffs-list__spots">
+                        <span class="tariffs-list__label">{{ _("Points per tour (max)") }}</span>
+                        <span class="tariffs-list__info tooltip-place" data-tooltip-content="#tooltip_spots">
+                            <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                        </span>
+                        <div class="tooltip_templates">
+                            <span id="tooltip_spots" class="tooltip_content">
+                                {{ _("Every tour has a number of points you can move around. This is the maximum number of points you can have in a single tour.") }}
+                                <div class="tooltip_more">
+                                    <a href="{{ url_for('tutorials.index') }}" target="_blank">{{ _("learn more") }}</a>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="tariffs-list__td tariffs-list__hosting">
+                        <span class="tariffs-list__label">{{ _("Hosting") }}</span>
+                    </div>
+                    <div class="tariffs-list__td tariffs-list__options">
+                        <span class="tariffs-list__label">{{ _("Extra features") }}</span>
+                    </div>
+                    <div class="tariffs-list__price-bottom-container">
+                        <div class="tariffs-list__td tariffs-list__price">
+                            <div class="tariffs-list__price__wrapper">
+                                <span class="tariffs-list__label">{{ _("Legal entities price") }}</span>
+                                <span class="tariffs-list__label__caption--desktop">{{ _("Prices do not include VAT") }}</span>
+                            </div>
+                        </div>
+                        <div class="tariffs-list__td tariffs-list__price">
+                            <div class="tariffs-list__price__wrapper">
+                                <span class="tariffs-list__label">{{ _("Consumers price") }}</span>
+                                <span class="tariffs-list__label__caption--desktop">{{ _("Price include German VAT of 19%%, final price may be different if another VAT rate is applicable for your case") }}</span>
+                            </div>
+                        </div>
+                        <div class="tariffs-list__td tariffs-list__button"></div>
+                    </div>
+                </div>
+                {% for plan_id, plan in products.virtoaster.plans.items() if not plan.hidden %}
+                    {% set left_tours = current_plan.meta['storage'] - current_user.count_footages() if current_user.is_authenticated and current_plan is not none else 0 %}
+                    {% set left_toasts = current_user_product.meta['processings_left'] if current_user.is_authenticated and current_user_product is not none else 0 %}
+                    <div class="tariffs-list__column {% if current_plan.id == plan_id %} tariffs-list__column--active {% endif %}" data-id="{{ plan_id }}">
+                        <div class="tariffs-list__td tariffs-list__name">
+                            {% if plan.price == 0 %}
+                                <div class="tariffs-list__title__wrapper">
+                                    <h2 class="tariffs-list__title">{{ plan.title }}</h2>
+                                    <a class="tariffs-list__guide-link" href="{{ url_for('tutorials.quick_start_guide') }}" target="_blank">{{ _("Quick start guide") }}</a>
+                                </div>
+                                <div class="tariffs-list__current">{{ _("Current plan") }}</div>
+                            {%- else -%}
+                                <h2 class="tariffs-list__title">{{ plan.title }}</h2>
+                                <div class="tariffs-list__current">{{ _("Current plan") }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="tariffs-list__three">
+                            <div class="tariffs-list__td tariffs-list__tours" data-title="{{ _("Tours capacity") }}: ">
+                                <span class="tariffs-list__info tooltip-place" data-tooltip-content="#tooltip_tours">
+                                    <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                                </span>
+                                <span class="tariffs-list__span">
+                                    <span class="tariffs-list__value">{{ plan.meta['storage'] }}</span>
+                                    {% if current_plan.id == plan_id %}<span class="tariffs-list__left{% if left_tours <= 0 %} tariffs-list__left--warning{% endif %}">{{ _("%(count)s left", count=(left_tours if left_tours > 0 else 0)) }}</span>{% endif %}
+                                </span>
+                            </div>
+                            <div class="tariffs-list__td tariffs-list__toasts" data-title="{{ _("Tours per month") }}: ">
+                                <span class="tariffs-list__info tooltip-place" data-tooltip-content="#tooltip_toasts">
+                                    <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                                </span>
+                                <span class="tariffs-list__span">
+                                    <span class="tariffs-list__value">{{ plan.meta['processings'] }}</span>
+                                    {% if current_plan.id == plan_id %}<span class="tariffs-list__left{% if left_toasts <= 0 %} tariffs-list__left--warning{% endif %}">{{ _("%(count)s left", count=(left_toasts if left_toasts > 0 else 0)) }}</span>{% endif %}
+                                </span>
+                            </div>
+                            <div class="tariffs-list__td tariffs-list__spots" data-title="{{ _("Points per tour (max)") }} ">
+                                <span class="tariffs-list__info tooltip-place" data-tooltip-content="#tooltip_spots">
+                                    <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                                </span>
+                                <span class="tariffs-list__span">
+                                    <span class="tariffs-list__value">{{ plan.meta['max_skyboxes'] }}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="tariffs-list__td tariffs-list__hosting tariffs-list__td--small">
+                            {%- if plan_id == 0 -%}
+                                {{ _("Tours can be shared with other users for new accounts. Tours cannot be shared after one month after account creation") }}
+                            {%- else -%}
+                                {{ _("Tours can be shared while the subscription is active. Tours can not be shared or created without subscription") }}
+                            {%- endif -%}
+                        </div>
+                        <div class="tariffs-list__td tariffs-list__options{% if plan_id == 30 %} tariffs-list__options--full{% endif %}" data-title="{{ _("Extra features") }}: ">
+                            <span class="tariffs-list__value">
+                                {% if plan_id == 30 %}
+                                    <p class="tariffs-list__branding">{{ _("Tour branding") }}</p>
+                                    <p class="tariffs-list__branding">{{ _("Higher resolution support") }}</p>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="tariffs-list__price-bottom-container">
+                            <div class="tariffs-list__td tariffs-list__price{% if plan.price == 0 %} tariffs-list__price--trial{% endif %}">
+                                <div class="tariffs-list__price-value">
+                                    {% if plan.price == 0 %}
+                                    {{ _("FREE") }}
+                                    {% else %}
+                                    {{ _("€%(price)s/mo", price=plan.price) }}
+                                    {% endif %}
+                                </div>
+                                {% if plan.price != 0 %}
+                                    <div class="tariffs-list__label__caption--mobile">
+                                        {{ _("Prices do not include VAT.") }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="tariffs-list__td tariffs-list__price{% if plan.price_with_vat == 0 %} tariffs-list__price--trial{% endif %}">
+                                <div class="tariffs-list__price-value">
+                                    {% if plan.price_with_vat == 0 %}
+                                        {{ _("FREE") }}
+                                    {% elif plan.price_with_vat == None %}
+                                        —
+                                    {% else %}
+                                        {{ _("€%(price)s/mo", price=plan.price_with_vat) }}
+                                    {% endif %}
+                                </div>
+                                {% if plan.price_with_vat != 0 and plan.price_with_vat != None %}
+                                    <div class="tariffs-list__label__caption--mobile">
+                                        {{ _("Price include German VAT of %%19, final price may be different if another VAT rate is applicable for your case.") }}
+                                    </div>
+                                {% endif %}
+                                <div class="tariffs-list__expires">
+                                    {%- if current_user.is_authenticated and current_plan is not none and current_user_product is not none -%}
+                                        {%- if plan_id != 0 and current_plan.id == plan_id and current_user_product.next_payment_time -%}
+                                            {{ _("Expires on %(date)s", date=current_user_product.next_payment_time.strftime(date_format.get(g.lang, default_date_format))) }}
+                                        {%- else -%}
+                                            {%- set may_downgrade = left_tours >= 0 and left_toasts >= 0 -%}
+                                            {%- if current_user_product.plan_id > plan_id and plan_id != 0 -%}
+                                                {%- if left_tours < 0 -%}
+                                                    <div>{{ _("Tour limit exceeded") }}</div>
+                                                {%- endif -%}
+                                                {%- if left_toasts < 0 -%}
+                                                    <div>{{ _("Toast limit exceeded") }}</div>
+                                                {%- endif -%}
+                                            {%- endif -%}
+                                            {%- if may_downgrade -%}
+                                                &nbsp;
+                                            {%- endif -%}
+                                        {%- endif -%}
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                            <div class="tariffs-list__td tariffs-list__button">
+                                {%- if current_user.is_authenticated -%}
+                                    {%- if current_user_product and current_user_product.plan_id != 0 and plan_id == 0 -%}
+                                        <button class="button fill blue tariffs-list__submit" data-type="unsubscribe">{{ _("Cancel my plan") }}</button>
+                                    {%- endif -%}
+                                    {%- if current_user_product and current_user_product.plan_id > plan_id -%}
+                                        {%- if plan_id != 0 -%}
+                                            <button class="button fill blue tariffs-list__submit" data-type="downgrade"{% if not may_downgrade %} disabled{% endif %}>{{ _("Downgrade plan") }}</button>
+                                        {%- endif -%}
+
+                                    {%- elif not current_user_product or current_user_product.plan_id < plan_id -%}
+                                        {%- if not current_user_product or current_user_product.plan_id == 0 -%}
+                                            {%- if plan_id == 0 -%}
+                                                <button class="button fill blue tariffs-list__submit">{{ _("Try for free") }}</button>
+                                                {%- else -%}
+                                                <button class="button fill blue tariffs-list__submit" data-type="buy-now"
+                                                    {% if current_user.deleted %} disabled title="{{ _("You have deleted your account and can't buy subscriptions.") }}" {% endif %}
+                                                >
+                                                    {{ _("Buy now") }}
+                                                </button>
+                                            {%- endif -%}
+                                        {%- else -%}
+                                            <button class="button fill blue tariffs-list__submit" data-type="upgrade"
+                                                {% if current_user.deleted %} disabled title="{{ _("You have deleted your account and can't buy subscriptions.") }}" {% endif %}>
+                                                {{ _("Upgrade plan ") }}
+                                            </button>
+                                        {%- endif -%}
+                                    {%- endif -%}
+                                {%- else -%}
+                                    {# Для неавторизованных пользователей клик на кнопку "Купить" вызывает авторизацию, после которой редиректимся опять сюда #}
+                                    {%- if plan_id != 0 -%}
+                                        <button class="button fill blue tariffs-list__submit" data-next="{{ next }}" data-type="login">{{ _("Buy now") }}</button>
+                                    {%- endif -%}
+                                    {%- if plan_id == 0 -%}
+                                        <button class="button fill blue tariffs-list__submit" data-type="login">{{ _("Start trial") }}</button>
+                                    {%- endif -%}
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="tariffs-list__column{% if current_user.is_authenticated and current_user_product.plan_id == 40 %} tariffs-list__column--active{% endif %}" data-id="{% if current_user.is_authenticated %}{{ current_user_product.plan_id }}{% endif %}">
+                    <div class="tariffs-list__td tariffs-list__name">
+                        <h2 class="tariffs-list__title">{{ _("Custom") }}</h2>
+                        <div class="tariffs-list__current">{{ _("Current plan") }}</div>
+                    </div>
+                    <div class="tariffs-list__three">
+                        <div class="tariffs-list__td tariffs-list__tours" data-title="{{ _("Tours capacity") }}: ">
+                            <span class="tariffs-list__info tooltip-place" data-tooltip-content="#tooltip_tours">
+                                <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                            </span>
+                            <span class="tariffs-list__info tariffs-list__tooltip-place__custom">
+                                {{ _("Tours per month") }}:
+                                <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                            </span>
+                            <span class="tariffs-list__span">
+                                <span class="tariffs-list__custom">
+                                    {{ _("Tailored solution that scale required number of tours as needed") }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="tariffs-list__td tariffs-list__spots" data-title="{{ _("Points per tour (max)") }} ">
+                            <span class="tariffs-list__info tooltip-place" data-tooltip-content="#tooltip_spots">
+                                <svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#information"></use></svg>
+                            </span>
+                            <span class="tariffs-list__span">
+                                <span class="tariffs-list__value">{{ 300 }}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="tariffs-list__td tariffs-list__hosting tariffs-list__td--small">
+                        {{ _("Tours can be shared while the subscription is active. Tours can not be shared or created without subscription") }}
+                    </div>
+                    <div class="tariffs-list__td tariffs-list__options tariffs-list__options--full"
+                         data-title="{{ _("Extra features") }}: "
+                    >
+                        <p class="tariffs-list__branding">{{ _("Tour branding") }}</p>
+                        <p class="tariffs-list__branding">{{ _("Higher resolution support") }}</p>
+                    </div>
+                    <div class="tariffs-list__price-bottom-container">
+                        <div class="tariffs-list__td tariffs-list__price">
+                            <div class="tariffs-list__price-custom">
+                                {{ _("Contact us for a quote using") }}
+                                <a class="tariffs-list__guide-link tariffs-list__guide-link-custom"
+                                   href="mailto:info@biganto.com"
+                                >
+                                    info@biganto.com
+                                </a>
+                            </div>
+                        </div>
+                        <div class="tariffs-list__td tariffs-list__price">
+                            <div class="tariffs-list__price-value">
+                                —
+                            </div>
+                            <div class="tariffs-list__expires">
+                            </div>
+                        </div>
+                        <div class="tariffs-list__td tariffs-list__button">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {{ tariff_modals() }}
+
+    </div>
+{% endblock %}
+
+{% block tail %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    var Plans = {{ products.virtoaster.plans_public_dict()|tojson }};
+    BG.CONST.MESSAGES.modalHeaders = {
+        "buy-now": "{{ _("Buy {plan} plan") }}",
+        "buy-more": "{{ _("Buy {plan} plan") }}",
+        "downgrade": "{{ _("Downgrade to {plan} plan") }}",
+        "upgrade": "{{ _("Upgrade to {plan} plan") }}",
+        "unsubscribe": "{{ _("Downgrade to {plan}") }}"
+    };
+    current_user.last_payment_time = "{{ current_user_product.last_payment_time }}";
+    current_user.next_payment_time = "{{ current_user_product.next_payment_time }}";
+    current_user.stripe_customer_id = "{{ current_user.stripe_customer_id if current_user.stripe_customer_id != None else '' }}";
+    current_user.stripe_config = "{{ config.get('STRIPE_PK') }}";
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% set page_title = _("Interactive meshes") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/interactive-meshes/interactive-meshes.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+                <p>Помимо добавления новых интерактивных объектов в тур, вы можете взаимодействовать и напрямую с 3д моделью тура. Вы можете выбрать любой меш, например кресло и создать внутри тура переход на сайт производителя по клику на это кресло. Эти т.н. “Интерактивные меши” - мощный инструмент чтобы превратить тур в креативную и интересную презентацию.</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_1.jpg" alt="">
+                </p>
+                <p>Процесс создания интерактивных мешей предельно прост. Для начала, откройте тур в режиме редактирования и взгляните на вкладку “Меши” в нижнем левом углу. Здесь вы можете увидеть список всех мешей в модели тура, найти меши с помощью поиска и отфильтровать список, чтобы увидеть только Интерактивные меши с помощью кнопки <img class="icon--inline" src="/static/public/img/tutorials/interactive-meshes/ic-interactive.svg" alt=""> .</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_2.jpg" alt="">
+                </p>
+                <p>Используйте текстовый поиск чтобы найти нужные меши в модели по имени. Как только вы выберите меш, он будет подсвечен в сцене. Когда вы выбираете меш из списка, плеер туров постарается показать меш и центрировать на нем камеру. Однако в редких случаях необходимый меш может оказаться скрыт за углом или другим объектом, обратите на это внимание.</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_3.jpg" alt="">
+                </p>
+                <p>
+                    В качестве альтернативы вы можете воспользоваться кнопкой “Выбрать меш” <img class="icon--inline" src="/static/public/img/tutorials/interactive-meshes/ic-interactive.svg" alt=""> на панели вверху экрана. Нажмите кнопку и просто выберите нужный меш внутри тура.
+                </p>
+                <p>Чтобы превратить обычный меш в интерактивный достаточно изменить “Режим” меша в правой панели. Здесь вы также можете изменить внешний вид меша (изменить подсветку и подсветку по наведению мыши, добавить подсказки при наведении мыши и т.д.).</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_4.jpg" alt="">
+                </p>
+                <p>И наконец самое важное, вы можете добавить т.н. “Actions” - действия , такие как переход на другой сайт, проигрывание видео\аудио, открыть всплывающее окно с информацией и т.д. Например, действие для открытия другого сайта во всплывающем окне будет выглядеть так:</p>
+                <p>
+                    <img src="/static/public/img/tutorials/interactive-meshes/Screenshot_5.jpg" alt="">
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

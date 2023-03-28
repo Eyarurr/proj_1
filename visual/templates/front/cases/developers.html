@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% set page_title = _("About") %}
+{% set corpus_class = 'cases' %}
+
+{% from 'front/cases/page_nav.html' import page_nav %}
+{% from 'front/cases/features_list.html' import feature_list %}
+
+{% set use_cases = [
+    ('#ic-path', _(" Three dimensional tour allows free movement and instantly provides good understanding of the space, which is harder to achieve via traditional still images or floorplans ")),
+    ('#ic-loyality', _(" Walking through interactive presentation of a real estate is an exciting experience that grows customer attachment to the project and drives sales ")),
+    ('#ic-multiplatfom', _(" Tours are available on almost any devices via browser and internet connection, with no need to install additional software, hardware or applications ")),
+    ('#ic-view', _(" Tours can be displayed on the web site, shown in the sales office or shared with a customer in chat via link. It’s a perfect solution to demonstrate real estate online ")),
+    ('#ic-link', _(" Link to the tour gives customer an unlimited access to desired real estate even after his visit to the sales office or without the visit at all ")),
+    ('#ic-preferences', _(" Unlimited tour options, from individual apartments to walkthroughs through the whole residential complex, from whiteboxes to demonstrating multiple finishing and furniture options in a single tour "))
+] %}
+
+{% block content %}
+    <div class='background-video'>
+        <video muted loop autoplay class='background-video__video' poster="/static/public/img/cases/tour2_poster.jpeg">
+            <source src="/static/public/video/cases/tour2_720p.webm" type="video/webm">
+            <source src="/static/public/video/cases/tour2_720p.ogg" type="video/ogg">
+            <source src="/static/public/video/cases/tour2_720p.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class='tabs-css b-page__inner'>
+
+        {{ page_nav('Developers') }}
+
+        <div class='tabs-css__tabs-folder'>
+            <div class='tabs-css__tab-content'>
+                <div class="page-title">
+                    <div class="page-title__inner">
+                        <h1 class="page-title__head h1">{{ _("Developers") }}</h1>
+                    </div>
+                </div>
+
+                {{ feature_list(use_cases) }}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

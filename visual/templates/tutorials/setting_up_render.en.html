@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% set page_title = _("Setting up 360 render") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/setting-up-render/preview_big.jpg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <h2>Summary</h2>
+                <ol>
+                    <li>Set render resolution and number of frames to render</li>
+                    <li>Select camera type</li>
+                    <li>Disable post processing effects</li>
+                    <li>Proceed with 360 renders <a href='{{ url_for('tutorials.post_production') }}'>post processing</a></li>
+                </ol>
+
+                <div id="more" class="b-anchor"></div>
+                <h2>Full guide</h2>
+
+                <p><span class='warning'>Important:</span> you can set core render settings with Virtoaster Camera tool script. Nonetheless, it is required to manually disable post processing effects, if there are any (see the end of the article). </p>
+                <p>Go to Render setup (F10), you need to specify the range of frames to render from the first to the last keyframe of the animated Virtoaster camera. Each frame corresponds to a single point in a tour.</p>
+                <p>Set render resolution to 9216x1536px.</p>
+                <p><img src="/static/public/img/tutorials/setting-up-render/image_9.jpg" alt="" width="360"></p>
+                <p>Change the type of camera.</p>
+                <p><b>For V-Ray:</b></p>
+                <p>Open V-Ray tab. Set the camera type to Cube 6x1 (Render Setup/tab V-Ray/Scroll Camera/Type: Cube 6x1).</p>
+                <p><img src="/static/public/img/tutorials/setting-up-render/image_10.jpg" alt="" width="360"></p>
+                <p><b>For Corona:</b></p>
+                <p>Select Virtoaster Camera. From the Modifier list  add “CoronaCameraMod” modifier. In CameraProjection scroll check the box at ProjectionType/Override. Select Cubemap in the dropdown list.</p>
+                <p><img src="/static/public/img/tutorials/setting-up-render/image_11.jpg" alt="" width="360"></p>
+                <p><span class='warning'>Important:</span> disable native Sharpening from Corona render. Disable any form of post processing effects, including vignetting, DoF, motion blur effects. This will result in visible seams between parts of 360 render! The only effect you may use when rendering cubemaps is Corona Bloom and Glare, and even than, use these effects with caution, as they may still slightly impact sides of cubemaps.</p>
+                <p><img src="/static/public/img/tutorials/setting-up-render/image_12.jpg" alt=""></p>
+                <p><span class='warning'>Important:</span> if you are using Corona 4.0 or newer, we recommend to disable High Quality image filter under System tab. High quality image filter sometimes causes visible seams on the Cubemaps. Please select "None" or "Tent" under image filter type.</p>
+                <p>Select the folder you want to save your sequence and required render channels.</p>
+                <p><span class='warning'>Important:</span> we do not recommend to use JPEG file format for render output and post processing. When uploading 360 renders to the tour, the engine will automatically convert and transform them into JPEG to show images in browser. Thus the images will be compressed twice: when rendering/adding post effects and when uploading to the tour!</p>
+                <p>Once your renders are complete, you may proceed with <a href='{{ url_for('tutorials.post_production') }}'>image post production.</a></p>
+            </div>
+
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#short" class="side-menu__link link-scroll-to">Summary</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#more" class="side-menu__link link-scroll-to">Full guide</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

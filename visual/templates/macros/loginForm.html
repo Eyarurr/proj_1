@@ -1,0 +1,66 @@
+{#
+    @param {string} next - задействуем ли поле input hidden next
+    при next = 'same_page' редиректим на страницу, url которой сейчас открыт
+#}
+
+{% macro login_form(next) %}
+    <form class="form-modal login" method="post" action="{{ url_for('users.login') }}">
+        <div class="form-modal__section login__section">
+            <div class="form-modal__label">{{ _("E-mail") }}</div>
+            <div class="form-modal__field login__field">
+                <input type="text" class="big-input" value="" placeholder="{{ _("Your e-mail") }}" name="email"
+                    tabindex="1">
+            </div>
+        </div>
+        <div class="form-modal__section login__section">
+            <div class="form-modal__label clearfix">
+                {{ _("Password") }}
+                <a href="{{ url_for('users.remind') }}" class="login__forgot">{{ _("forgot?") }}</a>
+            </div>
+            <div class="form-modal__field login__field">
+                <input type="password" name="password" class="big-input" value="" placeholder="{{ _("Password") }}"
+                    tabindex="2">
+                <div class="login__password-toggle" title="{{ _("Show the password") }}">
+                    <svg viewBox="0 0 32 24" class="login__eye login__eye-o icon__svg">
+                        <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#eye-o"></use>
+                    </svg>
+                    <svg viewBox="0 0 32 24" class="login__eye login__eye-c icon__svg">
+                        <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#eye-c"></use>
+                    </svg>
+                    <span class="login__password-label">{{ _("Show the password") }}</span>
+                </div>
+            </div>
+        </div>
+        {% if next and next != 'same_page' %}<input name="next" type="hidden" value="<%= rc.next %>">{% endif %}
+        {% if next == 'same_page' %}<input name="next" type="hidden" value="{{ request.url }}">{% endif %}
+        <div class="form-modal__section login__submit clearfix">
+            <button type="submit" class="button fill blue modal-custom__button-wide" tabindex="3">{{ _("Submit") }}</button>
+        </div>
+
+        <div class="form-modal__section login__register clearfix">
+                <a class="login__register__button"
+                    href="{{ url_for('users.register') }}">{{ _("Don't have an account?") }}</a>
+        </div>
+        {% if config.JURISDICTION !='ru' %}
+        <div class="form-modal__section login__icons-container clearfix">
+            <div class="login__auth-text">{{ _("Sign up with:") }}</div>
+            <a class="login__auth-icon" href="{{ url_for('users.oauth_login', provider='fb') }}">
+                    <svg class="icon_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+                        <g fill="none" fill-rule="evenodd">
+                            <path fill="#3B5998" d="M0 30C0 13.431 13.431 0 30 0c16.569 0 30 13.431 30 30 0 16.569-13.431 30-30 30C13.431 60 0 46.569 0 30z"/>
+                            <path fill="#FFF" d="M33.127 47.64V31.317h4.505l.597-5.625h-5.102l.008-2.815c0-1.467.139-2.253 2.246-2.253h2.817V15H33.69c-5.412 0-7.317 2.728-7.317 7.317v3.377H23v5.624h3.374V47.64h6.753z"/>
+                        </g>
+                    </svg>
+            </a>
+            <a class="login__auth-icon" href="{{ url_for('users.oauth_login', provider='vk') }}">
+                    <svg class="icon_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+                        <g fill="none" fill-rule="evenodd">
+                            <path fill="#4C6C91" d="M0 30C0 13.431 13.431 0 30 0c16.569 0 30 13.431 30 30 0 16.569-13.431 30-30 30C13.431 60 0 46.569 0 30z"/>
+                            <path fill="#FFF" d="M31.57 39.845s.577-.063.873-.375c.27-.286.261-.825.261-.825s-.036-2.518 1.155-2.89c1.174-.365 2.681 2.435 4.28 3.512 1.209.815 2.126.636 2.126.636l4.274-.058s2.235-.135 1.176-1.86c-.088-.142-.618-1.277-3.177-3.61-2.681-2.44-2.321-2.046.906-6.269 1.966-2.572 2.751-4.142 2.506-4.813-.234-.642-1.68-.472-1.68-.472l-4.81.03s-.358-.048-.622.107c-.258.152-.426.507-.426.507s-.76 1.99-1.776 3.682c-2.143 3.57-3 3.76-3.35 3.539-.815-.518-.612-2.078-.612-3.185 0-3.462.536-4.904-1.04-5.277-.523-.125-.908-.206-2.246-.22-1.717-.017-3.17.006-3.993.4-.548.264-.97.85-.712.884.318.042 1.037.19 1.42.7.492.66.475 2.138.475 2.138s.283 4.074-.662 4.58c-.648.347-1.537-.361-3.448-3.602-.978-1.659-1.717-3.493-1.717-3.493s-.142-.343-.397-.527c-.309-.223-.74-.292-.74-.292l-4.57.03s-.688.018-.94.311c-.224.26-.017.799-.017.799s3.58 8.22 7.633 12.364c3.717 3.798 7.937 3.55 7.937 3.55h1.912z"/>
+                        </g>
+                    </svg>
+            </a>
+        </div>
+        {% endif %}
+    </form>
+{% endmacro %}

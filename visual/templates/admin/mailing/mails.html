@@ -1,0 +1,81 @@
+{% extends 'admin/base-bs-3.html' %}
+{% set menu_current = 'mailing' %}
+
+
+{% block content %}
+
+<style type="text/css">
+#filters { margin-top: 20px; }
+#filters h1 { margin-top: 0; }
+#table-mails td.svg { min-width: 40px; }
+#table-mails td.name { font-weight: bold; width: 40%; }
+#table-mails td.applies { font-size: .9em; white-space: nowrap; }
+#table-mails td.actions { white-space: nowrap; }
+#table-mails form { display: inline-block; }
+.table tbody > tr > td { vertical-align: middle; }
+</style>
+
+<div class="row" id="filters">
+    <div class="col-sm-4">
+        <h1>Письма</h1>
+    </div>
+    <div class="col-sm-8 text-right">
+        <a id="action-create" class="btn btn-success" href="{{ url_for('.create_mail', list_id=lst.id) }}"><i class="fa fa-plus"></i> Создать письмо</a>
+    </div>
+</div>
+
+{% set ru_status = {
+    'new': 'новое',
+    'scheduled': 'запланирована рассылка',
+    'sending': 'идёт отправка',
+    'sent': 'отправлено'
+    }
+%}
+
+{% if mails.items %}
+<table class="table table-bordered table-list clear-fix" id="table-mails">
+<thead>
+<tr>
+    <th>Дата</th>
+    <th>Тема</th>
+    <th>Статус</th>
+    <th></th>
+</tr>
+</thead>
+    {% for mail in mails.items %}
+    <tr data-id="{{ lst.id }}">
+        <td class="date">{{ mail.created|utcinlocal|humantime }}</td>
+        <td class="subject t">{{ mail.subject }}</td>
+        <td class="status">{{ ru_status[mail.status] }}</td>
+        <td class="actions">
+            <a class="btn btn-default" href="{{ url_for('.mail', list_id=lst.id, id=mail.id) }}">
+                {% if mail.read_only %}
+                    Просмотр
+                {% else %}
+                    Редактировать
+                {% endif %}
+            </a>
+            {% if mail.can_schedule %}
+                <form action="{{ url_for('.schedule', list_id=lst.id, id=mail.id) }}" method="POST" onsubmit="return confirm('Точно?!')">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-default btn-danger">Разослать</button>
+                </form>
+            {% endif %}
+            {% if mail.can_reset %}
+                <form action="{{ url_for('.cancel_schedule', list_id=lst.id, id=mail.id) }}" method="POST">
+                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                     <button class="btn btn-default">Отменить рассылку</button>
+                </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+    <div class="alert alert-info">
+        Не создано ни одного письма
+    </div>
+{% endif %}
+
+{% endblock %}

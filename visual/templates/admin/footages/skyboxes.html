@@ -1,0 +1,478 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'footages' %}
+
+{% block content %}
+    <h2>Панорамы съёмки #{{ footage.id }}</h2>
+
+    {% include('admin/footages/_tabs.html') %}
+
+    <h2>Разрешения</h2>
+
+    {% if footage.meta.get('_bg_jobs', {}).get('resize') %}
+        <div class="alert alert-danger"> Происходит обработка нового разрешения </div>
+    {% endif %}
+    <div class="row align-items-center mb-3">
+            <div class="col-lg-auto" data-res="{{ res }}">
+        {% for res in footage.meta.resolutions|sort %}
+                <span class="me-4">
+                    {{ res }}px
+                    {% if not footage.meta.get('_bg_jobs', {}).get('resize') %}
+                    <a href="#modal-res-edit" data-bs-toggle="modal" title="Редактировать"><i class="fa fa-edit"></i></a>
+                    {% endif %}
+                </span>
+        {% endfor %}
+            </div>
+            <div class="col-lg g-lg-0">
+            {% if not footage.meta.get('_bg_jobs', {}).get('resize') %}
+            <div class="col-sm-2"><a href="#modal-res-add" data-bs-toggle="modal" class="btn btn-outline-secondary">Добавить</a></div>
+        {% endif %}
+            </div>
+    </div>
+
+    <form method="post" action="{{ url_for('.footage_res_add', footage_id=footage.id) }}" id="form-res-add">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-res-add"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Создать разрешение</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <input type="text" name="res" class="form-control mb-2">
+            {% if footage.meta.get('skyboxes') and footage.meta.get('resolutions') %}
+            <p class="text-muted">
+                Вы можете добавить разрешение не более максимального. Панорамы будут пересчитаны.
+                Чтобы добавить более высокое разрешение, придётся стереть все существующие.
+            </p>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Ok</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+
+    <form method="post" action="{{ url_for('.footage_res_edit', footage_id=footage.id) }}" id="form-res-edit">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-res-edit"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Изменить разрешение</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" name="old_res">
+            <input type="text" name="new_res" class="form-control">
+            <p class="text-muted">
+                Вы можете установить разрешение не более максимального. Панорамы будут пересчитаны.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Ok</button>
+            <a href="#modal-res-delete" class="btn btn-danger" data-bs-toggle="modal" id="btn-res-delete">Удалить</a>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+
+    <form method="post" action="{{ url_for('.footage_res_delete', footage_id=footage.id) }}" id="form-res-delete">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-res-delete"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Удалить разрешение <span class="res-placeholder"></span>px?</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            Серьёзно? Панорамы в этом разрешении тоже будут удалены.
+            <input type="hidden" name="res">
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-danger">Удалять</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+    {#Панорамы#}
+    <h2 class="mb-3">Панорамы
+        <div class="float-lg-end mb-1 mb-lg-0">
+            {% if footage.meta.get('skyboxes') %}
+                    {% if footage.meta.get('binocular') %}
+                        <button href="#modal-binocular-delete" data-bs-toggle="modal"  class="btn btn-danger mb-1">Удалить бинокулярность</button>
+                    {% else %}
+                        <button href="#modal-binocular-upload" data-bs-toggle="modal"  class="btn btn-primary mb-1" >Сделать бинокулярным</button>
+                    {% endif %}
+                    <button href="#modal-skyboxs-upload" data-bs-toggle="modal"  class="btn btn-success mb-1">Перезалить панорамы</button>
+                    <a href="{{ url_for('.footage_skybox_edit', footage_id=footage.id) }}" class="btn btn-success"><i class="fas fa-plus-circle"></i> Добавить панораму</a>
+            {% endif %}
+        </div>
+    </h2>
+
+{#начало#}
+    <div class="row">
+        {% for box_id, box in skyboxes|dictsort %}
+            <div class="col-lg-6 ">
+                <div class="row">
+                    <div class="col-lg-2 p-0">
+                        <span class="me-2" >{{ box_id }}</span>
+                        <div class="btn-group mb-1" role="group">
+                            {% if 'disabled' in box %}
+                                <span class="btn btn-danger btn-xs" title="Деактивирован" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"><i
+                                    class="fa fa-lock warning"></i>
+                            </span>
+                            {% endif %}
+                            <a href="{{ url_for('.footage_skybox_edit', skybox_id=box_id, footage_id=footage.id) }}"
+                               class="btn btn-primary btn-xs" title="Редактировать скайбокс" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        {{ panorama(footage, footage.min_res, box_id, None, box.get('revision')) }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">Нет панорам.</div>
+        {% endfor %}
+    </div>
+{#    конец     #}
+    <form method="post" id="form-skyboxs-upload" enctype="multipart/form-data" action="{{ url_for('.footage_skyboxs_upload', footage_id=footage.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-skyboxs-upload"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Перезаливка панорам</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+                <label class="control-label">Панорамы</label>
+                    <input type="file" name="skyboxs" multiple class="form-control">
+            {% if footage.meta.get('binocular') %}
+                    <label class="control-label">Бинокулярные панорамы</label>
+                            <input type="file" name="skyboxs_binocular" multiple class="form-control">
+            {% endif %}
+                <div class="form-check my-3">
+                    <label class="form-check-text">Перевести съёмку в режим тестирования</label>
+                    <input class="form-check-input" type="checkbox" name="testing">
+                </div>
+            <span class="me-2">Тип рендера:</span>
+            <div class="form-check form-check-inline mb-3">
+                <label class="form-check-text">Vray</label><input class="form-check-input" type="radio" name="render_type" value="vray">
+            </div>
+            <div class="form-check form-check-inline">
+                <label class="form-check-text">Corona</label><input class="form-check-input" type="radio" name="render_type" value="corona" checked="checked">
+            </div>
+            <div class="col-auto">
+                <div class="row align-items-center">
+                    <span class="col-auto mb-3 pe-0">Сжатие JPEG:</span>
+                    <div class="col-auto">
+                        <input type="number" min="10" max="100" name="jpeg_quality" value="85" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <p class="text-muted">
+                Вы можете загружать несколько панормам. Панорамы должны иметь название в формате "1.RGB_color.1.jpg" и разрешение 1x6 или 1x12.
+            </p>
+            <div class="alert alert-success upload-messages d-none">
+                <ul></ul>
+            </div>
+            <div class="alert alert-danger upload-messages d-none">
+                <ul></ul>
+            </div>
+            <div class="progress progress-striped active upload_progress d-none">
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Заменить</button>
+            <button type="button" class="btn btn-outline-secondary btn-cancel" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+
+    <form action="{{ url_for('.footage_skyboxs_upload', footage_id=footage.id) }}" enctype="mulltipart/form-data" id="form-chunk" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    </form>
+
+    <form method="post" id="form-binocular-upload" enctype="multipart/form-data" action="{{ url_for('.footage_skyboxes_binocular_upload', footage_id=footage.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="modal" id="modal-binocular-upload"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Заливка бинокулярных панорам</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+                <label class="control-label">Бинокулярные панорамы</label>
+                        <input type="file" name="skyboxs_binocular" multiple class="form-control mb-3">
+            <div class="form-check my-3">
+                    <label class="form-check-text">Перевести съёмку в режим тестирования</label>
+                    <input class="form-check-input" type="checkbox" name="testing">
+                </div>
+            <span class="me-2">Тип рендера:</span>
+            <div class="form-check form-check-inline mb-3">
+                <label class="form-check-text">Vray</label><input class="form-check-input" type="radio" name="render_type" value="vray">
+            </div>
+            <div class="form-check form-check-inline">
+                <label class="form-check-text">Corona</label><input class="form-check-input" type="radio" name="render_type" value="corona" checked="checked">
+            </div>
+            <div class="col-auto">
+                <div class="row align-items-center mb-3">
+                    <span class="col-auto  pe-0">Сжатие JPEG:</span>
+                    <div class="col-auto">
+                        <input type="number" min="10" max="100" name="jpeg_quality" value="85" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <p class="text-muted">
+                Необходимо загрузить бинокулярные панорамы для всех точек. Панорамы должны иметь название в формате "1.RGB_color.1.jpg" и разрешением 1x12.
+            </p>
+            <div class="alert alert-success upload-messages d-none">
+                <ul></ul>
+            </div>
+            <div class="alert alert-danger upload-messages d-none">
+                <ul></ul>
+            </div>
+            <div class="progress progress-striped active upload_progress d-none">
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Заменить</button>
+            <button type="button" class="btn btn-outline-secondary btn-cancel" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+
+    <form method="post" action="{{ url_for('.footage_skyboxes_binocular_delete', footage_id=footage.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-binocular-delete"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Удаление бинокулярности</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <p>При удалении бинокулярности, у съёмки будут удалены все бинокулярные панорамы.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Удалить</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+    </form>
+
+{% endblock %}
+
+
+
+{% block tail %}
+<script type="text/javascript">
+$(function() {
+    var $modalEdit = $('#modal-res-edit'), $formEdit = $('#form-res-edit'),
+        $modalAdd = $('#modal-res-add'), $formAdd = $('#form-res-add'),
+        $modalDelete = $('#modal-res-delete'), $formDelete = $('#form-res-delete'),
+        $modalUpload = $('#modal-skyboxs-upload'), $formUpload = $('#form-skyboxs-upload'),
+        $modalBinocular = $('#modal-binocular-upload'), $formBinocular = $('#form-binocular-upload'),
+        $msgSuccessUpload = $('.upload-messages.alert-success', $modalUpload),
+        $msgErrorsUpload = $('.upload-messages.alert-danger', $modalUpload),
+        $msgSuccessBinocular = $('.upload-messages.alert-success', $modalBinocular),
+        $msgErrorsBinocular = $('.upload-messages.alert-danger', $modalBinocular),
+        $cancelUpload = $('.btn-cancel'),
+        $progressUpload = $('.progress-bar'),
+
+        $formChunk = $('#form-chunk'),
+        wasUploaded = false,
+        counter = 0,
+        all = 0,
+        types = {
+            skyboxs: 'Основная',
+            skyboxs_binocular: 'Бинокулярная'
+        };
+
+    $('.id').on('click', function () {
+        $('.fa-flag-checkered').remove();
+        $(this).append('<i class="fa fa-flag-checkered"></i>');
+        $('[name=start]').val($(this).data("id"));
+    });
+
+    $modalAdd.on('shown.bs.modal', function(e) {
+        $formAdd.find('[name=res]').focus();
+    });
+
+    $modalEdit.on('shown.bs.modal', function(e) {
+        var $div = $(e.relatedTarget).parents('div.res');
+        $('#btn-res-delete').data('res', $div.data('res'));
+        $formEdit.find('[name=old_res]').val($div.data('res')).focus();
+        $formEdit.find('[name=new_res]').val($div.data('res')).focus();
+    });
+
+    $modalDelete.on('shown.bs.modal', function(e) {
+        var res = $(e.relatedTarget).data('res');
+        $formDelete.find('[name=res]').val(res);
+        $modalDelete.find('.res-placeholder').text(res);
+    });
+
+    function onComplete() {
+        resetProgress();
+        addMessages('Загрузка панорам завершена.', $msgSuccessUpload);
+        $cancelUpload.text('OK').addClass('btn-success');
+        resetFiles();
+    };
+
+    function onCompleteBinocular() {
+        resetProgress();
+        $cancelUpload.text('OK').addClass('btn-success');
+        $formBinocular[0].skyboxs_binocular.value = "";
+        var data = new FormData($formChunk[0]);
+        data.append('action', 'save');
+        data.append('testing', $formBinocular[0].testing.value);
+
+        $.ajax({
+            url: $formBinocular.attr('action'),
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            error: function() {},
+            beforeSend: function() {}
+        })
+        .done(function (data) {
+            if (data.errors) {
+                data.errors.forEach(function (error) {
+                   addMessages(error, $msgErrorsBinocular);
+                });
+            } else {
+                addMessages(data.messages, $msgSuccessBinocular);
+            }
+        });
+    };
+
+    $formUpload.on('submit', function(e) {
+        e.preventDefault();
+        reset();
+        $cancelUpload.text('Отмена').removeClass('btn-success');
+        $progressUpload.parent().removeClass('d-none');
+        sendField('skyboxs', e.target.skyboxs, $formUpload, $msgErrorsUpload, onComplete);
+        if (e.target.skyboxs_binocular) sendField('skyboxs_binocular', e.target.skyboxs_binocular, $formUpload, $msgErrorsUpload, onCompleteBinocular);
+        if (all > 0) wasUploaded = true;
+    });
+
+    $formBinocular.on('submit', function(e) {
+        e.preventDefault();
+        reset();
+        $cancelUpload.text('Отмена').removeClass('btn-success');
+        $progressUpload.parent().removeClass('d-none');
+        sendField('skyboxs_binocular', e.target.skyboxs_binocular, $formBinocular, $msgErrorsBinocular, onCompleteBinocular);
+        if (all > 0) wasUploaded = true;
+    });
+
+    function resetProgress() {
+        $progressUpload.parent().addClass('d-none');
+        $progressUpload.width('0%');
+    };
+
+    function resetFiles() {
+        $formUpload[0].skyboxs.value = "";
+        if ($formUpload[0].skyboxs_binocular) $formUpload[0].skyboxs_binocular.value = "";
+    };
+
+    $modalUpload.on('d-none.bs.modal', function() {
+        $formUpload[0].reset();
+        resetProgress();
+        reset();
+        if (wasUploaded) location.reload();
+    });
+
+    $modalBinocular.on('d-none.bs.modal', function() {
+        $formBinocular[0].reset();
+        resetProgress();
+        reset();
+        if (wasUploaded) location.reload();
+    });
+
+    function reset() {
+        $('ul', $msgErrorsUpload)
+            .add($('ul', $msgSuccessUpload))
+            .add($('ul', $msgErrorsBinocular))
+            .add($('ul', $msgSuccessBinocular))
+            .html('');
+        $msgErrorsUpload
+            .add($msgSuccessUpload)
+            .add($($msgErrorsBinocular))
+            .add($($msgSuccessBinocular))
+            .addClass('d-none');
+
+        counter = 0;
+        all = 0;
+    };
+
+    function sendField(type, inputFile, form, errorsContainer, onComplete) {
+        var files = inputFile.files;
+        all = files.length;
+        upload(type, files, 0, form, errorsContainer, onComplete)
+    };
+
+    function upload(fieldName, files, index, form, errorsContainer, onComplete) {
+        if (index < all) {
+            var data = new FormData($formChunk[0]);
+            data.append(fieldName, files[index]);
+            data.append('action', 'upload');
+            data.append('render_type', form[0].render_type.value);
+            data.append('jpeg_quality', form[0].jpeg_quality.value);
+            if (form[0].testing.checked){
+                data.append('testing', 'on');
+            }
+
+            $.ajax({
+                url: form.attr('action'),
+                type: $formChunk.attr('method'),
+                data: data,
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                error: function() {},
+                success: function () {
+                    setTimeout(upload.bind(null, fieldName, files, index + 1, form, errorsContainer, onComplete), 0);
+                },
+                beforeSend: function() {}
+            })
+            .done(onSuccess.bind({errorsContainer: errorsContainer}))
+            .fail(onFail.bind({file: files[index], type: fieldName, errorsContainer: errorsContainer}));
+        } else if (index === all) {
+            onComplete();
+        }
+    };
+
+    function onSuccess(result) {
+        counter++;
+        console.log('Загружено %d из %d', counter, all);
+        $progressUpload.width((counter / all * 100) + '%');
+        if (result['errors']) {
+            addMessages(result.errors, this.errorsContainer);
+        } else if (result['messages']) {
+            // addMessages(result.messages, $msgSuccessUpload);
+        } else if (result['redirect']) {
+            window.location.href = result['redirect'];
+        }
+    };
+
+    function onFail(xhr) {
+        addMessages(types[this.type] + ' панорама ' + this.file.name + ' не загружена.', this.errorsContainer);
+        counter++;
+        $progressUpload.width((counter / all * 100) + '%');
+    };
+
+    function addMessages(list, container) {
+        var result;
+        if (list === undefined) return;
+        container.removeClass('d-none');
+        typeof list === 'string'
+            ? result = [list]
+            : result = list;
+        result = '<li>' + result.join('</li><li>') + '</li>';
+        $('ul', container).append(result);
+    };
+});
+</script>
+{% endblock %}

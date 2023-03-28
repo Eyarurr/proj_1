@@ -1,0 +1,37 @@
+{% macro products(virtoaster_link=None) %}
+<section class="block products">
+    <div class="b-page__inner products__inner">
+        <div class="block__head">
+            <h2 class="block__title products__head">{{ _("Products") }}</h2>
+        </div>
+        <div class="block__content products__content">
+            <div class="products__column">
+                <a href="{{ url_for('front.gallery') }}" class="products__row">
+                    <h3 class="products__title">{{ _("Biganto tours") }}</h3>
+                    <div class="products__text">
+                        {{ _("Turn your real estate project into an interactive presentation with Biganto Virtual tours. Provide a design project, floor plans and we will create a perfect tool for real estate presentations, marketing and sales improvement. Our tours include a wide range of customizable features and only require an internet connection to access.") }}
+                    </div>
+                    {#<a href="/" class="products__action">{{ _("Order tour here") }}</a>#}
+                    <div class="products__arrow">→</div>
+                </a>
+                <a href="{{ virtoaster_link or url_for('virtoaster.index') }}" class="products__row">
+                    <h3 class="products__title">{{ _("Virtoaster") }}</h3>
+                    <div class="products__text">
+                            {{ _("Virtoaster is a subscription based service, a platform allowing 3d artists, interior designers and architecture visualizers to create virtual tours on their own and within a short time frame. Virtoaster is a simple and powerful tool to turn existing 3d scenes into interactive presentations of your projects.") }}
+                    </div>
+                    <div class="products__arrow">→</div>
+                </a>
+            </div>
+            <div class="products__column">
+                <a href="{{ url_for('front.filincam') }}" class="products__row">
+                    <h3 class="products__title">{{ _("FilinCam") }}</h3>
+                    <div class="products__text">
+                        {{ _("FilinCam is a professional 3d camera to digitize existing premises and create their doubles in virtual space. FilinCam with the help of accompanying proprietary software creates a high definition laser scan of a space and automatically builds a 3d tour.") }}
+                    </div>
+                    <div class="products__arrow">→</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endmacro %}

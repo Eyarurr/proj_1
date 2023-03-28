@@ -1,0 +1,54 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'links' %}
+
+
+{% block content %}
+    <h1>{% if link.id %} Редактировать ссылку {% else %} Создать ссылку {% endif %}</h1>
+
+    <form method="post" class="form-horizontal" action="{{ url_for('.links_edit', link_id=link.id, page=request.args.get('page')) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% if link.id %}
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end" style="padding-top:0">Создано:</label>
+            <div class="col-lg">{{ link.created|utcinlocal|humantime(not_today=True) }}</div>
+{#            <div class="col-lg">{{ link.created.strftime('%d.%m.%Y %H:%M') }}</div>#}
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end" style="padding-top:0">Создал:</label>
+            <div class="col-lg">{{ link.author.name }}</div>
+        </div>
+        {% endif %}
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Ссылка:</label>
+            <div class="col-lg">
+                <input class="form-control" id="url" name="url" type="text" value="{{ link.url if link.url else '' }}" placeholder="{{ url_for('front.index', _external=True) }}">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg offset-lg-2">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                {% if link.id %}
+                <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger">Удалить</a>
+                {% endif %}
+                <a href="{{ url_for('.links', page=request.args.get('page')) }}" class="btn btn-default">Отмена</a>
+            </div>
+        </div>
+    </form>
+
+    {% if link.id %}
+    <form method="post" action="{{ url_for('.links_delete', link_id=link.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal" id="modal-delete"><div class="modal-dialog modal-lg"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Удалить ссылку?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Да</button>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Нет</button>
+            </div>
+        </div></div></div>
+    </form>
+    {% endif %}
+
+{% endblock %}

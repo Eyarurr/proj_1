@@ -1,0 +1,81 @@
+{% extends 'front/tour/base.html' %}
+{% set bundle = 'main' %}
+{% block head %}
+<script>
+    var PLAYER_MODULE = 'VIEW';
+
+    var TOOLBAR_LINK_GENERATOR = [
+            {
+                name: 'link_generator',
+                title: "{{ _("Tour link") }}",
+            }
+        ],
+        TOOLBAR_FOR_ACTIVE_SUBSCRIPTIONS = [
+            {
+                name: 'forActiveSubscriptions',
+                title: "{{ _("(Only for active subscriptions)") }}",
+            }
+        ],        
+        TOOLBAR_SCREENSHOT = [
+            {
+                name: 'screenshot',
+                title: "{{ _("Make a screenshot (Shift+F)") }}",
+            }
+        ],
+        TOOLBAR_VR = [
+            {
+                name: 'vr',
+                title: "{{ _("Virtual reality") }}",
+            },
+            {
+                name: 'vr',
+                title: "{{ _("3D mode") }}",
+            }
+        ],
+        TOOLBAR_3DTV = [
+            {
+                name: '3dtv',
+                title: "{{ _("Virtual reality") }}",
+            },
+            {
+                name: '3dtv',
+                title: "{{ _("3D mode") }}",
+            }
+        ],
+        TOOLBAR_GYRO = [
+            {
+                name: 'gyro',
+                title: "{{ _("Gyro mode") }}",
+            },
+            {
+                name: 'gyro',
+                title: "{{ _("3D mode") }}",
+            }
+        ],
+        {# верхняя часть тулбара #}
+        TOOLBAR = [
+            TOOLBAR_HELP,
+            TOOLBAR_LINK_GENERATOR,
+            TOOLBAR_FOR_ACTIVE_SUBSCRIPTIONS,
+            TOOLBAR_MODE,
+            TOOLBAR_FULLSCREEN,
+            TOOLBAR_NAVIGATOR,
+            TOOLBAR_SCREENSHOT,
+            TOOLBAR_GYRO,
+            TOOLBAR_VR,
+            TOOLBAR_3DTV,
+        ];
+
+    MESSAGES.SCREENSHOT_SUCCESS = "{{ _("The picture was saved successfully.") }}";
+    MESSAGES.GYROSCOPE_WARNING_IOS = "{{ _("Enable device orientation in Settings > Safari > Motion & Orientation Access and reload the page.") }}";
+    MESSAGES.GYROSCOPE_WARNING_COMMON = "{{ _("Enable motion sensors in Settings and reload the page.") }}";
+</script>
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}
+
+{% block body_scripts %}
+{{ super() }}
+{% endblock %}

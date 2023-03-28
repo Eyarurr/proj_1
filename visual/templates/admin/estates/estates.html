@@ -1,0 +1,100 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'estates' %}
+{% set user_id = request.view_args.get('user_id', 0)  %}
+{% set search = request.args.get('search')  %}
+{% set select = request.args.get('select')  %}
+
+
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>
+    Объекты недвижимости
+{% if user_id %}
+ юзера - <em>{{ user.name }}</em>
+{% else %}  - все
+{% endif %}
+<div class="float-lg-end" >
+    <a href="{{ url_for('.estates_edit') }}" class="btn btn-sm btn-submit btn-success "><i
+                    class="fa fa-plus"></i> Добавить объект</a>
+</div>
+
+</h1>
+<form method="get" action="">
+    <div class="row table-filters justify-content-between">
+        <div class="col-lg-auto">
+            <div class="row mb-1">
+                <div class="col-lg-auto">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Сортировать по:</span>
+                        {{ filters.sort(class='form-select form-select-sm') }}
+                    </div>
+                </div>
+                <div class="col-lg-auto">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Искать по:</span>
+                        <div class="col-auto">
+                            {{ filters.select(class='form-select form-select-sm') }}
+                        </div>
+                            {{ filters.search(class='form-control') }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-auto">
+            <div class="mb-1">
+                <button type="submit" class="btn btn-sm btn-submit btn-primary">Показать</button>
+                <a href="{{ url_for('.estates') }}" class="btn btn-sm btn-submit btn-outline-secondary">Очистить</a>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-3">
+
+<thead>
+<tr>
+    <th class="break">#</th>
+    <th class="break">Создано</th>
+    <th class="break">id</th>
+    <th class="break"><i class="fa fa-user"></i></th>
+    <th class="break">Название </th>
+    <th class="break" title="ID объекта во внешней CRM">Remote_id/synced</th>
+    <th class="break"></th>
+</tr>
+</thead>
+<tbody>
+
+{% for estate in estates.items %}
+<tr>
+    <td class="break col-lg-auto">{{ loop.index }}</td>
+    <td class="break col-lg-auto">{{ estate.created.strftime('%d-%m-%Y %H:%M') }}</td>
+    <td class="break col-lg-auto">{{ estate.id }}</td>
+    <td class="break col-lg-auto"><a href="{{ url_for('.estates', user_id=estate.user_id) }}" class="text-underline-hover">{{ estate.user.name }}</a></td>
+    <td class="break col-5 text-wrap"><a href="{{ url_for('.estates_edit', estate_id=estate.id) }}" class="text-underline-hover" title="Изменить объект">{{ estate.title }}</a></td>
+    <td class="break col-lg-1" ><span class="text-danger">{{ estate.remote_id if estate.remote_id}}</span>  {{ estate.synced.strftime('%d-%m-%Y') if estate.synced}}</td>
+    <td class="break col-lg-1">
+        {% set color_asset = 'btn-success' if estate.cnt_assets else 'btn-outline-secondary'%}
+        <a href="{{ url_for('.estate_assets', estate_id=estate.id) }}" class="btn btn-sm {{ color_asset }}">Ассеты</a>
+        {% set color_asset = 'btn-info' if estate.tags else 'btn-outline-secondary'%}
+        <a href="{{ url_for('.estates_etags', estate_id=estate.id) }}" class="btn btn-sm position-relative {{ color_asset }}">Теги
+            {% if estate.tags|length %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{ estate.tags|length }}</span>
+            {% endif %}
+        </a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
+
+{{ render_pagination(estates, '.estates', user_id=user_id, search=search, select=select) }}
+
+{% endblock %}

@@ -1,0 +1,334 @@
+{% extends 'admin/base.html' %}
+
+{% set menu_current = 'tours' %}
+
+
+{% macro select(name, options, selected=None) %}
+    <select name="{{ name }}" class="form-select">
+        {% for val, label in options %}
+            <option value="{{ val }}" {% if val == selected %} selected {% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+
+{% macro color(name, options) %}
+    <div class="input-group colorpicker-component color" id="colorpicker_{{ name }}">
+        {% if options.get(name) %}
+            {% set value = 'rgba(%d, %d, %d, %f)'|format(*options[name]) %}
+        {% else %}
+            {% set value = '' %}
+        {% endif %}
+        <input type="text" name="{{ name }}" class="form-control" value="{{ value }}">
+        <span class="input-group-text input-group-addon"><i></i></span>
+    </div>
+{% endmacro %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="/static/admin/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <style type="text/css">
+        .colorpicker-element .add-on i, .colorpicker-element .input-group-addon i {
+             border: 1px solid black;
+        }
+
+        .colorpicker-2x .colorpicker-saturation {
+            width: 200px;
+            height: 200px;
+        }
+
+        .colorpicker-2x .colorpicker-hue,
+        .colorpicker-2x .colorpicker-alpha {
+            width: 30px;
+            height: 200px;
+        }
+
+        .colorpicker-2x .colorpicker-color,
+        .colorpicker-2x .colorpicker-color div {
+            height: 30px;
+        }
+
+        .first-checkbox {
+            margin-top: 0;
+        }
+
+        .first-checkbox label {
+            font-weight: bold;
+        }
+        td {
+    word-wrap:break-word;
+}
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    {{ super() }}
+    <h2>Тур «{{ tour.title }}»</h2>
+
+    {% include('admin/tours/_tabs.html') %}
+
+    {% set options = tour.meta.get('options', {}) %}
+
+
+    <form method="post" id="form-options">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if tour.footage.type == 'outside' %}
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Цвет активных мешей по умолчанию:</label>
+                    <div class="  col">{{ color('active_meshes_look_fill', options) }}</div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Цвет активных мешей при наведении курсора</label>
+                    <div class="  col">{% set key_pan_speed = options.get('key_pan_speed', '') %}
+                        <input type="text" name="key_pan_speed" value="{% if key_pan_speed %}{{ key_pan_speed|join(',') }}{% else %}{{ '' }}{% endif %}" class="form-control"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Скорость перемещения с клавиатуры</label>
+                    <div class="  col-lg-6">
+                        {% set key_pan_speed = options.get('key_pan_speed', '') %}
+                        <input type="text" name="key_pan_speed" value="{% if key_pan_speed %}{{ key_pan_speed|join(',') }}{% else %}{{ '' }}{% endif %}" class="form-control">
+                    </div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Скорость вращения с клавиатуры</label>
+                    <div class="  col-lg-6">
+                        {% set key_rotate_speed = options.get('key_rotate_speed', '') %}
+                        <input type="text" name="key_rotate_speed" value="
+                         {% if key_rotate_speed %}{{ key_rotate_speed|join(',') }}{% else %}{{ '' }}{% endif %}" class="form-control">
+                    </div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Скорость перемещения мышью</label>
+                    <div class="  col-lg-6">
+                        {% set mouse_pan_speed = options.get('mouse_pan_speed', '') %}
+                        <input type="text" name="mouse_pan_speed" value="
+                                {% if mouse_pan_speed %}{{ mouse_pan_speed|join(',') }}{% else %}{{ '' }}{% endif %}"
+                               class="form-control">
+                    </div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Скорость вращения мышью</label>
+                    <div class="  col-lg-6">
+                        {% set mouse_rotate_speed = options.get('mouse_rotate_speed', '') %}
+                        <input type="text" name="mouse_rotate_speed" value="
+                                {% if mouse_rotate_speed %}{{ mouse_rotate_speed|join(',') }}{% else %}{{ '' }}{% endif %}"
+                               class="form-control">
+                    </div>
+                </div>
+                {% set disable_options = {
+                'model': 'Модель',
+                'overlays': 'Оверлеи',
+                'active_meshes': 'Активные меши',
+              } %}
+            {% else %}
+                <div class="row border-bottom pb-1 mb-3">
+                    <label class="col-lg-6">Цвет курсора</label>
+                <div class="col-lg-6">{{ color('cursor_color', options) }}</div>
+                </div>
+
+                <div class="row border-bottom pb-1 mb-3">
+                    <label class="  col-lg-6" >Цвет маркеров</label>
+                    <div class="  col-lg-6">{{ color('markers_color', options) }}</div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6 ">Показывать ли маркеры</label>
+                    <div class="  col-lg-6">{{ select('markers', [('', 'По умолчанию'), (True, 'Показывать'), (False, 'Скрывать')], options.get('markers')) }}</div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Маркеры на миникарте</label>
+                    <div class="  col-lg-6">
+                        {{ select('mapmarkers', [('', 'По умолчанию'), ('all', 'Всегда'), ('big', 'Только на большой'), ('small', 'Только на маленькой'), ('none', 'Никогда')], options.get('mapmarkers')) }}
+                    </div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">FOV камеры</label>
+                    <div class="  col-lg-6"><input type="text" name="fov" value="{{ options.get('fov', '') }}" class="form-control" placeholder="70"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Минимальный FOV камеры</label>
+                    <div class="  col-lg-6"><input type="text" name="fov_min" value="{{ options.get('fov_min', '') }}" class="form-control" placeholder="40"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Максимальный FOV камеры</label>
+                    <div class="  col-lg-6"><input type="text" name="fov_max" value="{{ options.get('fov_max', '') }}" class="form-control" placeholder="70"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Лоадер загрузки текстур скайбоксов</label>
+                    <div class="  col-lg-6">
+                        {{ select('skybox_preloader', [('', 'По умолчанию'), ('true', 'Показывать всегда'), ('false', 'Не показывать никогда'), ('not_in_walk', 'Скрывать при проигрывании маршрута')], options.get('skybox_preloader')) }}
+                    </div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Цвет заливки активных мешей по умолчанию</label>
+                    <div class="  col-lg-6">{{ color('active_meshes_look_fill', options) }}</div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Цвет заливки активных мешей при наведении курсора</label>
+                    <div class="  col-lg-6">{{ color('active_meshes_hover_fill', options) }}</div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Показывать ли справку при первом запуске плеера</label>
+                    <div class="  col-lg-6">
+                        {{ select('help', [('', 'По умолчанию'), (True, 'Да'), (False, 'Нет')], options.get('help')) }}
+                   </div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Как показывать планировку</label>
+                    <div class="  col-lg-6">
+                        {{ select('mapshow', [('', 'По умолчанию'), ('icon', 'Свёрнутую в иконку'), ('small', 'Маленькую'), ('big', 'Увеличенную')], options.get('mapshow')) }}
+                   </div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Цвет фона карты</label>
+                    <div class="  col-lg-6">{{ color('mapbg', options) }}</div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Цвет фона режима доллхауса</label>
+                    <div class="  col-lg-6">{{ color('dollhouse_bg_color', options) }}</div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Скорость вращения с клавиатуры</label>
+                    <div class="  col-lg-6"><input type="text" name="pan_speed" value="{{ options.get('pan_speed', '') }}" class="form-control"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Минимально допустимый угол относительно направления вверх, ∈ [0, 90]</label>
+                    <div class="  col-lg-6"><input type="number" min="0" max="90" name="look_limit_up" value="{{ options.get('look_limit_up', '') }}" class="form-control" placeholder="{{ {'virtual': 30, 'real': 50}.get(tour.footage.type) }}"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Минимально допустимый угол относительно направления вниз, ∈ [0, 90]</label>
+                    <div class="  col-lg-6"><input type="number" min="0" max="90" name="look_limit_down" value="{{ options.get('look_limit_down', '') }}" class="form-control" placeholder="{{ {'virtual': 30, 'real': 50}.get(tour.footage.type) }}"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Включать GPU-raycast при количестве полигонов, более чем</label>
+                    <div class="  col-lg-6"><input type="number" min="0" name="gpu_raycast_max_mesh_faces" value="{{ options.get('gpu_raycast_max_mesh_faces', '') }}" class="form-control" placeholder="500000"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Максимальное разрешение</label>
+                    <div class="  col-lg-6"><input type="number" min="0" name="max_resolution" value="{{ options.get('max_resolution', '') }}" class="form-control"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Время для повышения разрешения панорам, мс:</label>
+                    <div class="  col-lg-6"><input type="number" min="0" name="quality_improve_time"
+                               value="{{ options.get('quality_improve_time', '') }}" class="form-control"
+                               placeholder="1500"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Количество скайбоксов для предзагрузки:</label>
+                    <div class="  col-lg-6"><input type="number" min="0" name="pan_preload" value="{{ options.get('pan_preload', '') }}"
+                               class="form-control" placeholder="10"></div>
+                </div>
+                <div class="row border-bottom pb-1 mb-2">
+                    <label class="  col-lg-6">Размер кеша скайбоксов:</label>
+                    <div class="  col-lg-6"><input type="number" min="0" name="pan_cache_size"
+                               value="{{ options.get('pan_cache_size', '') }}" class="form-control" placeholder="100">
+                   </div>
+                </div>
+                {% set disable_options = {
+                'dollhouse': 'Dollhouse',
+                'overlays': 'Оверлеи',
+                'active_meshes': 'Активные меши',
+                'link_generator': 'Генератор ссылок',
+                'fullscreen': 'Полноэкранный режим',
+                'vr': 'VR-режим для мобильных устройств',
+                'gyro': 'Режим управления гироскопом для мобильных устройств',
+                'screenshot': 'Скриншотилка',
+                'navigator': 'Навигатор',
+                'roulette': 'Рулетка',
+                'walk': 'Маршруты',
+                'toolbar': 'Кастомный тулбар',
+                'audio': 'Аудио',
+                'resolution': 'Выбор разрешения по скорости подключения',
+                'joint': 'Cовместный просмотр',
+                'shadow_switch': 'Переключатель теней',
+                'help': 'Справка',
+              } %}
+            {% endif %}
+            <div class="row border-bottom pb-1 mb-2">
+                <label class="  col-lg-6">Настроить zoom</label>
+                    <div class="  col-lg-6">{{ select('scroll', [('', 'По умолчанию'), ('zoom', 'Зум'), ('move', 'Переход между точками'), ('disabled', 'Отключен')], options.get('scroll')) }}
+                    </div>
+            </div>
+            <div class="row border-bottom pb-1 mb-2">
+                <label class="  col-lg-6">Отображать навигатор</label>
+                    <div class="  col-lg-6">{{ select('navigator_show', [('', 'По умолчанию'), ('open', 'Развернуто'), ('icon', 'Как иконку')], options.get('navigator_show')) }}
+                </div>
+            </div>
+            <div class="row border-bottom pb-1 mb-2">
+                <label class="  col-lg-6">Отключить компоненты</label>
+                <div class="  col-lg-6 disable-block">
+                    {% set disable = options.get('disable', '') %}
+                    <input type="hidden" value="{{ disable|join(',') }}" name="disable" class="disable-checkbox">
+                    <div class="form-check first-checkbox">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" {{ 'checked' if disable[0] == 'all' }}>
+                            Все
+                        </label>
+                    </div>
+                    <div class="sub-checkboxes">
+                        {% for code, name in disable_options.items() %}
+                            <div class="form-check">
+                                <label>
+                                    <input class="form-check-input" type="checkbox"
+                                           value="{{ code }}" {{ 'checked' if code in disable or disable[0] == 'all' else '' }}>
+                                    {{ disable_options[code] }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-outline-secondary action-reset">Сбросить всё</button>
+    </form>
+{% endblock %}
+
+{% block tail %}
+    <script type="text/javascript" src="/static/admin/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <script type="text/javascript">
+        $('.color').colorpicker({
+            format: 'rgba',
+            customClass: 'colorpicker-2x',
+            sliders: {
+                saturation: {
+                    maxLeft: 200,
+                    maxTop: 200
+                },
+                hue: {
+                    maxTop: 200
+                },
+                alpha: {
+                    maxTop: 200
+                }
+            }
+        });
+        $('#form-options .action-reset').click(function () {
+            $('#form-options :input:not([type=hidden])').val('');
+            $('#form-options :input:not([type=hidden])').val('');
+        });
+
+        var firstCheckbox = $('.first-checkbox input[type="checkbox"]');
+        var subCheckboxes = $('.sub-checkboxes input[type="checkbox"]');
+        var countCheckboxes = subCheckboxes.length;
+
+        firstCheckbox.on('change', function () {
+            var self = $(this);
+            subCheckboxes.prop('checked', self.prop('checked'))
+        });
+        $('.disable-block input[type="checkbox"]').on('change', function () {
+            var res = [],
+                j = 0;
+            subCheckboxes.each(function (el, i) {
+                var self = $(this);
+                if (self.prop('checked')) {
+                    res.push(self.val());
+                    j++;
+                }
+            });
+            $('.disable-checkbox').val(countCheckboxes === j ? 'all' : res.join(','));
+        });
+    </script>
+{% endblock %}

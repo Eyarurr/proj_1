@@ -1,0 +1,112 @@
+{% extends 'admin/base.html' %}
+{#{% set menu_current = 'footages' if footage_id else 'tours' %}#}
+
+
+
+{% block head %}
+    <style type="text/css">
+        .gallery .not-ready {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -20px;
+            margin-top: -20px;
+            color: #f00;
+            text-shadow: 0 0 20px #000;
+        }
+
+        .problems {
+            font-size: 1.2em;
+            background: red;
+            padding: 1px 2px;
+            border-radius: 2px;
+            color: yellow;
+        }
+
+        ul.gallery .actions {
+            right: 45px;
+        }
+
+        ul.gallery .status {
+            position: absolute;
+            right: 6px;
+            bottom: 6px;
+        }
+
+        .bg-state {
+            font-size: .8em;
+            margin: 5px 0 3px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <h1>
+        Перенесенные туры <span class="text-muted">({{ tours.total }})</span>
+        <div class="float-lg-end">
+
+        </div>
+    </h1>
+    {% if footage_id %}
+        {% include('admin/footages/_tabs.html') %}
+    {% endif %}
+
+    <form class="table-filters">
+    <div class="row">
+        <div class="col-lg-auto mb-1 mb-lg-0">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text">Поиск: </span>
+                {{ form.search_by(class='form-select') }}
+            </div>
+        </div>
+    <div class="col-lg-auto mb-1 mb-lg-0">
+        {{ form.search_field(class='form-control form-control-sm') }}
+    </div>
+    <div class="col">
+        <div class="col-auto float-lg-end">
+        <button type="submit" class="btn btn-sm btn-primary">Искать</button>
+        <a href="{{ url_for('.tours_moved') }}" class="btn btn-sm btn-primary">Очистить</a></div>
+    </div>
+    </div>
+
+    </form>
+    <p class="text-muted">Для поиска по дате 'Формат - ДД.ММ.ГГГГ'</p>
+    {% if tours.total == 0 %}
+        <div class="alert alert-info">
+            Туров не найдено.
+        </div>
+    {% else %}
+        <div class="table-responsive-lg">
+        <table class="table table-hover table-bordered table-striped table-list">
+            <thead>
+            <tr>
+                <th class="col"> Перенесено
+                </th>
+                <th class="col" >id тура</th>
+                <th class="col">Новый id тура</th>
+                <th class="col">Куда перенесен
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tour in tours.items %}
+                <tr>
+                    <td>{{ tour.created.strftime('%d.%m.%Y') }}</td>
+                    <td>{{ tour.local_id }}</td>
+                    <td>{{ tour.remote_id }}</td>
+                    <td>{{ tour.moved_to }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {{ render_pagination(tours, '.tours_moved') }}
+
+    {% endif %}
+
+{% endblock %}
+
+{% block tail %}
+
+{% endblock %}

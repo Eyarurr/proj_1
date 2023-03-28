@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% set page_title = page_title_my or _("My tours") %}
+{% set page_title_sub = page_title_sub_my %}
+{% set corpus_class = cc or 'my' %}
+{# has_settings - показать ссылку Настройки профиля #}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+    <script>
+        var PAGE_TITLE = {{ page_title|safe|tojson }};
+        var PAGE_SUBTITLE = {{ page_title_sub|safe|tojson }};
+        var PAGE_TITLE_HIDE = {{ page_title_hide|safe|tojson}};
+    </script>
+
+    <div class="b-page__content">
+        <div class="b-page__inner b-page__columns b-page__mrg">
+            <div class="b-page__right-column b-page__right-column--wide">
+                {% block content_my %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{# пробрасываем шаблоны #}
+{% block tail %}
+    {% block tail_my %}{% endblock %}
+    <link rel="stylesheet" type="text/css" href="/static/public/css/lk.css?{{ config.get('RELEASE_VERSION') }}">
+
+    {#
+    <script type="text/template" class="template-modal" id="tmpl__needs-agree">
+        <div class="b-overlay">
+            <div class="modal-custom">
+                <div class="modal-custom__inner">
+                    <div class="modal-custom__close"><svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg></div>
+                    <div class="modal-custom__content before-payment">
+                        <div class="before-payment__content">
+                            <p class="before-payment__text">{{ _("By clicking «Continue» button I hereby accept terms of <a href='%(url_license)s' target='_blank'>License agreement</a>, <a href='%(url_terms)s' target='_blank'>Terms of the offer</a> and <a href='%(url_policy)s' target='_blank'>Privacy policy</a>. I agree that in accordance with current legislation my personal data, including, but not limited to my e-mail, may be provided to all liable fiscal data operators and tax authorities of Russian Federation.", url_license=url_for('front.license_tour'), url_terms=url_for('front.public_offer'), url_policy=url_for('front.privacy_policy')) }}</p>
+                            <div class="before-payment__button"><a href="<%= rc.url_next %>" class="more-new__button button fill blue" data-action="order">{{ _("Continue") }}</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    #}
+{% endblock %}

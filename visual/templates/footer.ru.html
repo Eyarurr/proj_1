@@ -1,0 +1,209 @@
+<footer class="footer footer__ru">
+    <div class="b-page__inner footer__inner">
+        <div class="footer__ru__top">
+            <div class="footer__nav footer__nav_ru">
+                <nav class="footer-nav__ru">
+                    <div class="footer-nav__column">
+                        {% if USE_VIRTOASTER %}
+                        <div class="footer-nav__ru__head">{{ _("Virtoaster") }}</div>
+                        <ul class="footer-nav__list">
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.gallery') }}" class="footer-nav__ru__link">
+                                    {{ _("Gallery") }}
+                                </a>
+                            </li>
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.about') }}" class="footer-nav__ru__link">
+                                    {{ _("About") }}
+                                </a>
+                            </li>
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('virtoaster.pricing') }}" class="footer-nav__ru__link">
+                                    {{ _("Pricing") }}
+                                </a>
+                            </li>
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('tutorials.index') }}" class="footer-nav__ru__link">
+                                    {{ _("Tutorials") }}
+                                </a>
+                            </li>
+                        </ul>
+                        {% else %}
+                            <div class="footer-nav__ru__head"><a href="{{ url_for('front.index') }}">{{ _("Biganto") }}</a></div>
+                        <ul class="footer-nav__list">
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.gallery') }}" class="footer-nav__ru__link">
+                                    {{ _("Gallery") }}
+                                </a>
+                            </li>
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.about') }}" class="footer-nav__ru__link">
+                                    {{ _("About") }}
+                                </a>
+                            </li>
+                        {#
+                            <!--                            <li class="footer-nav__item">-->
+                            <!--                                <a href="{{ url_for('front.news_list') }}" class="footer-nav__ru__link">-->
+                            <!--                                    {{ _("News") }}-->
+                            <!--                                </a>-->
+                            <!--                            </li>-->
+                         #}
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.contacts') }}" class="footer-nav__ru__link">
+                                    {{ _("Contacts") }}
+                                </a>
+                            </li>
+                            {% if vacancies_exist() %}
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.jobs_list') }}" class="footer-nav__ru__link">
+                                    {{ _("Jobs") }}
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if not USE_VIRTOASTER %}
+                            <br>
+                            <li class="footer-nav__item">
+                                <a href="https://biganto.com/virtoaster/" class="footer-nav__ru__link">
+                                    Virtoaster
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.filincam') }}" class="footer-nav__ru__link">
+                                    {{ _("Filincam") }}
+                                </a>
+                            </li>
+                            <li class="footer-nav__item">
+                                <a href="https://biganto.com/" class="footer-nav__ru__link">
+                                    Biganto.com
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <div class="footer-nav__column">
+                        <div class="footer-nav__section">
+                            <div class="footer-nav__ru__head">{{ _("Help") }}</div>
+                            <ul class="footer-nav__list">
+                                {% if USE_VIRTOASTER %}
+                                <li class="footer-nav__item">
+                                    <a href="{{ url_for('support.index') }}" class="footer-nav__ru__link">
+                                        {{ _("Support") }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li class="footer-nav__item">
+                                    <a href="mailto:ru.info@biganto.ru" class="footer-nav__ru__link">
+                                        ru.info@biganto.ru
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% if has_ios_app or has_android_app or has_windowsplayer %}
+                        <div class="footer-nav__section">
+                            <div class="footer-nav__ru__head">{{ _("Apps") }}</div>
+                            <ul class="footer-nav__list">
+                                {% if has_ios_app %}
+                                <li class="footer-nav__item">
+                                    <a href="{{ ios_app.get('download_url') }}" class="footer-nav__ru__link" target="_blank"
+                                       rel="nofollow noreferrer">
+                                        {{ _("iOS") }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if has_android_app %}
+                                <li class="footer-nav__item">
+                                    <a href="{{ android_app.get('download_url') }}" class="footer-nav__ru__link"
+                                       target="_blank" rel="nofollow noreferrer">
+                                        {{ _("Android") }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if has_windowsplayer %}
+                                <li class="footer-nav__item">
+                                    <a href="{{ windowsplayer.get('download_url') }}" class="footer-nav__ru__link"
+                                       target="_blank" rel="nofollow noreferrer">
+                                        {{ _("Desktop") }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="footer-nav__column">
+                        <div class="footer-nav__ru__head">{{ _("More") }}</div>
+                        <ul class="footer-nav__list">
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.license_player') }}" class="footer-nav__ru__link">
+                                    {{ _("License Agreement for Player") }}
+                                </a>
+                            </li>
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.license_tour') }}" class="footer-nav__ru__link">
+                                    {{ _("License Agreement for Tour") }}
+                                </a>
+                            </li>
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.privacy_policy') }}" class="footer-nav__ru__link">
+                                    {{ _("Privacy Policy") }}
+                                </a>
+                            </li>
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.user_agreement') }}" class="footer-nav__ru__link">
+                                    {{ _("User Agreement") }}
+                                </a>
+                            </li>
+
+                            {% if g.lang != 'ru' %}
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.legal_notice') }}" class="footer-nav__ru__link">
+                                    {{ _("Legal Notice") }}
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.ru_profile') }}" class="footer-nav__ru__link">
+                                    {{ _("Activity of the company") }}
+                                </a>
+                            </li>
+                            {% endif %}
+
+                            <li class="footer-nav__item">
+                                <a href="{{ url_for('front.cookie_policy') }}" class="footer-nav__ru__link">
+                                    {{ _("Cookie settings") }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="footer__social">
+                <div class="social">
+                    <ul class="social__list clearfix">
+                        <li class="social__li social--vk">
+                            <a href="https://vk.com/bigantovisual" class="social__a" target="_blank" title="vk.com">
+                            <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#soc-vkontakte-dark"></use>
+                            </svg>
+                            </a>
+                        </li>
+                        <li class="social__li social--yo">
+                            <a href="https://www.youtube.com/channel/UCi9EvRHuvchEElLZhu5F1sw" class="social__a"
+                               target="_blank" title="Youtube">
+                                <svg viewBox="0 0 24 24" class="icon__svg" width="24" height="24">
+                                    <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#soc-youtube-dark"></use>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer__ru__bottom">
+            <p class="footer__copyright">
+                &copy; 2014–{{ current_datetime().year }}, <a class="footer__ru__copyright__link" href="{{ url_for('front.index') }}">{{ _("Biganto") }}</a>
+            </p>
+        </div>
+    </div>
+</footer>

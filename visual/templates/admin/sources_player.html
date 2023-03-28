@@ -1,0 +1,40 @@
+<html lang="ru">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <style>
+            pre {
+                white-space: pre-wrap;       /* Since CSS 2.1 */
+                white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                white-space: -pre-wrap;      /* Opera 4-6 */
+                white-space: -o-pre-wrap;    /* Opera 7 */
+                word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                font-size: .8em;
+            }
+
+            @media print {
+                .no-print {
+                    display: none
+                }
+            }
+        </style>        
+    </head>
+    <body>
+        <ul>
+            <li>Название программы: Проигрыватель виртуальных туров Biganto Visual</li>
+            <li>Правообладатель: ООО «Биганто»</li>
+            <li>Авторы: Семёнов Николай, Ромахин Дмитрий Александрович</li>
+            <li>Год создания: 2017</li>
+        </ul>
+        <p class="no-print">
+            <a href="{{ url_for('.sources_player_download') }}">Скачать файл для записи на диск</a>
+        </p>
+        {% for file in files %}
+        <h1>{{ file }}</h1>
+        <ul>
+           <li>
+                <pre>{{ print_src(file) }}</pre>            
+           </li>            
+        </ul>
+        {% endfor %}        
+    </body>
+</html>

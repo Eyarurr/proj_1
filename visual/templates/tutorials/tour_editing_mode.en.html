@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% set page_title = _("Tour editing mode") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/tour-editing-mode/tour-editing-mode.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+         style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="short" class="b-anchor"></div>
+            <div class="content-page__main">
+
+                <div id="beginning" class="b-anchor"></div>
+                <p>“Editing mode” is an alternative mode of web player, it is sometimes referred as WYSIWYG editor (What
+                    You See Is What You Get). In this mode you can travel across the space the same way you do in “View
+                    only” mode but “Editing mode” also contains a set of tools to add extra features such as navigation
+                    panels, creation of interactive objects, record routes, etc.</p>
+                <p>To enter editing mode, hover mouse over the tour in tour list and press “Edit tour”: </p>
+                <p><img src="/static/public/img/tutorials/tour-editing-mode/image_1.jpg" alt=""></p>
+                <p>Also, you can enter editing mode when editing tour assets, by pressing “Edit tour”:</p>
+                <p><img src="/static/public/img/tutorials/tour-editing-mode/image_19.jpg" alt=""></p>
+                <p>Instead of the toolbar available in view mode you will see completely different user interface:</p>
+                <p><img src="/static/public/img/tutorials/tour-editing-mode/image_6.jpg" alt=""></p>
+                <br>
+                <div class="block block-1">
+                    <div class="text-block">
+                        <p>
+                            On the right side of the screen there is a context menu, where you will spend most of your
+                            time. By default it is a menu of the current point of the tour, where you can see your
+                            position in the tour and edit features of this specific point, e.g. add it to the navigation
+                            bar or make it a starting point in the tour.
+                        </p>
+                        <p>This menu is context dependent and will change if you decide to edit other tour features.</p>
+                        <p><span class="warning">Important</span>: to go back to the previous menu of the right sidebar
+                            (e.g.menu of the specific
+                            point), press “Escape”.</p>
+                    </div>
+                    <div class="img-block two-images">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/image_8.jpg" alt="">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/image_7.jpg" alt="">
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="block block-2">
+                    <div class="img-block">
+                        <img style="float: left; margin-right: 32px;"
+                             src="/static/public/img/tutorials/tour-editing-mode/image_9.jpg" alt="">
+                    </div>
+                    <div class="text-block">
+                        <p>On the left side of the screen there is a navigation bar with a list of points and objects in
+                            the
+                            tour. You can click on the point or an object to move to it right away. Current selection is
+                            always highlighted in the list.</p>
+                        <p>Next to the point number you can see the caption and icons for special features associated
+                            with
+                            this particular point. For example point 5 on the image is a starting point in the tour and
+                            also
+                            included in the navigation shortcuts.</p>
+                        <p>On the bottom of the left sidebar there is a list of objects in the tour. Also called
+                            overlays,
+                            they are interactive 3d objects which exist in the same space as the 3d model of a tour.
+                            Overlay
+                            is a visual part of an interactive object, but you can also attach a specific action to be
+                            performed when the user interacts with the overlay. Overlays with an action assigned to them
+                            are
+                            marked with a special icon<img class="icon--inline"
+                                                           src="/static/public/img/tutorials/tour-editing-mode/ic-action.svg"
+                                                           alt="">. This is a vast topic however and it is
+                            described in detail in <a href="/tutorials/creating_interactive_objects/">“Creating
+                                interactive objects”</a> article.
+                        </p>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="toolbar-image">
+                    <div class="large-screen">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/image_16.jpg" alt="">
+                    </div>
+                    <div class="small-screen">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/toolbar-1.jpg" alt="">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/toolbar-2.jpg" alt="">
+                        <img src="/static/public/img/tutorials/tour-editing-mode/toolbar-3.jpg" alt="">
+                    </div>
+                </div>
+                <br>
+                <br>
+                <p>On the top of the screen there is a toolbar, where you can select an overlay type to insert in
+                    the tour or you can access other features of the editing mode.
+                </p>
+                <p>Let’s go through the main features one by one. Most of them are very easy to use and pretty
+                    straightforward, open the rollouts to learn more about each one of them.</p>
+
+                <div id="captions" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Edit Caption</h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>
+                        “Caption” is a small note for each point in a tour, displayed in the bottom of the screen in
+                        view
+                        mode. By clicking on a specific point you may edit a single record for the point in the right
+                        side bar.
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_10.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>
+                        To edit all captions simultaneously you can also click on a tour in your tour list, and add text
+                        description to every point in the image list:
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_11.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>Captions are completely optional, but can be used to improve usability of the tour. For example,
+                        they can describe a room type and how big it is, e.g. “Dining room (8,87 m2)”
+                    </p>
+                </div>
+
+                <div id="starting_position" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Set starting position and create tour cover<img class="icon--inline"
+                                                                        src="/static/public/img/tutorials/tour-editing-mode/ic-tour-cover.svg"
+                                                                        alt=""></h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_12.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>Starting position is a point, where the user will be located when loading the tour. It is set
+                        automatically, when tour assembling is complete. You can change it manually, by going to the
+                        required point and clicking on “Start tour here”.
+                        “Start tour here” will also overwrite the default tour cover you can see in your tour list. If
+                        you want to change tour cover manually, turn the camera the way you want to and press “Create
+                        tour cover”.
+                    </p>
+                </div>
+
+                <div id="navigation" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Navigation panel<img class="icon--inline"
+                                             src="/static/public/img/tutorials/tour-editing-mode/ic-navigation.svg"
+                                             alt=""></h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>Navigation tool is a panel for quick transition between distant locations in your tour. You can
+                        think of it as a list of shortcuts, press on the shortcut and you will instantly move to the
+                        corresponding point. Navigation panel is located in the bottom left corner of the tour in view
+                        only mode.
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_13.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>To add the point to the navigation panel you can use a shortcut from the point menu in the right
+                        side bar:
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_14.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>
+                        Or you can use a dedicated “Navigation” tool, where you can add, remove or edit points, added to
+                        the shortcut list.
+                    </p>
+                    <img src="/static/public/img/tutorials/tour-editing-mode/image_15.jpg" alt="">
+                    <br>
+                    <br>
+                    <p>To add a point to the navigator, set the camera the way you want and press “Add”. Press and hold
+                        the
+                        <img class="icon--inline"
+                             src="/static/public/img/tutorials/tour-editing-mode/ic-arrows-lr.svg"
+                             alt=""> icon to change the order of the points. Press the
+                        <img class="icon--inline"
+                             src="/static/public/img/tutorials/tour-editing-mode/ic-delete.svg"
+                             alt=""> icon to remove the point from navigation.
+                    </p>
+                </div>
+
+                <div id="route" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Record route<img class="icon--inline"
+                                         src="/static/public/img/tutorials/tour-editing-mode/ic-route.svg"
+                                         alt=""></h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>You may record a route in the editing mode and play it later in view mode. Camera will travel
+                        across the space as if it is a live person controlling the movement, including both movement and
+                        rotation of the camera. When the route will reach its final point it will start again from the
+                        beginning. You may use this feature to show the tour on screen automatically or to make a quick
+                        showcase of main features of the space.
+                    </p>
+                    <p>
+                        To start recording, press the <img class="icon--inline"
+                                                           src="/static/public/img/tutorials/tour-editing-mode/ic-route.svg"
+                                                           alt=""> “Record route” icon on the top of the screen and go
+                        to your starting position. Press <img class="icon--inline"
+                                                              src="/static/public/img/tutorials/tour-editing-mode/ic-rec.svg"
+                                                              alt=""> “Start recording”, the recording will start
+                        immediately.
+                    </p>
+                    <p>Start moving through the tour. We suggest using a keyboard for more fluid movement: WASD buttons
+                        to move around and IJKL buttons to rotate the camera. To make smooth 180 degree turns you can
+                        use corresponding buttons on the sides of the screen.</p>
+                    <p>You may pause recording anytime and see the result by pressing the <img class="icon--inline"
+                                                                                               src="/static/public/img/tutorials/tour-editing-mode/ic-play.svg"
+                                                                                               alt=""> “Play route”
+                        button. To make the experience more fluid you can also remove any pauses you made while
+                        recording with <img class="icon--inline"
+                                            src="/static/public/img/tutorials/tour-editing-mode/ic-delpause.svg"
+                                            alt=""> “Clear pauses” button.
+                    </p>
+                    <p>
+                        If you press <img class="icon--inline"
+                                          src="/static/public/img/tutorials/tour-editing-mode/ic-rec.svg"
+                                          alt=""> “Resume recording” after the pause, you will be returned to the last
+                        known position of your route. To finish the recording, press <img class="icon--inline"
+                                                                                          src="/static/public/img/tutorials/tour-editing-mode/ic-save.svg"
+                                                                                          alt=""> “Save route”.
+                    </p>
+                </div>
+
+                <div id="options" class="b-anchor"></div>
+                <div class="troubleshooting__wrapper troubleshooting__wrapper--closed troubleshooting__wrapper__arrow">
+                    <h3>Set tour options<img class="icon--inline"
+                                             src="/static/public/img/tutorials/tour-editing-mode/ic-options.svg"
+                                             alt=""></h3>
+                </div>
+                <div class="troubleshooting__explanation">
+                    <p>Tour options contain some of the color and minimap setting you may change to your taste. You may
+                        press colored icons to change colors and transparency in RGBa space or use direct input (first
+                        three numbers define color, fourth number define transparency).
+                    </p>
+                    <p>Map options define the size of the map when loading the tour. By default map is set to
+                        “Collapsed” - medium size of the map. You must take into account that changing sizes of map
+                        viewport will not change the resolution of map image. You can access more options on the
+                        corresponding tab after entering the tour from the list of tours in your account.
+                    </p>
+                </div>
+
+
+            </div>
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#beginning" class="side-menu__link link-scroll-to">To the beginning</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#captions" class="side-menu__link link-scroll-to">Edit Caption</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#starting_position" class="side-menu__link link-scroll-to">Set starting position and create tour cover</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#navigation" class="side-menu__link link-scroll-to">Navigation panel</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#route" class="side-menu__link link-scroll-to">Record route</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#options" class="side-menu__link link-scroll-to">Set tour options</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

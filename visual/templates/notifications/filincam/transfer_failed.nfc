@@ -1,0 +1,44 @@
+# Отправляется, когда пришло событие transfer.failed: выгрузка не удалась
+#
+[CONTEXT]
+dataset=RemoteDataset
+errors=list
+
+[COMMON]
+channel=filincam
+tone=error
+link={{ url_for('my.index', path='scenes/', _anchor='scene-' + dataset.remote_id) }}
+
+[RU]
+message=Не удалось завершить обработку сцены <b>{{ dataset.title or 'Untitled' }}</b>
+    {%- if errors %}: {{ errors[0] }} {% if errors|length > 1 %}(+{{ errors|length - 1 }}){% endif %} {% endif %}
+email_subject=Не удалось завершить обработку сцену "{{ dataset.title or 'Untitled' }}"
+email_html=<p>
+        Во время завершения обработки сцены <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        произошли ошибки:
+     </p>
+     <ul>
+         {% for error in errors %}
+             <li>{{ error }}</li>
+         {% endfor %}
+    </ul>
+    <p>
+       Повторите попытку или <a href="mailto:{{ config['SUPPORT_EMAIL'] }}">свяжитесь с техподдержкой</a>.
+    </p>
+
+[EN]
+message=Error finalizing <b>{{ dataset.title or 'Untitled' }}</b>
+    {%- if errors %}: {{ errors[0] }} {% if errors|length > 1 %}(+{{ errors|length - 1 }}){% endif %} {% endif %}
+email_subject=Error finalizing scene "{{ dataset.title or 'Untitled' }}"
+email_html=<p>
+        During finalizing of scene <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        some errors encountered:
+     </p>
+     <ul>
+         {% for error in errors %}
+             <li>{{ error }}</li>
+         {% endfor %}
+    </ul>
+    <p>
+        Retry processing or <a href="mailto:{{ config['SUPPORT_EMAIL'] }}">contact support</a>.
+    </p>

@@ -1,0 +1,99 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+
+{% block head %}
+    <style type="text/css">
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+    {% if operator.id %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>Свойства оператора</h1>
+            </div>
+            {#
+            <div class="col-lg-6 text-lg-end">
+                <a class="btn btn-sm btn-success" href="#"><i class="fas fa-money"></i> Заказы</a>
+            </div>
+            #}
+        </div>
+    {% else %}
+        <h1>Создать оператора</h1>
+    {% endif %}
+
+    <form method="POST" id="form-edit" enctype="multipart/form-data">
+    {{ form.csrf_token() }}
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Юзер (email)</label>
+        <div class="col-lg-10">
+            {{ form.user_email(class='form-control') }}
+            <p class="text-muted">Пользователь должен быть <a href="{{ url_for('.team') }}">членом команды</a> с ролью <code>br.operator</code></p>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Режим работы</label>
+        <div class="col-lg-4">
+            <div class="input-group">
+                {{ form.work_start(class='form-control', placeholder='HH:MM:SS+TZ:TZ') }}
+                <span class="input-group-text">—</span>
+                {{ form.work_end(class='form-control', placeholder='HH:MM:SS+TZ:TZ') }}
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-check">
+                {{ form.active(class='form-check-input') }}
+                <label class="form-check-label" for="{{ form.active.name }}">Вообще работает</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-lg-2 col-form-label">Примечание</label>
+        <div class="col-lg-10">
+            {{ form.manager_comment(class='form-control', rows=3) }}
+            <p class="text-muted">Это видно только в админке и менеджерам.</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-between mb-3">
+        <div class="col-lg-auto offset-lg-2">
+            <button class="btn btn-primary">Сохранить</button>
+            {% if operator.user_id %}
+                <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger">Удалить</a>
+            {% endif %}
+            <a href="{{ url_for('.br_operators') }}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </div>
+</form>
+
+
+
+{% if operator.user_id %}
+    <form method="post" action="{{ url_for('.br_operator_delete', operator_id=operator.user_id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="modal" id="modal-delete"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Открепить оператора от офиса</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Сам юзер оператора не удалится, а просто открепится от этого офиса. Потом можно будет
+                    создать оператора с тем же юзером в другом офисе.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Открепить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Я передумал</button>
+            </div>
+        </div></div></div>
+    </form>
+{% endif  %}
+
+
+{% endblock %}

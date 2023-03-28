@@ -1,0 +1,111 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'vacancies' %}
+
+{% block head %}
+    <!-- include summernote css/js-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+<style type="text/css">
+    .applies-table {}
+    .applies-table td, .applies-table th { padding: 4px 8px; border-bottom: 1px solid #ddd;}
+    .applies-table thead th { text-align: center; }
+    .applies-table tbody th { text-align: right; }
+    .applies-table tbody td { text-align: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>{% if vacancy.id %} Редактировать вакансию {% else %} Добавить вакансию {% endif %}</h1>
+
+    <form id="form-main" method="post" class="form-horizontal" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Заголовок</label>
+            <div class="col-lg">{{ form.title(class='form-control', autofocus=True) }}</div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Краткое описание</label>
+            <div class="col-lg">{{ form.about(class='form-control') }}</div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Описание</label>
+            <div class="col-lg">
+                <input type="hidden" name="text" id="txt_content_html">
+                <div id="summernote">{{ (form.text.data or '')|safe }}</div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Зарплатная вилка</label>
+            <div class="col-lg">{{ form.salary(class='form-control') }}</div>
+        </div>
+        {% if vacancy.id %}
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end" style="padding-top:0">Дата создания</label>
+            <div class="col-lg">{{ vacancy.created|utcinlocal|humantime(not_today=True) }}</div>
+        </div>
+        {% endif %}
+        <div class="row mb-3">
+            <div class="col-lg offset-lg-2">
+                <div class="form-check">
+                    {{ form.hidden(class="form-check-input") }}
+                <label class="form-check-text">не показывать</label>
+                </div>
+
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm offset-lg-2">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                {% if vacancy.id %}
+                <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger">Удалить</a>
+                {% endif %}
+                <a href="{{ url_for('.vacancies', lang=vacancy.lang) }}" class="btn btn-default">Отмена</a>
+            </div>
+        </div>
+    </form>
+
+    {% if vacancy.id %}
+        <form method="post" action="{{ url_for('.vacancy_delete', vacancy_id=vacancy.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-delete"><div class="modal-dialog modal-lg"><div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Удалить вакансию?</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Да</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Нет</button>
+                </div>
+            </div></div></div>
+        </form>
+    {% endif %}
+
+{% endblock %}
+
+{% block tail %}
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#summernote').summernote({
+    height: 500,                 // set editor height
+    minHeight: null,             // set minimum height of editor
+    maxHeight: null,             // set maximum height of editor
+    focus: true,
+    toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['fontname', ['fontname']],
+        ['color', ['color']],
+        ['para', ['ol', 'ul', 'paragraph']],
+        ['insert', ['link', 'table']],
+        ['misc', ['codeview', 'help']]
+    ]
+  });
+  $("#form-main").submit(function(e) {
+    $str = $("#txt_content_html").val($("#summernote").summernote("code"));
+    console.log($str);
+  })
+})
+</script>
+
+{% endblock %}

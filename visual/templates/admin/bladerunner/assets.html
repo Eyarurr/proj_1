@@ -1,0 +1,118 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'bladerunner' %}
+
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>
+    Ассеты
+    {% if office %}
+        {% if order %} заказа №
+            «{{ order.id or "Без названия"}}»
+        {% endif %}
+        офиса «{{ office.title or "Без названия"}}»
+    {% else %}
+        — все какие есть
+    {% endif %}
+</h1>
+
+
+<div class="table-responsive-lg">
+<table class="table table-hover table-list mt-3">
+<thead>
+<tr>
+    <th>Дата</th>
+    <th class="break" colspan="2">Заказ/Офис</th>
+    <th class="break" >Тип</th>
+    <th class="break">Размер</th>
+    <th class="break px-0 text-center"><i class="fa fa-picture-o fa-lg" title="Превью"></i></th>
+    <th class="break">Ссылка</th>
+    <th class="break">Действия</th>
+</tr>
+</thead>
+<tbody>
+<form method="get">
+    <div class="row table-filters justify-content-between">
+        <div class="col-lg-auto">
+            <div class="row">
+                <div class="col-lg-auto mb-1 mb-lg-0">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Сортировать по:</span>
+                        {{ filters.sort(class='form-select form-select-sm') }}
+                    </div>
+                </div>
+                <div class="col-lg-auto mb-1 mb-lg-0">
+                    <div class="input-group input-group-sm"><span class="input-group-text">Искать по:</span>
+                        {{ filters.search(class='form-control form-select-sm', disabled=disabled) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-auto">
+            <div class="btn-group btn-group-sm mb-1 mb-lg-0">
+                {% if office.id and order.id %}
+                <a href="{{ url_for('.br_asset_edit', office_id=office.id, order_id=order.id) }}"
+                   class="btn btn-submit btn-success"><i class="fa fa-plus"></i> Добавить материал</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</form>
+{% for asset, order, office in assets.items %}
+    {% if asset.type == 'tour' and asset.tour_id%}
+    {% set url = url_for('front.tour', tour_id=asset.tour.id) %}
+    {% set preview_url = asset.tour.preview.url if asset.tour else None %}
+    {% else %}
+    {% set url = asset.url%}
+    {% set preview_url = asset.preview_url %}
+    {% endif %}
+    <tr>
+    <td class="">
+        {{ asset.created.strftime('%d-%m-%Y') }}
+    </td>
+    <td class="break">
+        <a class="text-underline-hover" href="{{ url_for('.br_assets', office_id=office.id, order_id=order.id) }}" title="Показать все ассеты заказа {{ order.id }}">{{ asset.order_id }}</a>
+    </td>
+    <td class="break">
+        <a class="text-underline-hover" href="{{ url_for('.br_assets', office_id=office.id) }}" title="Показать все ассеты офиса {{ office.title }}">{{ office.title }}</a>
+    </td>
+    <td class="break">
+        {{ asset.type }}
+    </td>
+    <td class="break">
+        {% if asset.size and asset.size != 0 %}
+        {{ asset.size }}
+        {% endif %}
+    </td>
+    <td class="break px-0 text-center">
+        {% if preview_url %}
+        <a class="text-underline-hover" href="{{ preview_url }}"><span class="badge bg-success" title="{{ preview_url }}"><i class="fa fa-picture-o fs-5" ></i></span></a>
+        {% endif %}
+        </td>
+    <td class="break">
+        {% if url %}
+        {% if asset.type == 'tour' %}
+            <a class="text-underline-hover" href="{{ url }}">{{ url}}</a>
+        {% else %}
+            <a class="text-underline-hover" href="{{ url }}">{{ url|url_host_tail }}</a>
+        {% endif %}
+    </td>{% endif %}
+    <td class="break">
+        <a href="{{ url_for('admin.br_asset_edit', office_id =office.id, order_id=order.id, asset_id=asset.id) }}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+    </td>
+
+
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
+
+{{ render_pagination(assets, '.br_assets' )}}
+
+
+{% endblock %}

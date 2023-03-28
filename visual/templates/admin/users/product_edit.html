@@ -1,0 +1,93 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'users' %}
+
+
+{% block content %}
+
+<h1>Продукт юзера «{{ user.name }}» {{ product.product_id }}</h1>
+
+{% include('admin/users/_tabs.html') %}
+
+{% if form.errors %}
+    <h3>Ошибки:</h3>
+    <ul>
+        {{ form.errors }}
+    </ul>
+{% endif %}
+
+<form method="post">
+    {{ form.csrf_token }}
+    <div class="row mb-2">
+        <label class="col-sm-2 form-label">Тарифный план:</label>
+        <div class="col-sm-10">
+            {{ form.plan_id(class='form-select') }}
+            {% if form.plan_id.errors %}
+                <p class="text-danger">{{ form.plan_id.errors|join(' ') }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-sm-2 form-label">Последняя оплата:</label>
+        <div class="col-sm-10">
+            {{ form.last_payment_time(class='form-control') }}
+            {% if form.last_payment_time.errors %}
+                <p class="text-danger">{{ form.last_payment_time.errors|join(' ') }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-sm-2 form-label">Следующая оплата:</label>
+        <div class="col-sm-10">
+            {{ form.next_payment_time(class='form-control') }}
+            {% if form.next_payment_time.errors %}
+                <p class="text-danger">{{ form.next_payment_time.errors|join(' ') }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-sm-2 form-label">Метаданные:</label>
+        <div class="col-sm-10">
+            {{ form.meta_str(class='form-control code', rows=6) }}
+            {% if form.meta_str.errors %}
+                <p class="text-danger">{{ form.meta_str.errors|join(' ') }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-sm-10 offset-sm-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="{{ url_for('.user_products', user_id=user.id) }}" class="btn btn-secondary">Отмена</a>
+            <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger float-end">Удалить</a>
+        </div>
+    </div>
+</form>
+
+
+{% if not is_new %}
+<form method="post" action="{{ url_for('.user_product_delete', user_id=user.id, product_id=product.product_id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-delete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Удалить продукт?</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Продукт будет удалён у пользователя, как будто он его никогда и не приобретал.
+                        История покупок тоже сотрётся.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет, не надо</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endif %}
+
+
+{% endblock %}

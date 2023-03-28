@@ -1,0 +1,59 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'sys' %}
+
+{% block head %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+    <a href="{{ url_for('.sys_remote_datasets') }}">«« все датасеты</a>
+    <h1>Датасет <code>{{ dataset.type }}/{{ dataset.remote_id }}</code></h1>
+
+    <table class="table table-striped table-list">
+    <tr>
+        <th>type</th><td>{{ dataset.type }}</td>
+        <th>id</th><td>{{ dataset.remote_id }}</td>
+    </tr><tr>
+        <th>created</th><td>{{ dataset.created }}</td>
+        <th>title</th><td>{{ dataset.title }}</td>
+    </tr><tr>
+        <th>props</th>
+        <td colspan="3"><pre class="code">{{ dataset.props|json_neat }}</pre></td>
+    </tr>
+    </table>
+
+    <h2>События датасета</h2>
+    {% if events.total == 0 %}
+        <div class="alert alert-info">Никаких не было.</div>
+    {% else %}
+        <table class="table table-bordered table-list">
+        <thead>
+        <tr>
+            <th>Создано</th>
+            <th>Event.ts</th>
+            <th>Event.type</th>
+            <th>Event.job_id</th>
+            <th>Event.meta</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in events.items %}
+            <tr>
+                <td>{{ event.created }}</td>
+                <td>{{ event.ts or 'null' }}</td>
+                <td><code><strong>{{ event.type }}</strong></code></td>
+                <td>{% if event.job_id != None %}<code>{{ event.job_id }}</code>{% endif %}</td>
+                <td class="t">
+                    {% if event.meta != None %}
+                        <pre class="code">{{ event.meta|json_neat }}</pre>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {{ render_pagination(events, '.sys_remote_dataset', dataset_id=dataset.id) }}
+    {% endif %}
+
+{% endblock %}

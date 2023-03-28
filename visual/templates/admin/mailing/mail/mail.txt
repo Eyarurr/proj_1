@@ -1,0 +1,7 @@
+Hello
+
+{% block content %}
+{{ content|safe }}
+{% endblock %}
+
+(С) 2016 Lexion Development

@@ -1,0 +1,164 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'sys' %}
+
+{% block head %}
+<style type="text/css">
+.table-tour_builder_stats td.total-time {
+    background-color: #f0f0f0;
+}
+.table-tour_builder_stats small {
+    color: #777;
+}
+.table-tour_builder_stats td.warn {
+    color: #960000;
+    font-weight: bold;
+}
+.footage-status {
+    font-size: 0.8em;
+    min-width: 18px;
+    height: 18px;
+}
+.model-worker-actions {
+    font-family:monospace;
+    font-weight: bold;
+}
+.model-worker-actions span {
+    display: inline-block;
+    min-width: 16px;
+    height: 18px;
+    margin:0 2px;
+    background: #eee;
+    border-radius: 3px;
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Журнал сборщика</h1>
+
+<div class="table-responsive-lg">
+    <table class="table table-bordered table-list table-hover table-tour_builder_stats">
+    <thead class="table-light">
+    <tr>
+        <th rowspan="2">Начало</th>
+        <th rowspan="2">Юзер</th>
+        <th rowspan="2">Время </th>
+        <th rowspan="2">Съёмка</th>
+        <th colspan="2">Скайбоксы</th>
+        <th colspan="6">Модель</th>
+    </tr>
+    <tr>
+        <th class="n" title="Количество">N</th>
+        <th title="Время нарезки">Время</th>
+
+        <th title="Actions обработчика моделей. L: lowpoly D: dollhouse C: camhelpers">Действия</th>
+        <th class="n">Вес, MB</th>
+        <th class="n" title="Объектов">O</th>
+        <th class="n" title="Во сколько раз сжалась">Полигоны</th>
+        <th class="n" title="И среднее время обработки объекта. По ховеру — (низкополигонализатор + доллхаусизатор + texturesplit)">Время</th>
+        <th title="Код ошибки низподоха">R</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for rec in log.items %}
+        <tr>
+            <td {% if rec.result == False %} style="background-color: red;" {% endif %} title="{{ rec.started.strftime('%d.%m.%Y %H:%M:%S') }}">
+                {{ rec.started.strftime('%d.%m.%Y') }}
+            </td>
+            <td>
+                {% if rec.user %}
+                    <a href="{{ url_for('.tours', user_id=rec.user.id) }}" class="text-underline-hover">{{ rec.user.email }}</a>
+                {% endif %}
+            </td>
+            <td class="total-time {% if rec.finished and (rec.finished - rec.started).seconds > 60*30 %} warn {% endif %}">
+                {% if rec.finished %}
+                    {{ (rec.finished - rec.started)|timedelta_round }}
+                {% endif %}
+            </td>
+            <td>
+                {% if rec.footage %}
+                    {{ footage_status_icon(rec.footage) }}
+                    <a href="{{ url_for('.footage_edit', footage_id=rec.footage.id) }}" class="text-underline-hover">{{ rec.footage.id }}</a>
+                    <a href="{{ url_for('.footage_view', footage_id=rec.footage.id) }}"><i class="fa fa-eye"></i></a>
+                {% else %}
+                    &#8212;
+                {% endif %}
+            </td>
+
+            {# Скайбоксы #}
+            <td>{{ rec.cnt_skyboxes }}</td>
+            <td {% if rec.wurst_cutter_time and rec.cnt_skyboxes %} title="{{ (rec.wurst_cutter_time / rec.cnt_skyboxes)|round(1) }} сек/скайбокс"{% endif %}>
+                {{ rec.wurst_cutter_time|int2hms }}
+            </td>
+
+            {# Модель #}
+            {% if rec.model_worker_exit_code == None %}
+                {# До низподоха дело не дошло, возможно успели только взвесить исходную модель #}
+                <td></td>
+                <td>
+                    {% if rec.model_size_before %}{{ (rec.model_size_before/1024/1024)|round(2) }}{% endif %}
+                </td>
+                <td colspan="4"></td>
+            {% else %}
+                {# Дейтвия #}
+                <td class="model-worker-actions">
+                    {% if 'lowpoly' in rec.model_worker_actions %}<span>L</span>{% endif -%}
+                    {% if 'dollhouse' in rec.model_worker_actions %}<span>D</span>{% endif -%}
+                    {% if 'camhelpers' in rec.model_worker_actions %}<span>C</span>{% endif -%}
+                </td>
+                {# Вес #}
+                <td class="n">
+                    {% if rec.model_size_before and rec.model_size_after %}
+                        ×<b>{{ (rec.model_size_before/rec.model_size_after)|round(0)|int }}</b>
+                    {% endif %}
+                    <small class="pull-left">
+                        {%- if rec.model_size_before %}{{ (rec.model_size_before/1024/1024)|round(2) }}{% else %}?{% endif %}
+                        &rarr;
+                        {% if rec.model_size_after %}{{ (rec.model_size_after/1024/1024)|round(2) }}{% else %}?{% endif -%}
+                    </small>
+                </td>
+                <td class="n">
+                    {{ rec.model_objects_after or '' }}
+                </td>
+                {# Полигонов #}
+                <td class="n">
+                    {% if rec.model_size_before and rec.model_faces_after %}
+                        ×<b>{{ (rec.model_faces_before / rec.model_faces_after)|round(0)|int }}</b>
+                    {% endif %}
+                    <small class="pull-left">
+                        {% if rec.model_faces_before %}{{ (rec.model_faces_before/1000)|int }}k{% else %}?{% endif %}
+                        &rarr;
+                        {% if rec.model_faces_after %}{{ (rec.model_faces_after/1000)|int }}k{% else %}?{% endif %}
+                    </small>
+                </td>
+                {# Время обработки #}
+                <td class="n" title="({{ rec.model_worker_meshtransform_time|int2ms }} + {{ rec.model_worker_texturing_time|int2ms }} + {{ rec.model_worker_texturesplit_time|int2ms }})">
+                    {{ rec.model_worker_time|int2hms }}
+                    {% if rec.model_worker_time and rec.model_objects_after %}
+                        <small class="pull-left">{{ (rec.model_worker_time / rec.model_objects_after)|round(1) }} s/o</small>
+                    {% endif %}
+                </td>
+                <td {% if rec.model_worker_exit_code %} style="background-color: red;" {% endif %}>
+                    {{ rec.model_worker_exit_code }}
+                </td>
+            {% endif %}
+        </tr>
+        {% if rec.build_errors %}
+            <tr>
+            <td colspan="12" class="t">
+                <ul>
+                    {% for err in rec.build_errors %}
+                        <li>{{ err }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+    </table>
+</div>
+
+    {{ render_pagination(log, '.builders_log') }}
+{% endblock %}

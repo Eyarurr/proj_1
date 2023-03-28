@@ -1,0 +1,85 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'keys' %}
+{% set cur_app_id = request.args.get('app_id', app_id) %}
+{% set cur_active = request.args.get('active', 'active') %}
+{% set cur_keys = active_keys if cur_active == 'active' else inactive_keys %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<h1>Ключи распространения</h1>
+
+    <ul class="nav nav-tabs nav-justified">
+    {% for app_id in applications %}
+        {% set active= "active" if app_id == cur_app_id %}
+        <li  class="nav-item">
+            <a href="{{ url_for('.keys', app_id=app_id) }}" class="nav-link {{ active }}">
+                {{ app_id }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+    <br><br><br><br>
+
+    <ul class="nav nav-tabs nav-justified" style="width: 50%; margin: auto;">
+        <li class="nav-item">
+            {% set active = "active" if cur_active == 'active' %}
+            <a href="{{ url_for('.keys', app_id = cur_app_id, active = 'active') }}" class="nav-link {{ active }}">
+                {{ 'Неиспользованные' }} <span class="badge text-bg-secondary">{{ active_keys.total }}</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            {% set active = "active" if cur_active == 'inactive' %}
+            <a href="{{ url_for('.keys', app_id = cur_app_id, active = 'inactive') }}" class="nav-link {{ active }}">
+                {{ 'Использованные' }} <span class="badge text-bg-secondary">{{ inactive_keys.total }}</span>
+            </a>
+        </li>
+    </ul>
+
+    <table align="center" class="table table-striped" style="margin-top: 32px;width:50%;">
+        {% for item in cur_keys.items  %}
+        <tr>
+            <td class="text-center" style="width: 50%; padding-top:15px;">
+                {{ item.key }}
+            </td>
+            <td class="text-center">
+                <div class="btn-group">
+                    <a href="{{ url_for('.keys_edit', app_id=cur_app_id, active=cur_active, key_id=item.id, action=('deactivate' if cur_active == 'active' else 'activate')) }}" class="btn btn-default">{{ 'деактивировать' if cur_active == 'active' else 'активировать' }}</a>
+                    <a href="{{ url_for('.keys_edit', app_id=cur_app_id, active=cur_active, key_id=item.id, action='delete') }}" class="btn btn-danger">удалить</a>
+                </div>
+            </td>
+        </tr>
+        {%  endfor %}
+        <tr>
+            <td align="center" colspan="2">
+                <br>
+                <a href="#modal-add" data-bs-toggle="modal" class="btn btn-secondary">добавить ключ</a>
+                <br><br>
+                {{ render_pagination(cur_keys, '.keys', app_id = cur_app_id, active = cur_active) }}
+            </td>
+        </tr>
+    </table>
+{% endblock %}
+
+{% block tail %}
+<form method="post" action="{{ url_for('.keys_add', app_id=cur_app_id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal" id="modal-add"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Добавление ключей</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <p>Ключи (один на строку):</p>
+            <p><textarea rows="10" name="keys" class="form-control" autofocus required></textarea></p>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Ok</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Отмена</button>
+        </div>
+    </div></div></div>
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% set page_ttl = _("Support") %}
+{% set corpus_class = 'support' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+    <div class="page-title">
+        <div class="b-page__inner page-title__inner page-title__inner--align-left">
+            <h1 class="page-title__head background-image-title h1">{{ page_ttl }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg support-page">
+
+        <section class="support-page__form">
+            {% if config.JURISDICTION == 'ru' %}
+            <p class="support-form__intro">Добро пожаловать в службу поддержки Biganto! Для получения технической поддержки, свяжитесь с нами с помощью email или Telegram.</p>
+            {% endif %}
+            {% if config.JURISDICTION == 'world' %}
+            <form action="{{ url_for('support.index') }}" class="support-form form-modal" type="post">
+                <p class="support-form__intro">{{ _("Welcome to Virtoaster support! Please, complete the form and we will address your request as soon as possible.") }}</p>
+                <div class="support-form__answer"></div>
+                <div class="support-form__inner">
+                    <div class="form-modal__section">
+                        <div class="form-modal__label">{{ _("Subject") }}</div>
+                        <div class="form-modal__field">
+                            <div class="big-select">
+                                <select name="subject" class="big-select__input support-form__subject" tabindex="0">
+                                    <option value=""></option>
+                                    <option value="tour">{{ _("Issue with created tour") }}</option>
+                                    <option value="payment">{{ _("Issue with payment/tariff, etc.") }}</option>
+                                    <option value="feedback">{{ _("Request feature/provide feedback") }}</option>
+                                    <option value="other">{{ _("Other") }}</option>
+                                </select>
+                                <svg viewBox="0 0 9 8" class="big-select__icon" width="9" height="8"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down" /></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="support-form__block support-form__block--tour">
+                        <div class="form-modal__section">
+                            <div class="form-modal__label">{{ _("Link to the tour") }}</div>
+                            <div class="form-modal__field">
+                                <input type="text" class="big-input support-form__tour" value="" placeholder="" name="tour_link" tabindex="0">
+                            </div>
+                            <div class="form-modal__comment">{{ _("Please, provide a link to the tour you having trouble with.") }}</div>
+                        </div>
+                        <div class="form-modal__section">
+                            <div class="form-modal__field">
+                                <label class="big-checkbox">
+                                    <input type="checkbox" class="big-checkbox__input support-form__helpless" name="type" value="1" tabindex="0">
+                                    <span class="big-checkbox__checkmark"></span>
+                                    <span class="big-checkbox__label">
+                                        <span>{{ _("Have you tried to solve the issue using <a href='%(url)s' target='_blank'>“Troubleshooting”</a> guide?", url=url_for('tutorials.troubleshooting')) }}</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="support-form__block support-form__block--desc">
+                        <div class="form-modal__section">
+                            <div class="form-modal__label">{{ _("Message:") }}</div>
+                            <div class="form-modal__field">
+                                <textarea class="big-input support-form__desc" value="" placeholder="" name="issue" tabindex="0"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-modal__section">
+                            <div class="form-modal__label">{{ _("Contact email") }}</div>
+                            <div class="form-modal__field">
+                                <input type="email" class="big-input support-form__email" value="{{ current_user.email if current_user.is_authenticated else '' }}" placeholder="" name="email" tabindex="0">
+                            </div>
+                        </div>
+                        <input type="hidden" value="" name="user_id" class="support-form__user">
+                    </div>
+                    <div class="support-form__submit">
+                        <button type="submit" class="button fill blue support-form__button" tabindex="0" disabled>{{ _("Submit") }}</button>
+                    </div>
+                </div>
+                <div class="support-form__success">{{ _("We are working on your request! Please, be patient, we will contact you soon.") }}</div>
+                <div class="support-form__error"></div>
+            </form>
+            {% endif %}
+        </section>
+        <div class="support-page__contacts">
+            <section class="support-contacts">
+                <div class="support-contacts__item">
+                    <a href="mailto:{{ config['SUPPORT_EMAIL'] }}" class="support-contacts__link">
+                        <div class="support-contacts__icon">
+                            <svg viewBox="0 0 100.72 106.68" class="icon__svg" width="50" height="50"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#email"></svg>
+                        </div>
+                        <div class="support-contacts__label">
+                            <span class="support-contacts__name">{{ _("E-mail") }}</span>
+                            <span class="support-contacts__value">{{ config['SUPPORT_EMAIL'] }}</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="support-contacts__item">
+                    <a href="https://t.me/{{ config['SUPPORT_TELEGRAM'] }}" class="support-contacts__link" target="_blank">
+                        <div class="support-contacts__icon">
+                            <svg viewBox="0 0 15 12.57" class="icon__svg" width="50" height="50"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#telega"></svg>
+                        </div>
+                        <div class="support-contacts__label">
+                            <span class="support-contacts__name">{{ _("Telegram") }}</span>
+                            <span class="support-contacts__value">@{{ config['SUPPORT_TELEGRAM'] }}</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </div>
+
+    </div>
+{% endblock %}

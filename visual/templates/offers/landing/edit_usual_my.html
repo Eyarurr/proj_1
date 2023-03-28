@@ -1,0 +1,261 @@
+{% macro field_value(name) %}
+    {%- if offer.template_data -%}
+        {{ offer.template_data.get(name) or '' -}}
+    {%- endif -%}
+{% endmacro %}
+
+{% macro feature_field(i, feature) %}
+    <li class="b-editor-features__item">
+        <div class="b-editor-features__touch form-group">
+            <svg class="icon__svg" viewBox="-1 -1 13 7" width="13" height="7"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#touch"></use></svg>
+        </div>
+        <div class="b-editor-features__key form-group">
+            <input type="text" name="features[{{ i }}][key]" class="form-control form-control--cling-right" value="{{ feature.get('key') or '' }}" placeholder="{{ _("Name") }}" required="required">
+        </div>
+        <div class="b-editor-features__value form-group">
+            <input type="text" name="features[{{ i }}][value]" class="form-control form-control--cling-center" value="{{ feature.get('value') or '' }}" placeholder="{{ _("Value") }}" required="required" maxlength="110">
+        </div>
+        <div class="b-select b-select--left b-select--cling-left b-editor-features__measure">
+            <svg viewBox="0 0 9 8" class="icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down"></use></svg>
+            <select name="features[{{ i }}][measure]" class="b-select__block">
+                <option></option>
+                {% for v in (_('m'), _('m²'), _('cm'), _('ha')) %}
+                <option value="{{ v }}"{% if v == feature.get('measure') %} selected="selected"{% endif %}>{{ v }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="b-editor-features__button">
+            <span class="b-editor-features__minus">&times;</span>
+        </div>
+    </li>
+{% endmacro %}
+
+{# Полная копия макроса из my/base.html. @todo: переписать всю бодягу с редакторами на наследовании шаблонов. Это как раз один из тех случаев, показывающих, что инклюды — зло. #}
+{% macro steps(number) %}
+    <div class="b-steps">
+        <div class="b-steps__item{% if number == 1 %} b-steps__item--current{% endif %}">{{ _("Select a sample") }}</div>
+        <div class="b-steps__glue">
+            <svg class="icon__svg" viewBox="0 0 20 38" width="9" height="17"><use xlink:href="/static/offers/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-right"></use></svg>
+        </div>
+        <div class="b-steps__item{% if number == 2 %} b-steps__item--current{% endif %}">{{ _("Description") }}</div>
+        <div class="b-steps__glue">
+            <svg class="icon__svg" viewBox="0 0 20 38" width="9" height="17"><use xlink:href="/static/offers/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-right"></use></svg>
+        </div>
+        <div class="b-steps__item{% if number == 3 %} b-steps__item--current{% endif %}">{{ _("Multimedia") }}</div>
+    </div>
+{% endmacro %}
+
+{{ steps(2) }}
+
+<form id="form-edit" class="b-form b-form--description b-editor-form" enctype="application/json" method="post" action="{{ form_action }}">
+    <div class="form-group">
+        <label class="control-label">{{ _("Page header") }}</label>
+        <input type="text" name="title" class="form-control" value="{{ field_value('title') }}" required="required">
+    </div>
+
+    {# шапка #}
+    {% with header = offer.template_data.get('header', {}) %}
+        <div class="row b-editor-form__main">
+            <div class="col-xs-12 col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">{{ _("The name is on the header.") }}</label>
+                    <input type="text" name="header[title]" value="{{ header.get('title') or '' }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">{{ _("The link is on the logotype.") }}</label>
+                    <input type="text" name="header[url]" value="{{ header.get('url') or '' }}" class="form-control" pattern="/^(https?:\/\/)(www\.)?([a-zа-яё0-9-\.]{1,99}).([a-zа-яё]{2,4})/i" data-form-error-message="{{ _("Incorrect link format. Please, check the input format.") }}">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <div class="form-group b-editor-logo">
+                    <label class="control-label">{{ _("Logo") }}</label>
+                    <input type="file" name="asset:logo" class="b-editor-logo__file">
+                    <div class="b-editor-logo__wrap">
+                        <div class="b-editor-logo__image">
+                            {% if offer.logo %}
+                                <img src="{{ offer.logo.url }}" class="b-editor-logo__picture">
+                            {% else %}
+                                <svg viewBox="0 0 59 59" class="icon__svg b-editor-logo__plus"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#plus" x="0" y="0" width="59" height="59"></use></svg>
+                                <svg viewBox="0 0 60 45" class="icon__svg b-editor-logo__done hidden"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#done" x="0" y="0" width="60" height="45"></use></svg>
+                            {% endif %}
+                        </div>
+                        <div class="b-editor-logo__action">
+                            {% if offer.logo %}
+                            <div class="b-editor-logo__link">
+                                <a href="#" class="b-editor-logo__update">{{ _("Update logo.") }}</a>
+                            </div>
+                            {# <div class="b-editor-logo__link">
+                                <a href="#" class="b-editor-logo__delete">{{ _("Delete") }}</a>
+                            </div> #}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+
+    {# расположение #}
+    {% with location = offer.template_data.get('location', {}) %}
+        <div class="row b-editor-form__location">
+            <div class="col-xs-12 col-lg-6">
+                <div class="form-group">
+                    <label class="control-label">{{ _("Address") }}</label>
+                    <input type="text" name="location[address]" value="{{ location.get('address') or '' }}" class="form-control b-editor-map__address">
+                </div>
+            </div>
+            <div class="col-xs-12 col-lg-6">
+                <div class="form-group b-form__second-line">
+                    <div class="checkbox">
+                        <label class="control-label">
+                            <input type="checkbox" name="address_equal" data-address="{{ estate.address }}" class="b-editor-map__equal" data-parsley-excluded="true"> {{ _("Matches the address of the whole object.") }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group b-editor-form__map">
+            <div class="b-editor-map">
+                <input type="hidden" name="location[lat]" value="{{ location.get('lat') or '' }}" class="b-editor-map__lat">
+                <input type="hidden" name="location[lon]" value="{{ location.get('lon') or '' }}" class="b-editor-map__lon">
+                <div id="map" class="b-editor-map__area"></div>
+                <div class="b-editor-map__links">
+                    <a href="#" id="remove-marker" class="e-link e-link--x b-editor-map__delete"><span class="icon">&times;</span>{{ _("Delete a mark") }}</a>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+
+    <div class="b-form__spacer"></div>
+
+    {# цена #}
+    <div class="form-group b-editor-form__price">
+        {% with price = offer.template_data.get('price', {}) %}
+            <label class="control-label">{{ _("Price") }}</label>
+            <div class="b-form__price">
+                <div class="b-form__price-value form-group">
+                    <input type="text" name="price[value]" class="form-control form-control--cling-right" value="{{ price.get('value') or '' }}" data-form-type="digits">
+                </div>
+                <div class="b-form__price-currency">
+                    <div class="b-select b-select--left b-select--cling-left">
+                        <svg viewBox="0 0 9 8" class="icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down"></use></svg>
+                        <select name="price[currency]" class="b-select__block">
+                            <option></option>
+                            {% for k in ['Р', '$', '€'] %}
+                            <option value="{{ k }}" {% if price.get('currency') == k %} selected {% endif %}>
+                                {{ k }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="b-form__price-period">
+                    <div class="b-select b-select--left">
+                        <svg viewBox="0 0 9 8" class="icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down"></use></svg>
+                        <select name="price[period]" class="b-select__block">
+                            {% for k in ['', _('per month'), _('per year'), _('per day')] %}
+                            <option value="{{ k }}" {% if price.get('period') == k %} selected {% endif %}>
+                                {{ k }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+    </div>
+
+    <div class="b-form__spacer"></div>
+
+    <div class="row b-editor-form__desc">
+        <div class="col-xs-12 col-lg-6">
+            <div class="form-group">
+                <label class="control-label">{{ _("Object description") }}</label>
+                <textarea name="description" rows="8" class="form-control">{{ field_value('description') }}</textarea>
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-6">
+
+            <div class="b-editor-features">
+                {% set countFeatures = offer.template_data.get('features', [])|length %}
+                <label class="control-label">{{ _("Features") }} <span class="b-editor-features__counter">{{ countFeatures }}</span> {{ _("Piece") }}</label>
+
+                {# фичи #}
+                {% with features = offer.template_data.get('features', []) %}
+                    <ul class="b-editor-features__list">
+                        {% for feature in offer.template_data.get('features', []) %}
+                            {{ feature_field(loop.index0, feature) }}
+                        {% else %}
+                            {{ feature_field(0, { 'key': '', 'value': '', 'measure': '' }) }}
+                        {% endfor %}
+                    </ul>
+                    <div class="b-editor-features__add">
+                        <span class="btn btn-default">{{ _("Add") }}</span>
+                    </div>
+                {% endwith %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="b-form__spacer"></div>
+
+    {# контактное лицо #}
+    {% with contact = offer.template_data.get('contact', {}) %}
+        <div class="row b-editor-form__contact">
+            <div class="col-xs-12 col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">{{ _("Name") }}</label>
+                    <input type="text" name="contact[name]" value="{{ contact.get('name') or '' }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">{{ _("E-mail") }}</label>
+                    <input type="email" name="contact[email]" value="{{ contact.get('email') or '' }}" class="form-control">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">{{ _("Phone number") }}</label>
+                    <input type="tel" name="contact[phone]" value="{{ contact.get('phone') or '' }}" class="form-control form-control-phone">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">{{ _("Web site") }}</label>
+                    <input type="text" name="contact[url]" value="{{ contact.get('url') or '' }}" class="form-control" pattern="/^(https?:\/\/)(www\.)?([a-zа-яё0-9-\.]{1,99}).([a-zа-яё]{2,4})/i" data-form-error-message="{{ _("Incorrect link format. Please, check the input format.") }}">
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+
+    <div class="form-group b-form__submit b-editor-form__submit">
+        <a href="{{ url_cancel }}" class="btn btn-gray">{{ _("Cancel") }}</a>
+        <button type="submit" class="btn btn-default b-editor-form__submit">{{ _("Save and continue") }}</button>
+    </div>
+</form>
+
+<script type="text/template" class="template-other" id="tmpl__editor-feature">
+    <li class="b-editor-features__item">
+        <div class="b-editor-features__touch form-group">
+            <svg class="icon__svg" viewBox="-1 -1 13 7" width="13" height="7"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#touch"></use></svg>
+        </div>
+        <div class="b-editor-features__key form-group">
+            <input type="text" name="features[<%= rc.i %>][key]" class="form-control form-control--cling-right" value="<% if (rc.key) { %><%= rc.key %><% } %>" placeholder="{{ _("Name") }}" required="required">
+        </div>
+        <div class="b-editor-features__value form-group">
+            <input type="text" name="features[<%= rc.i %>][value]" class="form-control form-control--cling-center" value="<% if (rc.value) { %><%= rc.value %><% } %>" placeholder="{{ _("Value") }}" required="required" maxlength="110">
+        </div>
+        <div class="b-select b-select--left b-select--cling-left b-editor-features__measure">
+            <svg viewBox="0 0 9 8" class="icon__svg"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#triangle-down"></use></svg>
+            <select name="features[<%= rc.i %>][measure]" class="b-select__block">
+                <option></option>
+                {% for v in (_('m'), _('m²'), _('cm'), _('ha')) %}
+                <option value="{{ v }}"<% if (rc.measure === '{{ v }}') { %> selected="selected"<% } %>>
+                    {{ v }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="b-editor-features__button">
+            <span class="b-editor-features__minus">&times;</span>
+        </div>
+    </li>
+</script>

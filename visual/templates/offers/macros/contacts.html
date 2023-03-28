@@ -1,0 +1,24 @@
+{% macro contacts(offer) %}
+    {% if offer.template_data.contact %}
+        {% if offer.template_data.contact.phones or offer.template_data.contact.email or offer.template_data.contact.url or offer.template_data.contact.name %}
+            <section class="b-contacts b-external__section">
+                <div class="b-external__inner clearfix">
+                    <div class="b-external__content clearfix">
+                        {# <div class="b-contacts__avatar">
+                            <img src="/static/public/img/content/contact-avatar.png" class="b-contacts__image">
+                        </div> #}
+                        <div class="b-contacts__title">{{ _("Contact person") }}</div>
+                        <div class="b-contacts__name">{{ offer.template_data.contact.name }}</div>
+                        {% if offer.template_data.contact.phones or offer.template_data.contact.email or offer.template_data.contact.url %}
+                            <div class="b-contacts__more">
+                                {% if offer.template_data.contact.phone %}<span class="b-contacts__info b-contacts__phone">{{ offer.template_data.contact.phone }}</span>{% endif %}
+                                {% if offer.template_data.contact.email %}<span class="b-contacts__info b-contacts__email"><a href="mailto:{{ offer.template_data.contact.email }}">{{ offer.template_data.contact.email }}</a></span>{% endif %}
+                                {% if offer.template_data.contact.url %}<span class="b-contacts__info b-contacts__site"><a href="{{ offer.template_data.contact.url }}" target="_blank" rel="noopener noreferrer">{{ offer.template_data.contact.url|url_host }}</a></span>{% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endif %}
+{% endmacro %}

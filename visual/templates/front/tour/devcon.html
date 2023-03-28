@@ -1,0 +1,29 @@
+{% extends 'front/tour/index.html' %}
+
+{% from '/front/tour/messages_password.html' import messages_password %}
+{%- from 'macros/common_messages.html' import common_messages -%}
+
+{% block head %}
+    {{ super() }}
+
+    <script>
+        var PLAYER_MODULE = 'DEVCON';
+        var RELEASE_VERSION = "{{ config.get('RELEASE_VERSION') }}";
+        var CSRF_TOKEN = '{{ csrf_token() }}';
+        {{ common_messages(_, pgettext) }}
+    </script>
+
+    {{ messages_password() }}
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+{% endblock %}
+
+{% block body_scripts %}
+    {{ super() }}
+{% endblock %}
+
+{% block init_script %}
+    <script src="/static/public/player/js/devcon.js?{{ config.get('RELEASE_VERSION') }}" ></script>
+{% endblock %}

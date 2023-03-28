@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% set page_title = _("Manual model replacement") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/model-replacement/title_bg.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage" {% if background_head %}
+         style="background-image: url({{ background_head }});" {% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--green">{{ _("extra") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+
+        <div id="camera" class="b-anchor"></div>
+        <div class="content-page__wrapper">
+            <div id="terms" class="b-anchor"></div>
+            <div class="content-page__main">
+            
+                <p>
+                    Changing the model manually is a feature for advanced users, please use it with caution and always keep the
+                    initial
+                    model as a backup. This feature can be used for troubleshooting the tour, without reassembling it from scratch
+                    (e.g.
+                    you can upload the initial model, remove or add some meshes and upload it back to the tour).
+                </p>
+                <p>
+                    In order to manually change the model, please access the corresponding tab in your tour:
+                </p>
+            
+                <p>
+                    <img src="/static/public/img/tutorials/model-replacement/model_replacement_screenshot.jpg" />
+                </p>
+            
+                <p>
+                    There are several assets you can download from tour:
+                </p>
+                <ol>
+                    <li>Low poly tour model in .obj format
+                    </li>
+                    <li>MTL file that defines which textures different parts of the model will use</li>
+                    <li>Textures for 3d panorama mode
+                    </li>
+                </ol>
+            
+                <p>
+                    At the moment you can download any files from the list, however you can replace only the model itself, textures
+                    and
+                    MTL cannot be changed manually.
+                </p>
+            
+                <p>
+                    Why would you want to replace the model? For example you received some comments from your customer and you need
+                    to
+                    remove some furniture from the tour. You can render new images and replace them without reassembling the tour
+                    altogether, however removed furniture will still exist in the older model and may affect how the user moves
+                    through
+                    the tour or may impact the visual side of it.
+                </p>
+            
+                <p>
+                    Previously, you should have reassembled the tour altogether to fix the issue, however now you can download the
+                    model
+                    from the tour, remove unnecessary mesh from it and upload the model back into the tour.
+                </p>
+            
+                <p>
+                    Uploaded 3d model should be in .obj format, scaled in meters, have the same coordinates and generally should be
+                    similar to the initial model. There is no automatic model optimization here, so the model you are uploading into
+                    the
+                    tour should be low poly, otherwise it will either not work, or will slow down the tour significantly. If you
+                    want to
+                    keep the 3d panorama mode, the new model should also have the same texture coordinates as the old one, so take
+                    that
+                    into account while editing the downloaded model.
+                </p>
+            
+                <p>
+                    Regarding the 3d panorama mode, keep in mind that tours without it will not have any textures or MTL in the list
+                    (tours with 3d panorama mode being disable will still have them).
+                    For now, existing textures won’t be updated while changing the model manually. Thus if you made significant
+                    changes
+                    in the tour (e.g. you removed a large piece of furniture, like a sofa or replaced wall color everywhere), you
+                    will
+                    not see these changes in the 3d panorama mode. If 3d panorama mode is a priority for you, we still recommend
+                    reassembling the tour altogether when significant changes are required.
+                </p>
+            
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

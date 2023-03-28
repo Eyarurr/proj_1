@@ -1,0 +1,146 @@
+{% macro render_pagination(pagination, endpoint) %}
+<nav>
+    <ul class=pagination>
+        {%- for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                    <li><a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a></li>
+                {% else %}
+                    <li class="active"><a href="#">{{ page }} <span class="sr-only">(current)</span></a></li>
+                {% endif %}
+            {% else %}
+                <li><span class=ellipsis>…</span></li>
+            {% endif %}
+        {%- endfor %}
+    </ul>
+</nav>
+{% endmacro %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{{ page_title|default('Biganto', true) }}</title>
+    <link rel="stylesheet" href="//yastatic.net/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/prototype.css?1">
+    <script type="text/javascript" src="//yastatic.net/jquery/2.1.3/jquery.js"></script>
+    <script type="text/javascript" src="//yastatic.net/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script type="text/javascript" src="/static/prototype.js"></script>
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Biganto</a>
+        </div>
+
+        {% block menu_main %}
+        {% set menu_current = menu_current|default(request.blueprint) %}
+        <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('front.gallery') }}">Discover</a></li>
+                <li><a href="{{ url_for('front.about') }}">About</a></li>
+                <li><a href="{{ url_for('virtoaster.pricing') }}">Pricing</a></li>
+                <li><a href="{{ url_for('tutorials.index') }}">Tutorials</a></li>
+                <li class="pull-right"></li>
+                <li class="pull-right"></li>
+        </ul>
+        <div class="navbar-text pull-right">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('my.index') }}">{{ current_user.name }}: Личный кабинет</a> |
+                <a href="{{ url_for('users.logout') }}">Выйти</a>
+            {% else %}
+                <li><a href="#modal-login" data-toggle="modal">Login</a></li>
+            {% endif %}
+        </div>
+        {% endblock %}
+    </div>
+</nav>
+
+<div class="container">
+    {% for category, messages in flashes().items() %}
+        <div class="alert alert-{{ category }}">
+            <ul>
+                <li>{{ messages | join('</li><li>') | safe }}</li>
+            </ul>
+        </div>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+</div>
+
+
+
+{### Логин ###}
+<form method="post" action="{{ url_for('users.login') }}" id="form-login" class="form-horizontal">
+<div class="modal" id="modal-login"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <h4 class="modal-title">Входите!</h4>
+    </div>
+    <div class="modal-body">
+        <p class="login-msg">Если, конечно, вы помните пароль :-)</p>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input type="text" name="email" class="form-control" placeholder="E-mail">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input type="text" name="password" class="form-control" placeholder="Пароль">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6">
+                <a href="{{ url_for('users.remind') }}">Я не помню пароль</a>
+            </div>
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-success">Войти</button>
+            </div>
+        </div>
+    </div>
+</div></div></div>
+</form>
+<script type="text/javascript">
+(function() {
+    var $modal = $('#modal-login'), $form = $('#form-login'), $msg = $modal.find('.login-msg');
+
+    $modal.on('shown.bs.modal', function() {
+        if($msg.data('default-text')) {
+            $msg.text($msg.data('default-text')).removeClass('text-danger');
+        } else {
+            $msg.data('default-text', $msg.text());
+        }
+        $form.find('[name=email]').focus();
+    });
+
+    $form.ajaxForm({
+        dataType: 'json',
+        data: {ajax: 1},
+        success: function(data) {
+            if(data.error) {
+                $msg.text(data.error).addClass('text-danger');
+                $form.find('[name=email]').focus();
+            } else {
+                location.href = data.redirect;
+            }
+        },
+        error: function() {
+            $msg.text('Что-то пошло не так. Попробуйте попозже.').addClass('text-danger');
+        }
+    })
+
+})();
+</script>
+
+
+
+{% block tail %}{% endblock %}
+</body>
+</html>

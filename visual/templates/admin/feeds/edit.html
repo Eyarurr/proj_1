@@ -1,0 +1,314 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'feeds' %}
+
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
+
+<!-- include summernote css/js-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+{#<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.css" rel="stylesheet">#}
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.js"></script>#}
+<style type="text/css">
+    .btn-eye {
+        cursor: none;
+        pointer-events: none;
+        float: left;
+    }
+    ul.gallery .actions {
+        left: 6px;
+        text-align: right;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>{% if feed.id %} Редактировать новость {% else %} Добавить новость {% endif %}</h1>
+
+    <ul class="nav nav-tabs">
+    {% for lang in feed_translations.keys()|sort %}
+        {% set active = 'active' if lang == request.args.get('lang') or not feed.id else '' %}
+        <li role="presentation" class="nav-item {{ active }}">
+            <a class="nav-link" href="{{ url_for('.feeds_edit', feed_id=feed.id) }}?lang={{ lang }}">{{ lang }}</a>
+        </li>
+    {% endfor %}
+        {% if feed.id and feed_translations.keys()|length < config.get('LANGUAGES')|length %}
+        <li>
+            <form method="post" class="form-horizontal">
+                <div class="input-group" style="width:100px; margin-top:4px;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <select name="new_lang" class="form-select">
+                        {%- for lang in config.get('LANGUAGES') -%}
+                            {%- if lang not in feed_translations.keys() -%}
+                                <option value="{{ lang }}">{{ lang }}</option>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </select>
+                    <span class="">
+                        <a href="#" onclick="$(this).closest('form').submit();"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                    </span>
+                </div>
+            </form>
+        </li>
+        {% endif %}
+    </ul>
+
+    <br>
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" id="form-main">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Дата публикации</label>
+            <div class="col-lg">
+                <input class="form-control" id="published" name="published" type="text" placeholder="01.01.2019 00:00" value="{{ feed.created|humantime}}">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Заголовок</label>
+            <div class="col-lg">
+                <input autofocus class="form-control" id="title" name="title" type="text" value="{{ feed_translations[lang]['title'] if feed_translations else '' }}" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Анонс</label>
+            <div class="col-lg">
+                <input class="form-control" id="announce" name="announce" type="text" value="{{ feed_translations[lang]['announce']|safe if feed_translations else '' }}">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Текст</label>
+            <div class="col-lg">
+                <input type="hidden" name="body" id="txt_body"/>
+                <div id="summernote">
+                    {{ feed_translations[lang]['text']|safe if feed_translations else '' }}
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg offset-lg-2 ">
+                <div class="form-check">
+                <input class="form-check-input" id="hidden" name="hidden" type="checkbox" {{ 'checked' if feed_translations and feed_translations[lang].published else '' }} value="{{ feed_translations[lang].published if feed_translations else '' }}">
+                <label class="form-check-text">опубликовано</label></div>
+
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Превью</label>
+            <div class="col-lg">
+                <input type="file" name="image" class="form-control">
+            </div>
+        </div>
+        {% if feed.preview %}
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Превью</label>
+            <div class="col-lg">
+                <img src="{{ feed.preview.url }}" class="img-thumbnail">
+            </div>
+        </div>
+        {% endif %}
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Фотографии к новости</label>
+            <div class="col-lg">
+                <input type="file" name="images" class="form-control" multiple>
+            </div>
+        </div>
+        {% if photos|length > 0 %}
+        <div class="row mb-3">
+            <label class="col-lg-2 text-lg-end">Фотографии</label>
+            <div class="col-lg">
+                <ul class="gallery" id="gallery">
+                {% for photo in photos %}
+                    <li data-id="{{ photo.id }}" data-delete-url="{{ url_for('.feeds_photo_delete', photo_id=photo.id) }}" data-edit-url="{{ url_for('.feeds_photo_edit', photo_id=photo.id) }}">
+                        <img src="{{ photo.preview.url }}" width="{{ photo.preview.width }}" height="{{ photo.preview.height }}">
+                        {% set title = photo_translations[photo.id][lang] if photo_translations.get(photo.id, {}).get(lang, {}) else '' %}
+                        {% if title %}
+                        <p class="title">{{ title }}</p>
+                        {% endif %}
+                        <div class="actions clearfix">
+                            <div class="btn btn-sm btn-info btn-eye">
+                            {% if not photo.hidden %}
+                                <span title="Показывается"><i class="fa fa-eye"></i></span>
+                            {% else %}
+                                <span title="Показывается"><i class="fa fa-eye-slash"></i></span>
+
+                            {% endif %}
+                            </div>
+                            <a href="#" data-bs-toggle="modal" class="btn btn-sm btn-success copy-link" title="Копировать ссылку" data-full-url="{{ photo.image.url }}"><i class="fa fa-link"></i></a>
+                            <a href="#modal-photo-delete" data-bs-toggle="modal" class="btn btn-sm btn-danger" title="Удалить"><i class="fa fa-trash-o"></i></a>
+                            <a href="#modal-photo-edit" data-bs-toggle="modal" class="btn btn-sm btn-info" title="Редактировать"><i class="fa fa-pencil"></i></a>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+        <div class="row mb-3">
+            <div class="col-lg offset-lg-2">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                {% if feed_translations and feed_translations[lang].id %}
+                <a href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger">Удалить</a>
+                {% endif %}
+                <a href="{{ url_for('.feeds') }}" class="btn btn-outline-secondary">к списку новостей</a>
+            </div>
+        </div>
+    </form>
+
+    {% if feed_translations and feed_translations[lang].id %}
+        <form method="post" action="{{ url_for('.feed_translation_delete', feed_translation_id=feed_translations[lang].id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal" id="modal-delete"><div class="modal-dialog modal-lg"><div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Удалить новость на языке &laquo;{{ lang }}&raquo;<sup>*</sup> ?</h4><br>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div class="text-muted">* - если язык английский новость будет удалена на всех языках.</div>
+                    <div class="div">
+                    <button type="submit" class="btn btn-danger">Да</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Нет</button></div>
+                </div>
+            </div></div></div>
+        </form>
+        {% if photos|length > 0 %}
+            <form method="post" action="#" id="form-photo-delete" class="form-horizontal">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal" id="modal-photo-delete"><div class="modal-dialog modal-lg"><div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Удалить фотографию?</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Да</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Нет</button>
+                    </div>
+                </div></div></div>
+            </form>
+            <form method="post" action="#" id="form-photo-edit" class="form-horizontal">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="lang" value="{{ lang }}">
+                <div class="modal" id="modal-photo-edit">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Редактировать фото</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-3">
+                                    <label class="text-lg-end col-lg-2">Подпись:</label>
+                                    <div class="col-lg"><input type="text" name="title" class="form-control"></div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-lg offset-lg-2">
+                                    <div class="form-check">
+                                        <span class="form-check-label"></span>скрыто
+                                        <input name="hidden" type="checkbox" class="form-check-input">
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Сохранить</button>
+                                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Отмена</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block tail %}
+<script>
+(function() {
+    var modalDelete = $('#modal-photo-delete'),
+        modalEdit = $('#modal-photo-edit'),
+        formDelete = $('#form-photo-delete'),
+        formEdit = $('#form-photo-edit'),
+        gallery = $('#gallery');
+
+    /* Редактирование фотографии */
+    modalEdit.on('shown.bs.modal', function(e) {
+        var $li = $(e.relatedTarget).parents('li'),
+            $checkbox = $li.find('span')[0];
+        formEdit.attr('action', $li.data('edit-url')).find('[name=title]').val($li.find('p.title').text()).focus();
+
+        if ($checkbox.className.indexOf('glyphicon-eye-close') >= 0){
+            formEdit.find('[name=hidden]').prop('checked', true);
+        }else{
+            formEdit.find('[name=hidden]').prop('checked', false);
+        }
+    });
+
+    formEdit.ajaxForm({
+        dataType: 'json',
+        success: function(data) {
+            if(data.error) {
+                alert(data.error);
+                return;
+            }
+            var $gallery = gallery.find('[data-id=' + data.id + ']');
+            $gallery.find('p.title').text(data.title);
+            $gallery.find('span').first().attr('class', data.hidden ? 'glyphicon glyphicon-eye-close' : 'glyphicon glyphicon-eye-open');
+            modalEdit.modal('hide');
+        }
+    });
+
+    /* Удаление фотографии */
+    modalDelete.on('shown.bs.modal', function(e) {
+        var btn = $(e.relatedTarget).closest('li');
+        formDelete.attr('action', btn.data('deleteUrl')).find('button[data-bs-dismiss]').focus();
+    });
+
+    formDelete.ajaxForm({
+        dataType: 'json',
+        success: function(data) {
+            if (data.photo_id) {
+                gallery.find('[data-id=' + data.photo_id + ']').remove();
+                if (gallery.children('li').length === 0) gallery.closest('.row mb-3').remove();
+                modalDelete.modal('hide');
+            } else {
+                console.log('Что пошло не так.');
+            }
+        }
+    });
+
+    $('.copy-link').on('click', function(e) {
+        var el = document.createElement('textarea');
+        el.value = $(this).attr('data-full-url');
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    });
+})();
+
+$(document).ready(function() {
+  $('#summernote').summernote({
+    height: 500,                 // set editor height
+    minHeight: null,             // set minimum height of editor
+    maxHeight: null,             // set maximum height of editor
+    focus: true,
+    toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['fontname', ['fontname']],
+        ['color', ['color']],
+        ['para', ['ol', 'ul', 'paragraph']],
+        ['insert', ['link', 'table']],
+        ['misc', ['codeview', 'help']]
+    ]
+  });
+  $("#form-main").submit(function(e) {
+    $("#txt_body").val($("#summernote").summernote("code"));
+  });
+  $('.note-fontname').remove();
+})
+</script>
+{% endblock %}
+

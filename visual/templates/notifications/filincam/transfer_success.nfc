@@ -1,0 +1,43 @@
+# Отправляется, когда сцена перекачалась из процессинга на biganto.com, transfer.success
+#
+[CONTEXT]
+dataset=RemoteDataset
+# Может быть None, если внешняя система не сказала, в какой тур превратилась сцена в Event.meta.results[0]
+tour=Tour
+
+[COMMON]
+channel=filincam
+tone=success
+link={% if tour %}{{  url_for('front.tour', tour_id=tour.id) }}{% else %}{{ url_for('my.index', path='tours/') }}{% endif %}
+
+[EN]
+message=Scene <b>{{ dataset.title or 'Untitled' }}</b> successfully converted into tour {%- if tour and tour.title != dataset.title %} <b>{{ tour.title }}</b>{% endif %}
+email_subject=Scene "{{ dataset.title or 'Untitled' }}" successfully converted into tour {%- if tour and tour.title != dataset.title %} {{ tour.title }}{% endif %}
+email_html=<p>
+        Your scene <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        has been successfully processed and converted into 3D-Tour
+        {% if tour %}
+            "<a href="{{ url_for('front.tour', tour_id=tour.id, _external=True) }}">{{ tour.title }}</a>".
+        {% else %}
+            which you can find <a href="{{ url_for('my.index', _external=True, path='tours/') }}">in your account</a>.
+        {% endif %}
+     </p>
+     <p>
+        Do not forget to publish it.
+     </p>
+
+[RU]
+message=Сцена <b>{{ dataset.title or 'Untitled' }}</b> обработана в тур {%- if tour and tour.title != dataset.title %} <b>{{ tour.title }}</b>{% endif %}
+email_subject=Сцена "{{ dataset.title or 'Untitled' }}" обработана в тур {%- if tour and tour.title != dataset.title %} {{ tour.title }}{% endif %}
+email_html=<p>
+        Ваша сцена <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        успешно обработана и превратилась в 3D-тур
+        {% if tour %}
+            "<a href="{{ url_for('front.tour', tour_id=tour.id, _external=True) }}">{{ tour.title }}</a>".
+        {% else %}
+            который вы можете найти <a href="{{ url_for('my.index', _external=True, path='tours/') }}">в личном кабинете</a>.
+        {% endif %}
+     </p>
+     <p>
+        Пожалуйста, не забудьте опубликовать его.
+     </p>

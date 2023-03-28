@@ -1,0 +1,118 @@
+{% extends 'base_common.html' %}
+{% set pixels_disabled = True %}
+
+{% set corpus_class = 'dark' %}
+
+{% from '/offers/macros/spacer.html' import spacer_line %}
+{% from '/offers/macros/price.html' import price %}
+{% from '/offers/macros/features.html' import features %}
+{% from '/offers/macros/description.html' import description %}
+{% from '/offers/macros/contacts.html' import contacts %}
+{% from '/offers/macros/location.html' import location %}
+
+{% block common_head %}
+    {% block head %}{% endblock %}
+    <link rel="stylesheet" type="text/css" href="/static/offers/css/landing.css?{{ config.get('RELEASE_VERSION') }}">
+{% endblock %}
+
+{% block common_content %}
+
+    {% block before %}{% endblock %}
+
+    {% for category, messages in flashes().items() %}
+        <div class="b-topnav">
+            <ul class="b-topnav__flashes">
+                <li class="b-topnav__flashes-item">{{ messages | join('</li><li class="b-topnav__flashes-item">') | safe }}</li>
+            </ul>
+        </div>
+    {% endfor %}
+
+    <div class="b-external b-external--landing">
+
+        {% if offer.template_data.header and offer.template_data.header.title or offer.logo %}
+            <header class="b-header b-external__section">
+                <div class="b-external__inner clearfix">
+                    <div class="b-header__label">
+                        {% if offer.template_data.header.url %}
+                            <a href="{{ offer.template_data.header.url }}" rel="noopener" target="_blank">
+                        {% endif %}
+                            {% if offer.logo %}<img src="{{ offer.logo.url }}" width="{{ offer.logo.width }}" height="{{ offer.logo.height }}" class="b-header__logo">{% endif %}
+                            {% if offer.template_data.header.title %}<span class="b-header__title">{{ offer.template_data.header.title }}</span>{% endif %}
+                        {% if offer.template_data.header.url %}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+        {% endif %}
+
+        {# {% if offer.template_data.header or offer.logo == True %}
+            {% if offer.template_data.header.title != '' %}
+                <section class="b-namer b-external__section">
+                    <div class="b-external__inner clearfix">
+                        <h1 class="b-namer__value">{{ offer.template_data.get('title', '') }}</h1>
+                    </div>
+                </section>
+            {% endif %}
+        {% endif %} #}
+
+        <section class="b-area">
+            {% if offer.template_data.get('title') %}
+                <div class="b-titler b-external__section">
+                    <div class="b-external__inner clearfix">
+                        <h1 class="b-titler__value">{{ offer.template_data.get('title') }}</h1>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% include 'offers/gallery_viewbox.html' %}
+            {% include 'offers/gallery_thumbs.html' %}
+        </section>
+
+        {{ spacer_line() }}
+
+        {% if offer.template_data.contact %}
+            {{ contacts(offer) }}
+            {{ spacer_line() }}
+        {% endif %}
+
+        {% if (offer.template_data.price and offer.template_data.price.value) or offer.template_data.features|length > 0 %}
+            <section class="b-bg-box" style="background-image: url(/static/public/img/content/bg-box-image-1.jpg);">
+                <div class="b-bg-box__inner clearfix">
+
+                    {% if offer.template_data.price and offer.template_data.price.value %}
+                        <div class="b-bg-box__half">
+                            {{ price(offer=offer) }}
+                        </div>
+                    {% endif %}
+
+                    {% if offer.template_data.features|length > 0 %}
+                        <div class="b-bg-box__half">
+                            {{ features(offer=offer) }}
+                        </div>
+                    {% endif %}
+
+                </div>
+            </section>
+
+            {{ spacer_line() }}
+        {% endif %}
+
+        {% if offer.template_data.description %}
+            {{ description(offer) }}
+            {{ spacer_line() }}
+        {% endif %}
+
+        {{ location(offer) }}
+
+    </div>
+{% endblock %}
+
+{% block common_tail %}
+    {% block tail %}{% endblock %}
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" defer></script>
+    <script>
+        BG.KEEP_POSITION = {% if offer.template_data.keep_position %}true{% else %}false{% endif %};
+    </script>
+    <script src="/static/offers/js/landing.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+{% endblock %}

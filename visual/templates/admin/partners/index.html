@@ -1,0 +1,88 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'content' %}
+
+
+{% block content %}
+    <h1>
+        <a href="{{ url_for('.partners_edit', lang=lang) }}" class="btn btn-success float-end"><i class="fa fa-plus"></i> Добавить партнёра</a>
+        Партнёры
+    </h1>
+
+    {% if not partners %}
+        <div class="alert alert-info">
+            Нет ни одного партнёра для этого языка.
+        </div>
+    {% else %}
+        <div class="table-responsive-lg">
+        <table class="table table-bordered table-hover table-list">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Логотип</th>
+            <th>Партнёр</th>
+            <th>Ссылка</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for partner in partners %}
+        <tr data-id="{{ partner.id }}" {% if partner.hidden %} style="background: #eee" {% endif %}>
+            <td><i class="fa fa-sort handle"></i></td>
+            <td>{% if partner.logo %}<img src="{{ partner.logo.url }}" class="partner-logo" style="max-width: 300px; max-height: 200px;">{% endif %}</td>
+            <td>
+                <p>{{ partner.title or '' }}</p>
+            </td>
+            <td class="t">
+                <p>{{ partner.url or '' }}</p>
+            </td>
+            <td>
+                <p>
+                    <a href="{{ url_for('.partners_edit', lang=partner.lang, partner_id=partner.id) }}" class="btn btn-primary btn-sm">
+                        <i class="fa fa-edit"></i> Редактировать
+                    </a>
+                </p>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block tail %}
+
+<form method="post" action="{{ url_for('.partners_reorder', lang=lang) }}" id="form-reorder">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
+
+<script type="text/javascript" src="/static/jquery-sortable-min.js"></script>
+<script type="text/javascript" src="https://yastatic.net/jquery/form/3.14/jquery.form.min.js"></script>
+<script type="text/javascript">
+(function() {
+    var $table = $('.table-list'), $formReorder = $('#form-reorder');
+
+    $formReorder.ajaxForm();
+
+    $table.sortable({
+        containerSelector: 'table',
+        itemPath: '> tbody',
+        itemSelector: 'tr',
+        placeholder: '<tr class="placeholder"><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>',
+        handle: 'i.fa-sort',
+        delay: 200,
+        onDrop: function ($item, container, _super) {
+            $formReorder.find('input[name^=sort]').remove();
+            $.each($table.sortable("serialize").get()[0], function(i) {
+                $('<input type="hidden">').attr('name', 'sort.' + this.id).val(i).appendTo($formReorder);
+            });
+            $formReorder.submit();
+
+            _super($item, container);
+        }
+    });
+})();
+</script>
+{% endblock %}

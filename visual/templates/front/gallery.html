@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% set page_title=_('Tour gallery') %}
+{% set corpus_class = 'portfolio' %}
+{% set offset_content = True %}
+
+{% from 'macros/spinner.html' import spinner %}
+{% from 'macros/render_tours.html' import render_tours_items %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+    <script>
+        {% set pagesCount = (tours.total / tours.per_page)|round(0, 'ceil')|int %}
+        var pagesCount = {{ pagesCount }},
+            filterParams = {{ params|tojson }},
+            filter = {
+                types: {{ types|tojson }},
+                styles: {{ styles|tojson }},
+                developers: {{ developers|tojson }},
+                features: {{ features|tojson }},
+                sorts: {{ sorts|tojson }}
+            };
+    </script>
+    <div class="page-title">
+        <div class="b-page__inner page-title__inner page-title__inner--align-left">
+            <h1 class="page-title__head background-image-title-gallery h1">{{ page_title }}</h1>
+            {% if params.type != '' or params.style != '' or params.developer != '' or params.feature != '' %}
+            <div class="back">
+                <a href="{{ url_for('front.gallery') }}" class="back__link">← {{ _("To all tours") }}</a>
+            </div>
+            {% endif %}
+            <div class="filter">
+                <form class="filter__inner" action="{{ url_for('front.gallery') }}" method="GET">
+                    <div class="filter__item">
+                        <select class="no-style filter__select" name="type">
+                            <option value="">{{ _("All tours") }}</option>
+                            {% for item in types %}
+                                <option value="{{ item.tag }}"{% if item.tag == params['type'] %} selected{% endif %}>{{ item.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter__item">
+                        <select class="no-style filter__select" name="style">
+                            <option value="">{{ _("All styles") }}</option>
+                            {% for item in styles %}
+                            <option value="{{ item.tag }}"{% if item.tag == params['style'] %} selected{% endif %}>{{ item.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter__item">
+                        <select class="no-style filter__select" name="developer">
+                            <option value="">{{ _("All companies") }}</option>
+                            {% for item in developers %}
+                            <option value="{{ item.tag }}"{% if item.tag == params['developer'] %} selected{% endif %}>{{ item.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter__item">
+                        <select class="no-style filter__select" name="feature">
+                            <option value="">{{ _("All features") }}</option>
+                            {% for item in features %}
+                            <option value="{{ item.id }}"{% if item.id == params['feature'] %} selected{% endif %}>{{ item.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {#
+                    <div class="filter__item">
+                        <select class="no-style filter__select" name="sort">
+                            {% for item in sorts %}
+                            <option value="{{ item.id }}"{% if item.id == params['sort'] %} selected{% endif %}>{{ item.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                 #}
+                    <div class="filter__launch">
+                        <button class="filter__link">
+                            <svg viewBox="0 0 32 32" class="icon__svg" width="32" height="32"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#launch"></use></svg>
+                            <span>{{ _("Launch by ID") }}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg b-page__matter">
+
+        {% if tours.total == 0 %}
+            <div class="offers offers--empty">
+                {{ _("No tours found. <a href='%(url)s'>Show all tours.</a>", url=url_for('front.gallery')) }}
+            </div>
+        {% else %}
+            <div class="offers offers--portfolio">
+                <div class="offers__inner">
+                    <ul class="offers__list">
+                        {{ render_tours_items(tours, params) }}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if pagesCount > 1 %}
+        <div class="load-more">
+            <button class="button border gray load-more__button">{{ _("Load more") }}</button>
+            {{ spinner('load-more__spinner') }}
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script type="text/template" class="template-modal" id="tmpl__launch-tour">
+        <div class="b-overlay">
+            <div class="modal-custom">
+                <div class="modal-custom__inner">
+                    <div class="modal-custom__header">
+                        <div class="modal-custom__close"><svg viewBox="0 0 32 32" class="icon__svg" width="24" height="24"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#close"></use></svg></div>
+                        <div class="modal-custom__title">
+                            {{ _("Launch tour") }}
+                        </div>
+                    </div>
+                    <div class="modal-custom__content">
+                        <form class="form-modal launch" method="post" action="{{ url_for('front.gallery') }}">
+                            <div class="form-modal__section launch__section">
+                                <div class="form-modal__label">{{ _("Enter tour ID or tour link") }}</div>
+                                <div class="form-modal__field launch__field">
+                                    <input type="text" class="big-input" value="" name="tour">
+                                </div>
+                            </div>
+                            <div class="form-modal__section launch__submit clearfix">
+                                <button type="submit" class="button fill blue modal-custom__button-wide launch__button" disabled="disabled">{{ _("Open") }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+{% endblock %}

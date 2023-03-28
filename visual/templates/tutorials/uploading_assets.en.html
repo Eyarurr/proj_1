@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% set page_title = _("Uploading assets") %}
+{% set corpus_class = 'tutorials' %}
+{% set background_head = '/static/public/img/tutorials/uploading-assets/assets-uploading.jpeg' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="page-title page-title--textpage"{% if background_head %} style="background-image: url({{ background_head }});"{% endif %}>
+        <div class="b-page__inner">
+            <div class="page-title__inner">
+                <h1 class="h1 page-title__head">{{ page_title }}</h1>
+                <div class="page-title__tags tags">
+                    <span class="tags__item tags__item--red">{{ _("must-read") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        <div class="content-page__wrapper">
+
+            <div id="more" class="b-anchor"></div>
+            <div class="content-page__main">
+                <h2>Creating new tour</h2>
+
+                <p>To start creating a tour, press “Create tour” on the top of Virtoaster web page or enter existing folder and scroll down to the bottom of the tour list. You will enter asset uploading interface.</p>
+                <p><img src="/static/public/img/tutorials/uploading-assets/image_1.png" alt="" /></p>
+                <p>Any Virtoaster tour require three key assets. First, there are 360 panoramic renders. So far we only support the following images:</p>
+                <ul>
+                    <li>Cubemap 6x1 (12x1 for binocular renders) format</li>
+                    <li>9216x1536 px. resolution (18432x1536 for binocular renders)</li>
+                    <li>.jpg or .png image format (we recommend to upload only .png images to avoid double compression when using .jpg)</li>
+                    <li>image file names should contain a sequential number in order to match renders with points in a tour (numbering should not have any breaks and file name should contain distinct number e.g. “Render_01.png”, “Render_02.png”, etc., names like “10001.png” can not be used.)</li>
+                </ul>
+
+                <div id="uploading_panoramas" class="b-anchor"></div>
+                <h3>Uploading panoramas</h3>
+                <p>If you followed our instructions for <a href='{{ url_for('tutorials.setting_up_camera') }}'>setting up camera</a> and managing <a href='{{ url_for('tutorials.setting_up_render') }}'>your render</a> settings carefully, you should already have required sequence of images. Select your render type and select files to upload - you will see the list of uploaded renders under the “Result” headline. From this list you can replace renders individually (hover with your mouse to the point and press “Delete central panorama”) or delete points altogether if necessary (“Delete point”).</p>
+                <p>If some of uploaded files do not comply with the requirements, you will receive an error message in the bottom of the screen. Creating the tour will not be possible, unless every error has been addressed.</p>
+                <p><img src="/static/public/img/tutorials/uploading-assets/image_2.jpg" width="360" alt="" /></p>
+                <p>You may also want to upload binocular panoramas. Each binocular 12x1 panorama should have regular 6x1 equivalent.</p>
+
+                <div id="uploading_3d_model" class="b-anchor"></div>
+                <h3>Uploading 3d model</h3>
+                <p>Next, upload 3d model of the scene. By default we expect to receive high poly .obj file, which will be optimized by our algorithm. You can follow our <a href='{{ url_for('tutorials.preparing_geometry') }}'>“Preparing geometry for Virtoaster”</a> guide to perform all necessary actions and export .obj file with proper settings.</p>
+<!--                <p><span class='warning'>Important:</span> your high poly 3d model will likely have a significant file size. To decrease file size to upload, please use zip archive (zip only!).</p>-->
+                <p>Alternatively you can upload low poly model of the scene yourself. Model should not exceed 50 mb and should not exceed 200-300k polygons, otherwise you may face performance issues when loading and viewing the tour. Low poly model should not contain texture coordinates, model should be scaled in meters. Do not forget to uncheck “Optimize 3d model” flag when uploading.</p>
+                <p>You can also uncheck "Create 3d panorama view" flag to prevent this process in our software. This
+                    might save some time of tour processing if you do not want 3d panorama mode anyway. Note, however,
+                    that you can not create 3d panorama separately from assembling the tour and, thus, it will be
+                    unavailable to your until complete tour reassembly.
+                </p>
+                <p><span class='warning'>Important:</span> you can disable or enable 3d panorama mode anytime in tour options instead.</p>
+
+                <div id="uploading_coordinates" class="b-anchor"></div>
+                <h3>Uploading coordinates</h3>
+                <p>Finally, there are coordinates of rendered panoramas. By default we recognize these coordinates from 3d model of the scene and auxiliary objects, created by our camera script. If you’ve followed instructions on how to set camera and uploaded high poly model of the scene you may skip this step.</p>
+                <p>Otherwise, you should use our camera creation tool to create .txt file with the coordinates (more details in <a href='{{ url_for('tutorials.setting_up_camera') }}'>Setting up camera guide</a>). Upload these coordinates with file or copy-paste them into the text field. System will perform coordinates check and will show error messages if something is not in order.</p>
+                <p>Once all the assets are uploaded and all error instances are resolved, you will be able to press “Create tour” in the bottom of the page. Your tour will be added to the queue, you will receive an email when it will be processed.</p>
+                <p>When your tour will be complete, do not forget to change its status to “Published”. Follow <a href='{{ url_for('tutorials.releasing_tour') }}'>this guide</a> to access your tour, change status and share it.</p>
+                <p>If you are unable to complete tour at the moment, you can always close the page and return to it later - this tour will be available from your user account. Unfinished tour are locked in “Loading” status inside parent folder. Press “Delete” from tour list if you do not intent to complete the tour.</p>
+                <p><img src="/static/public/img/tutorials/uploading-assets/image_3.jpg" alt="" /></p>
+            </div>
+
+            <aside class="content-page__side content-page__side--hide">
+                <nav class="side-menu sticky" data-top-spacing="96" data-res="lg">
+                    <ul class="side-menu__list">
+                        <li class="side-menu__item">
+                            <a href="#more" class="side-menu__link link-scroll-to">Creating new tour</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#uploading_panoramas" class="side-menu__link link-scroll-to">Uploading panoramas</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#uploading_3d_model" class="side-menu__link link-scroll-to">Uploading 3d model</a>
+                        </li>
+                        <li class="side-menu__item">
+                            <a href="#uploading_coordinates" class="side-menu__link link-scroll-to">Uploading coordinates</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

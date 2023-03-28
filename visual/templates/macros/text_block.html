@@ -1,0 +1,12 @@
+{% macro text_block(title='', text='', container_class=None) %}
+<section class="block standard {{ container_class or '' }}">
+    <div class="b-page__inner">
+        <div class="block__head">
+            <h2 class="block__title multiplatform__head">{{ title }}</h2>
+        </div>
+        <div class="block__content">
+            {{ text }}
+        </div>
+    </div>
+</section>
+{% endmacro %}

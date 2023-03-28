@@ -1,0 +1,159 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'team' %}
+
+
+{% block head %}
+    <style>
+        .add-bd {
+            border: 1px solid darkcyan;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+   <p>← <a href="{{ url_for('.hardware') }}">Вся техника</a></p>
+
+    <div class="row justify-content-start">
+        <div class="col-lg-2">
+            <div class="card text-center">
+
+                <div class="card-body">{% if gadget and gadget.preview %}
+                    <a class="" href="{{ gadget.photo.url }}">
+                        <img src="{{ gadget.preview.url }}" width="{{ gadget.preview.width }}"
+                             height="{{ gadget.preview.height }}"></a>
+                {% else %}
+                    <img class="" src="{{ url_for('static', filename='/admin/noutbook.png') }}"
+                         width="100px" height="100px" alt="">
+                {% endif %}</div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+            <div class="card">
+                <h4 class="card-header">
+                    {% if gadget  %}
+                    Наименование: {{ form.title.label }}
+                    {% else %}
+                    Карточка нового гаджета:
+                    {% endif %}
+                </h4>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="row  align-items-center">
+                                <div class="col-lg-4">
+                                    <label for=""
+                                           class="col-form-label"><strong>{{ form.title.label(class="") }}:</strong></label>
+                                </div>
+                                <div class="col-lg">
+                                    {{ form.title(class="form-control form-control-sm") }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="col-form-label"><label
+                                        class=""><strong>Передать:</strong></label></label>
+                                </div>
+                                <div class="col-lg">
+                                    {{ form.user_id(class="form-select form-control form-select-sm") }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label for="inputPassword6"
+                                           class="col-form-label"><strong>{{ form.sn.label(class="") }}:</strong></label>
+                                </div>
+                                <div class="col-lg">
+                                    {{ form.sn(class="form-control form-control-sm") }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="col-form-label"><strong><label
+                                        class="">Стоимость</label>:</strong></label>
+                                </div>
+                                <div class="col-lg">
+                                    {{ form.price(class="form-control form-control-sm") }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="col-form-label"><strong><label class="">Дата
+                                        покупки</label>:</strong></label>
+                                </div>
+                                <div class="col-lg">
+                                    {{ form.buy_date(class="form-control form-control-sm") }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="col-form-label"><strong><label class="">Тип
+                                        гаджета</label>:</strong></label>
+                                </div>
+                                <div class="col-lg">
+                                    {{ form.type(class="form-select form-select-sm") }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="col-form-label"><strong><label class="">Где
+                                        находится</label>:</strong></label>
+                                </div>
+                                <div class="col-lg">
+                                    {{ form.location(class="form-select form-select-sm") }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="col-form-label"><strong><label
+                                        class="">Описание</label>:</strong></label>
+                                </div>
+                                <div class="col-lg">
+                                    {{ form.description(class="form-control form-control-sm") }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            {{ form.img(class="form-control form-control-sm") }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer text-end">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="submit"
+                                class="btn btn-sm btn-outline-success">Сохранить изменения
+                        </button>
+                        {% if gadget %}
+                        <a href="{{ url_for('.hardware_delete', gadget_id=gadget.id ) }}"
+                           class="btn btn-sm btn-danger">Удалить</a>
+                        {% endif %}
+                        <a href="{{ url_for('.hardware') }}"
+                           class="btn btn-sm btn-submit btn-secondary">Отмена</a>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+{% block tail %}
+    <script type="text/javascript">
+    </script>
+{% endblock %}

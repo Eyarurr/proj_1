@@ -1,0 +1,12 @@
+{#
+    @param {string} url - адрес целевой страницы
+    @param {string} selector - селектор блока, к котором следует проскроллить страницу
+    @param {string} type - тип стрелки (top, right, down, left)
+#}
+{% macro more(url, selector, type = 'down') %}
+    <div class="b-more">
+        <a class="b-more__arrow{% if selector %} link-scroll-to{% endif %}" href="{{ url or '#' }}"{% if selector %} data-elem="{{ selector }}"{% endif %}>
+            <svg viewBox="0 0 56 56" class="icon__svg" width="56" height="56"><use xlink:href="/static/public/img/icons.svg#arrow-double-{{ type }}"></use></svg>
+        </a>
+    </div>
+{% endmacro %}

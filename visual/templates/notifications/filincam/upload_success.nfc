@@ -1,0 +1,32 @@
+# Отправляется, когда сцена загрузилась, автопроцессинг у юзера не включен.
+#
+[CONTEXT]
+dataset=RemoteDataset
+
+[COMMON]
+channel=filincam
+tone=action
+link={{ url_for('my.index', path='scenes/', _anchor='scene-' + dataset.remote_id) }}
+
+[RU]
+message=Запустите обработку сцены <b>{{ dataset.title or 'Untitled' }}</b> или включите автопроцессинг
+email_subject=Запустите обработку сцены "{{ dataset.title or 'Untitled' }}"
+email_html=<p>
+        Ваша сцена <a href="{{ url_for('my.index', _external=True, path='scenes/', _anchor='scene-' + dataset.remote_id) }}">"{{ dataset.title or 'Untitled' }}"</a>
+        выгрузилась из камеры и доступна в личном кабинете.
+     </p>
+     <p>
+        <a href="{{ url_for('my.index', path='scenes/', _external=True, _anchor='scene-' + dataset.remote_id) }}">Запустите создание</a> из неё тура или включите автопроцессинг
+        <a href="{{ url_for('my.index', path='scenes/', _external=True) }}">на странице сцен</a> в личном кабинете.
+     </p>
+
+[EN]
+message=Please start processing of scene <b>{{ dataset.title or 'Untitled' }}</b> or enable autoprocessing
+email_subject=Please start processing of scene "{{ dataset.title or 'Untitled' }}"
+email_html=<p>
+        Your scene "{{ dataset.title or 'Untitled' }}" is ready for processing.
+     </p>
+     <p>
+        <a href="{{ url_for('my.index', path='scenes/', _external=True, _anchor='scene-' + dataset.remote_id) }}">Start creation of tour</a> or enable autoprocessing
+        <a href="{{ url_for('my.index', path='scenes/', _external=True) }}">on the scenes list</a> in your account.
+     </p>

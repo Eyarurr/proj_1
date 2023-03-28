@@ -1,0 +1,30 @@
+{% macro lang(cl) %}
+    <div class="lang {{ cl or '' }}">
+        <div class="lang__inner">
+            <div class="lang__choosen" title="{{ _("Change language") }}">
+                <div class="lang__link">
+                    {% if g.lang and 'site' in config.LANGUAGES[g.lang]['applicable'] -%}
+                        <img src="/static/public/img/lang/{{ g.lang }}.png?{{ config.get('RELEASE_VERSION') }}" alt="" class="lang__ico">
+                        <span class="lang__label">{{config.LANGUAGES[g.lang]['title']}}</span>
+                    {% else %}
+                        <img src="/static/public/img/lang/{{ config.LANGUAGE }}.png?{{ config.get('RELEASE_VERSION') }}" alt="" class="lang__ico">
+                        <span class="lang__label">{{config.LANGUAGES[config.LANGUAGE]['title']}}</span>
+                    {% endif %}
+                </div>
+                <i class="icon icon-arrow-down lang__arrow"></i>
+            </div>
+            <div class="lang__sub">
+                <ul class="lang__list">
+                    {% for code, props in config.LANGUAGES.items() if 'site' in props['applicable'] %}
+                    <li class="lang__item{% if g.lang == code %} lang__active{% endif %}">
+                        <a href="{{ url_for('front.set_lang', lang=code) }}" class="lang__link">
+                            <img src="/static/public/img/lang/{{ code }}.png?{{ config.get('RELEASE_VERSION') }}" alt="" class="lang__ico">
+                            <span class="lang__label">{{- props['title'] -}}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

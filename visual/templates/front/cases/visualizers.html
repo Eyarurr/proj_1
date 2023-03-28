@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% set page_title = _("About") %}
+{% set corpus_class = 'cases' %}
+
+{% from 'front/cases/page_nav.html' import page_nav %}
+{% from 'front/cases/features_list.html' import feature_list %}
+
+{% set use_cases = [
+    ('#ic-virtoaster', _(" Create interactive projects on your own with Virtoaster - a service for creating 3d tours ")),
+    ('#ic-pencil', _(" You retain full control over the result of your work, you decide how your project will look like ")),
+    ('#ic-service', _(" Expand the range of services for existing customers and attract new ones with the help of 3d tours ")),
+    ('#ic-puzzle', _(" The creation of a 3d tour requires minimal resources and knowledge beyond the production of static renders, all assets are created from a regular ready-made 3d scenes for architectural visualisation ")),
+    ('#ic-book', _(" Easy to learn, all the nuances are described in detail on our \"Tutorials\" page ")),
+] %}
+
+{% block content %}
+    <div class='background-video'>
+        <video muted loop autoplay class='background-video__video' poster="/static/public/img/cases/tour3_poster.jpeg">
+            <source src="/static/public/video/cases/tour3_720p.webm" type="video/webm">
+            <source src="/static/public/video/cases/tour3_720p.ogg" type="video/ogg">
+            <source src="/static/public/video/cases/tour3_720p.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class='tabs-css b-page__inner'>
+
+        {{ page_nav('Visualizers') }}
+
+        <div class='tabs-css__tabs-folder'>
+            <div class='tabs-css__tab-content'>
+                <div class="page-title">
+                    <div class="page-title__inner">
+                        <h1 class="page-title__head h1">{{ _("Visualizers") }}</h1>
+                    </div>
+                </div>
+
+                {{ feature_list(use_cases) }}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

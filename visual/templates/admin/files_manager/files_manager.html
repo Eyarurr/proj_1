@@ -1,0 +1,278 @@
+{% extends 'admin/base.html' %}
+{% if entity == 'footage' %}
+    {% set menu_current = 'footages' %}
+    {% set entity_id = footage.id %}
+    {% set endpoint = 'admin.footage_files' %}
+    {% set tabs = 'admin/footages/_tabs.html' %}
+    {% set abs_url = footage.files.url%}
+{% endif %}
+{% if entity == 'tour' %}
+    {% set menu_current = 'tours' %}
+    {% set entity_id =  tour.id %}
+    {% set endpoint = 'admin.tour_files' %}
+    {% set tabs = 'admin/tours/_tabs.html' %}
+    {% set abs_url = tour.files.url %}
+{% endif %}
+
+{% if content.files|length != 0 %}
+    {% set count_files = ' - '+ content.files|length|string + ' файл(ов)' %}
+{% endif %}
+
+{% block content %}
+    <style>
+        .scroll {
+            height: 300px; /* высота нашего блока */
+            background: #fff; /* цвет фона, белый */
+            border: 1px solid #C1C1C1; /* размер и цвет границы блока */
+            overflow-x: scroll; /* прокрутка по горизонтали */
+            overflow-y: scroll; /* прокрутка по вертикали */
+        }
+
+        .ico {
+            margin-right: 5px;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: white;
+
+        }
+        thead th.header {
+            cursor: pointer;
+        }
+        th.headerSortDown {
+            color: #337ab7;
+        }
+
+        th.headerSortUp {
+            color: #337ab7;
+        }
+
+        th.headerSortDown::after {
+            color: #337ab7;
+            content: " ↑";
+        }
+
+        th.headerSortUp::after {
+            color: #337ab7;
+            content: " ↓";
+        }
+        th.header:hover {
+            color: #337ab7;
+        }
+
+    </style>
+    <h2>
+        {% if entity == 'footage' %}Модель съёмки #{{ footage.id }}
+        {% else %}Тур «{{ tour.title }}»
+        {% endif %}
+    </h2>
+
+    {% include(tabs) %}
+
+    <div>{% if rel_path %}
+        <h2> Выбран каталог {{ rel_path }}</h2>
+    {% endif %}
+        <div class="scroll w-75 mb-3">
+            <table class="table table-bordered table-striped table-hover" id="files">
+                <thead class="table-light">
+                <tr>
+                    <th class="col-11">Папки</th>
+                    <th class="col-1"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ url_for(endpoint, obj_id=entity_id, rel_path = '') }}" title="В начало"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a></td>
+                    <td>
+                    </td>
+                </tr>
+
+                {% if rel_path %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for(endpoint, obj_id=entity_id, rel_path='/'.join(rel_path.split('/')[:-1])) }}"
+                               title="Наверх"><i class="fa fa-level-up" aria-hidden="true"></i> наверх</a>
+                        </td>
+
+                    </tr>
+                {% endif %}
+
+                {% for name in content.folders %}
+                    <tr>
+                        <td>
+                            {% if rel_path %}
+                                {% set path_ = rel_path+'/'+name %}
+                            {% else %}
+                                {% set path_ = name %}
+                            {% endif %}
+                            <a href="{{ url_for(endpoint, obj_id=entity_id, rel_path= path_ ) }}"><i
+                                    class="fa fa-folder ico" aria-hidden="true"></i> {{ name }} </a>
+                        </td>
+                        <td file-name="{{ name }}" class="text-end">
+                            <button href="#modal-delete" data-bs-toggle="modal" class="btn btn-danger btn-sm" title="Удалить папку {{ name }}">
+                                <i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <h2>Добавить каталог</h2>
+    <form method="post" id="form-upload" enctype="multipart/form-data" class="form-horizontal"
+          action="{{ url_for(endpoint, obj_id=entity_id, rel_path=rel_path, what='add_folder' ) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="col-6">
+                <div class="mb-3">
+                    <input type="text" name="folder" class="form-control multiple mb-1" placeholder=""
+                           aria-label="Пример текста с надстройкой кнопкой" aria-describedby="button-addon1">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-plus-circle"></i> Создать каталог</button>
+                </div>
+            </div>
+    </form>
+    <div>
+
+        {% if rel_path %}
+            <h2>
+                Содержимое каталога {{ rel_path }}{{ count_files }}
+            </h2>
+        {% else %}
+            <h2>
+                Содержимое каталога ...{{ count_files }}
+            </h2>
+        {% endif %}
+        <div class="scroll w-75 mb-3">
+            <table class="table table-bordered table-striped" id="table_with_files">
+            <thead class="table-light">
+            <tr>
+                <th class="col-auto">Файл</th>
+                <th class="col-2">Создано</th>
+                <th class="col-2">Размер</th>
+                <th class="col-1 sorter-false"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for file in content.files %}
+                {% if rel_path %}
+                    {% set abs_url = abs_url +'/' + rel_path + '/' + file.name %}
+                {% else %}
+                    {% set abs_url = abs_url + '/' + file.name %}
+                {% endif %}
+
+                <tr>
+                    <td>
+                        {{ file.name }}
+                    </td>
+                    <td>{{ file.created.strftime('%d.%m.%Y') }}</td>
+                    <td class="size_file">{{ file.size}}</td>
+                    <td file-name="{{ file.name }}" type="file" class="text-end text-nowrap">
+                        <a href="#modal-delete" data-bs-toggle="modal"><i
+                                class="fa fa-trash ico" aria-hidden="true" title="Удалить файл {{ file.name }}"
+                        ></i></a>
+                        <a href="{{ url_for(endpoint, obj_id=entity_id, rel_path=rel_path, name=file.name, what='download') }}"><i
+                                class="fa fa-download ico " aria-hidden="true" title="Скачать файл {{ file.name }}"></i></a>
+                        <a href="{{ abs_url }}"
+                           target="_blank"><i
+                                class="fa fa-file-image-o ico " aria-hidden="true"
+                                title="Открыть  файл {{ file.name }}"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+
+    <h2 id="add_files">Добавить файлы:</h2>
+<form method="post" id="form-upload" enctype="multipart/form-data" class="form-horizontal"
+          action="{{ url_for(endpoint, obj_id=entity_id, rel_path=rel_path, what='add_files') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="col-lg-6 mb-2">
+        <input type="file" name="files" class="form-control" multiple>
+    </div>
+    <div class="col-lg-auto mb-2">
+        <div class="form-check"><label class="form-check-label">Перезаписывать файлы</label>
+            <input class="form-check-input" type="checkbox" name="overwrite">
+        </div>
+    </div>
+    <div class="col-lg-auto mb-2">
+        <button type="submit" class="btn ps-1 btn-primary">
+            <i class="fas fa-plus-circle"></i> Добавить <span class="d-sm-inline d-none">выбранные файлы</span>
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block tail %}
+    <form method="post" id="form-delete" action="{{ url_for(endpoint, obj_id=entity_id, rel_path=rel_path, what='del') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal " id="modal-delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h4 class="modal-title">Удалить файл.</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body"><span>Удалить файл </span>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <script type="text/javascript">
+    (function() {
+        let $modal = $('#form-delete');
+        {#Сортировка таблицы#}
+        $("#table_with_files").tablesorter();
+
+        {#Преобразование размеров файлов#}
+        $('.size_file').text(function () {
+            let value = Number($(this).text());
+            if (value && !isNaN(value)) {
+                const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB', 'BB'];
+                let index = 0;
+                let k = value;
+                if (value >= 1024) {
+                    while (k > 1024) {
+                        k = k / 1024;
+                        index++;
+                    }
+                }
+            return k.toFixed(2)+' '+units[index];}
+        return '';
+        })
+
+        $modal.on('shown.bs.modal', function (e) {
+            let $name = $(e.relatedTarget).parents('td').attr('file-name');
+            let $url = $modal.attr('action') + '&' + 'name=' + $name;
+            $modal.find('.modal-body span').append('<code>' + $name + '</code>');
+            $modal.attr('action', $url);
+            if (!$(e.relatedTarget).parents('td').attr('type')) {
+                $modal.find('.modal-title').text('Удалить папку.');
+                $modal.find('.modal-body span').html('Вы действительно хотите удалить папку ' + '<code>' + $name + '</code>' + ' со всеми вложенными файлами');
+            } else {
+                $modal.find('.modal-title').text('Удалить файл.');
+                $modal.find('.modal-body span').html('Вы действительно хотите удалить файл ' + '<code>' + $name + '</code>');
+            }
+        })
+
+
+
+    })();
+    </script>
+{% endblock %}

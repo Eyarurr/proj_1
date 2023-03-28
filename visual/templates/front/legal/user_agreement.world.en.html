@@ -1,0 +1,561 @@
+{% extends 'base.html' %}
+{% set page_title = _("User Agreement") %}
+
+{% block content %}
+    <div class="page-title page-title--textpage">
+        <div class="b-page__inner page-title__inner page-title__inner--align-left">
+            <h1 class="page-title__head h1">{{ page_title }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg content-page content-page__license">
+        <p><strong> Terms of Use – www.biganto.com</strong></p>
+
+        <br>
+        <p><strong>1. General terms</strong></p>
+
+        <p>These terms of use regulate the use of <a href="{{ url_for('front.index') }}">www.biganto.com</a> from Biganto GmbH, Schloßschmidstr. 5, 80639 Munich, registered in the commercial register at the Munich Local Court, HRB 206771 (hereinafter: Biganto).
+        </p>
+
+        <p>The online services offered by Biganto allow users to create and manage interactive presentations, virtual and
+            photo tours, digital visualizations, renderings and 3D models.
+        </p>
+
+        <p>The online services provided by Biganto include all online applications, software, the provision of technical
+            customer service (support), sample content (samples), scripts, instructions and documentation, hereinafter
+            collectively referred as "online services".
+        </p>
+
+        <p>These terms of use apply to all online services offered by Biganto; the use of other services and developments by
+            Biganto offered in the future are also subject to these terms of use.
+        </p>
+
+        <p>By using the online services provided by Biganto, the user agrees to these terms of use.
+        </p>
+
+        <p>Terms and conditions of the users or third parties do not apply, even if Biganto does not separately contradict
+            their validity in individual cases.
+        </p>
+
+        <br>
+
+        <p><strong>2. Applicable Law</strong></p>
+
+        <p>The law of the Federal Republic of Germany applies, excluding the UN sales law, if
+        </p>
+
+        <ul>
+            <li>the user is habitually resident in Germany, or
+            </li>
+            <li>the user is habitually resident in a country that is not a member of the European Union
+            </li>
+        </ul>
+
+        <p>In the event that the user has his habitual residence in a member state of the European Union, German law also
+            applies, whereby the mandatory provisions of the state in which the user has his habitual residence remain
+            unaffected.
+        </p>
+
+        <br>
+
+        <p><strong>3. Use of online services at www.biganto.com</strong></p>
+
+        <p>After registering, users have the option of using Biganto's online services free of charge to a limited extent or
+            beyond the free use for a fee, after selecting a corresponding tariff.
+        </p>
+
+        <p>Users also have the option of publishing the content they have created with Biganto's online services via an
+            active link on the Internet.
+        </p>
+
+        <br>
+
+        <p><strong>3.1. Requirements</strong></p>
+
+        <p>Biganto provides its services via the Internet as an infrastructure provider (software-as-a-service). In order to
+            use Biganto's online services, a functioning internet connection and a corresponding device are required (see
+            also Section 3.3 of these Terms of Use).
+        </p>
+
+        <br>
+
+        <p><strong>3.2. Registration</strong></p>
+
+        <p>Registration of the user is required for free as well as for paid use of the online services. This requires a
+            valid user email address. After assigning a password and confirming the registration by the user, he will
+            receive a user account.
+        </p>
+
+        <p>In the event that the data provided by the user during registration does not enable the user to be identified,
+            Biganto has the right to deny the user access to the account and the use of the online services.
+        </p>
+
+        <p>The user account may not be made available to third parties for the use of Biganto's online services.
+        </p>
+
+        <p>The user must ensure that his access data for Biganto online services are used and stored confidentially.
+        </p>
+
+        <p>Biganto naturally treats the registration data confidentially and only uses it within the framework of our <a
+                href="{{ url_for('front.privacy_policy') }}">Privacy Policy</a>.
+        </p>
+
+        <br>
+
+        <p><strong>3.3. System requirements</strong></p>
+
+        <p>In order to use the online services, the user must ensure that the technical system requirements of the end
+            devices are met. The technical system requirements can be found at <a
+                href="{{ url_for('tutorials.system_requirements') }}">https://biganto.com/tutorials/system_requirements/</a>.
+        </p>
+
+        <p>The user confirms that they have familiarized themselves with the source materials and instructions at <a
+                href="{{ url_for('tutorials.index') }}">https://biganto.com/virtoaster/tutorials/</a> before using the
+            online services.</p>
+
+        <br>
+
+        <p><strong>4. Services provided by Biganto</strong></p>
+
+        <p>Biganto provides the online services in accordance with the tariffs, bonus programs or special offers specified
+            on the website. To a limited extent, the user also has the option to use services free of charge.
+        </p>
+
+        <p>It is possible to use a tariff that goes beyond the free use at the costs specified on the website.
+        </p>
+
+        <br>
+
+        <p><strong>4.1. Accepting the offer</strong></p>
+
+        <p>The presentation of the online services at www.biganto.com does not represent a legally binding offer, but an
+            invitation to order (invitatio ad offerendum).
+        </p>
+
+        <p>By submitting the order at the end of the ordering process, the user makes a binding offer to book the online
+            services shown in the order overview. Immediately after submitting the order, the user receives an order
+            confirmation, which, however, does not yet represent an acceptance of his contract offer. A contract between the
+            user and Biganto is concluded as soon as Biganto accepts the user's order and / or booking via a separate e-mail
+            or activates the desired online services for the user.
+        </p>
+
+        <p>The user regularly checks the SPAM folder in his e-mail inbox.
+        </p>
+
+        <br>
+
+        <p><strong>4.2. Payment terms</strong></p>
+
+        <p>The price for the online services selected by the user is due in advance with the order / booking. Payment for
+            the booked service can be made using the payment methods specified during the ordering process via our payment
+            service provider.
+        </p>
+
+        <p>All prices and tariffs given by Biganto are in the currency "Euro" (EUR).
+        </p>
+
+        <p>Biganto uses payment service providers for payments via the website, who process payments through the public
+            networks in accordance with international standards (such as "verified by VISA", "Mastercard SecureCode") using
+            the latest technologies to secure payment transactions, such as 3D-Secure. The authentication of the user or
+            authorization of the payment takes place in the context of these technologies via the issuing bank of the user.
+        </p>
+
+        <br>
+
+        <p><strong>4.3. Duration</strong></p>
+
+        <p>If the user opts for a paid tariff, the costs will be debited monthly using the payment method specified when
+            ordering.
+        </p>
+
+        <p>The contract between the user and Biganto is extended by one month each time, unless the user terminates the
+            contractual relationship before the next debit.
+        </p>
+
+        <br>
+
+        <p><strong>4.4. Termination</strong></p>
+
+        <p>Users have the right to terminate the contract with Biganto at any time, so that the contract is no longer
+            renewed monthly. Payments already made for the current month will not be refunded. A termination by the user
+            does not release the user from paying any previously accrued amounts.
+        </p>
+
+        <p>The right to terminate for exceptional reasons remains unaffected.
+        </p>
+
+        <p>Reasons that entitle Biganto to extraordinary termination include, among others the violation of user
+            obligations, in particular art. 7.1 of these Terms of Use, the discontinuation of the online services by
+            Biganto, breaches of the law by the user when using the online services, delay in payment of more than 30 days
+            or inactivity of the free account for more than 6 months.
+        </p>
+
+        <p>The consequence of the extraordinary termination by Biganto is the final and irrevocable deletion of the user
+            profile or the blocking of access to the account. In this case, the user is informed that his user account and
+            the data stored in Biganto's systems will be deleted by Biganto within a reasonable period of time.
+        </p>
+
+        <br>
+
+        <p><strong>5. Time of performance and acceptance</strong></p>
+
+        <br>
+
+        <p><strong>5.1. Execution time</strong></p>
+
+        <p>Dates for the provision of services are only binding for Biganto when Biganto provides written confirmation in
+            text form for final confirmation.
+        </p>
+
+        <p>Delays in performance in the user's area of ​​responsibility (e.g. failure to cooperate in time) or due to force
+            majeure (such as strikes, official orders, general disruptions in telecommunications networks, etc.) entitle
+            Biganto to postpone the services concerned for the duration of the hindrance plus a reasonable start-up time.
+        </p>
+
+        <br>
+
+        <p><strong>5.2. Acceptance</strong></p>
+
+        <p>If Biganto is responsible for bringing about a certain success (contractual obligation), the user and Biganto
+            will determine the requirements and the procedure for acceptance in the individual contract or as part of the
+            project management.</p>
+
+        <p>The acceptance by the user can also take place by way of coherent behavior, in particular by using the system in
+            productive use, by unconditional payment or calling up further services.
+        </p>
+
+        <p>The user checks and tests the service given to him according to the agreed procedure; Biganto can also hand over
+            independently verifiable partial services. A total acceptance only takes place if no partial acceptance has
+            taken place.
+        </p>
+
+        <p>The user ensures that Biganto's services are not used productively until the tests and acceptance have been
+            completed, unless otherwise agreed between the contractual partners.
+        </p>
+
+        <p>If Biganto's services or partial services correspond to the agreed requirements or if there are only
+            insignificant deviations, the user immediately declares acceptance. This should be done in text form (e.g.
+            e-mail). In particular, those deviations which only insignificantly impair the functionality are insignificant.
+        </p>
+
+        <p>If the user does not declare acceptance within five working days after handing over a service or after being
+            requested to accept the service and if he has not reported any significant defects to Biganto during this time,
+            the services or partial services are deemed to have been accepted.
+        </p>
+
+        <br>
+
+        <p><strong>6. Right of Withdrawal</strong></p>
+
+        <p>If the user is a consumer, he has a right of withdrawal. A consumer is any person who concludes a legal
+            transaction for purposes that are predominantly neither commercial nor self-employed.
+        </p>
+
+        <p>At the end of these terms of use you will find our cancellation policy and a non-binding Consumer revocation
+            instruction.
+        </p>
+
+        <br>
+
+        <p><strong>7. User rights and responsibilities</strong></p>
+
+        <p>Regardless of whether the user has selected free or paid use of the online services, Biganto grants users the
+            non-exclusive and non-transferable right to use the online services they have selected (paid or free) for the
+            duration of the user relationship within the scope of these terms of use and use the respective tariffs.
+        </p>
+
+        <br>
+
+        <p><strong>7.1. User Responsibilities</strong></p>
+
+        <p>The user undertakes not to commit any unlawful acts during and through the use of the online services. This
+            obligation also includes compliance with any possible use by the user of conflicting copyrights and trademarks,
+            as well as naming, patent and competition rights as well as intellectual property rights to the items uploaded
+            or stored in the Biganto systems when using the online services Files and content, as well as Biganto's
+            copyrights to the online services themselves.
+        </p>
+
+        <p>Furthermore, the user is obliged to use the online services only in such a way that the website and / or the
+            online services themselves do not malfunction;
+        </p>
+
+        <p>The user is prohibited to:
+        </p>
+
+        <ul>
+            <li>upload and / or save illegal content in Biganto's systems;
+            </li>
+            <li>upload or save amoral or morally questionable content, such as pornographic or violence-glorifying
+                materials, into Biganto's systems;
+            </li>
+            <li>offer Biganto online services to third parties for use in return for payment or free of charge;
+            </li>
+            <li>copy, modify, sell or otherwise make available or further license the Online Services to any third party;
+            </li>
+            <li>copy or collect interactive presentations, virtual and photo tours, digital visualizations, renderings and
+                3D models created with Biganto's online services or software for the production of systematic collections,
+                such as for storage in a database, as long as this is beyond user rights granted by art. 9 of these Terms of
+                Use;
+            </li>
+            <li>circumvent any access or restrictions put into place to prevent certain uses of the Services or Software;
+                The same applies to the - even attempted - deactivation of our online services;
+            </li>
+            <li>upload malware or code or other system-damaging content, such as computer viruses into Biganto's systems.
+            </li>
+            <li>Promote Biganto online services without our express permission;
+            </li>
+            <li>Extract or copy the online services or other software or interfaces provided by Biganto;
+            </li>
+        </ul>
+
+        <p>Insofar as Biganto provides the user with storage space within Biganto's systems, the user undertakes to use this
+            storage space only to use the Biganto services selected by him. In doing so, the user must ensure that no
+            content violating the rights of third parties is saved when using the storage space. When storing files in
+            Biganto's systems, it is up to the user to ensure that these files are backed up (data backup).
+        </p>
+
+        <p>If the user violates these terms of use, he releases Biganto in full from liability for claims by third parties,
+            including any further costs that Biganto incurs as a result of defending against these claims.
+        </p>
+
+        <br>
+
+        <p><strong>7.2. Prohibition of changes, prohibition of reverse engineering</strong></p>
+
+        <p>Unless expressly permitted by Biganto, users do not have the right to modify, transfer, adapt or translate parts
+            of the services or the software, to reconstruct, decompile, disassemble or otherwise determine the source code
+            or parts of the online services or the software , to copy or to use beyond agreed purposes.
+        </p>
+
+        <p>Biganto can - taking into account its own copyright, performance and usage rights - at its own discretion provide
+            users with appropriate information about the online services or software as well as interfaces and impose
+            reasonable conditions (including reasonable fees) on the user to use the services or software to decompile.
+            Biganto is not obliged to do so.
+        </p>
+
+        <br>
+
+        <p><strong>8. Sample files</strong></p>
+
+        <p>Biganto provides demo versions, images, 3D models, finished scenes or audio files at <a href="{{ url_for('front.index') }}">www.biganto.com</a> (hereinafter: sample files). These are used to guide users or for other demonstration purposes set by Biganto.
+            The user may not use the sample files for purposes other than those mentioned above. The dissemination of these
+            sample files by the user is expressly prohibited.
+        </p>
+
+        <br>
+
+        <p><strong>9. Copyright and usage rights</strong></p>
+
+        <p>The user grants Biganto all usage rights required to fulfill the contract, including use of copyrights, ancillary
+            copyrights and other commercial property rights (including trademark rights), in particular the right to
+            reproduce, distribute, make publicly available and edit, in terms of time, location and content, in the scope
+            required for the execution of the contract. This also includes the transfer of these usage rights or the
+            corresponding sublicensing to third parties who are commissioned by Biganto to fulfill the contract.
+        </p>
+
+        <p>Biganto is entitled to change the user's content upon agreement with the user.
+        </p>
+
+        <p>All copyrights, ancillary copyrights and other rights to the analyzes, concepts and content created and possibly
+            implemented by Biganto or by third parties on behalf of Biganto remain with Biganto. However, Biganto grants the
+            customer unlimited right to use the analyzes and concepts to the extent necessary for their own marketing
+            purposes. This also applies beyond the end of the contract.
+        </p>
+
+        <p>If third parties assert claims against Biganto with the assertion that the content (s) created by the user via
+            Biganto's online services violate legal provisions and / or their publication violates third parties rights, the
+            user will release Biganto from all third-party claims upon first request. The user will reimburse any costs and
+            damages Biganto incurs through the use of an appropriate legal defense, insofar as the user is responsible for
+            the violation of the rights of third parties or the violation of legal provisions.
+        </p>
+
+        <p>The user is obliged to support Biganto within the scope of what is reasonable by providing information and
+            documents in legal defense against third parties.
+        </p>
+
+        <br>
+
+        <p><strong>10. References</strong></p>
+
+        <p>The user allows Biganto to include him in a reference list on www.biganto.com and other advertising and
+            presentation materials as well as in Biganto's social media accounts, in particular by naming and displaying
+            company / product names, a screenshot of the online services Content or other services created by Biganto for
+            the user.</p>
+
+        <br>
+
+        <p><strong>11. Limitation of Liability</strong></p>
+
+        <p><strong>11.1.</strong> Biganto is liable for intent and gross negligence. Biganto is also liable for the
+            negligent breach of obligations, the fulfillment of which enables the proper execution of the contract in the
+            first place, the breach of which jeopardizes the achievement of the purpose of the contract and on whose
+            compliance you as a user can regularly rely. In the latter case, Biganto is only liable for the foreseeable
+            damage typical of the contract. Biganto is not liable for the slightly negligent breach of obligations other
+            than those mentioned in the preceding sentences.
+        </p>
+
+        <p>Biganto is not liable for any injuries to third parties that the user may commit by using the online services.
+            Furthermore, Biganto is not liable for the content linked to or from the Biganto website by users.
+        </p>
+
+        <p>The above exclusions of liability do not apply to injury to life, limb or health. Liability under the Product
+            Liability Act remains unaffected.
+        </p>
+
+        <p><strong>11.2.</strong> According to the current state of technology, data communication via the Internet cannot
+            be guaranteed to be error-free and / or available at all times. Biganto is not liable for the constant and
+            uninterrupted availability of the online services.</p>
+
+        <p><strong>11.3.</strong> Biganto is not responsible for actions that users take in connection with the use of
+            online services. The use of our online services is at the users' own risk; they are solely responsible for any
+            loss of data or damage to their computer system resulting from the use of the online services or software and
+            access to them.</p>
+
+        <br>
+
+        <p><strong>12. Final provisions</strong></p>
+
+        <br>
+
+        <p><strong>12.1. Subject to change, notification of change and consent</strong></p>
+
+        <p>The terms of use written here are subject to change. In the event of changes in the legal situation that has or
+            can have an impact on the use of the online services or in the event of a significant change in the online
+            services offered by Biganto, these terms of use may be changed.
+        </p>
+
+        <p>In the event of a change to these terms of use, the users will be informed transparently by Biganto by e-mail and
+            will have the opportunity to react to the change in the terms of use within a reasonable period of time.
+        </p>
+
+        <p>If the user does not respond to the notification of change within a reasonable period of time, these are deemed
+            to have been accepted by the user. Biganto will always point this out in the change notification.
+        </p>
+
+        <br>
+
+        <p><strong>12.2. Jurisdiction</strong></p>
+
+        <p>If the user had their domicile or habitual abode in Germany when the contract was concluded and either moved from
+            Germany at the time we filed the action or their domicile or habitual abode is unknown at that time, the place
+            of jurisdiction for all disputes is our company's headquarters in Munich.
+        </p>
+
+        <br>
+
+        <p><strong>12.3. Consumer Dispute Resolution</strong></p>
+
+        <p>We would like to point out that the user, in addition to the ordinary legal process - if he is a consumer (see
+            Section 5 of these Terms of Use) - also has the option of an out-of-court settlement of disputes in accordance
+            with Regulation (EU) No. 524/2013. Details can be found in Regulation (EU) No. 524/2013 and at the Internet
+            address: http://ec.europa.eu/consumers/odr
+        </p>
+
+        <p>Our email address is: info@biganto.com
+        </p>
+
+        <p>According to § 36 VSBG, we point out that we are not obliged to participate in an out-of-court dispute settlement
+            procedure before a consumer arbitration board.
+        </p>
+
+        <br>
+
+        <p><strong>12.4. Relevant language version</strong></p>
+
+        <p>In the event that these terms of use are made available to the user in a language other than German, the German
+            version has priority in the event of discrepancies between the German version and a translation.
+        </p>
+
+        <p>German version of these terms can be found at <a href="{{ url_for('front.user_agreement', force_lang='de') }}">https://biganto.com/user_agreement/</a>
+        </p>
+
+        <br>
+
+        <p><strong>12.5. If individual provisions of these terms of use are ineffective, this shall not affect the rest of
+                the terms of use.</strong></p>
+
+        <br>
+
+        <p><strong>APPENDIX: Cancellation policy for consumers</strong></p>
+
+        <br>
+
+        <p><strong>Right of withdrawal</strong></p>
+
+        <p>You have the right to withdraw from the contract concluded with Biganto within fourteen days without giving any
+            reason.
+        </p>
+
+        <p>The cancellation period is fourteen days from the day the contract is concluded.
+        </p>
+
+        <p>In order to exercise your right of withdrawal, you must inform us, Biganto GmbH, Schloßschmidstr. 5, 80639
+            Munich, phone +49 (89) 262-195-67, e-mail info@biganto.com, by means of a clear declaration (e.g. a letter sent
+            by post or e-mail) about your decision to revoke this contract.
+        </p>
+
+        <p>You can use the sample withdrawal form below for this purpose, but this is not mandatory.
+        </p>
+
+        <p>To meet the cancellation deadline, it is sufficient for you to send your notification of exercising your right of
+            cancellation before the cancellation period has expired.
+        </p>
+
+        <br>
+
+        <p><strong>Consequences of the withdrawal</strong></p>
+
+        <p>If you withdraw from this contract, we will refund you all the payments that we have received from you, including
+            any delivery costs (with the exception of the additional costs that result from choosing a different type of
+            delivery than the cheapest standard delivery offered by us), to be repaid immediately and at the latest within
+            fourteen days from the day on which we received the notification of your cancellation of this contract. For this
+            repayment we use the same means of payment that you used for the original transaction, unless something else was
+            expressly agreed with you; In no case will you be charged any fees for this repayment.
+        </p>
+
+        <p>If you have requested cancellation, during the period when the services being commenced, you have to pay us a
+            reasonable amount that corresponds to the proportion of the services already provided up to the point in time at
+            which you informed us of the exercise of the right of withdrawal with regard to this contract сompared to the
+            total scope of the services provided in the contract.
+        </p>
+
+        <br>
+
+        <p><strong>Reasons for exclusion or expiry
+            </strong></p>
+
+        <p>In the case of a contract for the provision of services, the right of withdrawal expires if the entrepreneur has
+            fully provided the service and has only started to perform the service after the consumer has given his express
+            consent and at the same time confirmed his knowledge that he has his right of withdrawal lost if the contract is
+            fully fulfilled by the entrepreneur.</p>
+
+        <br>
+
+        <p><strong>Sample withdrawal form</strong></p>
+
+        <br>
+
+        <p><strong>(If you want to cancel the contract, please fill out this form and send it back.)</strong></p>
+
+        <p>To the</p>
+        <p>Biganto GmbH</p>
+        <p>Schloßschmidstr. 5</p>
+        <p>80639 München: </p>
+        <p>info@biganto.com</p>
+
+        <ul>
+            <li>I / we (*) hereby revoke the contract concluded by me / us (*) for the purchase of the following goods (*) /
+                the provision of the following service (*)</li>
+            <li>Ordered on (*) / received on (*)</li>
+            <li>Name of the consumer (s)</li>
+            <li>Address of the consumer (s)</li>
+            <li>Signature of the consumer (s) (only when notified on paper)
+            </li>
+            <li>date</li>
+        </ul>
+
+        <p>(*) Delete where inapplicable.</p>
+
+        <br>
+
+    </div>
+{% endblock %}

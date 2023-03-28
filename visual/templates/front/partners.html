@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% set page_title=_('Our partners') %}
+{% set corpus_class = 'visualizers' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="b-page__content">
+    <div class="page-title">
+        <div class="page-title__inner b-page__inner">
+            <h1 class="page-title__head background-image-title-partners h1">{{ page_title }}</h1>
+            <p class="page-title__text">{{ _("Whether you are a freelancer 3d artist or a development company, we would be glad to help showcasing your projects! Enjoy 3d tours and join the ranks of our partners:") }}</p>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__columns b-page__mrg">
+       <ul class="visualizers__list">
+            {% for partner in partners %}
+                <li class="visualizers__item">
+                    {% if partner.url %}
+                        <a href="{{ partner.url }}" target="_blank" class="visualizers__link" rel="nofollow noopener">
+                            <img src="{{ partner.logo.url }}?{{ config.get('RELEASE_VERSION') }}" alt="{{ partner.title}}">
+                        </a>
+                    {% else %}
+                        <img src="{{ partner.logo.url }}?{{ config.get('RELEASE_VERSION') }}" alt="{{ partner.title}}" >
+                    {% endif %}
+                </li>
+            {% endfor %}
+       </ul>
+    </div>
+</div>
+{% endblock %}

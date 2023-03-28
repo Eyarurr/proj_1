@@ -1,0 +1,246 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'footages' %}
+{% if user %}{% set user_id = user.id %}{% else %}{% set user_id = None %}{% endif %}
+
+{% macro footage_features(tour) %}
+    {% if tour.meta.get('binocular') %}
+        <i class="fas fa-binoculars" title="Бинокулярная съёмка"></i>
+    {% endif %}
+    {% if tour.meta.get('mtl') %}
+        <i class="fas fa-cube" title="Доллхаус"></i>
+    {% endif %}
+{% endmacro %}
+
+{% macro footage_resolutions(footage) -%}
+    {%- if footage.type == 'outside' -%}
+        {%- for res in footage.meta.get('resolutions') -%}
+            {{- res|join('×') }}{% if not loop.last %}, {% endif -%}
+        {%- endfor -%}
+    {%- else -%}
+        {{- footage.meta.get('resolutions')|sort|join(', ') -}}
+    {%- endif -%}
+{%- endmacro %}
+
+
+{% block content %}
+    <h1>
+    {% if user %}
+        Съёмки {{ user.name }} <span class="text-muted">({{ footages.total }})</span>
+    {% else %}
+        Съёмки <span class="text-muted">({{ footages.total }})</span>
+    {% endif %}
+    {% if user %}
+        <div class="float-end">
+            <a class="btn btn-sm btn-success" href="{{ url_for('.user_edit', user_id=user.id) }}"><i class="fas fa-user"></i> Юзер</a>
+            <a class="btn btn-sm btn-success" href="{{ url_for('.tours', user_id=user.id) }}"><i class="fas fa-user"></i> Туры</a>
+            <a class="btn btn-sm btn-success" href="{{ url_for('.multitours', user_id=user.id) }}"><i class="fas fa-user"></i> Мультитуры</a>
+        </div>
+    {% endif %}
+    </h1>
+
+    <form class="table-filters">
+        <div class="row justify-content-between ">
+            <div class="col-lg-auto">
+                <div class="row justify-content-start">
+                    <div class="col-lg-auto mb-1 mb-lg-0">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Тип</span>
+                            {{ filters.type(class='form-select') }}
+                        </div>
+                    </div>
+                    <div class="col-lg-auto mb-1 mb-lg-0">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Статус</span>
+                            {{ filters.status(class='form-select', style='width:130px') }}
+                        </div>
+                    </div>
+                    <div class="col-lg-auto mb-1 mb-lg-0">
+                        <div class="input-group input-group-sm">
+                            {{ filters.search(class='form-control', placeholder='Переход по ID', style='width: 300px;') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg text-lg-end">
+                <button type="submit" class="btn btn-sm btn-primary">Показать</button>
+            </div>
+        </div>
+</form>
+
+{% if footages.total == 0 %}
+    <div class="text-info">
+        Съёмок не найдено.
+    </div>
+{% else %}
+    <div class="table-responsive-lg">
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+        <tr>
+            <th>id</th>
+            <th>Создано</th>
+            <th>Тип</th>
+            <th>Статус</th>
+            {% if not user %}<th>Юзер</th>{% endif %}
+            <th colspan="2">Туры</th>
+            <th><i class="fa fa-bolt" title="Фичи"></i></th>
+            <th class="n" title="Максимальное разрешение. Наведите мышку, чтобы посмотреть все разрешения."><i class="fa fa-arrows-alt"></i></th>
+            <th class="n">Этажей</th>
+            <th class="n">Точек</th>
+            <th class="n">Вес</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for footage in footages.items %}
+            {% set job = jobs.get(footage.id) %}
+            <tr data-id="{{ footage.id }}">
+                <td> {{ footage.id }} </td>
+                <td>{{ footage.created|utcinlocal|humantime }}</td>
+                <td>{{ footage_type_icon(footage.type) }}</td>
+                <td>{{ footage_status_icon(footage) }}</td>
+                {% if not user %}
+                    <td><a href="{{ url_for('.footages', user_id=footage.user_id) }}">{{ footage.user.name }}</a></td>
+                {% endif %}
+                <td class="n">{{ footage.tours|count or '' }}</td>
+                <td class="t">
+                    <ul class="list-unstyled">
+                        {% for tour in footage.tours %}
+                            <li>
+                                {% if tour.user_id != footage.user_id %}{{ tour.user.name }} /{% endif %}
+                                <a href="{{ url_for('.tour_edit', tour_id=tour.id) }}">{{ tour.title or '<i>Без названия</i>'|safe }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% if footage.status == 'processing' or footage.status == 'queued' %}
+                        {% if job %}
+                            <div class="build-status">{{ job.meta.get('wtf', '') }}</div>
+                        {% else %}
+                            <div class="build-errors">Съемки на самом деле нет в очереди задач!</div>
+                        {% endif %}
+                        <div>
+                            <a href="#modal-queue-cancel" class="btn btn-xs btn-danger" data-toggle="modal">Отменить</a>
+                            <a href="#modal-queue-requeue" class="btn btn-xs btn-danger" data-toggle="modal">Перезапустить</a>
+                        </div>
+                    {% elif footage.status == 'loading' %}
+                        {% if footage.meta.get('_loading', {}).get('build_errors') %}
+                            <ul class="build-errors">
+                                {% for error in footage.meta._loading.build_errors[:10] %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                                {% if footage.meta._loading.build_errors|length > 10 %}
+                                    <li>...и ещё {{ footage.meta._loading.build_errors|length - 10 }} ошибок</li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    {% elif footage.status == 'queued' %}
+                        _queued: {{ footage.meta.get('_queued') }}
+                    {% endif %}
+
+                </td>
+                <td>{{ footage_features(footage) }}</td>
+                {% if footage.meta.get('resolutions') %}
+                    <td title="{{ footage_resolutions(footage) }}" class="n">
+                        {% if footage.type == 'outside' %}
+                            {{ footage.max_res|join('×') }}
+                        {% else %}
+                            {{ footage.max_res }}
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                <td class="n">{{ if_value(footage.meta.get('floors', {})|length) }}</td>
+                <td class="n">{{ if_value(footage.count_panoramas()) }}</td>
+                <td class="n">
+                    {% with size = footage.total_size() %}
+                        {% if size %}{{ size|filesizeformat }}{% endif %}
+                    {% endwith %}
+                </td>
+                <td class="text-right text-nowrap">
+                    {% set notComplete = footage.status in ['loading', 'processing'] %}
+{#                    <a href="{{ url_for('.footage_view', footage_id=footage.id) }}" class="btn btn-sm btn-info text-light {% if notComplete %} disabled {% endif %}" title="{% if notComplete %} Тур ещё не собран {% else %} Посмотреть {% endif %}" target="_blank"><i class="fa fa-eye"></i></a>#}
+                    <a href="{{ url_for('.footage_edit', footage_id=footage.id) }}" class="btn btn-sm btn-success " title="Свойства"><i class="fa fa-edit"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    {{ render_pagination(footages, '.footages') }}
+
+    <form id="form-queue-cancel" method="post" action="{{ url_for('.footage_queue_cancel') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="footage_id">
+        <div class="modal" id="modal-queue-cancel"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">Отменить обработку тура</h4>
+            </div>
+            <div class="modal-body">
+                <h2>Что сейчас произойдёт?</h2>
+                <ul>
+                    <li>Сборка этой съёмки удалится из очереди задач</li>
+                    <li>Съёмка получит статус <code>loading</code></li>
+                </ul>
+                <h2>Внимание!</h2>
+                <p>
+                    Эта операция не останавливает сам процесс сборки и должна использоваться только тогда, когда вы уверены,
+                    что сборка не идёт вообще или на самом деле сейчас собирается совершенно другой тур. В противном случае,
+                    сборщик доработает там где-то в фоне и тур получит статус <code>testing</code> или <code>loading</code>
+                    в зависимости от результатов сборки.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Поехали</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Нет, не надо</button>
+            </div>
+        </div></div></div>
+    </form>
+
+    <form id="form-queue-requeue" method="post" action="{{ url_for('.footage_queue_requeue') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="footage_id">
+        <div class="modal" id="modal-queue-requeue"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">Перезапустить обработку тура?</h4>
+            </div>
+            <div class="modal-body">
+                <h2>Что сейчас произойдёт?</h2>
+                <ul>
+                    <li>Сборка этой съёмки удалится из очереди задач</li>
+                    <li>Съёмка получит статус <code>queued</code></li>
+                    <li>В очередь задач поставится новая задача сборки съёмки</li>
+                </ul>
+                <h2>Внимание!</h2>
+                <p>
+                    Эта операция не останавливает сам процесс сборки и должна использоваться только тогда, когда вы уверены,
+                    что сборка не идёт вообще или на самом деле сейчас собирается совершенно другой тур. В противном случае,
+                    сборщик доработает там где-то в фоне и тур получит статус <code>testing</code> или <code>loading</code>
+                    в зависимости от результатов сборки.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Поехали</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Нет, не надо</button>
+            </div>
+        </div></div></div>
+    </form>
+
+
+    <script type="text/javascript">
+        (function() {
+            $('#modal-queue-cancel').on('show.bs.modal', function(e) {
+                $('#form-queue-cancel').find('[name=footage_id]').val($(e.relatedTarget).parents('tr').data('id'));
+            });
+            $('#modal-queue-requeue').on('show.bs.modal', function(e) {
+                $('#form-queue-requeue').find('[name=footage_id]').val($(e.relatedTarget).parents('tr').data('id'));
+            });
+        })();
+    </script>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'prototype.html' %}
+
+{% if room.title %}
+    {% set page_title = room.title + ': совместный просмотр тура Biganto' %}
+{% endif %}
+
+{% block content %}
+    <h1>Комната {{ room_id }}</h1>
+    <strong>room:</strong><pre>{{ room }}</pre>
+    <strong>tour:</strong><pre>{{ tour }}</pre>
+
+
+    <h4>Пришло из сокета:</h4>
+    <pre id="received" style="background-color: #444; color: #ccffcc; font-size: .8em; max-height:300px;"></pre>
+
+
+    <form>
+    <h4>Отправить в сокет:</h4>
+        <p>
+            <textarea id="input" rows="4" cols="30" class="form-control"></textarea>
+        </p>
+        <button id="send" type="button" class="btn btn-primary">Send</button>
+        <p class="help-block pull-right">Можно Ctrl+Enter</p>
+        <ul style="margin-top: 20px;">
+            <li><a href="#" class="shortcut" data-message='{"act": "hello", "content": {"name": "Володенька (en)", "password": "123", "lang": "en"}}'>Войти как Володенька</a></li>
+            <li><a href="#" class="shortcut" data-message='{"act": "hello", "content": {"name": "Наденька (ru)", "password": "123", "lang": "ru"}}'>Войти как Наденька</a></li>
+            <li><a href="#" class="shortcut" data-message='{"act": "hello", "content": {"name": "Феликс Эдмундович", "password": "123"}}'>Войти как Феликс Эдмундович</a></li>
+            <li><a href="#" class="shortcut" data-message='{"act": "get.members"}'>get.members</a></li>
+            <li><a href="#" class="shortcut" data-message='{"act": "get.chat"}'>get.chat</a></li>
+            <li><a href="#" class="shortcut" data-message='{"act": "get.me"}'>get.me</a></li>
+            <li><a href="#" class="shortcut" data-message='{"act": "get.room"}'>get.room</a></li>
+            <li><a href="#" class="shortcut" data-message='{"act": "get.pointers"}'>get.pointers</a></li>
+        </ul>
+    </form>
+
+<script type="text/javascript">
+const socket = new WebSocket('ws://localhost:8765/{{ room_id }}');
+const elReceived = document.getElementById('received'),
+      elInput = document.getElementById('input'),
+      elSend = document.getElementById('send');
+
+function log(msg) {
+    elReceived.innerText += msg + '\n';
+    elReceived.scrollTop = elReceived.scrollHeight;
+}
+
+socket.addEventListener('open', (e) => { log('SOCKET OPEN'); });
+socket.addEventListener('error', (e) => { log('SOCKET ERROR'); });
+socket.addEventListener('close', (e) => { log('SOCKET CLOSE'); });
+socket.addEventListener('message', (e) => {
+    log('< ' + e.data);
+});
+
+elSend.addEventListener('click', send);
+elInput.addEventListener('keypress', (e) => {
+    if(e.ctrlKey && e.key === 'Enter') {
+        send();
+    }
+});
+
+function send() {
+    socket.send(elInput.value);
+    log('> ' + elInput.value);
+    elInput.value = '';
+}
+
+function sendShortcut(e) {
+    e.preventDefault();
+    let msg = this.getAttribute('data-message');
+    socket.send(msg);
+    log('> ' + msg);
+}
+const shortcuts = document.getElementsByClassName('shortcut');
+for(let i = 0; i < shortcuts.length; i++) {
+    shortcuts[i].addEventListener('click', sendShortcut, false);
+}
+</script>
+{% endblock %}

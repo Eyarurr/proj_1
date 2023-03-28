@@ -1,0 +1,19 @@
+{% extends 'my/base.html' %}
+{% set page_title_my = _('Password recovery') %}
+{% set has_settings = true %}
+
+{% block content_my %}
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <p class="text-center">{{ _("The password has been successfully recovered") }}</p>
+            <br>
+            <p class="text-center">
+                <a class="b-button b-button__green-tr" href="/">{{ _("Back to the main page") }}</a>
+            </p>
+
+        </div>
+    </div>
+
+{% endblock %}

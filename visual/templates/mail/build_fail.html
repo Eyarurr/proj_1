@@ -1,0 +1,18 @@
+{% extends 'mail/base.html' %}
+{% block content %}
+            <p>
+                {{ _('Good day!') }}
+            </p>
+
+            <p>
+                {{ _('Unable to create a tour «%(title)s» due to following errors:', title=(tour.title if tour.title else _('Untitled'))) }}
+            </p>
+
+            {%  for err in tour.footage.meta['_loading']['build_errors'] %}
+            <p>{{ err }}</p>
+            {% endfor %}
+
+            <p>
+                {{ _('Please, resolve the issues yourself or contact technical support to proceed with this tour.') }}
+            </p>
+{% endblock %}

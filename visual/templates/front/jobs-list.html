@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% set page_title=_('Jobs') %}
+{% set corpus_class = 'jobs' %}
+
+
+{% block head %}{% endblock %}
+
+{% block content %}
+    <div class="page-title">
+        <div class="b-page__inner page-title__inner">
+            <h1 class="page-title__head background-image-title h1">{{ _("Jobs") }}</h1>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__mrg">
+        {% if vacancies|length > 0 %}
+        <ul class="jobs-list">
+            {% for vacancy in vacancies %}
+            <li class="jobs-list__item">
+                <a class="jobs-list__link" href="{{ url_for('.job', job_id=vacancy.id) }}">
+                    <div class="jobs-list__main">
+                        <svg class="jobs-list__icon" viewBox="0 0 58.1 69.8" width="58" height="70">
+                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#briefcase"></use>
+                        </svg>
+                        <div class="jobs-list__content">
+                            <div class="jobs-list__title">{{ vacancy.title }}</div>
+                            <div class="jobs-list__desc">
+                                {{ vacancy.about }}
+                            </div>
+                            <div class="jobs-list__salary">{{ vacancy.salary }}</div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {%- endfor %}
+        </ul>
+        {% else %}
+        <div class="jobs-list__empty">
+            <div class="col-xs-12">{{ _("There's no opened vacancies at the moment. Check out later.") }}</div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

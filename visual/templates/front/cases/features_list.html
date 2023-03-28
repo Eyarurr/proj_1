@@ -1,0 +1,12 @@
+{% macro feature_list(use_cases) %}
+    {% for icon, text in use_cases %}
+        <div class='feature'>
+            <svg viewBox="0 0 64 64" class="feature__icon icon__svg" width="64" height="64">
+                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}{{ icon }}"></use>
+            </svg>
+            <div class='feature__description'>
+                {{ text }}
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}

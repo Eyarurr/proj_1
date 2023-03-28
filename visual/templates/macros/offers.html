@@ -1,0 +1,37 @@
+{% macro offers(tours=[]) %}
+{% if tours|length > 0 %}
+<section class="block offers">
+    <div class="b-page__inner block__inner">
+        <div class="block__head">
+            <h2 class="block__title offers__title">{{ _("Featured tours") }}</h2>
+            <div class="block__button">
+                <a href="{{ url_for('front.gallery') }}" class="button mini border gray block__button">{{ _("See all tours") }} →</a>
+            </div>
+        </div>
+        <div class="block__content">
+            <ul class="offers__list">
+                {% for tour in tours %}
+                    <li class="offers__item">
+                        <a href="{{ url_for('.gallery_tour', tour_id=tour.id) }}" class="offers__link">
+                            <div class="offers__media">
+                                {% if tour.preview %}
+                                    <img src="{{ tour.preview.url }}" width="{{ tour.preview.width }}" height="{{ tour.preview.height }}" alt="{{ tour.title }}" class="offers__image">
+                                {% else %}
+                                    <img src="/static/public/img/preview-empty.png?{{ config.get('RELEASE_VERSION') }}" class="offers__image">
+                                {% endif %}
+                            </div>
+                            <div class="offers__name">{{ tour.title }}</div>
+                        </a>
+                        <div class="offers__tags">
+                            {% for tag in tour.gallery_tags %}
+                                <a href="{{ url_for('.gallery', tag=tag.tag) }}" class="offers__tag">#{{ tag.tag }}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endmacro %}

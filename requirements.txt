@@ -1,0 +1,86 @@
+Flask
+itsdangerous
+markupsafe
+flask-login
+flask-babel>=0.11.2
+flask-wtf
+Wtforms>=3.0.0
+pytz
+psycopg2-binary
+Sqlalchemy
+flask-sqlalchemy
+Alembic
+Redis>=3.3.1
+ansicolors
+sqlparse
+phonenumbers
+pillow
+numpy
+requests
+user_agents
+lxml
+rq
+packaging
+unidecode
+python-dateutil
+Pytest
+pytest-cov
+email-validator
+websockets
+filetype
+
+# AWS API
+boto3
+
+git+https://github.com/Alt90/lagring.git
+git+https://github.com/uisky/jinja_bs_modal.git
+git+https://github.com/uisky/flask-sa-logger
+
+# Используется в некоторых manage-скриптах, в основном ради read_csv_file(), использование столь тяжеловесной либы вряд-ли оправдано.
+pandas
+
+# Библиотека для работы с платёжным агрегатором Stripe
+stripe
+
+# OAuth-авторизация
+rauth
+
+# Для работы скриптов в составе Низподоха
+scipy
+matplotlib
+opencv-python-headless
+psutil
+
+# Чтобы читать длительность MP3-файлов
+mutagen
+
+# Для чтения DataURI, которые могут быть поданы на вход разных методов API
+python-datauri
+
+# Для работы с геоданными от maxmind
+maxminddb
+
+# Для скрипта переноса между юрисдикциями
+scp
+paramiko
+
+# Библиотека генерации QR-кодов, используется в API GET tours/<id>/qr
+segno
+
+# Используется в User.notify() для чтения шаблонов
+iniconfig
+
+# Поддержка изображений в формате HEIC
+pillow-heif
+
+# Библиотека датаклассов
+pydantic
+
+# JSON-сериализатор с поддержкой разных типов данных. Юзается пока только для postgresql
+orjson
+
+# Библиотека для работы с интервалами. Используется в API BladeRunner
+portion
+
+# Для работы с видео (в BROrderAsset, например) - вычисление размеров, длительности, создания превью
+ffmpeg-python

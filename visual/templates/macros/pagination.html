@@ -1,0 +1,17 @@
+{% macro render_pagination(pagination, endpoint) %}
+    <nav class="pagination__out">
+        <ul class="pagination">
+            {%- for page in pagination.iter_pages() %}
+                {% if page %}
+                    {% if page != pagination.page %}
+                        <li class="pagination__item"><a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a></li>
+                    {% else %}
+                        <li class="pagination__item active"><a href="#">{{ page }} <span class="sr-only">(current)</span></a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="pagination__item"><span class="ellipsis">…</span></li>
+                {% endif %}
+            {%- endfor %}
+        </ul>
+    </nav>
+{% endmacro %}

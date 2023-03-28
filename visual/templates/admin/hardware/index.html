@@ -1,0 +1,257 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'team' %}
+
+
+{% block head %}
+    <style>
+        ul.gallery.gallery-hardware li {
+            width: 150px;
+            height: 150px;
+        }
+
+        ul.gallery.gallery-hardware div.title {
+            font-size: 0.8em;
+            background-color: #F5EFEFFF;
+            padding: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 60px;
+
+        }
+
+        .add_gadget {
+            display: block;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>
+        Учет оборудования Biganto <small class="text-muted">{{ gadgets.total }}шт.</small>    </h1>
+
+
+    <form method="get">
+    <div class="row table-filters justify-content-between">
+        <div class="row col-lg-auto ">
+            <div class="col-lg-auto mb-1 mb-lg-lg-0">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text" id="basic-addon">Искать по:</span>
+                                    {{ search_form.search_(class="form-control form-control-sm",  style='width: 130px', placeholder='по имени и e-mail') }}
+                </div>
+            </div>
+
+            <div class="col-lg-auto mb-1 mb-lg-0">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Юзер:</span>
+                                {{ search_form.user_id(class="form-select form-control-sm") }}
+                </div>
+            </div>
+            <div class="col-lg-auto mb-1 mb-lg-0">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text" id="basic-addon1">Сортировать по:</span>
+                                {{ search_form.sorted_(class="form-select form-control-sm", style='width: 180px') }}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-auto">
+                <div class="btn-group" role="group">
+                    {% if current_user.has_role('hardware.edit') %}
+                        <a href="{{ url_for('.hardware_edit') }}" class="btn btn-sm btn-outline-success"><i class="fa fa-plus"></i> Добавить гаджет</a>
+                    {% endif %}
+                    <button type="submit" class="btn btn-sm btn-primary">Показать</button>
+                    <a href="{{ url_for('.hardware') }}" class="btn btn-sm btn-submit btn-secondary">Очистить</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+    {% if form.display.data == 'table' %}
+        <h2>Список оборудования</h2>
+        <ul class="nav nav-tabs">
+            <li id='all' class="nav-item">
+                <a href="{{ url_for ('.hardware') }}"
+                    {% if storage_id == None %}
+                   class="nav-link active"
+                    {% else %}
+                   class="nav-link"
+                    {% endif %}
+                   aria-current="page">Все оборудование</a>
+            </li>
+            <li class="nav-item"><a href="{{ url_for ('.hardware', storage_id='100') }}"
+                    {% if storage_id == 100 %}
+                        class="nav-link active"
+                    {% else %}
+                    class="nav-link"
+                    {% endif %}
+                    aria-current="page">Склад</a>
+            </li>
+            {% for department in departments %}
+                <li class="nav-item">
+                    <a href="{{ url_for ('.hardware', storage_id= department.id) }}"
+                    {% if storage_id == department.id %}
+                    class="nav-link active"
+                    {% else %}
+                       class="nav-link"
+                    {% endif %}
+                    aria-current="page">{{ department.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="table-responsive-lg">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Изображение</th>
+                    <th>Тип</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Где находится</th>
+                    <th>Сотрудник</th>
+                    <th>Дата</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for gadget ,date in gadgets.items %}
+                    <tr>
+                        <td class="text-center" style="width: 100px">{% if gadget.photo %}
+                            <a class="" href="{{ gadget.photo.url }}">
+                                <img src="{{ gadget.preview.url }}" width="{{ gadget.preview.width }}" height="{{ gadget.preview.height }}"></a>
+                        {% else %}
+                            <img src="{{ url_for('static', filename='/admin/noutbook.png') }}" alt="Добавьте изображение гаджета" width="100px" height="100px">
+
+                        {% endif %}
+                        </td>
+                        <td>{{ gadget.get_type() }}</td>
+                        <td><a href="{{ url_for('.hardware_card', gadget_id = gadget.id) }}" class="text-underline-hover">{{ gadget.title }}</a>
+                        </td>
+                        <td class="your-div">{{ gadget.description }}</td>
+                        <td>{{ gadget.get_location() }}</td>
+                        <td>{{ gadget.user.name }}
+                            {% if gadget.user and gadget.user.team_member.fired %}<i style="color: red" class="fa fa-flag" aria-hidden="true"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                        {{ date.strftime('%d.%m.%Y %H:%M') }}
+                        </td>
+                        <td>
+                            <button gadget_id="{{ gadget.id }}" type="button" class="to_take btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#myModal"><i class="fa fa-plus"></i> Взять себе</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ render_pagination(gadgets, '.hardware') }}
+        </div>
+    {% else %}
+        <div class="thumbnails">
+        <h2>Список оборудования</h2>
+        <ul class="gallery gallery-hardware" id="team-hardware">
+        {% for gadget in gadgets.items %}
+            <li>
+            <div class="img-rounded">
+                {% if gadget.preview %}
+                    <a href="{{ gadget.screen.url }}"><img src="{{ gadget.preview.url }}" width="{{ gadget.preview.width }}" height="{{ gadget.preview.height }}"></a>
+                {% else %}
+                    <div style="background-color: #a6a6a6; width: 150px; height: 100px"></div>
+                {% endif %}</div>
+            <div title="{{ gadget.user.name }}" class="title">{{ gadget.title }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</ul>
+</div>
+
+    <!-- Modal -->
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form action="" method="POST" class=" add_gadget form-horizontal" enctype="multipart/form-data">
+                        <div class="panel panel-default">
+                            <!-- Содержание панели по умолчанию -->
+                            <h2 class="text-center">Взять себе гаджет</h2>
+                            <div class="panel-heading">
+                                <h4 name="title">Наименование: </h4>
+                            </div>
+
+                            <!-- Группы списков -->
+                            <div class="table-responsive-lg">
+                                <table class="table table-light table-striped table-bordered table-hover ">
+                                    <tbody>
+                                    <tr class="" name="type">
+                                        <td>Тип устройства:</td>
+                                    </tr>
+                                    <tr name="storage">
+                                        <td>Где находится:</td>
+                                    </tr>
+                                    <tr name="user">
+                                        <td>У кого:</td><td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Куда:</td>
+                                        <td>{{ form.csrf_token }}{{ form.location(class="form-select form-control-sm") }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="modal-footer">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="submit" class="btn btn-outline-success">Сохранить изменения</button>
+                                <button type="button" class="btn btn-default btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            const myModal = document.getElementById('myModal')
+            const myInput = document.getElementById('myInput')
+
+            myModal.addEventListener('shown.bs.modal', () => {
+            myInput.focus()
+            })
+        });
+        let $navbar = $('.nav')
+        let $to_take = $('.to_take');
+        let $modal = $('#myModal');
+        {#Для модалки#}
+
+        $to_take.on('click', function (e) {
+            let xhr = new XMLHttpRequest();
+            $target = $(e.target).attr('gadget_id')
+            xhr.open('GET', `/admin/hardware/${$target}/to_take`, true)
+            $modal.find('form').attr('action', `/admin/hardware/${$target}/to_take`)
+            xhr.send()
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    responseObject = JSON.parse(xhr.responseText);
+                    $modal.find('[name="title"]').html('<strong>Название: </strong>' + responseObject.title)
+                    $modal.find('[name="type"]').html('<td>Тип устройства:</td>' + '<td>' + responseObject.type + '</td>')
+                    $modal.find('[name="storage"]').html('<td>Где находится:</td>' + '<td>' + responseObject.get_location+ '</td>')
+                    if (responseObject.user){
+                        $modal.find('[name="user"]').html('<td>У кого:</td>' + '<td>' + responseObject.user + '</td>')
+                    }
+                    $modal.find('select').on('select', function () {
+                    })
+
+                }
+            }
+        })
+
+    </script>
+{% endblock %}
+
+{% block tail %}
+{% endblock %}

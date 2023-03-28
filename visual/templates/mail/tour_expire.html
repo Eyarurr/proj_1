@@ -1,0 +1,17 @@
+{% extends 'mail/base.html' %}
+{% block content %}
+            <p>
+                {{ _('Good day!') }}
+            </p>
+
+            {% for title in notifications.get('delete', []) %}
+                <p>{{ _('Your tour «%(title)s» has been deleted.', title=(title if title else _('Untitled'))) }}</p>
+            {% endfor %}
+            {% for title, days, user_id, tour_id in notifications.get('notify', []) %}
+                <p>{{ _('Your tour <a href="%(url_edit)s">«%(title)s»</a> has loading/testing status for a long time. It will expire in %(days)s day(s) and will be deleted.', url_edit=url_for('my.index', path='toast/{}/edit'.format(tour_id), _external=True, _scheme='https'), title=(title if title else _('Untitled')), days=days) }}</p>
+            {% endfor %}
+            <br>
+            <p>
+                {{ _('Set tour status to «Published» to save your progress. Note, that when publishing, initial assets will be deleted and you will lose the ability to edit them.') }}
+            </p>
+{% endblock %}

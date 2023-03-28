@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% set page_title=_('Job opportunity') + ': ' + vacancy.title %}
+
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="b-page__content">
+    <div class="b-page__inner page-title">
+        <div class="page-title__inner">
+            <h1 class="page-title__head page-title__smaller background-image-title h1">{{ vacancy.title }}</h1>
+            <p class="page-title__more">{{ vacancy.salary }}</p>
+        </div>
+    </div>
+    <div class="b-page__inner b-page__columns b-page__mrg">
+        {% if vacancies|length > 1 %}
+        <aside class="b-page__left-column">
+            <div class="b-category-list">
+                <div class="b-category-list__all">
+                    <span class="b-category-list__all-a">{{ _("All jobs") }}<i class="icon icon-arrow-down"><svg viewBox="0 0 22 12" class="icon__svg" width="22" height="12"><use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-down"></use></svg></i></span>
+                </div>
+                <ul class="b-category-list__ul">
+                    {% for item in vacancies %}
+                    <li class="b-category-list__item{% if vacancy.id == item.id %} b-category-list__item--active{% endif %}">
+                        <a href="{{ url_for('.job', job_id=item.id) }}" class="b-category-list__a">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </aside>
+        {% endif %}
+        <div class="b-page__right-column">
+            <div class="job">
+                <div class="job__detail">
+                    {{ vacancy.text|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

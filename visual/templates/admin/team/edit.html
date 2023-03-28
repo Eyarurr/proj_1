@@ -1,0 +1,287 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'team' %}
+
+
+{% block content %}
+    <h1>
+        {% if user.id %} Свойства сотрудника {% else %} Создать сотрудника {% endif %}
+    </h1>
+    <style type="text/css">
+        .roles-list {
+            list-style-type: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        .dropdown-item {
+            color: #0c0e0b;
+            margin-left: 12px;
+
+        }
+
+        .dropdown-item:hover {
+            background-color: #b0b0b0;
+            cursor: default
+
+        }
+
+        #btn-create-password {
+            cursor: pointer;
+        }
+
+        #warn-create-password {
+            display: none;
+        }
+    </style>
+
+    {% if user.id %}
+        <form id="form-delete" class="form-inline" method="post"
+              action="{{ url_for('.team_delete', user_id=user.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        </form>
+    {% endif %}
+
+
+    <form method="POST" id="form-edit" class="form-horizontal" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% if user.id %}
+            <div class="row mb-3" style="--bs-bg-opacity: .1;">
+                <div class="col-lg-3">
+                    <div class="row">
+                        <label class="col-auto">Создан</label>
+                        <div class="col offset-lg-1">
+                            {{ user.created|utcinlocal|humantime }}
+                            {% if user.created_by %}—<a href="{{ url_for('.team_profile', user_id=user.created_by) }}" class="team-member">{{ user.creator.name }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="row">
+                        <label class="col-auto">Был на сайте</label>
+                        <div class="col">{{ user.last_active|utcinlocal|humantime('Никогда') }}</div>
+                    </div>
+                </div>
+            </div>
+    {% endif %}
+            <div class="row mb-3">
+                <div class="col-lg-1"><label class="">{{ form_user.name.label }}</label></div>
+                <div class="col-lg-11">{{ form_user.name(class='form-control') }}</div>
+            </div>
+
+        <div class="row mb-3">
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-2"><label>{{ form_user.email.label }}</label></div>
+                    <div class="col-lg-10">{{ form_user.email(class='form-control') }}
+                        <div class="form-check mt-3">{{ form_user.banned(class="form-check-input") }}<label class="form-check-label">Вход заблокирован</label></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label class="">{{ form_user.password.label }}</label></div>
+                    <div class="col-lg-10">
+                        <div class="input-group">
+                            {% if user.password_hash %}{{ form_user.password(class='form-control', placeholder='пароль задан') }}<span class="input-group-text" id="btn-create-password" title="Сгенерировать новый пароль"><i class="far fa-lightbulb"></i></span>
+                                {% else %}{{ form_user.password(class='form-control') }}<span class="input-group-text" id="btn-create-password" title="Сгенерировать новый пароль"><i class="far fa-lightbulb"></i></span>
+                            {% endif %}
+                            {% if user.id %}<p class="text-warning" id="warn-create-password">У пользователя уже был пароль. Если не хотите его менять, просто очистите это поле.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2"><label>Временная зона</label></div>
+                    <div class="col-lg-10">{{ form_member.timezone(class='form-select') }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-lg-1"><label>Описание</label></div>
+            <div class="col-lg-11">{{ form_member.description(class='form-control', rows=3) }}<p class="help-block">Здесь будет уместно рассказать об обязанностях сотрудника, с какими вопросами к нему стоит обращаться.</p></div>
+        </div>
+        <!-- блок отдел должность-->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Отдел</label></div>
+                    <div class="col-lg">{{ form_member.department_id(class='form-select') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Мобильный</label></div>
+                    <div class="col-lg-10">{{ form_member.phone_mobile(class='form-control') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2 "><label>Никнейм в "Телеграмме"</label></div>
+                    <div class="col-lg">{{ form_member.telegram(class='form-control') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label class="">Город</label></div>
+                    <div
+                        class="col-lg">{{ form_member.city_id(class='form-select advanced2AutoComplete', autocomplete="off") }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Принят</label></div>
+                    <div class="col-lg">{{ form_member.hired(class='form-control') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Дата рождения</label></div>
+                    <div class="col-lg">{{ form_member.birthdate(class='form-control') }}</div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Должность</label></div>
+                    <div class="col-lg">{{ form_member.position(class='form-control') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Внутренний</label></div>
+                    <div class="col-lg">{{ form_member.phone_internal(class='form-control') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Дней в офисе</label></div>
+                    <div class="col-lg">{{ form_member.office_days(class='form-select') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Где сидит</label></div>
+                    <div class="col-lg">
+                        <div class="input-group mb-3">
+                            {% if user.team_member.location_url %}
+                                {{ form_member.location_url(class='form-control') }}<span class="input-group-text"> <a href="{{ user.team_member.location_url }}" target="_blank"><i class="fas fa-link"></i></a></span>
+                            {% else %}
+                                {{ form_member.location_url(class='form-control') }}
+                                <span class="input-group-text"> <a href="{{ user.team_member.location_url }}" target="_blank"><i class="fas fa-link"></i></a></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Уволен</label></div>
+                    <div class="col-lg">{{ form_member.fired(class='form-control') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-2"><label>Фото</label></div>
+                    <div class="col-lg">{{ form_member.photo_(class='form-control') }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-lg-1"><label>Доступ</label></div>
+                    <div class="col-11">{{ form_member.roles(class='roles-list') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-between">
+            <div class="col-lg-auto offset-lg-1 mb-3">
+                <button class="btn btn-primary">Сохранить</button>
+                {% if user.id %}<button type="button" id="btn-delete" class="btn btn-danger">Удалить</button>
+                {% endif %}
+                <a href="{{ url_for('.team') }}" class="btn btn-secondary">Отмена</a>
+            </div>
+            <div class="col-lg-auto mb-3">
+                {% if user.id and current_user.has_role('super') %}<a href="#modal-authas" class="btn btn-warning" data-toggle="modal">Войти в личный кабинет</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </form>
+
+
+    <script type="text/javascript">
+        (function () {
+            var $form = $('#form-edit'), $btnPassword = $('#btn-create-password');
+
+            $btnPassword.click(function (e) {
+                e.preventDefault();
+                var letters = 'abvgdezkmnoprstufhz23456789', pwd = '', i;
+                for (i = 0; i < 6; i++) {
+                    pwd = pwd + letters.substr(Math.floor(Math.random() * letters.length), 1);
+                }
+                $form.find('[name=password]').val(pwd).change();
+            });
+
+            $form.find('[name=password]').on('change keyup', function () {
+                if ($(this).val() == '') $('#warn-create-password').hide(200);
+                else $('#warn-create-password').show(200);
+            });
+        })();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+    <!-- Bootstrap 4 Autocomplete -->
+    <script type="text/javascript" src="/static/bootstrap-autocomplete.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.advanced2AutoComplete').autoComplete({
+                minLength: 3,
+                resolver: 'custom',
+                formatResult: function (item) {
+                    return {
+                        value: item.id,
+                        text: item.country_id + ": " + item.name,
+                    };
+                },
+                events: {
+                    search: function (qry, callback) {
+                        // let's do a custom ajax call
+                        $.ajax(
+                            "{{ url_for('api3.misc_get_cities') }}" + '?client=web&client_version=1.0&lang=ru',
+                            {
+                                data: {'prefix': qry}
+                            }
+                        ).done(function (res) {
+                            callback(res.result)
+                        });
+                    },
+
+                }
+            });
+            $('[name="city_id_text"]').attr('value', '{{user.team_member.city.name}}')
+            $('[name="city_id"]').attr('value', '{{user.team_member.city_id or ''}}')
+        });
+    </script>
+
+
+    {% if user.id %}
+        <form method="post" action="{{ url_for('.user_authas') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <div class="modal fade" id="modal-authas">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Войти в личный кабинет</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Сейчас вы выйдите из админки и войдёте в личный кабинет пользователя {{ user.name }},
+                                как будто вы ввели его логин и пароль на сайте.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-success">Войти</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $("#btn-delete").on("click", function (e) {
+                if (confirm("Вы действительно хотите удалить пользователя {{ user.name }}?")) {
+                    e.preventDefault();
+                    $("#form-delete").submit();
+                }
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+

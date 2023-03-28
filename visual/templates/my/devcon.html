@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{%- from 'macros/devcon_messages.html' import devcon_messages -%}
+{%- from 'macros/common_messages.html' import common_messages -%}
+
+{% set corpus_class = 'devcon-pages' %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/devcon/build/css/main.css">
+    <script>
+        var RELEASE_VERSION = "{{ config.get('RELEASE_VERSION') }}";
+        var LANG = '{{ g.lang }}';
+        {{ devcon_messages(_, pgettext) }}
+        {{ common_messages(_, pgettext) }}
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div id="biganto-devcon"></div>
+{% endblock %}
+
+{% block tail %}
+    <script src="/static/devcon/build/main.js?{{ config.get('RELEASE_VERSION') }}"></script>
+{% endblock %}

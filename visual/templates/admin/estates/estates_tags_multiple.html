@@ -1,0 +1,85 @@
+{% extends 'admin/base.html' %}
+{% set menu_current = 'estates' %}
+{% set estate_id = request.view_args.get('estate_id') %}
+
+
+
+
+{% block head %}
+    <style type="text/css">
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>
+    Добавить теги в объект {{ estate.title }}
+    </h1>
+
+    <div class="table-responsive-lg">
+<table class="table table-hover table-list align-middle mt-3">
+
+<thead>
+<tr>
+
+    <th class="break align-top">#</th>
+    <th class="break align-top">Имя</th>
+    <th class="break align-top">Лейбел</th>
+    <th class="break align-top">Суффикс</th>
+    <th class="break align-top">Префикс</th>
+    <th class="break align-top">Словарь значений</th>
+    <th class="break align-top">Значение</th>
+    <th class="break">
+        <div class="form-check ">
+            <input type="checkbox" name="checkbox" class="form-check-input " value="a" id="all">
+            <label class="form-check-label align-top" for="">Все</label>
+        </div>
+    </th>
+</tr>
+</thead>
+    <tbody>
+<form method="post" action="{{ url_for('.estates_etag_add_multiple_tags', estate_id=estate_id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% for tag in tags %}
+        <tr>
+
+            <td class="break col-lg-auto">{{ loop.index }}</td>
+            <td class="break col-1 text-primary">{{ tag.name }}</td>
+            <td class="break col-lg-auto">{{ tag.label }}</td>
+            <td class="break col-lg-auto">{{ tag.suffix or ''}}</td>
+            <td class="break col-lg-auto">{{ tag.prefix or ''}}</td>
+            <td class="break col-lg-auto">{{ tag.display_dict or ''}}</td>
+            <td class="break col-lg-3">
+                <input type="text" id="tag_val" name="tag_val_{{ tag.id }}" class="form-control">
+            </td>
+        <td class="break col-lg-auto">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="{{ tag.id }}"
+                           id="tag" name="tag">
+                </div>
+            </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+    <div class="row">
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a href="{{ url_for('.estates_etags', estate_id=estate_id) }}" type="submit" class="btn btn-outline-secondary">Отменить</a>
+        </div>
+    </div>
+</div>
+</form>
+    <script type="text/javascript">
+        (function () {
+            $('#all').click(function () {
+                if ($(this).is(':checked')){
+                    $('input:checkbox').prop('checked', true);
+                } else {
+                    $('input:checkbox').prop('checked', false);
+                }
+            })
+        })();
+    </script>
+{% endblock %}

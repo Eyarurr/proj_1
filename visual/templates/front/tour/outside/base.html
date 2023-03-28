@@ -1,0 +1,91 @@
+{%- from '/macros/favicon.html' import favicon -%}
+{% if tour.title %}
+    {%- set page_title = tour.title + ' - ' + _('Biganto Virtual Tour') -%}
+{% else %}
+    {%- set page_title = _('Biganto Virtual Tour') -%}
+{% endif %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ page_title }}</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="msapplication-tap-highlight" content="no" />
+
+        {%- if tour.screen -%}
+            {%- set meta_image = tour.screen.url|absurl -%}
+        {%- else -%}
+            {%- set meta_image = url_for('static', filename='public/img/share/logo1.png', _external=True) -%}
+        {%- endif %}
+
+        <meta property="og:title" content="{{ page_title|default('Biganto', true) }}" />
+        <meta property="og:image" content="{{ meta_image }}" />
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ page_title|default('Biganto', true) }}">
+        <meta name="twitter:description" content="{{ tour.title }}">
+        <meta name="twitter:image" content="{{ meta_image }}">
+
+        {{- favicon() -}}
+
+        <link rel="stylesheet" type="text/css" href="/static/public/outside/css/app.css?{{ config.get('RELEASE_VERSION') }}">
+        <link rel="stylesheet" type="text/css" href="/static/public/outside/css/main.css?{{ config.get('RELEASE_VERSION') }}">
+        <script>
+            {# Тут инициализируется глобальная переменная current_user с тем же содержимым, как если бы обратились к методу API `GET /my` #}
+            {% if not current_user.is_authenticated %}
+                var current_user = {
+                    is_authenticated: false,
+                    name: ''
+                }
+            {% else %}
+                var current_user = {{ current_user.current_user_api_repr(is_authenticated=True) | tojson }}
+                {% endif %}
+
+            var STAT_SESSION = '{{ session.session_key or '' }}',
+                CSRF_TOKEN = "{{ csrf_token() }}",
+                TOUR_IN_EDIT_MODE = false,
+                HIT_TIME = {{ config.get('PLAYER_HIT_TIME') }},
+                STAT_HIT = "{% if tour.id %}{{ url_for('front.tour_stat_hit', tour_id=tour.id) }}{% endif %}",
+                STAT_ACTION = "{% if tour.id %}{{ url_for('front.tour_stat_action', tour_id=tour.id) }}{% endif %}",
+                {# тур попадает в открытый доступ только при статусе `published` #}
+                IS_READY = {{ tour.showable|lower }},
+                Tour = {{ tour.meta_full()|tojson }},
+                MESSAGES = {
+                    LOAD: "{{ _("Error has occurred while downloading the virtual tour.") }}",
+                    DEFAULT: "{{ _("Unfortunately the server is temporarily not available. Please, try again later.") }}",
+                    QUERY_FAIL: "{{ _("Action failed.") }}",
+                    SETS: "{{ _("Floors") }}",
+                    SUPPORT_WEBGL: "{{ _("Unfortunately, your video card or web browser doesn't support WebGL. Therefore, some functions were disabled.") }}"
+                };
+        </script>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+
+        <div class="page" id="appContainer" data-csrf="{{ csrf_token() }}">
+            {% for category, messages in flashes().items() %}
+                <div class="topline">
+                    <ul class="topline__flashes">
+                        <li class="topline__flashes-item">{{ messages | join('</li><li class="topline__flashes-item">') | safe }}</li>
+                    </ul>
+                    <div class="topline__close">&times;</div>
+                </div>
+            {% endfor %}
+            <div class="page__picture"></div>
+            <div id="root"></div>
+            <div class="overlay spinner">
+              <img src="/static/public/outside/i/spinner.svg?{{ config.get('RELEASE_VERSION') }}" alt="" class="spinner__icon">
+            </div>
+        </div>
+
+        {% block content %}{% endblock %}
+
+        {%- if config['ENVIRONMENT'] == 'development' -%}
+        <script src="/static/public/outside/js/rStats.js?{{ config.get('RELEASE_VERSION') }}"></script>
+        <script src="/static/public/outside/js/rStats.extras.js?{{ config.get('RELEASE_VERSION') }}"></script>
+        <script src="/static/public/outside/js/dat.gui.min.js?{{ config.get('RELEASE_VERSION') }}"></script>
+        {%- endif -%}
+        <script src="/static/public/outside/js/app.js?{{ config.get('RELEASE_VERSION') }}"></script>
+    </body>
+</html>

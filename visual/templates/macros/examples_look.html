@@ -1,0 +1,84 @@
+{% macro examples_look(items=[], container_class='', old_style=False, link=None, interface_color='blue') %}
+
+{%- set interface_color=('blue' if interface_color not in ['red', 'blue', 'orange'] else interface_color) -%}
+
+{% if items|length %}
+<section class="block examples-look {{ container_modifier }}">
+    <div class="b-page__inner block__inner examples-look__inner">
+        <div class="block__content">
+            <div class="examples-look__viewbox">
+                <div class="examples-look__gallery">
+                    <ul class="examples-look__list clearfix">
+                        {% for item in items %}
+                        <li class="examples-look__item" data-title="{{ item['title'] }}" data-preview="{{ item['screen'] }}" data-url="{{ item['url'] }}">
+                            <div class="examples-look__aspectratio">
+                                <div class="examples-look__picture" style="background-image: url({{ item['screen'] }});">
+                                    <div class="examples-look__play">
+                                        <svg viewBox="0 0 96 96" class="examples-look__svg icon__svg" width="96" height="96">
+                                            <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#play-{{ interface_color }}"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% if old_style %}
+                <div class="examples-look__active"></div>
+                {% endif %}
+
+                {# навигация + пагинация #}
+                {% if items|length > 1 %}
+                {% if not old_style %}
+                <div class="examples-look__nav">
+                {% endif %}
+
+                    {% if not old_style %}
+                    <div class="examples-look__pagination"></div>
+                    {% endif %}
+
+                    <div class="examples-look__arrow-container examples-look__prev">
+                        <div class="examples-look__arrow">
+                            {% if old_style %}
+                            <svg viewBox="0 0 20 38" class="examples-look__icon examples-look__icon--{{ interface_color }} icon__svg" width="20" height="38">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-left"></use>
+                            </svg>
+                            {% else %}
+                            <svg viewBox="0 0 20 38" class="examples-look__icon examples-look__icon--{{ interface_color }} icon__svg" width="18" height="36">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-left-fat"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="examples-look__arrow-container examples-look__next">
+                        <div class="examples-look__arrow">
+                            {% if old_style %}
+                            <svg viewBox="0 0 20 38" class="examples-look__icon examples-look__icon--{{ interface_color }} icon__svg" width="20" height="38">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-right"></use>
+                            </svg>
+                            {% else %}
+                            <svg viewBox="0 0 20 38" class="examples-look__icon examples-look__icon--{{ interface_color }} icon__svg" width="18" height="36">
+                                <use xlink:href="/static/public/img/icons.svg?{{ config.get('RELEASE_VERSION') }}#arrow-right-fat"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                {% if not old_style %}
+                </div>
+                {% endif %}
+                {% endif %}
+
+                {% if link %}
+                <div class="examples-look__link-container">
+                    <a href="{{ link['url'] }}" class="examples-look__link button light-blue">{{ link['text']|safe }}</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endmacro %}

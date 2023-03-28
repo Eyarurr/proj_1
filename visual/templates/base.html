@@ -1,0 +1,56 @@
+{% extends 'base_common.html' %}
+{% from '/macros/logo.html' import logo %}
+{% from '/macros/cooperateEvent.html' import cooperateEvent %}
+
+{% set apps = config.get('APPLICATIONS', {}) %}
+{% set ios_app = apps.get('iosplayer') %}
+{% set has_ios_app = ios_app and ios_app.get('download_url') %}
+{% set android_app = apps.get('androidplayer') %}
+{% set has_android_app = android_app and android_app.get('download_url') %}
+{% set windowsplayer = apps.get('windowsplayer') %}
+{% set has_windowsplayer = windowsplayer and windowsplayer.get('download_url') %}
+
+{% block common_content %}
+    <div class="b-page{% if offset_content %} b-page--upoffset{% endif %}">
+        <main class="b-page__bg">
+
+            {% include '/my/_flashes.html' %}
+
+            {#{% if g.lang == 'en' or g.lang == 'ru' %}
+                {{ cooperateEvent() }}
+            {% endif %}#}
+
+            {# шапка #}
+            {% if corpus_class != 'main' and corpus_class != 'virtoaster' and corpus_class != 'filincam-page' and corpus_class != 'devcon-pages' and corpus_class != 'bladerunner-pages' %}
+                <div class="b-page__header">
+                    {% block header %}
+                        {% include 'header.'+ config.JURISDICTION + '.html' %}
+                    {% endblock %}
+                </div>
+            {% endif %}
+
+            {# контент страницы #}
+            <div class="b-page__content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+
+        {# подвал #}
+        {% if corpus_class != 'bladerunner-pages' %}
+        <div class="b-page__footer">
+            {% include 'footer.'+ config.JURISDICTION + '.html' %}
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{# пробрасываем вставки в начало и конец документа #}
+{% block common_head %}
+    {% block head %}{% endblock %}
+    {% include 'inc_styles.html' %}
+{% endblock %}
+
+{%- block common_tail -%}
+    <script src="/static/public/js/main.js?{{ config.get('RELEASE_VERSION') }}" defer></script>
+    {% block tail %}{% endblock %}
+{%- endblock -%}

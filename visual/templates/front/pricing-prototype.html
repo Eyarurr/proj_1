@@ -1,0 +1,109 @@
+{% extends 'prototype.html' %}
+
+
+{% block content %}
+
+    <table class="table table-bordered">
+    <tr>
+        {% for plan_id, plan in products.virtoaster.plans.items() if not plan.hidden %}
+            <th class="text-center">
+                {{ plan.title }}<br>
+                {{ plan.price }} €/month
+            </th>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for plan_id, plan in products.virtoaster.plans.items() if not plan.hidden %}
+            <td class="text-center" data-plan-id="{{ plan_id }}">
+                {% if plan_id == current_user.products['virtoaster'].plan_id %}
+                    <label class="label label-info">Your plan</label>
+                {% else %}
+                    <a href="#modal-buy" data-toggle="modal" class="btn btn-default">
+                        {% if plan_id == 0 %}
+                            Cancel subscription
+                        {% elif current_user.products['virtoaster'].plan_id > plan_id %}
+                            Downgrade
+                        {% else %}
+                            Buy this plan
+                        {% endif %}
+                    </a>
+                {% endif %}
+            </td>
+        {% endfor %}
+    </tr>
+    </table>
+
+
+    <form method="post" action="{{ url_for('.plan_buy') }}" id="form-buy">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="plan_id" disabled>
+
+        <div class="modal" id="modal-buy"><div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Switch to this plan?
+                <p>
+                    Пацаны! Запрос на <code>url_for('.plan_buy')</code> может обрабатываться несколько секунд.
+                    Потому повесьте на сабмит блокировку кнопки сабмита и какой-нибудь весёленький спиннер.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div></div></div>
+    </form>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script type="text/javascript">
+
+    var stripe = Stripe('{{ config.get('STRIPE_PK') }}');
+
+    (function() {
+        var $modal=$('#modal-buy'), $form=$('#form-buy');
+
+        $modal.on('shown.bs.modal', function(e) {
+            var plan_id = $(e.relatedTarget).parents('td').data('planId');
+            $form.find('[name=plan_id]').val(plan_id);
+        });
+
+        $form.on('submit', function(e) {
+            e.preventDefault();
+            var plan_id = $form.find('[name=plan_id]').val();
+            console.log('POST ', $form.attr('action'), plan_id);
+            $.ajax({
+                type: 'POST',
+                url: $form.attr('action'),
+                data: {
+                    'plan_id': plan_id,
+                    csrf_token: $form.find('[name=csrf_token]').val()
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if(data.action === 'redirectToCheckout') {
+                        // Редиректнуться на страницу шлюза при помощи stripe.redirectToCheckout
+                        stripe.redirectToCheckout({
+                            sessionId: data.session_id
+                        }).then(function (result) {
+                            // If `redirectToCheckout` fails due to a browser or network
+                            // error, display the localized error message to your customer
+                            // using `result.error.message`.
+                            alert(result.error.message);
+                        });
+                    } else if(data.action === 'redirect') {
+                        // Редиректнуться на другую страницу
+                        location.href = data.url;
+                    } else if(data.action === 'alert') {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+    })();
+    </script>
+
+{% endblock %}
